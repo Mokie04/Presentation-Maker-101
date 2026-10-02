@@ -16,6 +16,10 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "SAYUNA AI PRESENTATION MAKER",
   description: "Upload Lesson Plan and generate PowerPoint Presentation instantly with Sayuna AI.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
