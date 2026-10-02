@@ -8,6 +8,7 @@ import {
   Layers,
 } from 'lucide-react';
 import type { PresentationData } from '@/types/presentation';
+import { getPartBadgeInfo } from './SlideCard';
 
 interface SlideshowModalProps {
   isOpen: boolean;
@@ -113,9 +114,14 @@ export function SlideshowModal({
       {/* Top Bar */}
       <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-6 py-3.5 flex items-center justify-between text-white z-10">
         <div className="flex items-center gap-3">
-          <span className="px-2.5 py-1 text-xs font-black uppercase tracking-wider rounded-md bg-sky-600 text-white shadow-sm">
-            {currentSlide.part || 'SLIDE'}
-          </span>
+          {(() => {
+            const badge = getPartBadgeInfo(currentSlide.part);
+            return (
+              <span className={`px-2.5 py-1 text-xs font-black uppercase tracking-wider rounded-md ${badge.bg} text-white shadow-sm`}>
+                {badge.label}
+              </span>
+            );
+          })()}
           <span className="text-sm font-semibold text-slate-300 truncate max-w-xs sm:max-w-md">
             {presentationData.topic} {session ? `— ${session}` : ''}
           </span>

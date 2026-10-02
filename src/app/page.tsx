@@ -199,6 +199,13 @@ export default function Home() {
   };
 
   // Slide Edit Handlers
+  const handleUpdatePart = (slideIndex: number, newPart: string) => {
+    if (!presentationData) return;
+    const updated = [...presentationData.slides];
+    updated[slideIndex] = { ...updated[slideIndex], part: newPart };
+    setPresentationData({ ...presentationData, slides: updated });
+  };
+
   const handleUpdateTitle = (slideIndex: number, newTitle: string) => {
     if (!presentationData) return;
     const updated = [...presentationData.slides];
@@ -512,6 +519,7 @@ export default function Home() {
                   isEditing={isEditing}
                   slideImage={slideImages[idx]}
                   isGeneratingImage={Boolean(generatingImages[idx])}
+                  onUpdatePart={handleUpdatePart}
                   onUpdateTitle={handleUpdateTitle}
                   onUpdateBullet={handleUpdateBullet}
                   onAddBullet={handleAddBullet}

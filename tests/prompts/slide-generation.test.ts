@@ -28,6 +28,12 @@ describe('slide-generation prompts', () => {
     expect(result).toContain('Focus strictly on the curriculum segments pertaining to: Day 1 - Session 1.');
     expect(result).toContain('Detect and apply the specific directive for "Science".');
     expect(result).toContain('"subject": "Science"');
+    expect(result).toContain('Review');
+    expect(result).toContain('Motivation');
+    expect(result).toContain('Lesson Presentation');
+    expect(result).toContain('Discussion');
+    expect(result).toContain('Activities');
+    expect(result).toContain('Assessment');
   });
 
   it('IMAGE_PROMPT_PREFIX has exact required phrasing', () => {

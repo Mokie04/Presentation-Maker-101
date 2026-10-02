@@ -12,6 +12,29 @@ import {
 } from 'lucide-react';
 import type { SlideData } from '@/types/presentation';
 
+export const PEDAGOGICAL_PARTS = [
+  'Title Page',
+  'Review',
+  'Motivation',
+  'Lesson Presentation',
+  'Discussion',
+  'Activities',
+  'Assessment',
+] as const;
+
+export function getPartBadgeInfo(part?: string): { bg: string; label: string } {
+  if (!part) return { bg: 'bg-slate-600', label: 'SLIDE' };
+  const p = part.toLowerCase();
+  if (p.includes('review')) return { bg: 'bg-amber-600', label: '1. REVIEW' };
+  if (p.includes('motivation')) return { bg: 'bg-emerald-600', label: '2. MOTIVATION' };
+  if (p.includes('lesson presentation') || p === 'presentation') return { bg: 'bg-sky-600', label: '3. LESSON PRESENTATION' };
+  if (p.includes('discussion')) return { bg: 'bg-cyan-700', label: '4. DISCUSSION' };
+  if (p.includes('activit')) return { bg: 'bg-purple-600', label: '5. ACTIVITIES' };
+  if (p.includes('assess')) return { bg: 'bg-rose-600', label: '6. ASSESSMENT' };
+  if (p.includes('title')) return { bg: 'bg-indigo-600', label: 'TITLE PAGE' };
+  return { bg: 'bg-sky-600', label: part.toUpperCase() };
+}
+
 interface SlideCardProps {
   slide: SlideData;
   index: number;
@@ -19,6 +42,7 @@ interface SlideCardProps {
   isEditing: boolean;
   slideImage?: string;
   isGeneratingImage?: boolean;
+  onUpdatePart?: (index: number, part: string) => void;
   onUpdateTitle: (index: number, title: string) => void;
   onUpdateBullet: (slideIndex: number, bulletIndex: number, text: string) => void;
   onAddBullet: (slideIndex: number) => void;
@@ -34,6 +58,7 @@ export function SlideCard({
   isEditing,
   slideImage,
   isGeneratingImage = false,
+  onUpdatePart,
   onUpdateTitle,
   onUpdateBullet,
   onAddBullet,
@@ -48,13 +73,15 @@ export function SlideCard({
       : `data:image/png;base64,${slideImage}`
     : undefined;
 
+  const badgeInfo = getPartBadgeInfo(slide.part);
+
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 border border-sky-100/90 overflow-hidden flex flex-col h-full">
       {/* Slide Top Strip */}
       <div className="bg-sky-50/70 px-4 py-2.5 border-b border-sky-100 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md bg-sky-600 text-white shadow-xs">
-            {slide.part || 'SLIDE'}
+          <span className={`text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md ${badgeInfo.bg} text-white shadow-xs`}>
+            {badgeInfo.label}
           </span>
           <span className="text-xs font-semibold text-slate-500">
             Slide {slide.slideNumber || index + 1} of {totalSlides}
@@ -76,18 +103,41 @@ export function SlideCard({
       <div className="p-5 flex-1 flex flex-col justify-between gap-4">
         {/* Title & Bullets */}
         <div className="space-y-4">
-          {/* Title */}
+          {/* Title and Pedagogical Part */}
           {isEditing ? (
-            <div>
-              <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
-                Slide Title
-              </label>
-              <input
-                type="text"
-                value={slide.title}
-                onChange={(e) => onUpdateTitle(index, e.target.value)}
-                className="w-full text-base sm:text-lg font-bold text-sky-950 p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="sm:col-span-1">
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  Pedagogical Part
+                </label>
+                <select
+                  aria-label="Pedagogical Part"
+                  value={slide.part}
+                  onChange={(e) => onUpdatePart?.(index, e.target.value)}
+                  className="w-full text-xs font-bold text-slate-800 p-2.5 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
+                >
+                  {PEDAGOGICAL_PARTS.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                  {!PEDAGOGICAL_PARTS.includes(slide.part as (typeof PEDAGOGICAL_PARTS)[number]) && (
+                    <option value={slide.part}>{slide.part}</option>
+                  )}
+                </select>
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                  Slide Title
+                </label>
+                <input
+                  type="text"
+                  value={slide.title}
+                  onChange={(e) => onUpdateTitle(index, e.target.value)}
+                  className="w-full text-sm sm:text-base font-bold text-sky-950 p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
+                />
+              </div>
             </div>
           ) : (
             <h3 className="text-lg sm:text-xl font-extrabold text-sky-900 tracking-tight leading-snug">
