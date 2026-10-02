@@ -1,101 +1,458 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState } from 'react';
+import {
+  FileDown,
+  FileText,
+  Play,
+  RotateCcw,
+  Edit3,
+  Eye,
+  Plus,
+  UserCheck,
+} from 'lucide-react';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
+import { UploadSection } from '@/components/UploadSection';
+import { SlideCard } from '@/components/SlideCard';
+import { SlideshowModal } from '@/components/SlideshowModal';
+import type { PresentationData, SlideData } from '@/types/presentation';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [extractedText, setExtractedText] = useState('');
+  const [fileName, setFileName] = useState('');
+  const [selectedSession, setSelectedSession] = useState('');
+  const [presentationData, setPresentationData] = useState<PresentationData | null>(null);
+  const [slideImages, setSlideImages] = useState<Record<number, string>>({});
+  const [generatingImages, setGeneratingImages] = useState<Record<number, boolean>>({});
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSlideShowActive, setIsSlideShowActive] = useState(false);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingStage, setLoadingStage] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [isDownloadingPptx, setIsDownloadingPptx] = useState(false);
+  const [isDownloadingMd, setIsDownloadingMd] = useState(false);
+
+  // Handle successful document upload or paste
+  const handleUploadSuccess = (text: string, name: string) => {
+    setExtractedText(text);
+    setFileName(name);
+    setErrorMsg('');
+  };
+
+  // Generate Presentation Flow
+  const handleGenerate = async (text: string, session: string) => {
+    setIsLoading(true);
+    setErrorMsg('');
+    setLoadingStage('Analyzing curriculum & instructional structure...');
+
+    try {
+      const stageTimer1 = setTimeout(() => {
+        setLoadingStage('Architecting 25+ comprehensive slides (Review, Motivation, Lesson, Discussion, Activities, Assessment)...');
+      }, 1200);
+
+      const stageTimer2 = setTimeout(() => {
+        setLoadingStage('Synthesizing Philippine pedagogical diagrams and questions...');
+      }, 3500);
+
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, session }),
+      });
+
+      clearTimeout(stageTimer1);
+      clearTimeout(stageTimer2);
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to generate presentation slides.');
+      }
+
+      setPresentationData(data);
+      setSlideImages({});
+      setIsEditing(false);
+
+      // Auto-trigger background batch image generation
+      triggerBatchImageGeneration(data.slides);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'An error occurred during generation.';
+      setErrorMsg(msg);
+    } finally {
+      setIsLoading(false);
+      setLoadingStage('');
+    }
+  };
+
+  // Background batch image generation for eligible slides
+  const triggerBatchImageGeneration = (slides: SlideData[]) => {
+    const slidesForBatch = slides.map((s, index) => ({
+      slideIndex: index,
+      part: s.part,
+      visualDescription: s.visualDescription,
+    }));
+
+    fetch('/api/generate-images', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slides: slidesForBatch }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.images) {
+          setSlideImages((prev) => ({ ...prev, ...data.images }));
+        }
+      })
+      .catch((err) => {
+        console.error('Batch image generation error:', err);
+      });
+  };
+
+  // Single slide image generation / regeneration
+  const handleRegenerateImage = async (slideIndex: number, visualDescription: string) => {
+    setGeneratingImages((prev) => ({ ...prev, [slideIndex]: true }));
+    try {
+      const res = await fetch('/api/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: visualDescription, slideIndex }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to render image.');
+      }
+      setSlideImages((prev) => ({ ...prev, [slideIndex]: data.base64 }));
+    } catch (err) {
+      console.error('Image regeneration failed:', err);
+      setSlideImages((prev) => ({ ...prev, [slideIndex]: 'failed' }));
+    } finally {
+      setGeneratingImages((prev) => ({ ...prev, [slideIndex]: false }));
+    }
+  };
+
+  // Slide Edit Handlers
+  const handleUpdateTitle = (slideIndex: number, newTitle: string) => {
+    if (!presentationData) return;
+    const updated = [...presentationData.slides];
+    updated[slideIndex] = { ...updated[slideIndex], title: newTitle };
+    setPresentationData({ ...presentationData, slides: updated });
+  };
+
+  const handleUpdateBullet = (slideIndex: number, bulletIndex: number, text: string) => {
+    if (!presentationData) return;
+    const updated = [...presentationData.slides];
+    const points = [...updated[slideIndex].contentPoints];
+    points[bulletIndex] = text;
+    updated[slideIndex] = { ...updated[slideIndex], contentPoints: points };
+    setPresentationData({ ...presentationData, slides: updated });
+  };
+
+  const handleAddBullet = (slideIndex: number) => {
+    if (!presentationData) return;
+    const updated = [...presentationData.slides];
+    const points = [...updated[slideIndex].contentPoints, 'New primary discussion point'];
+    updated[slideIndex] = { ...updated[slideIndex], contentPoints: points };
+    setPresentationData({ ...presentationData, slides: updated });
+  };
+
+  const handleDeleteBullet = (slideIndex: number, bulletIndex: number) => {
+    if (!presentationData) return;
+    const updated = [...presentationData.slides];
+    const points = updated[slideIndex].contentPoints.filter((_, idx) => idx !== bulletIndex);
+    updated[slideIndex] = { ...updated[slideIndex], contentPoints: points };
+    setPresentationData({ ...presentationData, slides: updated });
+  };
+
+  const handleDeleteSlide = (slideIndex: number) => {
+    if (!presentationData) return;
+    const updated = presentationData.slides
+      .filter((_, idx) => idx !== slideIndex)
+      .map((s, idx) => ({ ...s, slideNumber: idx + 1 }));
+    setPresentationData({ ...presentationData, slides: updated });
+  };
+
+  const handleAddSlide = () => {
+    if (!presentationData) return;
+    const newSlide: SlideData = {
+      slideNumber: presentationData.slides.length + 1,
+      part: 'Discussion',
+      title: 'New Slide Topic',
+      contentPoints: ['Key takeaway for learners', 'Guided classroom discussion question'],
+      visualDescription: 'Philippine classroom illustration showing interactive group discussion',
+    };
+    setPresentationData({
+      ...presentationData,
+      slides: [...presentationData.slides, newSlide],
+    });
+  };
+
+  // Download Handlers
+  const handleDownloadPptx = async () => {
+    if (!presentationData) return;
+    setIsDownloadingPptx(true);
+    try {
+      const res = await fetch('/api/download-pptx', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          presentationData,
+          slideImages,
+          session: selectedSession,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to download PowerPoint.');
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+
+      const disposition = res.headers.get('Content-Disposition');
+      let filename = `${presentationData.topic.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${selectedSession.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_DepEdTambayan.pptx`;
+      if (disposition && disposition.includes('filename=')) {
+        const match = disposition.match(/filename="?([^"]+)"?/);
+        if (match?.[1]) filename = match[1];
+      }
+
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Error generating PPTX file.');
+    } finally {
+      setIsDownloadingPptx(false);
+    }
+  };
+
+  const handleDownloadMarkdown = async () => {
+    if (!presentationData) return;
+    setIsDownloadingMd(true);
+    try {
+      const res = await fetch('/api/download-markdown', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          presentationData,
+          session: selectedSession,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to download Markdown outline.');
+      }
+
+      const text = await res.text();
+      const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+
+      const disposition = res.headers.get('Content-Disposition');
+      let filename = `${presentationData.topic.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${selectedSession.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_Outline.md`;
+      if (disposition && disposition.includes('filename=')) {
+        const match = disposition.match(/filename="?([^"]+)"?/);
+        if (match?.[1]) filename = match[1];
+      }
+
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Error generating Markdown outline.');
+    } finally {
+      setIsDownloadingMd(false);
+    }
+  };
+
+  const handleReset = () => {
+    setPresentationData(null);
+    setSlideImages({});
+    setExtractedText('');
+    setFileName('');
+    setSelectedSession('');
+    setErrorMsg('');
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col bg-slate-50 selection:bg-emerald-200 selection:text-emerald-900">
+      <Header />
+
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Upload & Session Setup View */}
+        {!presentationData ? (
+          <UploadSection
+            extractedText={extractedText}
+            fileName={fileName}
+            onUploadSuccess={handleUploadSuccess}
+            selectedSession={selectedSession}
+            onSessionChange={setSelectedSession}
+            onGenerate={handleGenerate}
+            isLoading={isLoading}
+            loadingStage={loadingStage}
+            errorMsg={errorMsg}
+          />
+        ) : (
+          /* Presentation Workspace View */
+          <div className="space-y-6">
+            {/* Header Control Strip */}
+            <div className="bg-white rounded-2xl shadow-md border border-emerald-100 p-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-3 py-1 bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs">
+                    {selectedSession}
+                  </span>
+                  <span className="px-3 py-1 bg-emerald-100 text-emerald-800 font-bold text-xs uppercase tracking-wider rounded-lg">
+                    {presentationData.subject}
+                  </span>
+                  <span className="text-xs text-slate-500 font-semibold">
+                    {presentationData.slides.length} Sequential Slides Generated
+                  </span>
+                </div>
+
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                  {presentationData.topic}
+                </h2>
+
+                <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500">
+                  <UserCheck className="w-4 h-4 text-emerald-600" />
+                  <span>Writers: {presentationData.originalWriters || 'DepEd Tambayan'}</span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  disabled={isDownloadingPptx}
+                  onClick={handleDownloadPptx}
+                  className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
+                >
+                  <FileDown className="w-4 h-4" />
+                  <span>{isDownloadingPptx ? 'Compiling PPTX...' : 'Download PowerPoint'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  disabled={isDownloadingMd}
+                  onClick={handleDownloadMarkdown}
+                  className="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 active:bg-slate-950 text-white rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all"
+                >
+                  <FileText className="w-4 h-4" />
+                  <span>{isDownloadingMd ? 'Exporting...' : 'Download Outline'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCurrentSlideIndex(0);
+                    setIsSlideShowActive(true);
+                  }}
+                  className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all"
+                >
+                  <Play className="w-4 h-4" />
+                  <span>Preview</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold text-xs transition-colors"
+                  title="Reset to New Upload"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Slide Action Strip */}
+            <div className="flex items-center justify-between px-2">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(!isEditing)}
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all ${
+                    isEditing
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  {isEditing ? (
+                    <>
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>Slides View</span>
+                    </>
+                  ) : (
+                    <>
+                      <Edit3 className="w-3.5 h-3.5" />
+                      <span>Edit Slides</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleAddSlide}
+                  className="px-3.5 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 transition-all"
+                >
+                  <Plus className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>+ Add Slide</span>
+                </button>
+              </div>
+
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                {presentationData.slides.length} Slides Total
+              </span>
+            </div>
+
+            {/* Responsive Slides Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {presentationData.slides.map((slide, idx) => (
+                <SlideCard
+                  key={idx}
+                  slide={slide}
+                  index={idx}
+                  totalSlides={presentationData.slides.length}
+                  isEditing={isEditing}
+                  slideImage={slideImages[idx]}
+                  isGeneratingImage={Boolean(generatingImages[idx])}
+                  onUpdateTitle={handleUpdateTitle}
+                  onUpdateBullet={handleUpdateBullet}
+                  onAddBullet={handleAddBullet}
+                  onDeleteBullet={handleDeleteBullet}
+                  onDeleteSlide={handleDeleteSlide}
+                  onRegenerateImage={handleRegenerateImage}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Fullscreen Slideshow Modal */}
+        {presentationData && (
+          <SlideshowModal
+            isOpen={isSlideShowActive}
+            onClose={() => setIsSlideShowActive(false)}
+            presentationData={presentationData}
+            session={selectedSession}
+            slideImages={slideImages}
+            initialIndex={currentSlideIndex}
+          />
+        )}
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+      <Footer />
     </div>
   );
 }
