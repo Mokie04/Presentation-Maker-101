@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { checkHealth, type HealthCheckResponse } from '@/lib/health';
+import { checkHealth } from '@/lib/health';
 import { requireSession } from '@/lib/sessionAuth';
 
 export const dynamic = 'force-dynamic';
