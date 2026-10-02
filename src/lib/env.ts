@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { getAppStoreAuthConfig, type AppStoreAuthConfig } from '@/lib/sessionAuth';
 
 const envSchema = z.object({
   TEXT_PROVIDER_BASE_URL: z.string().url('TEXT_PROVIDER_BASE_URL must be a valid URL'),
@@ -32,6 +33,7 @@ export interface AppConfig {
   app: {
     maxFileSizeMb: number;
   };
+  auth: AppStoreAuthConfig;
 }
 
 export function validateEnv(rawEnv: Record<string, string | undefined> = process.env): AppConfig {
@@ -64,6 +66,7 @@ export function validateEnv(rawEnv: Record<string, string | undefined> = process
     app: {
       maxFileSizeMb: data.MAX_FILE_SIZE_MB,
     },
+    auth: getAppStoreAuthConfig(rawEnv),
   };
 }
 
