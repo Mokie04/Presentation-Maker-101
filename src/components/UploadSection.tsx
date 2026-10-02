@@ -64,8 +64,14 @@ export function UploadSection({
         body: formData,
       });
 
-      const data = await res.json();
-      if (!res.ok) {
+      const resText = await res.text();
+      let data: { text?: string; fileName?: string; error?: string } = {};
+      try {
+        data = JSON.parse(resText) as { text?: string; fileName?: string; error?: string };
+      } catch {
+        throw new Error(resText.slice(0, 150) || `Upload failed (${res.status})`);
+      }
+      if (!res.ok || !data.text) {
         throw new Error(data.error || 'Failed to upload and parse document.');
       }
 

@@ -67,9 +67,21 @@ export default function Home() {
       clearTimeout(stageTimer1);
       clearTimeout(stageTimer2);
 
-      const data = await res.json();
+      const resText = await res.text();
+      let data: (PresentationData & { error?: string }) | null = null;
+      try {
+        data = JSON.parse(resText) as PresentationData & { error?: string };
+      } catch {
+        if (res.status === 504 || resText.includes('FUNCTION_INVOCATION_TIMEOUT') || resText.toLowerCase().includes('timeout')) {
+          throw new Error(
+            'The AI request timed out (504). Generating 25+ comprehensive slides can take longer than allowed when using slower or free-tier models. Please try again or switch TEXT_PROVIDER_MODEL to a faster model on xKiro (such as openai/gpt-4o-mini or deepseek/deepseek-chat).'
+          );
+        }
+        throw new Error(resText.slice(0, 150) || `Server error (${res.status})`);
+      }
+
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to generate presentation slides.');
+        throw new Error(data?.error || 'Failed to generate presentation slides.');
       }
 
       setPresentationData(data);
@@ -100,9 +112,15 @@ export default function Home() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ slides: slidesForBatch }),
     })
-      .then((res) => res.json())
+      .then(async (res) => {
+        if (!res.ok) {
+          const errText = await res.text().catch(() => '');
+          throw new Error(errText || 'Batch image generation failed');
+        }
+        return res.json();
+      })
       .then((data) => {
-        if (data.images) {
+        if (data?.images) {
           setSlideImages((prev) => ({ ...prev, ...data.images }));
         }
       })
@@ -120,11 +138,17 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: visualDescription, slideIndex }),
       });
-      const data = await res.json();
-      if (!res.ok) {
+      const resText = await res.text();
+      let data: { base64?: string; error?: string } = {};
+      try {
+        data = JSON.parse(resText) as { base64?: string; error?: string };
+      } catch {
+        throw new Error(resText.slice(0, 120) || 'Failed to parse image response');
+      }
+      if (!res.ok || !data.base64) {
         throw new Error(data.error || 'Failed to render image.');
       }
-      setSlideImages((prev) => ({ ...prev, [slideIndex]: data.base64 }));
+      setSlideImages((prev) => ({ ...prev, [slideIndex]: data.base64! }));
     } catch (err) {
       console.error('Image regeneration failed:', err);
       setSlideImages((prev) => ({ ...prev, [slideIndex]: 'failed' }));
@@ -205,8 +229,14 @@ export default function Home() {
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to download PowerPoint.');
+        const errText = await res.text().catch(() => '');
+        let errMsg = 'Failed to download PowerPoint.';
+        try {
+          errMsg = JSON.parse(errText).error || errMsg;
+        } catch {
+          if (errText) errMsg = errText.slice(0, 150);
+        }
+        throw new Error(errMsg);
       }
 
       const blob = await res.blob();
@@ -247,8 +277,14 @@ export default function Home() {
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to download Markdown outline.');
+        const errText = await res.text().catch(() => '');
+        let errMsg = 'Failed to download Markdown outline.';
+        try {
+          errMsg = JSON.parse(errText).error || errMsg;
+        } catch {
+          if (errText) errMsg = errText.slice(0, 150);
+        }
+        throw new Error(errMsg);
       }
 
       const text = await res.text();
