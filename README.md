@@ -113,6 +113,33 @@ IMAGE_PROVIDER_MODEL=dall-e-3
 MAX_FILE_SIZE_MB=10
 ```
 
+#### App Store SSO Configuration
+
+Presentation Maker Pro is launched from the Sayuna AI App Store with a short-lived signed `access` handoff. The application exchanges that handoff once for the `presentation_maker_pro_session` HttpOnly cookie; generation, upload, image, download, and health APIs require that session.
+
+For local development without an App Store launch, set:
+
+```env
+APPSTORE_AUTH_ENABLED=false
+```
+
+Production is fail-closed. Configure these values in the Vercel project environment; never commit the shared secret:
+
+```env
+APPSTORE_AUTH_ENABLED=true
+APPSTORE_SHARED_SECRET=<the same secret configured for the Sayuna App Store issuer>
+APPSTORE_AUDIENCE=presentation-maker
+APPSTORE_ALLOWED_CLOCK_SKEW_SECONDS=20
+APPSTORE_MAX_TOKEN_TTL_SECONDS=900
+APPSTORE_SESSION_MAX_AGE_SECONDS=3600
+APPSTORE_COOKIE_SAMESITE=none
+APPSTORE_COOKIE_SECURE=true
+# Omit this for the default host-only cookie.
+APPSTORE_COOKIE_DOMAIN=
+```
+
+The App Store issuer and this application must use the same `APPSTORE_AUDIENCE` value. Numeric settings are bounded by the server, and a production `APPSTORE_AUTH_ENABLED=false` value is not treated as a bypass. `APPSTORE_COOKIE_DOMAIN` is optional; leave it empty unless the deployment requires an explicit cookie domain.
+
 #### Multi-Provider Setup Examples
 
 <details>
@@ -270,6 +297,15 @@ Automatic keyword classifier identifies curriculum subjects and instructs the AI
    - `IMAGE_PROVIDER_API_KEY`
    - `IMAGE_PROVIDER_MODEL`
    - `MAX_FILE_SIZE_MB` (e.g. `10`)
+   - `APPSTORE_AUTH_ENABLED=true`
+   - `APPSTORE_SHARED_SECRET` (the matching App Store issuer secret)
+   - `APPSTORE_AUDIENCE=presentation-maker`
+   - `APPSTORE_ALLOWED_CLOCK_SKEW_SECONDS=20`
+   - `APPSTORE_MAX_TOKEN_TTL_SECONDS=900`
+   - `APPSTORE_SESSION_MAX_AGE_SECONDS=3600`
+   - `APPSTORE_COOKIE_SAMESITE=none`
+   - `APPSTORE_COOKIE_SECURE=true`
+   - `APPSTORE_COOKIE_DOMAIN` (optional; omit for host-only cookies)
 6. Click **Deploy**.
 
 ### Deploying via Vercel CLI
@@ -288,8 +324,19 @@ vercel env add IMAGE_PROVIDER_BASE_URL
 vercel env add IMAGE_PROVIDER_API_KEY
 vercel env add IMAGE_PROVIDER_MODEL
 vercel env add MAX_FILE_SIZE_MB
+vercel env add APPSTORE_AUTH_ENABLED
+vercel env add APPSTORE_SHARED_SECRET
+vercel env add APPSTORE_AUDIENCE
+vercel env add APPSTORE_ALLOWED_CLOCK_SKEW_SECONDS
+vercel env add APPSTORE_MAX_TOKEN_TTL_SECONDS
+vercel env add APPSTORE_SESSION_MAX_AGE_SECONDS
+vercel env add APPSTORE_COOKIE_SAMESITE
+vercel env add APPSTORE_COOKIE_SECURE
+vercel env add APPSTORE_COOKIE_DOMAIN
 vercel --prod
 ```
+
+After deployment, complete an authenticated browser smoke test by opening the tool from the Sayuna AI App Store and exercising upload, generation, image generation, and both export actions. Local tests, a successful build, or an unauthenticated request to `/api/health` do not prove this production handoff or browser flow.
 
 ### Notes on Serverless Function Timeouts (`maxDuration`)
 
