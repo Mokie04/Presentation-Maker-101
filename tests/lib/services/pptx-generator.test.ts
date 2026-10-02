@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   buildPresentationPptx,
+  createPresentationPptx,
+  DEFAULT_FONT_FACE,
   SHADE_PRIMARY,
   SHADE_SECONDARY,
   SHADE_BACKGROUND,
@@ -43,13 +45,19 @@ describe('pptx-generator', () => {
   const sampleBase64 =
     'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
 
-  it('exports required color palette constants', () => {
+  it('exports required color palette constants and default font face', () => {
+    expect(DEFAULT_FONT_FACE).toBe('Poppins');
     expect(SHADE_PRIMARY).toBe('0284C7');
     expect(SHADE_SECONDARY).toBe('06B6D4');
     expect(SHADE_BACKGROUND).toBe('F0F9FF');
     expect(SHADE_TEXT_DARK).toBe('0F172A');
     expect(FALLBACK_BG).toBe('E0F2FE');
     expect(FALLBACK_BORDER).toBe('7DD3FC');
+  });
+
+  it('configures widescreen layout and includes writer attribution on slide 1', () => {
+    const pptx = createPresentationPptx(samplePresentation);
+    expect(pptx.layout).toBe('LAYOUT_WIDE');
   });
 
   it('generates a valid non-empty Buffer for presentation data', async () => {

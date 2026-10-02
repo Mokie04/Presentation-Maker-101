@@ -8,6 +8,8 @@ export const SHADE_TEXT_DARK = '0F172A';
 export const FALLBACK_BG = 'E0F2FE';
 export const FALLBACK_BORDER = '7DD3FC';
 
+export const DEFAULT_FONT_FACE = 'Poppins';
+
 export function createPresentationPptx(
   presentationData: PresentationData,
   slideImages?: Record<number, string>
@@ -27,49 +29,64 @@ export function createPresentationPptx(
     // Slide 1: Special Hero Title Slide Layout
     if (idx === 0) {
       // Session Badge
-      const partText = (slide.part || 'WELCOME').toUpperCase();
+      const partText = (slide.part || 'TITLE PAGE').toUpperCase();
       slideObj.addText(partText, {
         x: 0.8,
-        y: 1.2,
+        y: 1.0,
         w: '85%',
-        h: 0.4,
-        fontSize: 14,
+        h: 0.45,
+        fontSize: 16,
         color: SHADE_SECONDARY,
         bold: true,
-        fontFace: 'Calibri',
+        fontFace: DEFAULT_FONT_FACE,
       });
 
-      // Big Title
+      // Big Title (minimum 40pt, aim 45pt)
       slideObj.addText(slide.title || 'Lesson Presentation', {
         x: 0.8,
-        y: 1.7,
+        y: 1.55,
         w: '85%',
         h: 1.6,
-        fontSize: 36,
+        fontSize: 45,
         color: SHADE_PRIMARY,
         bold: true,
-        fontFace: 'Century Gothic',
+        fontFace: DEFAULT_FONT_FACE,
+        fit: 'shrink',
       });
 
       // Subtitle / Writers Attribution (Clean un-bulleted card layout)
-      const contentPoints = slide.contentPoints || [];
+      const contentPoints = [...(slide.contentPoints || [])];
+      const writers = presentationData.originalWriters;
+      if (
+        writers &&
+        !contentPoints.some(
+          (pt) =>
+            pt.toLowerCase().includes('writer') ||
+            pt.toLowerCase().includes('author') ||
+            pt.toLowerCase().includes(writers.toLowerCase())
+        )
+      ) {
+        contentPoints.push(`Original Lesson Plan Writers: ${writers}`);
+      }
+
       if (contentPoints.length > 0) {
         const textItems = contentPoints.map((pt, pIdx) => ({
           text: pt + (pIdx < contentPoints.length - 1 ? '\n' : ''),
           options: {
-            fontSize: pIdx === 0 ? 20 : 16,
-            color: pIdx === 0 ? '334155' : '64748B',
-            bold: pIdx === 0,
+            fontSize: pIdx === 0 ? 28 : 22,
+            color: pIdx === 0 ? '1E293B' : '475569',
+            bold: pIdx === 0 || pt.toLowerCase().includes('writer') || pt.toLowerCase().includes('author'),
           },
         }));
 
         slideObj.addText(textItems, {
           x: 0.8,
-          y: 3.5,
+          y: 3.4,
           w: '85%',
-          h: 2.2,
-          fontFace: 'Calibri',
-          lineSpacing: 26,
+          h: 2.6,
+          fontFace: DEFAULT_FONT_FACE,
+          lineSpacing: 34,
+          fit: 'shrink',
         });
       }
 
@@ -82,7 +99,7 @@ export function createPresentationPptx(
         fontSize: 11,
         color: '94A3B8',
         align: 'right',
-        fontFace: 'Calibri',
+        fontFace: DEFAULT_FONT_FACE,
       });
       return;
     }
@@ -92,28 +109,30 @@ export function createPresentationPptx(
     const partText = (slide.part || '').toUpperCase();
     slideObj.addText(partText, {
       x: 0.8,
-      y: 0.5,
+      y: 0.45,
       w: '85%',
       h: 0.35,
-      fontSize: 13,
+      fontSize: 14,
       color: SHADE_SECONDARY,
       bold: true,
-      fontFace: 'Calibri',
+      fontFace: DEFAULT_FONT_FACE,
     });
 
-    // 3. Title
+    // 3. Title (minimum 40pt, aim 45pt)
+    const titleFontSize = slide.title && slide.title.length > 35 ? 40 : 45;
     slideObj.addText(slide.title || '', {
       x: 0.8,
-      y: 0.9,
-      w: '85%',
-      h: 0.95,
-      fontSize: 30,
+      y: 0.85,
+      w: '88%',
+      h: 1.15,
+      fontSize: titleFontSize,
       color: SHADE_PRIMARY,
       bold: true,
-      fontFace: 'Century Gothic',
+      fontFace: DEFAULT_FONT_FACE,
+      fit: 'shrink',
     });
 
-    // 4. Bullet content
+    // 4. Bullet content (minimum 35pt body text)
     const hasVisual = Boolean(slide.visualDescription && slide.visualDescription.trim().length > 0);
     const contentWidth = hasVisual ? '55%' : '88%';
     const contentPoints = slide.contentPoints || [];
@@ -127,19 +146,20 @@ export function createPresentationPptx(
         x: 0.8,
         y: 2.1,
         w: contentWidth,
-        h: 4.5,
-        lineSpacing: 28,
-        fontFace: 'Calibri',
-        fontSize: 18,
+        h: 4.6,
+        lineSpacing: 46,
+        fontFace: DEFAULT_FONT_FACE,
+        fontSize: 35,
         color: SHADE_TEXT_DARK,
+        fit: 'shrink',
       });
     }
 
-    // 5. Visual element (if slide.visualDescription is present)
+    // 5. Visual element (occupies <= 40% of slide space)
     if (hasVisual) {
       const imageData = slideImages ? slideImages[idx] : undefined;
 
-      // Always draw a handsome rounded card background container
+      // Always draw a handsome rounded card background container (w: 33% <= 40% of slide space)
       slideObj.addShape(pptx.ShapeType.roundRect, {
         x: '62%',
         y: 2.1,
@@ -170,12 +190,13 @@ export function createPresentationPptx(
           y: 2.3,
           w: '31%',
           h: 4.1,
-          fontSize: 12,
+          fontSize: 13,
           color: SHADE_PRIMARY,
           italic: true,
           align: 'center',
           valign: 'middle',
-          fontFace: 'Calibri',
+          fontFace: DEFAULT_FONT_FACE,
+          fit: 'shrink',
         });
       }
     }
@@ -189,7 +210,7 @@ export function createPresentationPptx(
       fontSize: 11,
       color: '94A3B8',
       align: 'right',
-      fontFace: 'Calibri',
+      fontFace: DEFAULT_FONT_FACE,
     });
   });
 
