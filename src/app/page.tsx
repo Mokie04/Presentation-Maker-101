@@ -115,7 +115,7 @@ export default function Home() {
       } catch {
         if (res.status === 504 || resText.includes('FUNCTION_INVOCATION_TIMEOUT') || resText.toLowerCase().includes('timeout')) {
           throw new Error(
-            'The AI request timed out (504). Generating 25+ comprehensive slides can take longer than allowed when using slower or free-tier models. Please try again or switch TEXT_PROVIDER_MODEL to a faster model on xKiro (such as openai/gpt-4o-mini or deepseek/deepseek-chat).'
+            'The presentation generation timed out. Generating 25+ comprehensive slides can take longer than the server limit. Please try again with a focused section or retry shortly.'
           );
         }
         throw new Error(resText.slice(0, 150) || `Server error (${res.status})`);
