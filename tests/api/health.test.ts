@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { checkHealth } from '@/lib/health';
 import { GET } from '@/app/api/health/route';
 import * as textProvider from '@/lib/providers/text-provider';
+import { NextRequest } from 'next/server';
 
 describe('Health Check API', () => {
   it('returns ok for both providers when text provider call succeeds and image provider is configured', async () => {
@@ -54,11 +55,10 @@ describe('Health Check API', () => {
       },
     } as any);
 
-    const response = await GET();
+    const response = await GET(new NextRequest('http://localhost:3000/api/health'));
     expect(response.status).toBe(200);
     const body = await response.json();
     expect(body).toHaveProperty('textProvider');
     expect(body).toHaveProperty('imageProvider');
   });
 });
-

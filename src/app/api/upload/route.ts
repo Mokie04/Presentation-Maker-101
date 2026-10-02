@@ -2,12 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import { env } from '@/lib/env';
 import { parseDocument } from '@/lib/parsers/document-parser';
+import { requireSession } from '@/lib/sessionAuth';
 
 export const dynamic = 'force-dynamic';
 
 const ALLOWED_EXTENSIONS = ['.docx', '.pdf', '.txt', '.md'];
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const auth = requireSession(request);
+  if (!auth.ok) return auth.response;
+
   try {
     let formData: FormData;
     try {

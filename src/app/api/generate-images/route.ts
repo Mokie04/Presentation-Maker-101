@@ -3,11 +3,15 @@ import {
   processBatchImages,
   type SlideImageBatchItem,
 } from '@/lib/services/image-batch';
+import { requireSession } from '@/lib/sessionAuth';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const auth = requireSession(request);
+  if (!auth.ok) return auth.response;
+
   try {
     let body: Record<string, unknown>;
     try {

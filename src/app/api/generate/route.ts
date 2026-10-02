@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateSlideContent } from '@/lib/providers/text-provider';
 import { detectSubject } from '@/lib/utils/subject-detector';
+import { requireSession } from '@/lib/sessionAuth';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -8,6 +9,9 @@ export const maxDuration = 300;
 const VALID_SESSIONS = ['Session 1', 'Session 2', 'Session 3', 'Session 4', 'Session 5'];
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const auth = requireSession(request);
+  if (!auth.ok) return auth.response;
+
   try {
     let body: Record<string, unknown>;
     try {

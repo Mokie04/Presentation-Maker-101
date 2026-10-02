@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateSlideImage } from '@/lib/providers/image-provider';
+import { requireSession } from '@/lib/sessionAuth';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 120;
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const auth = requireSession(request);
+  if (!auth.ok) return auth.response;
+
   let slideIndex: number = 0;
   try {
     let body: Record<string, unknown>;

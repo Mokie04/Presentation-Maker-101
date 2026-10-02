@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { presentationDataSchema } from '@/lib/providers/text-provider';
 import { buildPresentationMarkdown } from '@/lib/services/markdown-generator';
+import { requireSession } from '@/lib/sessionAuth';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const auth = requireSession(request);
+  if (!auth.ok) return auth.response;
+
   try {
     let body: Record<string, unknown>;
     try {
