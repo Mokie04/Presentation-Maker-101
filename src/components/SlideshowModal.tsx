@@ -196,7 +196,7 @@ export function SlideshowModal({
 
           {/* Slide Bottom: Writers & Counter */}
           <div className="flex items-center justify-between text-xs sm:text-sm text-slate-500 font-semibold pt-2 border-t border-emerald-100">
-            <span>{presentationData.originalWriters || 'DepEd Tambayan'}</span>
+            <span>{presentationData.originalWriters || 'JOHN M. NAVARRO'}</span>
             <span className="text-[#047857] font-bold">
               Slide {currentIndex + 1} of {totalSlides}
             </span>

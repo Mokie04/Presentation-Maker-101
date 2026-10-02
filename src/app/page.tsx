@@ -215,7 +215,7 @@ export default function Home() {
       a.href = url;
 
       const disposition = res.headers.get('Content-Disposition');
-      let filename = `${presentationData.topic.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${selectedSession.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_DepEdTambayan.pptx`;
+      let filename = `${presentationData.topic.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${selectedSession.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_SayunaAI.pptx`;
       if (disposition && disposition.includes('filename=')) {
         const match = disposition.match(/filename="?([^"]+)"?/);
         if (match?.[1]) filename = match[1];
@@ -327,7 +327,7 @@ export default function Home() {
 
                 <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500">
                   <UserCheck className="w-4 h-4 text-emerald-600" />
-                  <span>Writers: {presentationData.originalWriters || 'DepEd Tambayan'}</span>
+                  <span>Writers: {presentationData.originalWriters || 'JOHN M. NAVARRO'}</span>
                 </div>
               </div>
 

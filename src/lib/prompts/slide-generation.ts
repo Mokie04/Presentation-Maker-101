@@ -47,7 +47,7 @@ Generate detailed, sequential slides representing the content exhaustively (aimi
 Return your output STRICTLY as a JSON object with this structure:
 {
   "subject": "${detectedSubject}",
-  "originalWriters": "Specify writers extracted from the plan, or 'DEPED TAMBAYAN Instructors' if not found",
+  "originalWriters": "Specify writers extracted from the plan, or 'JOHN M. NAVARRO' if not found",
   "topic": "Main Lesson Topic",
   "slides": [
     {

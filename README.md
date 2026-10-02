@@ -1,17 +1,17 @@
-# Presentation Maker 101
+# SAYUNA AI PRESENTATION MAKER
 
-> **Empowering Philippine DepEd Teachers with Automated, Pedagogically-Aligned PowerPoint Presentations.**
+> **Empowering Teachers with Automated, Pedagogically-Aligned PowerPoint Presentations.**
 > Built with Next.js 14 App Router, TypeScript, Tailwind CSS, and Server-Side Dual AI Providers.
 
 ---
 
 ## 1. Project Overview & Architecture
 
-**Presentation Maker 101** is a high-performance Next.js 14 web application designed specifically for Philippine Department of Education (DepEd) educators. It transforms Daily Lesson Logs (DLL) and lesson plan documents into comprehensive, classroom-ready PowerPoint (`.pptx`) presentations and Markdown (`.md`) curriculum outlines in seconds.
+**SAYUNA AI PRESENTATION MAKER** is a high-performance Next.js 14 web application designed specifically for educators. It transforms Daily Lesson Logs (DLL) and lesson plan documents into comprehensive, classroom-ready PowerPoint (`.pptx`) presentations and Markdown (`.md`) curriculum outlines in seconds.
 
-### Architectural Evolution: v1 vs. Presentation Maker 101
+### Architectural Evolution: Legacy vs. SAYUNA AI PRESENTATION MAKER
 
-| Dimension | DepEd Tambayan v1 (Legacy) | Presentation Maker 101 (Current) |
+| Dimension | Legacy (Client-Side) | SAYUNA AI PRESENTATION MAKER |
 | :--- | :--- | :--- |
 | **Execution Model** | Client-side single-file HTML / JS | Next.js 14 App Router (Server-side architecture) |
 | **API Key Security** | Teachers pasted raw API keys stored in `localStorage` | **100% Server-side credential isolation** — zero user keys required |
@@ -350,7 +350,6 @@ The project adheres to strict Test-Driven Development (Red-Green-Refactor) with 
 
 ## 6. Credits & License
 
-- **Developer**: Richard R. Raqueño
-- **Branding & Community**: DepEd Tambayan
-- **Companion Tool**: [ILAW Lesson Plan Generator](https://www.depedtambayanph.net/2026/06/ilaw-lesson-plan-generator.html)
+- **Developer**: JOHN M. NAVARRO
+- **Product**: SAYUNA AI PRESENTATION MAKER
 - **License**: MIT

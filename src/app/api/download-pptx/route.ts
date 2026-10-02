@@ -33,7 +33,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const sessionString = typeof session === 'string' && session.trim().length > 0 ? session.trim() : 'session';
     const sanitizedTopic = (validatedData.topic || 'presentation').replace(/[^a-z0-9]/gi, '_').toLowerCase();
     const sanitizedSession = sessionString.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-    const sanitizedFileName = `${sanitizedTopic}_${sanitizedSession}_DepEdTambayan.pptx`;
+    const sanitizedFileName = `${sanitizedTopic}_${sanitizedSession}_SayunaAI.pptx`;
 
     const pptxBuffer = await buildPresentationPptx(
       validatedData,

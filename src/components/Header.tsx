@@ -38,7 +38,7 @@ export function Header() {
                 <Sparkles className="w-5 h-5 text-emerald-300 animate-pulse" />
               </span>
               <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-white uppercase drop-shadow-sm">
-                DEPED TAMBAYAN POWERPOINT GENERATOR
+                SAYUNA AI PRESENTATION MAKER
               </h1>
             </div>
             <p className="text-sm sm:text-base text-emerald-100 font-medium pl-9">

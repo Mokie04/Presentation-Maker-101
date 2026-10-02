@@ -41,7 +41,7 @@ describe('POST /api/download-pptx', () => {
       'application/vnd.openxmlformats-officedocument.presentationml.presentation'
     );
     expect(res.headers.get('Content-Disposition')).toBe(
-      'attachment; filename="water_cycle___weather_session_1_DepEdTambayan.pptx"'
+      'attachment; filename="water_cycle___weather_session_1_SayunaAI.pptx"'
     );
 
     const arrayBuffer = await res.arrayBuffer();
