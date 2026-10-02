@@ -109,11 +109,11 @@ export function UploadSection({
 
   return (
     <section className="w-full max-w-4xl mx-auto my-8 px-4">
-      <div className="bg-white rounded-2xl shadow-xl border border-emerald-100/80 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-xl border border-sky-100/80 overflow-hidden">
         {/* Card Header */}
-        <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50/50 px-6 py-4 border-b border-emerald-100 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-sky-50 via-cyan-50 to-sky-50/50 px-6 py-4 border-b border-sky-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="p-2 bg-emerald-600 text-white rounded-xl shadow-sm">
+            <span className="p-2 bg-sky-600 text-white rounded-xl shadow-sm">
               <UploadCloud className="w-5 h-5" />
             </span>
             <div>
@@ -121,7 +121,7 @@ export function UploadSection({
                 Lesson Plan Document Processing
               </h2>
               <p className="text-xs text-slate-500 font-medium">
-                Supports DepEd Daily Lesson Logs (DLL) in .docx, .pdf, .txt, or .md
+                Supports Daily Lesson Logs (DLL) in .docx, .pdf, .txt, or .md
               </p>
             </div>
           </div>
@@ -129,7 +129,7 @@ export function UploadSection({
           <button
             type="button"
             onClick={() => setShowManual(!showManual)}
-            className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-100/60 hover:bg-emerald-200/60 px-3 py-1.5 rounded-lg border border-emerald-300/60 transition-colors flex items-center gap-1.5"
+            className="text-xs font-semibold text-sky-700 hover:text-sky-800 bg-sky-100/60 hover:bg-sky-200/60 px-3 py-1.5 rounded-lg border border-sky-300/60 transition-colors flex items-center gap-1.5"
           >
             <Clipboard className="w-3.5 h-3.5" />
             <span>{showManual ? 'Hide Manual Paste' : 'Paste Lesson Plan Text'}</span>
@@ -147,8 +147,8 @@ export function UploadSection({
               onClick={() => fileInputRef.current?.click()}
               className={`relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 ${
                 isDragging
-                  ? 'border-emerald-500 bg-emerald-50/80 scale-[0.99]'
-                  : 'border-slate-300 hover:border-emerald-400 bg-slate-50/50 hover:bg-emerald-50/20'
+                  ? 'border-sky-500 bg-sky-50/80 scale-[0.99]'
+                  : 'border-slate-300 hover:border-sky-400 bg-slate-50/50 hover:bg-sky-50/20'
               }`}
             >
               <input
@@ -161,14 +161,14 @@ export function UploadSection({
 
               {isUploading ? (
                 <div className="flex flex-col items-center gap-2 py-4">
-                  <Loader2 className="w-10 h-10 text-emerald-600 animate-spin" />
-                  <p className="text-sm font-semibold text-emerald-800">
+                  <Loader2 className="w-10 h-10 text-sky-600 animate-spin" />
+                  <p className="text-sm font-semibold text-sky-800">
                     Extracting Lesson Plan Content...
                   </p>
                 </div>
               ) : (
                 <>
-                  <div className="w-14 h-14 rounded-full bg-emerald-100/80 text-emerald-700 flex items-center justify-center shadow-inner">
+                  <div className="w-14 h-14 rounded-full bg-sky-100/80 text-sky-700 flex items-center justify-center shadow-inner">
                     <UploadCloud className="w-7 h-7" />
                   </div>
                   <div>
@@ -197,26 +197,26 @@ export function UploadSection({
                 onChange={handleManualChange}
                 placeholder="Paste raw lesson plan content here (objectives, parts, activities, questions)..."
                 rows={7}
-                className="w-full font-mono text-xs sm:text-sm p-3.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 bg-slate-50/30 text-slate-800 placeholder-slate-400 transition-all outline-none resize-y"
+                className="w-full font-mono text-xs sm:text-sm p-3.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 bg-slate-50/30 text-slate-800 placeholder-slate-400 transition-all outline-none resize-y"
               />
             </div>
           )}
 
           {/* Feedback & File Pill */}
           {extractedText && fileName && (
-            <div className="p-3.5 bg-emerald-50 border border-emerald-200/80 rounded-xl flex items-center justify-between animate-fadeIn">
+            <div className="p-3.5 bg-sky-50 border border-sky-200/80 rounded-xl flex items-center justify-between animate-fadeIn">
               <div className="flex items-center gap-2.5 overflow-hidden">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-sky-600 flex-shrink-0" />
                 <div className="truncate">
-                  <p className="text-xs sm:text-sm font-bold text-emerald-950 truncate">
+                  <p className="text-xs sm:text-sm font-bold text-sky-950 truncate">
                     {fileName}
                   </p>
-                  <p className="text-xs text-emerald-700">
+                  <p className="text-xs text-sky-700">
                     {extractedText.length.toLocaleString()} characters extracted and ready
                   </p>
                 </div>
               </div>
-              <span className="text-[11px] font-bold uppercase px-2.5 py-1 bg-emerald-200/70 text-emerald-800 rounded-full flex-shrink-0">
+              <span className="text-[11px] font-bold uppercase px-2.5 py-1 bg-sky-200/70 text-sky-800 rounded-full flex-shrink-0">
                 Ready
               </span>
             </div>
@@ -245,7 +245,7 @@ export function UploadSection({
                   aria-label="Select Session"
                   value={selectedSession}
                   onChange={(e) => onSessionChange(e.target.value)}
-                  className="w-full appearance-none bg-white border border-slate-300 font-medium text-slate-800 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer shadow-sm transition-all"
+                  className="w-full appearance-none bg-white border border-slate-300 font-medium text-slate-800 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 cursor-pointer shadow-sm transition-all"
                 >
                   <option value="">-- Choose Curriculum Session --</option>
                   <option value="Session 1">Session 1</option>
@@ -265,7 +265,7 @@ export function UploadSection({
                 onClick={() => onGenerate(extractedText, selectedSession)}
                 className={`w-full py-3 px-6 rounded-xl font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 shadow-md transition-all duration-200 ${
                   canGenerate
-                    ? 'bg-gradient-to-r from-emerald-600 via-emerald-700 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white cursor-pointer hover:shadow-lg active:scale-[0.99]'
+                    ? 'bg-gradient-to-r from-sky-600 via-sky-500 to-cyan-600 hover:from-sky-700 hover:to-cyan-700 text-white cursor-pointer hover:shadow-lg active:scale-[0.99]'
                     : 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
                 }`}
               >
@@ -276,7 +276,7 @@ export function UploadSection({
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4 text-emerald-200" />
+                    <Sparkles className="w-4 h-4 text-sky-200" />
                     <span>Generate Slides</span>
                   </>
                 )}
@@ -287,9 +287,9 @@ export function UploadSection({
           {/* Loading Stage Indicator */}
           {isLoading && loadingStage && (
             <div className="pt-2">
-              <div className="p-4 bg-emerald-50/90 border border-emerald-200 rounded-xl flex items-center gap-3 animate-pulse">
-                <Loader2 className="w-5 h-5 text-emerald-700 animate-spin flex-shrink-0" />
-                <p className="text-xs sm:text-sm font-semibold text-emerald-900">
+              <div className="p-4 bg-sky-50/90 border border-sky-200 rounded-xl flex items-center gap-3 animate-pulse">
+                <Loader2 className="w-5 h-5 text-sky-700 animate-spin flex-shrink-0" />
+                <p className="text-xs sm:text-sm font-semibold text-sky-900">
                   {loadingStage}
                 </p>
               </div>

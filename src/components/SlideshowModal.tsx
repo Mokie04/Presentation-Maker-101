@@ -113,7 +113,7 @@ export function SlideshowModal({
       {/* Top Bar */}
       <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-6 py-3.5 flex items-center justify-between text-white z-10">
         <div className="flex items-center gap-3">
-          <span className="px-2.5 py-1 text-xs font-black uppercase tracking-wider rounded-md bg-emerald-600 text-white shadow-sm">
+          <span className="px-2.5 py-1 text-xs font-black uppercase tracking-wider rounded-md bg-sky-600 text-white shadow-sm">
             {currentSlide.part || 'SLIDE'}
           </span>
           <span className="text-sm font-semibold text-slate-300 truncate max-w-xs sm:max-w-md">
@@ -139,13 +139,13 @@ export function SlideshowModal({
 
       {/* Center Slide Viewport */}
       <div className="flex-1 flex items-center justify-center p-4 sm:p-8 overflow-y-auto">
-        <div className="w-full max-w-6xl aspect-[16/9] bg-[#F0FDF4] rounded-2xl shadow-2xl border-4 border-emerald-600/20 p-6 sm:p-12 flex flex-col justify-between overflow-hidden relative">
+        <div className="w-full max-w-6xl aspect-[16/9] bg-[#F0F9FF] rounded-2xl shadow-2xl border-4 border-sky-600/20 p-6 sm:p-12 flex flex-col justify-between overflow-hidden relative">
           {/* Slide Header: Part & Title */}
           <div className="space-y-2">
-            <span className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#10B981]">
+            <span className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#0284C7]">
               {currentSlide.part}
             </span>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#047857] tracking-tight leading-tight">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#0369A1] tracking-tight leading-tight">
               {currentSlide.title}
             </h2>
           </div>
@@ -160,8 +160,8 @@ export function SlideshowModal({
             >
               {(currentSlide.contentPoints || []).map((point, pIdx) => (
                 <div key={pIdx} className="flex items-start gap-3 sm:gap-4">
-                  <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#047857] mt-2 sm:mt-2.5 flex-shrink-0 shadow-xs" />
-                  <p className="text-base sm:text-xl md:text-2xl font-bold text-[#1E293B] leading-snug">
+                  <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#0284C7] mt-2 sm:mt-2.5 flex-shrink-0 shadow-xs" />
+                  <p className="text-base sm:text-xl md:text-2xl font-bold text-[#0F172A] leading-snug">
                     {point}
                   </p>
                 </div>
@@ -172,7 +172,7 @@ export function SlideshowModal({
             {currentSlide.visualDescription && (
               <div className="md:col-span-5 h-full flex items-center justify-center">
                 {hasValidImage ? (
-                  <div className="rounded-xl overflow-hidden shadow-lg border-2 border-emerald-300 w-full aspect-video bg-black flex items-center justify-center">
+                  <div className="rounded-xl overflow-hidden shadow-lg border-2 border-sky-300 w-full aspect-video bg-black flex items-center justify-center">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={imageSrc}
@@ -181,11 +181,11 @@ export function SlideshowModal({
                     />
                   </div>
                 ) : (
-                  <div className="w-full aspect-video bg-[#ECFDF5] border-2 border-dashed border-[#A7F3D0] rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-inner">
-                    <span className="text-[11px] font-black uppercase tracking-wider text-[#047857] mb-1">
+                  <div className="w-full aspect-video bg-[#E0F2FE] border-2 border-dashed border-[#7DD3FC] rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-inner">
+                    <span className="text-[11px] font-black uppercase tracking-wider text-[#0369A1] mb-1">
                       [PHILIPPINES CLASSROOM VISUAL DESIGN]
                     </span>
-                    <p className="text-xs sm:text-sm text-emerald-800/80 italic line-clamp-4">
+                    <p className="text-xs sm:text-sm text-sky-900/80 italic line-clamp-4">
                       &ldquo;{currentSlide.visualDescription}&rdquo;
                     </p>
                   </div>
@@ -195,9 +195,9 @@ export function SlideshowModal({
           </div>
 
           {/* Slide Bottom: Writers & Counter */}
-          <div className="flex items-center justify-between text-xs sm:text-sm text-slate-500 font-semibold pt-2 border-t border-emerald-100">
+          <div className="flex items-center justify-between text-xs sm:text-sm text-slate-500 font-semibold pt-2 border-t border-sky-100">
             <span>{presentationData.originalWriters || 'JOHN M. NAVARRO'}</span>
-            <span className="text-[#047857] font-bold">
+            <span className="text-[#0284C7] font-bold">
               Slide {currentIndex + 1} of {totalSlides}
             </span>
           </div>
@@ -231,7 +231,7 @@ export function SlideshowModal({
               aria-label="Jump to slide"
               value={currentIndex}
               onChange={(e) => setCurrentIndex(Number(e.target.value))}
-              className="appearance-none bg-slate-800 border border-slate-700 text-xs sm:text-sm font-bold text-slate-200 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer shadow-sm"
+              className="appearance-none bg-slate-800 border border-slate-700 text-xs sm:text-sm font-bold text-slate-200 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer shadow-sm"
             >
               {slides.map((s, idx) => (
                 <option key={idx} value={idx}>
@@ -249,7 +249,7 @@ export function SlideshowModal({
             className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all ${
               currentIndex === totalSlides - 1
                 ? 'bg-slate-800 text-slate-600 cursor-not-allowed border border-slate-800'
-                : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md active:scale-95'
+                : 'bg-sky-600 hover:bg-sky-500 text-white shadow-md active:scale-95'
             }`}
           >
             <span>Next</span>

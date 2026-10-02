@@ -286,7 +286,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 selection:bg-emerald-200 selection:text-emerald-900">
+    <div className="min-h-screen flex flex-col bg-slate-50 selection:bg-sky-200 selection:text-sky-950">
       <Header />
 
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -307,13 +307,13 @@ export default function Home() {
           /* Presentation Workspace View */
           <div className="space-y-6">
             {/* Header Control Strip */}
-            <div className="bg-white rounded-2xl shadow-md border border-emerald-100 p-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            <div className="bg-white rounded-2xl shadow-md border border-sky-100 p-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div className="space-y-2">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-3 py-1 bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs">
+                  <span className="px-3 py-1 bg-sky-600 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs">
                     {selectedSession}
                   </span>
-                  <span className="px-3 py-1 bg-emerald-100 text-emerald-800 font-bold text-xs uppercase tracking-wider rounded-lg">
+                  <span className="px-3 py-1 bg-sky-100 text-sky-800 font-bold text-xs uppercase tracking-wider rounded-lg">
                     {presentationData.subject}
                   </span>
                   <span className="text-xs text-slate-500 font-semibold">
@@ -326,7 +326,7 @@ export default function Home() {
                 </h2>
 
                 <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500">
-                  <UserCheck className="w-4 h-4 text-emerald-600" />
+                  <UserCheck className="w-4 h-4 text-sky-600" />
                   <span>Writers: {presentationData.originalWriters || 'JOHN M. NAVARRO'}</span>
                 </div>
               </div>
@@ -337,7 +337,7 @@ export default function Home() {
                   type="button"
                   disabled={isDownloadingPptx}
                   onClick={handleDownloadPptx}
-                  className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
+                  className="px-4 py-2.5 bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
                 >
                   <FileDown className="w-4 h-4" />
                   <span>{isDownloadingPptx ? 'Compiling PPTX...' : 'Download PowerPoint'}</span>
@@ -359,7 +359,7 @@ export default function Home() {
                     setCurrentSlideIndex(0);
                     setIsSlideShowActive(true);
                   }}
-                  className="px-4 py-2.5 bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all"
+                  className="px-4 py-2.5 bg-cyan-600 hover:bg-cyan-700 active:bg-cyan-800 text-white rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all"
                 >
                   <Play className="w-4 h-4" />
                   <span>Preview</span>
@@ -384,7 +384,7 @@ export default function Home() {
                   onClick={() => setIsEditing(!isEditing)}
                   className={`px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all ${
                     isEditing
-                      ? 'bg-emerald-600 text-white shadow-sm'
+                      ? 'bg-sky-600 text-white shadow-sm'
                       : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50'
                   }`}
                 >
@@ -406,7 +406,7 @@ export default function Home() {
                   onClick={handleAddSlide}
                   className="px-3.5 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 transition-all"
                 >
-                  <Plus className="w-3.5 h-3.5 text-emerald-600" />
+                  <Plus className="w-3.5 h-3.5 text-sky-600" />
                   <span>+ Add Slide</span>
                 </button>
               </div>

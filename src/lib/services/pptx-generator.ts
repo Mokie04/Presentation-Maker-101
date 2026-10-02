@@ -1,12 +1,12 @@
 import PptxGenJS from 'pptxgenjs';
 import type { PresentationData } from '@/types/presentation';
 
-export const SHADE_PRIMARY = '047857';
-export const SHADE_SECONDARY = '10B981';
-export const SHADE_BACKGROUND = 'F0FDF4';
-export const SHADE_TEXT_DARK = '1E293B';
-export const FALLBACK_BG = 'ECFDF5';
-export const FALLBACK_BORDER = 'A7F3D0';
+export const SHADE_PRIMARY = '0284C7';
+export const SHADE_SECONDARY = '06B6D4';
+export const SHADE_BACKGROUND = 'F0F9FF';
+export const SHADE_TEXT_DARK = '0F172A';
+export const FALLBACK_BG = 'E0F2FE';
+export const FALLBACK_BORDER = '7DD3FC';
 
 export async function buildPresentationPptx(
   presentationData: PresentationData,
