@@ -34,18 +34,26 @@ export async function checkHealth(options?: HealthCheckOptions): Promise<HealthC
     errors.push(`Text Provider: ${message}`);
   }
 
-  // 2. Image Provider check: verify client can be instantiated and config is valid
+  // 2. Image Provider check: verify client or pexels config is valid
   try {
-    const imageClient = options?.imageClient ?? getImageProviderClient();
-    if (
-      !imageClient ||
-      !env.imageProvider.baseUrl ||
-      !env.imageProvider.apiKey ||
-      !env.imageProvider.model
-    ) {
-      throw new Error('Image provider client configuration is missing or incomplete.');
+    if (env.imageProvider.source === 'pexels') {
+      if (!env.pexels?.apiKey) {
+        throw new Error('Pexels API key is not configured.');
+      }
+      imageStatus = 'ok';
+    } else {
+      const imageClient = options?.imageClient ?? getImageProviderClient();
+      if (
+        !imageClient ||
+        !env.imageProvider.baseUrl ||
+        !env.imageProvider.apiKey ||
+        env.imageProvider.apiKey === 'not-configured' ||
+        !env.imageProvider.model
+      ) {
+        throw new Error('Image provider client configuration is missing or incomplete.');
+      }
+      imageStatus = 'ok';
     }
-    imageStatus = 'ok';
   } catch (err: unknown) {
     imageStatus = 'error';
     const message = err instanceof Error ? err.message : String(err);
