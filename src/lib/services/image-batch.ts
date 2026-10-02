@@ -4,6 +4,7 @@ export interface SlideImageBatchItem {
   visualDescription: string;
   slideIndex: number;
   part: string;
+  title?: string;
 }
 
 export function shouldGenerateImageForPart(part: string): boolean {
@@ -24,7 +25,7 @@ function sleep(ms: number): Promise<void> {
 
 export async function processBatchImages(
   slides: SlideImageBatchItem[],
-  options?: { delayMs?: number }
+  options?: { delayMs?: number; source?: 'ai' | 'pexels' | 'auto' }
 ): Promise<Record<number, string>> {
   const images: Record<number, string> = {};
   const delayMs = options?.delayMs ?? 800;
@@ -36,7 +37,13 @@ export async function processBatchImages(
   for (let i = 0; i < eligibleSlides.length; i++) {
     const slide = eligibleSlides[i];
     try {
-      const base64 = await generateSlideImage(slide.visualDescription);
+      const itemOptions: { source?: 'ai' | 'pexels' | 'auto'; title?: string } = {};
+      if (options?.source) itemOptions.source = options.source;
+      if (slide.title) itemOptions.title = slide.title;
+
+      const base64 = Object.keys(itemOptions).length > 0
+        ? await generateSlideImage(slide.visualDescription, itemOptions)
+        : await generateSlideImage(slide.visualDescription);
       images[slide.slideIndex] = base64;
     } catch {
       images[slide.slideIndex] = 'failed';

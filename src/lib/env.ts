@@ -7,6 +7,8 @@ const envSchema = z.object({
   IMAGE_PROVIDER_BASE_URL: z.string().url('IMAGE_PROVIDER_BASE_URL must be a valid URL'),
   IMAGE_PROVIDER_API_KEY: z.string().min(1, 'IMAGE_PROVIDER_API_KEY is required'),
   IMAGE_PROVIDER_MODEL: z.string().min(1, 'IMAGE_PROVIDER_MODEL is required'),
+  PEXELS_API_KEY: z.string().optional(),
+  IMAGE_SOURCE: z.enum(['ai', 'pexels', 'auto']).default('auto'),
   MAX_FILE_SIZE_MB: z.coerce.number().positive().default(10),
 });
 
@@ -22,6 +24,10 @@ export interface AppConfig {
     baseUrl: string;
     apiKey: string;
     model: string;
+    source: 'ai' | 'pexels' | 'auto';
+  };
+  pexels?: {
+    apiKey?: string;
   };
   app: {
     maxFileSizeMb: number;
@@ -50,6 +56,10 @@ export function validateEnv(rawEnv: Record<string, string | undefined> = process
       baseUrl: data.IMAGE_PROVIDER_BASE_URL,
       apiKey: data.IMAGE_PROVIDER_API_KEY,
       model: data.IMAGE_PROVIDER_MODEL,
+      source: data.IMAGE_SOURCE,
+    },
+    pexels: {
+      apiKey: data.PEXELS_API_KEY,
     },
     app: {
       maxFileSizeMb: data.MAX_FILE_SIZE_MB,

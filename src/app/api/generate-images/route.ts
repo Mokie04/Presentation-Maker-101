@@ -19,7 +19,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const { slides, delayMs } = body || {};
+    const { slides, delayMs, source } = body || {};
 
     if (!Array.isArray(slides)) {
       return NextResponse.json(
@@ -33,6 +33,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const images = await processBatchImages(slides as SlideImageBatchItem[], {
       delayMs: parsedDelay,
+      source: (source as 'ai' | 'pexels' | 'auto') || undefined,
     });
 
     return NextResponse.json({ images }, { status: 200 });

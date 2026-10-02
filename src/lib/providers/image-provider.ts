@@ -1,6 +1,7 @@
 import OpenAI from 'openai';
 import { env } from '@/lib/env';
 import { IMAGE_PROMPT_PREFIX } from '@/lib/prompts/slide-generation';
+import { fetchPexelsImageBase64 } from '@/lib/providers/pexels-provider';
 
 export function createImageProviderClient(options?: {
   baseURL?: string;
@@ -25,6 +26,9 @@ export interface GenerateImageOptions {
   client?: OpenAI;
   maxRetries?: number;
   backoffMs?: number;
+  source?: 'ai' | 'pexels' | 'auto';
+  title?: string;
+  pexelsApiKey?: string;
 }
 
 const DEFAULT_RETRY_COUNT = 3;
@@ -38,6 +42,17 @@ export async function generateSlideImage(
   visualDescription: string,
   options?: GenerateImageOptions
 ): Promise<string> {
+  const chosenSource = options?.source ?? env.imageProvider.source ?? 'auto';
+  const hasPexelsKey = Boolean(options?.pexelsApiKey || env.pexels?.apiKey);
+
+  // If source is explicitly set to Pexels, bypass AI and fetch from Pexels directly
+  if (chosenSource === 'pexels') {
+    return fetchPexelsImageBase64(visualDescription, {
+      apiKey: options?.pexelsApiKey,
+      title: options?.title,
+    });
+  }
+
   const client = options?.client ?? getImageProviderClient();
   const maxRetries = options?.maxRetries ?? DEFAULT_RETRY_COUNT;
   const backoffMs = options?.backoffMs ?? DEFAULT_BACKOFF_MS;
@@ -53,7 +68,6 @@ export async function generateSlideImage(
       const response = await client.images.generate({
         model: env.imageProvider.model,
         prompt,
-        // Next/OpenAI types allow string sizes
         size: '1024x576' as '1024x1024',
         quality: 'standard',
         response_format: 'b64_json',
@@ -85,6 +99,18 @@ export async function generateSlideImage(
       if (attempt < maxRetries) {
         await sleep(backoffMs);
       }
+    }
+  }
+
+  // If AI generation failed in 'auto' mode and Pexels is configured, fall back to Pexels!
+  if (chosenSource === 'auto' && hasPexelsKey) {
+    try {
+      return await fetchPexelsImageBase64(visualDescription, {
+        apiKey: options?.pexelsApiKey,
+        title: options?.title,
+      });
+    } catch {
+      // If Pexels also fails, throw the original AI error
     }
   }
 

@@ -17,7 +17,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const { prompt, slideIndex: rawIndex } = body || {};
+    const { prompt, slideIndex: rawIndex, source, title } = body || {};
 
     if (typeof rawIndex === 'number') {
       slideIndex = rawIndex;
@@ -30,7 +30,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const base64 = await generateSlideImage(prompt.trim());
+    const imgOptions: { source?: 'ai' | 'pexels' | 'auto'; title?: string } = {};
+    if (source) imgOptions.source = source as 'ai' | 'pexels' | 'auto';
+    if (typeof title === 'string') imgOptions.title = title;
+
+    const base64 = Object.keys(imgOptions).length > 0
+      ? await generateSlideImage(prompt.trim(), imgOptions)
+      : await generateSlideImage(prompt.trim());
 
     return NextResponse.json(
       {

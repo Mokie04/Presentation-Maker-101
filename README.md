@@ -54,10 +54,12 @@ To give schools, institutions, and developers ultimate freedom and cost optimiza
    - Analyzes curriculum content against strict instructional design directives.
    - Enforces structured JSON output matching `PresentationData`.
    - Automatic 5-retry exponential backoff (`1s, 2s, 4s, 8s, 16s`).
-2. **Image AI Provider (`/v1/images/generations`)**:
-   - Generates educational cartoon vector illustrations set in Philippine elementary classrooms.
-   - Outputs 16:9 widescreen visuals (`1024x576`) encoded directly into base64.
-   - Automatic 3-retry backoff (`2s`).
+2. **Image Provider (`/v1/images/generations` or Pexels API)**:
+   - **AI Mode**: Generates educational illustrations set in Philippine elementary classrooms.
+   - **Pexels Mode**: Free curated real-world stock photos via Pexels API (with intelligent stop-word removal and keyword extraction).
+   - **Auto Mode (Default)**: Attempts AI illustration first; automatically falls back to Pexels stock photos if AI image generation fails, times out, or has no quota.
+   - Outputs 16:9 widescreen visuals encoded directly into base64.
+   - Automatic retries and fallback protection.
 
 ---
 
@@ -341,9 +343,10 @@ The project adheres to strict Test-Driven Development (Red-Green-Refactor) with 
  ✓ tests/lib/services/markdown-generator.test.ts (2 tests)
  ✓ tests/api/generate-image.test.ts (3 tests)
  ✓ tests/prompts/slide-generation.test.ts (3 tests)
+ ✓ tests/lib/providers/pexels-provider.test.ts (8 tests)
 
- Test Files  18 passed (18)
-      Tests  67 passed (67)
+ Test Files  19 passed (19)
+      Tests  75 passed (75)
 ```
 
 ---
