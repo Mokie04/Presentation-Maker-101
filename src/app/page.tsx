@@ -16,6 +16,7 @@ import { Footer } from '@/components/Footer';
 import { UploadSection } from '@/components/UploadSection';
 import { SlideCard } from '@/components/SlideCard';
 import { SlideshowModal } from '@/components/SlideshowModal';
+import { SessionGate } from '@/components/SessionGate';
 import type { PresentationData, SlideData } from '@/types/presentation';
 
 async function compressImageForExport(base64: string): Promise<string> {
@@ -59,7 +60,7 @@ async function compressImageForExport(base64: string): Promise<string> {
   });
 }
 
-export default function Home() {
+function PresentationWorkspace() {
   const [extractedText, setExtractedText] = useState('');
   const [fileName, setFileName] = useState('');
   const [selectedSession, setSelectedSession] = useState('');
@@ -547,5 +548,13 @@ export default function Home() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <SessionGate>
+      <PresentationWorkspace />
+    </SessionGate>
   );
 }
