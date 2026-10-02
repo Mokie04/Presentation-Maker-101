@@ -3,6 +3,7 @@ import { presentationDataSchema } from '@/lib/providers/text-provider';
 import { buildPresentationPptx } from '@/lib/services/pptx-generator';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 30;
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {

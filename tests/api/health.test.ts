@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { checkHealth } from '@/lib/health';
 import { GET } from '@/app/api/health/route';
+import * as textProvider from '@/lib/providers/text-provider';
 
 describe('Health Check API', () => {
   it('returns ok for both providers when text provider call succeeds and image provider is configured', async () => {
@@ -43,6 +44,16 @@ describe('Health Check API', () => {
   });
 
   it('GET handler returns NextResponse with 200 status', async () => {
+    vi.spyOn(textProvider, 'getTextProviderClient').mockReturnValue({
+      chat: {
+        completions: {
+          create: vi.fn().mockResolvedValue({
+            choices: [{ message: { content: 'hello' } }],
+          }),
+        },
+      },
+    } as any);
+
     const response = await GET();
     expect(response.status).toBe(200);
     const body = await response.json();
@@ -50,3 +61,4 @@ describe('Health Check API', () => {
     expect(body).toHaveProperty('imageProvider');
   });
 });
+

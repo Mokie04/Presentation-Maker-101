@@ -3,6 +3,7 @@ import { generateSlideContent } from '@/lib/providers/text-provider';
 import { detectSubject } from '@/lib/utils/subject-detector';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 const VALID_SESSIONS = ['Session 1', 'Session 2', 'Session 3', 'Session 4', 'Session 5'];
 
