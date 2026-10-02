@@ -8,10 +8,10 @@ export const SHADE_TEXT_DARK = '0F172A';
 export const FALLBACK_BG = 'E0F2FE';
 export const FALLBACK_BORDER = '7DD3FC';
 
-export async function buildPresentationPptx(
+export function createPresentationPptx(
   presentationData: PresentationData,
   slideImages?: Record<number, string>
-): Promise<Buffer> {
+): PptxGenJS {
   const pptx = new PptxGenJS();
   pptx.layout = 'LAYOUT_16x9';
 
@@ -77,8 +77,10 @@ export async function buildPresentationPptx(
 
       if (imageData && imageData !== 'failed') {
         const rawBase64 = imageData.replace(/^data:image\/[a-z]+;base64,/, '');
+        const isJpeg = rawBase64.startsWith('/9j/');
+        const mime = isJpeg ? 'image/jpeg' : 'image/png';
         slideObj.addImage({
-          data: 'image/png;base64,' + rawBase64,
+          data: `${mime};base64,` + rawBase64,
           x: '63%',
           y: 1.9,
           w: '32%',
@@ -126,6 +128,14 @@ export async function buildPresentationPptx(
     });
   });
 
+  return pptx;
+}
+
+export async function buildPresentationPptx(
+  presentationData: PresentationData,
+  slideImages?: Record<number, string>
+): Promise<Buffer> {
+  const pptx = createPresentationPptx(presentationData, slideImages);
   const output = await pptx.write({ outputType: 'nodebuffer' });
   return Buffer.isBuffer(output) ? output : Buffer.from(output as ArrayBuffer);
 }

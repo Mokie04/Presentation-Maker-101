@@ -18,6 +18,47 @@ import { SlideCard } from '@/components/SlideCard';
 import { SlideshowModal } from '@/components/SlideshowModal';
 import type { PresentationData, SlideData } from '@/types/presentation';
 
+async function compressImageForExport(base64: string): Promise<string> {
+  if (typeof window === 'undefined') return base64;
+  if (!base64 || base64 === 'failed') return base64;
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      try {
+        const maxDim = 800;
+        let width = img.width;
+        let height = img.height;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(base64);
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+        const compressedBase64 = dataUrl.replace(/^data:image\/[a-z]+;base64,/, '');
+        resolve(compressedBase64);
+      } catch {
+        resolve(base64);
+      }
+    };
+    img.onerror = () => resolve(base64);
+    img.src = base64.startsWith('data:') ? base64 : `data:image/png;base64,${base64}`;
+  });
+}
+
 export default function Home() {
   const [extractedText, setExtractedText] = useState('');
   const [fileName, setFileName] = useState('');
@@ -217,13 +258,29 @@ export default function Home() {
   const handleDownloadPptx = async () => {
     if (!presentationData) return;
     setIsDownloadingPptx(true);
+    const filename = `${presentationData.topic.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${selectedSession.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_SayunaAI.pptx`;
+
     try {
+      // Compress slide images client-side before sending to keep payload well within Vercel's 4.5MB limit
+      const optimizedImages: Record<number, string> = {};
+      const entries = Object.entries(slideImages);
+      await Promise.all(
+        entries.map(async ([key, val]) => {
+          const idx = Number(key);
+          if (val && val !== 'failed') {
+            optimizedImages[idx] = await compressImageForExport(val);
+          } else {
+            optimizedImages[idx] = val;
+          }
+        })
+      );
+
       const res = await fetch('/api/download-pptx', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           presentationData,
-          slideImages,
+          slideImages: optimizedImages,
           session: selectedSession,
         }),
       });
@@ -243,14 +300,6 @@ export default function Home() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-
-      const disposition = res.headers.get('Content-Disposition');
-      let filename = `${presentationData.topic.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${selectedSession.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_SayunaAI.pptx`;
-      if (disposition && disposition.includes('filename=')) {
-        const match = disposition.match(/filename="?([^"]+)"?/);
-        if (match?.[1]) filename = match[1];
-      }
-
       a.download = filename;
       document.body.appendChild(a);
       a.click();

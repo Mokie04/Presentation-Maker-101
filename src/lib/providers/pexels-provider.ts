@@ -104,7 +104,7 @@ export async function searchPexelsPhoto(
   const firstPhoto = data.photos?.[0];
 
   if (firstPhoto) {
-    return firstPhoto.src.large2x || firstPhoto.src.large || firstPhoto.src.medium || firstPhoto.src.original;
+    return firstPhoto.src.medium || firstPhoto.src.large || firstPhoto.src.large2x || firstPhoto.src.original;
   }
 
   // If initial search returned 0 results, retry with first 2 words or a broader term
@@ -119,7 +119,7 @@ export async function searchPexelsPhoto(
       const fallbackData = (await fallbackRes.json()) as PexelsSearchResponse;
       const fallbackPhoto = fallbackData.photos?.[0];
       if (fallbackPhoto) {
-        return fallbackPhoto.src.large || fallbackPhoto.src.medium;
+        return fallbackPhoto.src.medium || fallbackPhoto.src.large || fallbackPhoto.src.large2x;
       }
     }
   }
