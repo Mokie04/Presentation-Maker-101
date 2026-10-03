@@ -41,4 +41,11 @@ describe('slide-generation prompts', () => {
       'Premium, bright, friendly, primary school educational cartoon vector graphic, set in a Philippine school environment: '
     );
   });
+
+  it('SYSTEM_PROMPT includes explicit formula formatting rules for Math and Science', () => {
+    expect(SYSTEM_PROMPT).toContain('FORMULA & EQUATION FORMATTING');
+    expect(SYSTEM_PROMPT).toContain('chemical formulas');
+    expect(SYSTEM_PROMPT).toContain('exponents');
+    expect(SYSTEM_PROMPT).toContain('radicals');
+  });
 });

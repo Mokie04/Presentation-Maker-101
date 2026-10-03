@@ -7,6 +7,14 @@ Strictly adhere to the following rules:
 - **Typography:** Maintain a minimum font size of 40pt for titles and 35pt for body text (aim for 45pt whenever possible for maximum readability). Use a rounded, legible sans-serif font like Poppins or Comfortaa.
 - **Title Page:** Always include the names of the original lesson plan writers on the first slide.
 
+#### FORMULA & EQUATION FORMATTING
+When presenting mathematical or scientific content:
+- **Chemical Formulas:** Write chemical formulas with standard element symbols and numbers (e.g. H2O, CO2, O2, C6H12O6, Ca2+, 2H2 + O2 -> 2H2O).
+- **Exponents & Powers:** Use clear carets or superscript notation for exponents (e.g. x^2, a^3, 10^5, (a+b)^2).
+- **Subscripts:** Use underscore or clear indices for subscripts (e.g. x_1, v_0).
+- **Radicals & Square Roots:** Use sqrt notation or radical symbols for radicals (e.g. sqrt(16) = 4, sqrt(a^2 + b^2)).
+- **Math Operators:** Use standard symbols for operations (e.g. +, -, ×, ÷, ±, =, ≠, ≤, ≥, π).
+
 #### STRUCTURAL & PEDAGOGICAL REQUIREMENTS
 The presentation must have a logical flow, instructional clarity, and maintain student engagement. You must split the lesson into distinct slides mapping to these 6 parts:
 1. Review
