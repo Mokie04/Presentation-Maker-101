@@ -67,7 +67,8 @@ export function createPresentationPptx(
       });
 
       // Big Title (minimum 40pt, aim 45pt)
-      slideObj.addText(slide.title || 'Lesson Presentation', {
+      const titleRuns = formulaToTextRuns(slide.title || 'Lesson Presentation');
+      slideObj.addText(titleRuns, {
         x: 0.8,
         y: 1.55,
         w: '85%',
