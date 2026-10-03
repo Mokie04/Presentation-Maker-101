@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import type { PresentationData } from '@/types/presentation';
 import { getPartBadgeInfo } from './SlideCard';
+import { FormattedFormula } from './FormattedFormula';
 
 interface SlideshowModalProps {
   isOpen: boolean;
@@ -152,7 +153,7 @@ export function SlideshowModal({
               {currentSlide.part}
             </span>
             <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#0369A1] tracking-tight leading-tight">
-              {currentSlide.title}
+              <FormattedFormula text={currentSlide.title} />
             </h2>
           </div>
 
@@ -168,7 +169,7 @@ export function SlideshowModal({
                 <div key={pIdx} className="flex items-start gap-3 sm:gap-4">
                   <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#0284C7] mt-2 sm:mt-2.5 flex-shrink-0 shadow-xs" />
                   <p className="text-base sm:text-xl md:text-2xl font-bold text-[#0F172A] leading-snug">
-                    {point}
+                    <FormattedFormula text={point} />
                   </p>
                 </div>
               ))}

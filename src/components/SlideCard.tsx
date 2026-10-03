@@ -11,6 +11,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import type { SlideData } from '@/types/presentation';
+import { FormattedFormula } from './FormattedFormula';
 
 export const PEDAGOGICAL_PARTS = [
   'Title Page',
@@ -141,7 +142,7 @@ export function SlideCard({
             </div>
           ) : (
             <h3 className="text-lg sm:text-xl font-extrabold text-sky-900 tracking-tight leading-snug">
-              {slide.title}
+              <FormattedFormula text={slide.title} />
             </h3>
           )}
 
@@ -187,7 +188,7 @@ export function SlideCard({
                 {(slide.contentPoints || []).map((bullet, bIdx) => (
                   <li key={bIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 leading-relaxed">
                     <span className="w-1.5 h-1.5 rounded-full bg-sky-600 mt-2 flex-shrink-0" />
-                    <span>{bullet}</span>
+                    <FormattedFormula text={bullet} className="flex-1" />
                   </li>
                 ))}
               </ul>
