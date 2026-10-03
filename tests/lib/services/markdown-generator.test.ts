@@ -51,4 +51,33 @@ describe('buildPresentationMarkdown', () => {
     expect(md).toContain('# Photosynthesis and Plant Nutrition');
     expect(md).not.toContain('- undefined');
   });
+
+  it('converts formulas to Unicode in titles and bullet points', () => {
+    const formulaPresentation: PresentationData = {
+      subject: 'Science',
+      originalWriters: 'Teacher Ana',
+      topic: 'Chemical Reactions',
+      slides: [
+        {
+          slideNumber: 1,
+          part: 'Discussion',
+          title: 'Water: H2O and Exponents: x^2',
+          contentPoints: [
+            'Photosynthesis: 6CO2 + 6H2O -> C6H12O6',
+            'Area = sqrt(s)',
+          ],
+          visualDescription: '',
+        },
+      ],
+    };
+
+    const md = buildPresentationMarkdown(formulaPresentation);
+    // Title should have Unicode subscripts and superscripts
+    expect(md).toContain('H₂O');
+    expect(md).toContain('x²');
+    // Bullet should have Unicode subscripts and arrow
+    expect(md).toContain('CO₂');
+    expect(md).toContain('→');
+    expect(md).toContain('√');
+  });
 });

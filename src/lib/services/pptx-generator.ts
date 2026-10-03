@@ -1,5 +1,6 @@
 import PptxGenJS from 'pptxgenjs';
 import type { PresentationData } from '@/types/presentation';
+import { parseFormulaToSegments } from '@/lib/utils/formula-parser';
 
 export const SHADE_PRIMARY = '0284C7';
 export const SHADE_SECONDARY = '06B6D4';
@@ -9,6 +10,30 @@ export const FALLBACK_BG = 'E0F2FE';
 export const FALLBACK_BORDER = '7DD3FC';
 
 export const DEFAULT_FONT_FACE = 'Poppins';
+
+/**
+ * Converts a text string into PptxGenJS text runs with native subscript/superscript.
+ * Additional options (e.g. bullet, breakLine) are merged into each run.
+ */
+function formulaToTextRuns(
+  text: string,
+  extraOptions?: Record<string, unknown>
+): PptxGenJS.TextProps[] {
+  const segments = parseFormulaToSegments(text);
+  if (segments.length === 0) {
+    return [{ text: text || '', options: { ...extraOptions } }];
+  }
+  return segments.map((seg, idx) => {
+    const opts: Record<string, unknown> = {};
+    if (seg.subscript) opts.subscript = true;
+    if (seg.superscript) opts.superscript = true;
+    // Merge extra options only into the first run (e.g. bullet, breakLine)
+    if (idx === 0 && extraOptions) {
+      Object.assign(opts, extraOptions);
+    }
+    return { text: seg.text, options: opts };
+  });
+}
 
 export function createPresentationPptx(
   presentationData: PresentationData,
@@ -120,7 +145,8 @@ export function createPresentationPptx(
 
     // 3. Title (minimum 40pt, aim 45pt)
     const titleFontSize = slide.title && slide.title.length > 35 ? 40 : 45;
-    slideObj.addText(slide.title || '', {
+    const titleRuns = formulaToTextRuns(slide.title || '');
+    slideObj.addText(titleRuns, {
       x: 0.8,
       y: 0.85,
       w: '88%',
@@ -136,10 +162,12 @@ export function createPresentationPptx(
     const hasVisual = Boolean(slide.visualDescription && slide.visualDescription.trim().length > 0);
     const contentWidth = hasVisual ? '55%' : '88%';
     const contentPoints = slide.contentPoints || [];
-    const textItems = contentPoints.map((pt) => ({
-      text: pt,
-      options: { bullet: true },
-    }));
+    const textItems: PptxGenJS.TextProps[] = [];
+    contentPoints.forEach((pt, pIdx) => {
+      const extra: Record<string, unknown> = { bullet: true };
+      if (pIdx > 0) extra.breakLine = true;
+      textItems.push(...formulaToTextRuns(pt, extra));
+    });
 
     if (textItems.length > 0) {
       slideObj.addText(textItems, {

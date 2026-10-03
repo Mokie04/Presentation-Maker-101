@@ -92,4 +92,38 @@ describe('pptx-generator', () => {
     expect(Buffer.isBuffer(buffer)).toBe(true);
     expect(buffer.length).toBeGreaterThan(1000);
   });
+
+  it('renders presentations containing math and science formulas into valid PPTX', async () => {
+    const mathSciencePresentation: PresentationData = {
+      subject: 'Science and Math',
+      originalWriters: 'DepEd Teachers',
+      topic: 'Photosynthesis and Pythagorean Theorem',
+      slides: [
+        {
+          slideNumber: 1,
+          part: 'Title Page',
+          title: 'Science: H2O & Math: a^2 + b^2 = c^2',
+          contentPoints: ['Photosynthesis: 6CO2 + 6H2O -> C6H12O6 + 6O2', 'Hypotenuse formula: c = sqrt(a^2 + b^2)'],
+          visualDescription: 'Cartoon of plant and geometric triangle',
+        },
+        {
+          slideNumber: 2,
+          part: 'Discussion',
+          title: 'Chemical Reactions & Exponents',
+          contentPoints: [
+            'Water molecule has two Hydrogen atoms: H2O',
+            'Quadratic equation: ax^2 + bx + c = 0',
+            'Subscripts and terms: x_1 and x_2 roots',
+          ],
+          visualDescription: 'Molecules and mathematical graph',
+        },
+      ],
+    };
+
+    const buffer = await buildPresentationPptx(mathSciencePresentation);
+    expect(Buffer.isBuffer(buffer)).toBe(true);
+    expect(buffer.length).toBeGreaterThan(1000);
+    expect(buffer[0]).toBe(0x50); // 'P'
+    expect(buffer[1]).toBe(0x4b); // 'K'
+  });
 });

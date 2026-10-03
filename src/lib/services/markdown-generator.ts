@@ -1,4 +1,5 @@
 import type { PresentationData } from '@/types/presentation';
+import { formatFormulaToUnicode } from '@/lib/utils/formula-parser';
 
 export function buildPresentationMarkdown(
   presentationData: PresentationData,
@@ -14,13 +15,13 @@ export function buildPresentationMarkdown(
 **Original Lesson Plan Writers**: ${presentationData.originalWriters}`;
 
   const slidesMarkdown = presentationData.slides.map((slide) => {
-    const points = slide.contentPoints.map((pt) => `- ${pt}`).join('\n');
+    const points = slide.contentPoints.map((pt) => `- ${formatFormulaToUnicode(pt)}`).join('\n');
     const visual = slide.visualDescription
       ? `\n\n*Suggested Visual:* ${slide.visualDescription}`
       : '';
 
     return `## Slide ${slide.slideNumber} - ${slide.part}
-### ${slide.title}
+### ${formatFormulaToUnicode(slide.title)}
 ${points}${visual}
 
 ---`;
