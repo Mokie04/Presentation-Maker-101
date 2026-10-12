@@ -27,8 +27,8 @@ beforeEach(() => {
     if (url === '/api/session') return Response.json({ authenticated: true });
     if (url === '/api/generate') return Response.json(presentation);
     if (url === '/api/generate-images') return batch ? batch.promise : Response.json({ images: { 0: 'old-roots', 1: 'old-leaves', 2: 'old-flowers' } });
-    if (url === '/api/nasa-images/search') return search();
-    if (url === '/api/nasa-images/select') return selected.promise;
+    if (url === '/api/nasa-images/search' || url === '/api/commons-images/search') return search();
+    if (url === '/api/nasa-images/select' || url === '/api/commons-images/select') return selected.promise;
     if (url === '/api/generate-image') return ai ? ai.promise : Response.json({ base64: 'new-ai' });
     if (url === '/api/download-markdown') return new Response('outline');
     throw new Error(`Unexpected request: ${url}`);
@@ -43,7 +43,7 @@ async function open() {
   await screen.findByRole('button', { name: 'Download Outline' });
 }
 async function pick(index = 0) {
-  fireEvent.click(screen.getAllByRole('button', { name: 'Find NASA image' })[index]);
+  fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[index]);
   expect(screen.getByLabelText('NASA search terms').getAttribute('value')).toBe(presentation.slides[index].title);
   fireEvent.change(screen.getByLabelText('NASA search terms'), { target: { value: 'seedling roots' } });
   fireEvent.click(screen.getByRole('button', { name: 'Search NASA' }));
@@ -52,6 +52,80 @@ async function pick(index = 0) {
 function rootsImage() { return screen.getByRole('img', { name: 'Roots' }).getAttribute('src'); }
 async function finish() { await act(async () => { selected.resolve(Response.json({ base64: '/9j/2Q==', metadata })); }); }
 describe('manual NASA picker with mocked responses', () => {
+  it('keeps Commons selection and export credits on the stable slide, then clears them on AI replacement', async () => {
+    const commons = { source: 'commons', fileId: 42, title: 'File:Roots.png', creator: 'Original artist', selectable: true,
+      licenseKind: 'cc-by', licenseName: 'CC BY 4.0', licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
+      sourceUrl: 'https://commons.wikimedia.org/wiki/File:Roots.png',
+      assetUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Roots.png/1200px-Roots.png', mimeType: 'image/png', rendition: 'thumbnail' };
+    await open(); fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[2]);
+    fireEvent.change(screen.getByLabelText('Image source'), { target: { value: 'commons' } });
+    search.mockResolvedValueOnce(Response.json({ candidates: [commons] }));
+    fireEvent.click(screen.getByRole('button', { name: 'Search Commons' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Use this image' }));
+    fireEvent.click(screen.getAllByRole('button', { name: 'Delete Slide' })[0]);
+    await act(async () => { selected.resolve(Response.json({ base64: 'commons-image', metadata: commons })); });
+    expect(screen.getByRole('img', { name: 'Flowers' }).getAttribute('src')).toContain('commons-image');
+    expect(screen.getByRole('img', { name: 'Flowers' }).className).toContain('object-contain');
+    expect(screen.getByRole('img', { name: 'Leaves' }).getAttribute('src')).toContain('old-leaves');
+    const selectCall = vi.mocked(fetch).mock.calls.find(([url]) => url === '/api/commons-images/select');
+    expect(JSON.parse(String(selectCall?.[1]?.body))).toEqual({ fileId: 42 });
+    fireEvent.click(screen.getByRole('button', { name: 'Download Outline' }));
+    await act(async () => {});
+    const exportCall = vi.mocked(fetch).mock.calls.find(([url]) => url === '/api/download-markdown');
+    expect(JSON.parse(String(exportCall?.[1]?.body)).presentationData.slides[1].imageMetadata.creator).toBe('Original artist');
+    const card = screen.getByRole('img', { name: 'Flowers' }).closest('.rounded-2xl')! as HTMLElement;
+    fireEvent.click(within(card).getByRole('button', { name: 'Regenerate AI Graphic' })); await act(async () => {});
+    expect(screen.getByRole('img', { name: 'Flowers' }).getAttribute('src')).toContain('new-ai');
+    expect(screen.queryByText('Creator: Original artist; License: CC BY 4.0')).toBeNull();
+  });
+  it('ignores a late search after switching sources', async () => {
+    const pending = deferred(); search.mockReturnValueOnce(pending.promise);
+    await open(); fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[0]);
+    fireEvent.click(screen.getByRole('button', { name: 'Search NASA' }));
+    fireEvent.change(screen.getByLabelText('Image source'), { target: { value: 'commons' } });
+    await act(async () => { pending.resolve(Response.json({ candidates: [candidate] })); });
+    expect(screen.queryByText('<b>Seedlings</b>')).toBeNull();
+    expect(rootsImage()).toContain('old-roots');
+  });
+  it('switches source, aborts a pending NASA selection and clears stale results', async () => {
+    await open(); await pick(); fireEvent.click(screen.getByRole('button', { name: 'Use this image' }));
+    fireEvent.change(screen.getByLabelText('Image source'), { target: { value: 'commons' } });
+    expect(screen.queryByText('<b>Seedlings</b>')).toBeNull();
+    expect((screen.getByLabelText('Commons search terms') as HTMLInputElement).value).toBe('seedling roots');
+    await finish(); expect(rootsImage()).toContain('old-roots');
+    expect(screen.getByRole('button', { name: 'Search Commons' }).hasAttribute('disabled')).toBe(false);
+  });
+  it.each(['none', 'rate limited', 'unsupported'])('preserves the existing image for Commons %s', async (mode) => {
+    await open(); fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[0]);
+    fireEvent.change(screen.getByLabelText('Image source'), { target: { value: 'commons' } });
+    search.mockResolvedValueOnce(mode === 'none' ? Response.json({ candidates: [] })
+      : mode === 'rate limited' ? Response.json({ error: 'Slow down', retryAfterSeconds: 120 }, { status: 429 })
+      : Response.json({ candidates: [{ source: 'commons', fileId: 42, title: 'Unsupported file', selectable: false,
+          licenseName: 'CC BY-SA 4.0', unavailableReason: 'License is not supported.' }] }));
+    fireEvent.click(screen.getByRole('button', { name: 'Search Commons' }));
+    await screen.findByText(mode === 'none' ? 'No Commons images found.' : mode === 'rate limited' ? 'Slow down' : 'License is not supported.');
+    expect(rootsImage()).toContain('old-roots');
+    if (mode === 'unsupported') expect(screen.getByRole('button', { name: 'Use this image' }).hasAttribute('disabled')).toBe(true);
+    if (mode === 'rate limited') expect(screen.getByRole('button', { name: 'Search Commons' }).hasAttribute('disabled')).toBe(true);
+  });
+  it.each(['delete', 'reset', 'switch'])('ignores late Commons selection after %s', async (mode) => {
+    const commons = { source: 'commons', fileId: 42, title: 'File:Roots.png', creator: 'Original artist', selectable: true,
+      licenseKind: 'cc-by', licenseName: 'CC BY 4.0', licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
+      sourceUrl: 'https://commons.wikimedia.org/wiki/File:Roots.png',
+      assetUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Roots.png/1200px-Roots.png', mimeType: 'image/png', rendition: 'thumbnail' };
+    await open(); fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[0]);
+    fireEvent.change(screen.getByLabelText('Image source'), { target: { value: 'commons' } });
+    search.mockResolvedValueOnce(Response.json({ candidates: [commons] }));
+    fireEvent.click(screen.getByRole('button', { name: 'Search Commons' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Use this image' }));
+    if (mode === 'delete') fireEvent.click(screen.getAllByRole('button', { name: 'Delete Slide' })[0]);
+    if (mode === 'reset') fireEvent.click(screen.getByTitle('Reset to New Upload'));
+    if (mode === 'switch') fireEvent.change(screen.getByLabelText('Image source'), { target: { value: 'nasa' } });
+    await act(async () => { selected.resolve(Response.json({ base64: 'commons-image', metadata: commons })); });
+    expect(screen.queryByText('Creator: Original artist; License: CC BY 4.0')).toBeNull();
+    if (mode === 'switch') expect(rootsImage()).toContain('old-roots');
+  });
+
   it('searches editable terms, renders plain metadata, and explicitly replaces only the selected slide', async () => {
     await open(); await pick();
     expect(screen.getByText('<b>Seedlings</b>')).toBeTruthy();
@@ -78,7 +152,7 @@ describe('manual NASA picker with mocked responses', () => {
         expect(screen.getByRole('alert')).toBeTruthy();
       }
     } else {
-      fireEvent.click(screen.getAllByRole('button', { name: 'Find NASA image' })[0]);
+      fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[0]);
       fireEvent.click(screen.getByRole('button', { name: 'Search NASA' }));
       await screen.findByText(mode === 'empty' ? 'No NASA images found.' : 'upstream failed');
     }

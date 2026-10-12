@@ -1,6 +1,6 @@
 'use client';
 
-import type { NasaImageMetadata } from '@/lib/image-metadata';
+import type { ImageMetadata } from '@/lib/image-metadata';
 import type { SupportedSubject } from '@/lib/utils/subject-options';
 
 import React, { useRef, useState } from 'react';
@@ -247,7 +247,7 @@ function PresentationWorkspace() {
     }
   };
 
-  const handleSelectNasaImage = (slideId: number, base64: string, metadata: NasaImageMetadata) => {
+  const handleSelectLibraryImage = (slideId: number, base64: string, metadata: ImageMetadata) => {
     if (!slideIds.current.includes(slideId)) return;
     imageVersions.current[slideId] = (imageVersions.current[slideId] ?? 0) + 1;
     setImagesById((prev) => ({ ...prev, [slideId]: `data:${metadata.mimeType};base64,${base64}` }));
@@ -630,7 +630,7 @@ function PresentationWorkspace() {
                   onDeleteBullet={handleDeleteBullet}
                   onDeleteSlide={handleDeleteSlide}
                   onRegenerateImage={handleRegenerateImage}
-                  onSelectNasaImage={(base64, metadata) => handleSelectNasaImage(id, base64, metadata)}
+                  onSelectImage={(base64, metadata) => handleSelectLibraryImage(id, base64, metadata)}
                 />;
               })}
             </div>

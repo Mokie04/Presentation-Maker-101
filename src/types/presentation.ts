@@ -1,4 +1,4 @@
-import type { NasaImageMetadata } from '@/lib/image-metadata';
+import type { ImageMetadata } from '@/lib/image-metadata';
 
 export interface SubjectEvidence {
   subject: string;
@@ -11,7 +11,7 @@ export interface SlideData {
   title: string;
   contentPoints: string[];
   visualDescription: string;
-  imageMetadata?: NasaImageMetadata;
+  imageMetadata?: ImageMetadata;
 }
 
 export interface PresentationData {

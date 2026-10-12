@@ -37,11 +37,11 @@ function formulaToTextRuns(
   });
 }
 
-/** Fit selected NASA images using decoded dimensions; legacy sizing uses box dimensions. */
-function addNasaImage(slide: PptxGenJS.Slide, image: string, box: { x: number; y: number; w: number; h: number }): void {
+/** Fit selected library images using decoded dimensions; legacy sizing uses box dimensions. */
+function addLibraryImage(slide: PptxGenJS.Slide, image: string, box: { x: number; y: number; w: number; h: number }): void {
   const raw = image.replace(/^data:image\/[a-z]+;base64,/, '');
   const dimensions = imageSize(Buffer.from(raw, 'base64'));
-  if (!dimensions.width || !dimensions.height) throw new Error('NASA export image dimensions are unavailable.');
+  if (!dimensions.width || !dimensions.height) throw new Error('Library export image dimensions are unavailable.');
   const scale = Math.min(box.w / dimensions.width, box.h / dimensions.height);
   const w = dimensions.width * scale;
   const h = dimensions.height * scale;
@@ -65,7 +65,7 @@ export function createPresentationPptx(
     const slideObj = pptx.addSlide();
 
     if (slide.imageMetadata) {
-      slideObj.addText(`NASA ${slide.imageMetadata.nasaId} — ${imageCreditText(slide.imageMetadata)}`, {
+      slideObj.addText(`${slide.imageMetadata.source === 'commons' ? 'Commons' : `NASA ${slide.imageMetadata.nasaId}`} — ${imageCreditText(slide.imageMetadata)}`, {
         x: 0.8, y: 7.15, w: 11.7, h: 0.25, fontSize: 8, color: '475569',
         fontFace: DEFAULT_FONT_FACE, fit: 'shrink',
         hyperlink: { url: slide.imageMetadata.sourceUrl ?? slide.imageMetadata.assetUrl },
@@ -142,7 +142,7 @@ export function createPresentationPptx(
       }
 
       if (slide.imageMetadata && slideImages?.[idx] && slideImages[idx] !== 'failed') {
-        addNasaImage(slideObj, slideImages[idx], { x: 9, y: 3.4, w: 3.5, h: 2.6 });
+        addLibraryImage(slideObj, slideImages[idx], { x: 9, y: 3.4, w: 3.5, h: 2.6 });
       }
 
       // Slide counter
@@ -229,7 +229,7 @@ export function createPresentationPptx(
 
       if (imageData && imageData !== 'failed') {
         if (slide.imageMetadata) {
-          addNasaImage(slideObj, imageData, { x: (40 / 3) * 0.625, y: 2.15, w: 4.2, h: 4.4 });
+          addLibraryImage(slideObj, imageData, { x: (40 / 3) * 0.625, y: 2.15, w: 4.2, h: 4.4 });
         } else {
           const rawBase64 = imageData.replace(/^data:image\/[a-z]+;base64,/, '');
           const isJpeg = rawBase64.startsWith('/9j/');

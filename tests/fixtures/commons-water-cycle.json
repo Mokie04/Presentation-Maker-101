@@ -1,0 +1,75 @@
+{
+  "batchcomplete": true,
+  "query": {
+    "pages": [
+      {
+        "pageid": 128001773,
+        "ns": 6,
+        "title": "File:USGS WaterCycle English ONLINE 20221013.png",
+        "index": 1,
+        "imagerepository": "local",
+        "imageinfo": [
+          {
+            "thumburl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/USGS_WaterCycle_English_ONLINE_20221013.png/1280px-USGS_WaterCycle_English_ONLINE_20221013.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+            "thumbwidth": 1200,
+            "thumbheight": 821,
+            "thumbmime": "image/png",
+            "responsiveUrls": {
+              "2": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/USGS_WaterCycle_English_ONLINE_20221013.png/3840px-USGS_WaterCycle_English_ONLINE_20221013.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail"
+            },
+            "thumbattribs": {
+              "src": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/USGS_WaterCycle_English_ONLINE_20221013.png/1280px-USGS_WaterCycle_English_ONLINE_20221013.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+              "decoding": "async",
+              "loading": "lazy",
+              "width": 1200,
+              "height": 821,
+              "srcset": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/60/USGS_WaterCycle_English_ONLINE_20221013.png/3840px-USGS_WaterCycle_English_ONLINE_20221013.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail 2x"
+            },
+            "url": "https://upload.wikimedia.org/wikipedia/commons/6/60/USGS_WaterCycle_English_ONLINE_20221013.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+            "descriptionurl": "https://commons.wikimedia.org/wiki/File:USGS_WaterCycle_English_ONLINE_20221013.png",
+            "descriptionshorturl": "https://commons.wikimedia.org/w/index.php?curid=128001773",
+            "extmetadata": {
+              "ImageDescription": {
+                "value": "Diagram showing the global water cycle and how human water use impacts where water is stored and how it moves.",
+                "source": "commons-desc-page"
+              },
+              "Credit": {
+                "value": "<a rel=\"nofollow\" class=\"external free\" href=\"https://www.usgs.gov/media/images/water-cycle-png\">https://www.usgs.gov/media/images/water-cycle-png</a>",
+                "source": "commons-desc-page"
+              },
+              "Artist": {
+                "value": "Hayley Corson-Dosch, Cee Nell, Rachel Volentine, Althea Archer, Ellen Bechtel, Jennifer Bruce, Nicole Felts, Tara Gross, Dianne Lopez-Trujillo, Charlotte Riggs, Emily Read",
+                "source": "commons-desc-page"
+              },
+              "LicenseShortName": {
+                "value": "Public domain",
+                "source": "commons-desc-page",
+                "hidden": ""
+              },
+              "UsageTerms": {
+                "value": "Public domain",
+                "source": "commons-desc-page"
+              },
+              "AttributionRequired": {
+                "value": "false",
+                "source": "commons-desc-page",
+                "hidden": ""
+              },
+              "Copyrighted": {
+                "value": "False",
+                "source": "commons-desc-page",
+                "hidden": ""
+              },
+              "Restrictions": {
+                "value": "",
+                "source": "commons-desc-page",
+                "hidden": ""
+              }
+            },
+            "mime": "image/png"
+          }
+        ]
+      }
+    ]
+  }
+}

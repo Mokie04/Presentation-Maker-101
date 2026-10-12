@@ -22,13 +22,15 @@ export function buildPresentationMarkdown(
       : '';
 
     const credits = slide.imageMetadata
-      ? '\n\n**Selected NASA image**\n\n' + imageSourceNotes(slide.imageMetadata)
-        .replace(/[\\`*_{}\[\]()#+.!>|<>]/g, '\\$&').replace(/\n/g, '  \n') + `\n\n[NASA source](<${slide.imageMetadata.sourceUrl ?? slide.imageMetadata.assetUrl}>)`
+      ? `\n\n**Selected ${slide.imageMetadata.source === 'commons' ? 'Commons' : 'NASA'} image**\n\n` + imageSourceNotes(slide.imageMetadata)
+        .replace(/[\\`*_{}\[\]()#+.!>|<>]/g, '\\$&').replace(/\n/g, '  \n') + `\n\n[${slide.imageMetadata.source === 'commons' ? 'Commons' : 'NASA'} source](<${slide.imageMetadata.sourceUrl ?? slide.imageMetadata.assetUrl}>)`
       : '';
+    const licenseLink = slide.imageMetadata?.source === 'commons' && slide.imageMetadata.licenseUrl
+      ? `\n\n[License: ${slide.imageMetadata.licenseName}](<${slide.imageMetadata.licenseUrl}>)` : '';
 
     return `## Slide ${slide.slideNumber} - ${slide.part}
 ### ${formatFormulaToUnicode(slide.title)}
-${points}${visual}${credits}
+${points}${visual}${credits}${licenseLink}
 
 ---`;
   });
