@@ -4,6 +4,8 @@ Teachers choose NASA (the existing default) or Wikimedia Commons in the existing
 
 ## Server and metadata contract
 
+Supported CC BY license URLs accept an optional trailing slash and are stored with the canonical trailing slash. The URL must still match the reported license version; query strings, fragments, extra path segments, and unsupported licenses remain unavailable.
+
 Session-protected POST `/api/commons-images/search` accepts `{ query: string }` (1–500 trimmed characters). POST `/api/commons-images/select` accepts `{ fileId: number }` (positive safe integer). Selection reloads imageinfo/extmetadata by page ID; client URLs, creator and license fields are ignored. Requests are limited to 8 KiB before JSON parsing. Missing legacy image metadata remains valid. NASA metadata remains compatible.
 
 The public Action API is fixed to `https://commons.wikimedia.org/w/api.php`. Search uses generator=search, file namespace 6, limit 5 and imageinfo with URL, MIME, thumbnail MIME and extmetadata. Selection requests a thumbnail bounded by 1200×900; actual returned dimensions may differ. Only trusted HTTPS `upload.wikimedia.org/wikipedia/commons/` JPEG/PNG thumbnails are downloaded, including PNG renderings of SVG. Originals are never a fallback. Nonraster or untrusted thumbnails are unavailable and never exposed as preview URLs. Redirects are rejected.

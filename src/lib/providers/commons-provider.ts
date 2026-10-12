@@ -107,7 +107,10 @@ function candidate(page: NonNullable<z.infer<typeof responseSchema>['query']>['p
   try {
     const url = new URL(fields.LicenseUrl?.value ?? '');
     if (['http:', 'https:'].includes(url.protocol) && ['creativecommons.org', 'www.creativecommons.org'].includes(url.hostname) && !url.port && !url.username && !url.password) {
-      url.protocol = 'https:'; url.hostname = 'creativecommons.org'; licenseUrl = url.href;
+      url.protocol = 'https:'; url.hostname = 'creativecommons.org';
+      // Commons can omit the trailing slash on canonical CC BY license URLs.
+      if (/^\/licenses\/by\/(1\.0|2\.0|2\.5|3\.0|4\.0)$/.test(url.pathname)) url.pathname += '/';
+      licenseUrl = url.href;
     }
   } catch { /* Missing license URL remains missing. */ }
   const preview = info.thumburl ? commonsAssetUrlSchema.safeParse(info.thumburl) : undefined;

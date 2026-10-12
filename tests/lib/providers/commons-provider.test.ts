@@ -94,11 +94,29 @@ describe('Commons provider with mocked HTTP', () => {
     const fetchFn = vi.fn<typeof fetch>().mockResolvedValue(Response.json(body(fields)));
     expect((await searchCommonsImages('roots', { fetchFn }))[0]).toMatchObject({ selectable: true, licenseKind });
   });
+  it.each(['', '/'])('accepts the observed CC BY 3.0 license with trailing slash %j in search and selection', async (suffix) => {
+    const fields = { Artist: { value: 'Navicore' }, LicenseShortName: { value: 'CC BY 3.0' },
+      LicenseUrl: { value: `https://creativecommons.org/licenses/by/3.0${suffix}` } };
+    const fetchFn = vi.fn<typeof fetch>().mockResolvedValueOnce(Response.json(body(fields)))
+      .mockResolvedValueOnce(Response.json(body(fields)))
+      .mockResolvedValueOnce(new Response(png, { headers: { 'content-type': 'image/png' } }));
+    expect((await searchCommonsImages('meteor', { fetchFn }))[0]).toMatchObject({ selectable: true,
+      creator: 'Navicore', licenseKind: 'cc-by', licenseUrl: 'https://creativecommons.org/licenses/by/3.0/' });
+    const selected = await fetchCommonsImageBase64(42, { fetchFn });
+    expect(selected.metadata).toMatchObject({ creator: 'Navicore', licenseKind: 'cc-by',
+      licenseUrl: 'https://creativecommons.org/licenses/by/3.0/' });
+    expect(fetchFn).toHaveBeenCalledTimes(3);
+  });
   it.each([
     { LicenseShortName: { value: 'CC BY-SA 4.0' }, LicenseUrl: { value: 'https://creativecommons.org/licenses/by-sa/4.0/' } },
     { LicenseShortName: { value: 'Unknown' } }, { LicenseUrl: { value: '' } },
     { LicenseUrl: { value: 'https://creativecommons.org.evil.example/licenses/by/4.0/' } },
     { LicenseUrl: { value: 'https://creativecommons.org/licenses/by-sa/4.0/' } },
+    { LicenseUrl: { value: 'https://creativecommons.org/licenses/by/3.0' } },
+    { LicenseUrl: { value: 'https://creativecommons.org/licenses/by/4.0//' } },
+    { LicenseUrl: { value: 'https://creativecommons.org/licenses/by/4.0?other=license' } },
+    { LicenseUrl: { value: 'https://creativecommons.org/licenses/by/4.0#other' } },
+    { LicenseUrl: { value: 'https://creativecommons.org/licenses/by/4.0/deed.en' } },
     { Artist: { value: '' } }, { AttributionRequired: { value: 'false' } },
     { Restrictions: { value: 'Additional restrictions' } },
     { LicenseShortName: { value: 'Public domain' }, Copyrighted: { value: 'True' } },
