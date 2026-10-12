@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   FileDown,
   FileText,
@@ -69,8 +69,17 @@ function PresentationWorkspace() {
   const [fileName, setFileName] = useState('');
   const [selectedSession, setSelectedSession] = useState('');
   const [presentationData, setPresentationData] = useState<PresentationData | null>(null);
-  const [slideImages, setSlideImages] = useState<Record<number, string>>({});
-  const [generatingImages, setGeneratingImages] = useState<Record<number, boolean>>({});
+  const [imagesById, setImagesById] = useState<Record<number, string>>({});
+  const [generatingById, setGeneratingById] = useState<Record<number, boolean>>({});
+  // Image ownership stays stable when deleting slides changes their positions.
+  const slideIds = useRef<number[]>([]);
+  const nextSlideId = useRef(0);
+  const slideImages: Record<number, string> = {};
+  const generatingImages: Record<number, boolean> = {};
+  slideIds.current.forEach((id, index) => {
+    if (imagesById[id] !== undefined) slideImages[index] = imagesById[id];
+    if (generatingById[id]) generatingImages[index] = true;
+  });
 
   const [isEditing, setIsEditing] = useState(false);
   const [isSlideShowActive, setIsSlideShowActive] = useState(false);
@@ -130,8 +139,10 @@ function PresentationWorkspace() {
         throw new Error(data?.error || 'Failed to generate presentation slides.');
       }
 
+      slideIds.current = data.slides.map(() => nextSlideId.current++);
       setPresentationData(data);
-      setSlideImages({});
+      setImagesById({});
+      setGeneratingById({});
       setIsEditing(false);
 
       // Auto-trigger background batch image generation
@@ -147,6 +158,7 @@ function PresentationWorkspace() {
 
   // Background batch image generation for eligible slides
   const triggerBatchImageGeneration = (slides: SlideData[]) => {
+    const requestSlideIds = [...slideIds.current];
     const slidesForBatch = slides.map((s, index) => ({
       slideIndex: index,
       part: s.part,
@@ -167,7 +179,15 @@ function PresentationWorkspace() {
       })
       .then((data) => {
         if (data?.images) {
-          setSlideImages((prev) => ({ ...prev, ...data.images }));
+          setImagesById((prev) => {
+            const updated = { ...prev };
+            requestSlideIds.forEach((id, index) => {
+              if (slideIds.current.includes(id) && data.images[index] !== undefined) {
+                updated[id] = data.images[index];
+              }
+            });
+            return updated;
+          });
         }
       })
       .catch((err) => {
@@ -177,7 +197,8 @@ function PresentationWorkspace() {
 
   // Single slide image generation / regeneration
   const handleRegenerateImage = async (slideIndex: number, visualDescription: string) => {
-    setGeneratingImages((prev) => ({ ...prev, [slideIndex]: true }));
+    const slideId = slideIds.current[slideIndex];
+    setGeneratingById((prev) => ({ ...prev, [slideId]: true }));
     try {
       const res = await fetch('/api/generate-image', {
         method: 'POST',
@@ -194,12 +215,18 @@ function PresentationWorkspace() {
       if (!res.ok || !data.base64) {
         throw new Error(data.error || 'Failed to render image.');
       }
-      setSlideImages((prev) => ({ ...prev, [slideIndex]: data.base64! }));
+      setImagesById((prev) => slideIds.current.includes(slideId)
+        ? { ...prev, [slideId]: data.base64! } : prev);
     } catch (err) {
       console.error('Image regeneration failed:', err);
-      setSlideImages((prev) => ({ ...prev, [slideIndex]: 'failed' }));
+      setImagesById((prev) => slideIds.current.includes(slideId)
+        ? { ...prev, [slideId]: 'failed' } : prev);
     } finally {
-      setGeneratingImages((prev) => ({ ...prev, [slideIndex]: false }));
+      setGeneratingById((prev) => {
+        const updated = { ...prev };
+        delete updated[slideId];
+        return updated;
+      });
     }
   };
 
@@ -245,6 +272,18 @@ function PresentationWorkspace() {
 
   const handleDeleteSlide = (slideIndex: number) => {
     if (!presentationData) return;
+    const deletedId = slideIds.current[slideIndex];
+    slideIds.current = slideIds.current.filter((_, idx) => idx !== slideIndex);
+    setImagesById((prev) => {
+      const updated = { ...prev };
+      delete updated[deletedId];
+      return updated;
+    });
+    setGeneratingById((prev) => {
+      const updated = { ...prev };
+      delete updated[deletedId];
+      return updated;
+    });
     const updated = presentationData.slides
       .filter((_, idx) => idx !== slideIndex)
       .map((s, idx) => ({ ...s, slideNumber: idx + 1 }));
@@ -253,6 +292,7 @@ function PresentationWorkspace() {
 
   const handleAddSlide = () => {
     if (!presentationData) return;
+    slideIds.current = [...slideIds.current, nextSlideId.current++];
     const newSlide: SlideData = {
       slideNumber: presentationData.slides.length + 1,
       part: 'Discussion',
@@ -401,7 +441,9 @@ function PresentationWorkspace() {
 
   const handleReset = () => {
     setPresentationData(null);
-    setSlideImages({});
+    slideIds.current = [];
+    setImagesById({});
+    setGeneratingById({});
     setExtractedText('');
     setFileName('');
     setSelectedSession('');
@@ -543,7 +585,7 @@ function PresentationWorkspace() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {presentationData.slides.map((slide, idx) => (
                 <SlideCard
-                  key={idx}
+                  key={slideIds.current[idx]}
                   slide={slide}
                   index={idx}
                   totalSlides={presentationData.slides.length}
