@@ -28,6 +28,12 @@ describe('text-provider', () => {
     expect(parsed.slides).toHaveLength(1);
   });
 
+  it('keeps model content separate from claimed provenance metadata', () => {
+    expect(presentationDataSchema.parse({ ...samplePresentation, subjectEvidence: [
+      { subject: 'Science', source: 'teacher-supplied' },
+    ] })).toEqual(samplePresentation);
+  });
+
   it('rejects an invalid PresentationData object missing required fields', () => {
     const invalid = {
       subject: 'Science',

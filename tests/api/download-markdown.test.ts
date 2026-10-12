@@ -42,6 +42,20 @@ describe('POST /api/download-markdown', () => {
     expect(text).toContain('## Slide 1 - Review');
   });
 
+  it('exports the same outline with optional subject history as with legacy data', async () => {
+    const exportRequest = (presentationData: PresentationData) => new NextRequest('http://localhost/api/download-markdown', {
+      method: 'POST', body: JSON.stringify({ presentationData, session: 'Session 2' }),
+    });
+    const legacy = await POST(exportRequest(validPresentation));
+    const withHistory = await POST(exportRequest({ ...validPresentation, subjectEvidence: [
+      { subject: 'Science', source: 'teacher-supplied' },
+      { subject: 'English/Reading', source: 'model-generated' },
+    ] }));
+    expect(withHistory.status).toBe(200);
+    expect(await withHistory.text()).toBe(await legacy.text());
+    expect(withHistory.headers.get('Content-Disposition')).toBe(legacy.headers.get('Content-Disposition'));
+  });
+
   it('returns 400 when presentationData fails schema validation', async () => {
     const req = new NextRequest('http://localhost:3000/api/download-markdown', {
       method: 'POST',

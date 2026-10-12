@@ -10,6 +10,7 @@ import {
   Clipboard,
   Layers,
 } from 'lucide-react';
+import { SUPPORTED_SUBJECTS, type SupportedSubject } from '@/lib/utils/subject-options';
 
 interface UploadSectionProps {
   extractedText: string;
@@ -17,7 +18,9 @@ interface UploadSectionProps {
   onUploadSuccess: (text: string, fileName: string) => void;
   selectedSession: string;
   onSessionChange: (session: string) => void;
-  onGenerate: (text: string, session: string) => void;
+  selectedSubject?: SupportedSubject | '';
+  onSubjectChange?: (subject: SupportedSubject | '') => void;
+  onGenerate: (text: string, session: string, subject?: SupportedSubject) => void;
   isLoading: boolean;
   loadingStage: string;
   errorMsg?: string;
@@ -29,6 +32,8 @@ export function UploadSection({
   onUploadSuccess,
   selectedSession,
   onSessionChange,
+  selectedSubject = '',
+  onSubjectChange,
   onGenerate,
   isLoading,
   loadingStage,
@@ -236,9 +241,9 @@ export function UploadSection({
             </div>
           )}
 
-          {/* Controls: Session Dropdown & Generate Action */}
+          {/* Controls: Session, Optional Subject & Generate Action */}
           <div className="pt-2 flex flex-col sm:flex-row items-center gap-4">
-            <div className="w-full sm:w-1/2">
+            <div className="w-full sm:w-1/3">
               <label
                 htmlFor="session-select"
                 className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5"
@@ -264,11 +269,37 @@ export function UploadSection({
               </div>
             </div>
 
-            <div className="w-full sm:w-1/2 flex items-end">
+            <div className="w-full sm:w-1/3">
+              <label
+                htmlFor="subject-select"
+                className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5"
+              >
+                Subject
+              </label>
+              <div className="relative">
+                <select
+                  id="subject-select"
+                  aria-label="Subject"
+                  value={selectedSubject}
+                  onChange={(e) => onSubjectChange?.(e.target.value as SupportedSubject | '')}
+                  className="w-full appearance-none bg-white border border-slate-300 font-medium text-slate-800 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 cursor-pointer shadow-sm transition-all"
+                >
+                  <option value="">Automatic</option>
+                  {SUPPORTED_SUBJECTS.map((subject) => (
+                    <option key={subject} value={subject}>{subject}</option>
+                  ))}
+                </select>
+                <Layers className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+              </div>
+            </div>
+
+            <div className="w-full sm:w-1/3 flex items-end">
               <button
                 type="button"
                 disabled={!canGenerate}
-                onClick={() => onGenerate(extractedText, selectedSession)}
+                onClick={() => selectedSubject
+                  ? onGenerate(extractedText, selectedSession, selectedSubject)
+                  : onGenerate(extractedText, selectedSession)}
                 className={`w-full py-3 px-6 rounded-xl font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 shadow-md transition-all duration-200 ${
                   canGenerate
                     ? 'bg-gradient-to-r from-sky-600 via-sky-500 to-cyan-600 hover:from-sky-700 hover:to-cyan-700 text-white cursor-pointer hover:shadow-lg active:scale-[0.99]'

@@ -49,6 +49,18 @@ describe('POST /api/download-pptx', () => {
     expect(returnedBuffer.toString()).toBe('fake-pptx-data');
   });
 
+  it('passes identical content to PPTX generation when optional subject history is present', async () => {
+    const build = vi.spyOn(pptxGenService, 'buildPresentationPptx').mockResolvedValueOnce(Buffer.from('pptx'));
+    const req = new NextRequest('http://localhost/api/download-pptx', {
+      method: 'POST', body: JSON.stringify({ presentationData: { ...validPresentation,
+        subjectEvidence: [{ subject: 'English/Reading', source: 'teacher-supplied' },
+          { subject: 'Science', source: 'model-generated' }],
+      }, session: 'Session 1' }),
+    });
+    expect((await POST(req)).status).toBe(200);
+    expect(build).toHaveBeenCalledWith(validPresentation, undefined);
+  });
+
   it('returns 400 when presentationData fails schema validation', async () => {
     const req = new NextRequest('http://localhost:3000/api/download-pptx', {
       method: 'POST',

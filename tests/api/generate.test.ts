@@ -38,7 +38,10 @@ describe('POST /api/generate', () => {
     expect(res.status).toBe(200);
 
     const json = await res.json();
-    expect(json).toEqual(samplePresentation);
+    expect(json).toEqual({ ...samplePresentation, subjectEvidence: [
+      { subject: 'Science', source: 'unknown' },
+      { subject: 'Science', source: 'model-generated' },
+    ] });
     expect(spy).toHaveBeenCalledWith(
       'Detailed lesson plan on botany and flower dissection.',
       'Session 1',

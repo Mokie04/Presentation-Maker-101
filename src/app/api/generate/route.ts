@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateSlideContent } from '@/lib/providers/text-provider';
 import { detectSubject } from '@/lib/utils/subject-detector';
 import { requireSession } from '@/lib/sessionAuth';
+import { SUPPORTED_SUBJECTS } from '@/lib/utils/subject-options';
+import type { SubjectEvidence } from '@/types/presentation';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -23,7 +25,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const { text, session, subject } = body || {};
+    const { text, session, subject, subjectSource } = body || {};
 
     if (!text || typeof text !== 'string' || text.trim().length === 0) {
       return NextResponse.json(
@@ -41,14 +43,30 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const resolvedSubject =
-      subject && typeof subject === 'string' && subject.trim().length > 0
-        ? subject.trim()
-        : detectSubject(text);
+    // The new marker distinguishes an explicit teacher choice from legacy subject input.
+    const hasSubjectSource = Object.prototype.hasOwnProperty.call(body, 'subjectSource');
+    if (Object.prototype.hasOwnProperty.call(body, 'subjectEvidence') ||
+        (hasSubjectSource && (subjectSource !== 'teacher-supplied' ||
+          !SUPPORTED_SUBJECTS.some((label) => label === subject)))) {
+      return NextResponse.json(
+        { error: 'Invalid subject provenance: use a supported subject with subjectSource "teacher-supplied"; subjectEvidence is server-recorded.' },
+        { status: 400 }
+      );
+    }
 
+    const hasSubject = typeof subject === 'string' && subject.trim().length > 0;
+    const resolvedSubject = hasSubject ? subject.trim() : detectSubject(text);
+    const inputEvidence: SubjectEvidence = {
+      subject: resolvedSubject,
+      source: hasSubjectSource ? 'teacher-supplied' : hasSubject ? 'unknown' : 'keyword-detected',
+    };
     const presentation = await generateSlideContent(text, session, resolvedSubject);
 
-    return NextResponse.json(presentation, { status: 200 });
+    // Never accept provenance from model output or replace the recorded teacher value.
+    return NextResponse.json({
+      ...presentation,
+      subjectEvidence: [inputEvidence, { subject: presentation.subject, source: 'model-generated' }],
+    }, { status: 200 });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Internal Server Error';
     return NextResponse.json({ error: message }, { status: 500 });

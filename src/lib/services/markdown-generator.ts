@@ -1,4 +1,5 @@
 import type { PresentationData } from '@/types/presentation';
+import { imageSourceNotes } from '@/lib/image-metadata';
 import { formatFormulaToUnicode } from '@/lib/utils/formula-parser';
 
 export function buildPresentationMarkdown(
@@ -20,9 +21,14 @@ export function buildPresentationMarkdown(
       ? `\n\n*Suggested Visual:* ${slide.visualDescription}`
       : '';
 
+    const credits = slide.imageMetadata
+      ? '\n\n**Selected NASA image**\n\n' + imageSourceNotes(slide.imageMetadata)
+        .replace(/[\\`*_{}\[\]()#+.!>|<>]/g, '\\$&').replace(/\n/g, '  \n') + `\n\n[NASA source](<${slide.imageMetadata.sourceUrl ?? slide.imageMetadata.assetUrl}>)`
+      : '';
+
     return `## Slide ${slide.slideNumber} - ${slide.part}
 ### ${formatFormulaToUnicode(slide.title)}
-${points}${visual}
+${points}${visual}${credits}
 
 ---`;
   });

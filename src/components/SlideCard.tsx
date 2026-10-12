@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Trash2,
   Plus,
@@ -11,6 +11,8 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import type { SlideData } from '@/types/presentation';
+import { NasaImagePicker } from './NasaImagePicker';
+import { imageCreditText, type NasaImageMetadata } from '@/lib/image-metadata';
 import { FormattedFormula } from './FormattedFormula';
 
 export const PEDAGOGICAL_PARTS = [
@@ -50,6 +52,7 @@ interface SlideCardProps {
   onDeleteBullet: (slideIndex: number, bulletIndex: number) => void;
   onDeleteSlide: (index: number) => void;
   onRegenerateImage: (index: number, visualDescription: string) => void;
+  onSelectNasaImage?: (base64: string, metadata: NasaImageMetadata) => void;
 }
 
 export function SlideCard({
@@ -66,7 +69,9 @@ export function SlideCard({
   onDeleteBullet,
   onDeleteSlide,
   onRegenerateImage,
+  onSelectNasaImage,
 }: SlideCardProps) {
+  const [nasaPickerOpen, setNasaPickerOpen] = useState(false);
   const hasValidImage = Boolean(slideImage && slideImage !== 'failed');
   const imageSrc = hasValidImage
     ? slideImage?.startsWith('data:')
@@ -209,7 +214,7 @@ export function SlideCard({
                 />
                 <div className="absolute top-2 left-2 px-2 py-0.5 bg-sky-900/80 backdrop-blur rounded text-[10px] font-bold text-sky-100 flex items-center gap-1 shadow-sm">
                   <CheckCircle className="w-3 h-3 text-sky-300" />
-                  <span>Generated live</span>
+                  <span>{slide.imageMetadata ? 'Selected NASA image' : 'Generated live'}</span>
                 </div>
               </div>
             ) : (
@@ -222,6 +227,20 @@ export function SlideCard({
                   &ldquo;{slide.visualDescription}&rdquo;
                 </p>
               </div>
+            )}
+
+            {slide.imageMetadata && (
+              <div className="text-xs text-slate-600 space-y-1">
+                <p>{imageCreditText(slide.imageMetadata)}</p>
+                <a href={slide.imageMetadata.sourceUrl ?? slide.imageMetadata.assetUrl} target="_blank" rel="noopener noreferrer" className="text-sky-700 underline">NASA source</a>
+                {slide.imageMetadata.description && <details><summary>Source description</summary><p className="whitespace-pre-wrap">{slide.imageMetadata.description}</p></details>}
+              </div>
+            )}
+            {onSelectNasaImage && (
+              nasaPickerOpen ? <NasaImagePicker title={slide.title} onCancel={() => setNasaPickerOpen(false)}
+                onSelect={(base64, metadata) => { onSelectNasaImage(base64, metadata); setNasaPickerOpen(false); }} />
+                : <button type="button" onClick={() => setNasaPickerOpen(true)}
+                  className="w-full py-2 px-3 rounded-lg text-xs font-bold text-sky-800 bg-sky-50 border border-sky-200">Find NASA image</button>
             )}
 
             <button

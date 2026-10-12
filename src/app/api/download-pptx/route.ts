@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { presentationDataSchema } from '@/lib/providers/text-provider';
+import { exportPresentationDataSchema } from '@/lib/schemas/presentation-export';
 import { buildPresentationPptx } from '@/lib/services/pptx-generator';
 import { requireSession } from '@/lib/sessionAuth';
 
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const { presentationData, slideImages, session } = body || {};
 
-    const validation = presentationDataSchema.safeParse(presentationData);
+    const validation = exportPresentationDataSchema.safeParse(presentationData);
     if (!validation.success) {
       const issues = validation.error.issues || [];
       const errorMsg = issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ');

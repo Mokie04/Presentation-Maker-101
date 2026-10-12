@@ -1,5 +1,8 @@
 'use client';
 
+import type { NasaImageMetadata } from '@/lib/image-metadata';
+import type { SupportedSubject } from '@/lib/utils/subject-options';
+
 import React, { useRef, useState } from 'react';
 import {
   FileDown,
@@ -68,12 +71,14 @@ function PresentationWorkspace() {
   const [extractedText, setExtractedText] = useState('');
   const [fileName, setFileName] = useState('');
   const [selectedSession, setSelectedSession] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState<SupportedSubject | ''>('');
   const [presentationData, setPresentationData] = useState<PresentationData | null>(null);
   const [imagesById, setImagesById] = useState<Record<number, string>>({});
   const [generatingById, setGeneratingById] = useState<Record<number, boolean>>({});
   // Image ownership stays stable when deleting slides changes their positions.
   const slideIds = useRef<number[]>([]);
   const nextSlideId = useRef(0);
+  const imageVersions = useRef<Record<number, number>>({});
   const slideImages: Record<number, string> = {};
   const generatingImages: Record<number, boolean> = {};
   slideIds.current.forEach((id, index) => {
@@ -99,7 +104,7 @@ function PresentationWorkspace() {
   };
 
   // Generate Presentation Flow
-  const handleGenerate = async (text: string, session: string) => {
+  const handleGenerate = async (text: string, session: string, subject?: SupportedSubject) => {
     setIsLoading(true);
     setErrorMsg('');
     setLoadingStage('Analyzing curriculum & instructional structure...');
@@ -116,7 +121,9 @@ function PresentationWorkspace() {
       const res = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, session }),
+        body: JSON.stringify({ text, session,
+          ...(subject ? { subject, subjectSource: 'teacher-supplied' } : {}),
+        }),
       });
 
       clearTimeout(stageTimer1);
@@ -159,6 +166,7 @@ function PresentationWorkspace() {
   // Background batch image generation for eligible slides
   const triggerBatchImageGeneration = (slides: SlideData[]) => {
     const requestSlideIds = [...slideIds.current];
+    const requestVersions = { ...imageVersions.current };
     const slidesForBatch = slides.map((s, index) => ({
       slideIndex: index,
       part: s.part,
@@ -182,7 +190,8 @@ function PresentationWorkspace() {
           setImagesById((prev) => {
             const updated = { ...prev };
             requestSlideIds.forEach((id, index) => {
-              if (slideIds.current.includes(id) && data.images[index] !== undefined) {
+              if (slideIds.current.includes(id) && data.images[index] !== undefined &&
+                  (imageVersions.current[id] ?? 0) === (requestVersions[id] ?? 0)) {
                 updated[id] = data.images[index];
               }
             });
@@ -198,6 +207,8 @@ function PresentationWorkspace() {
   // Single slide image generation / regeneration
   const handleRegenerateImage = async (slideIndex: number, visualDescription: string) => {
     const slideId = slideIds.current[slideIndex];
+    const version = (imageVersions.current[slideId] ?? 0) + 1;
+    imageVersions.current[slideId] = version;
     setGeneratingById((prev) => ({ ...prev, [slideId]: true }));
     try {
       const res = await fetch('/api/generate-image', {
@@ -215,19 +226,34 @@ function PresentationWorkspace() {
       if (!res.ok || !data.base64) {
         throw new Error(data.error || 'Failed to render image.');
       }
-      setImagesById((prev) => slideIds.current.includes(slideId)
-        ? { ...prev, [slideId]: data.base64! } : prev);
+      if (slideIds.current.includes(slideId) && imageVersions.current[slideId] === version) {
+        setImagesById((prev) => ({ ...prev, [slideId]: data.base64! }));
+        setPresentationData((prev) => prev ? { ...prev, slides: prev.slides.map((slide, i) => {
+          if (slideIds.current[i] !== slideId) return slide;
+          return { ...slide, imageMetadata: undefined };
+        }) } : prev);
+      }
     } catch (err) {
       console.error('Image regeneration failed:', err);
-      setImagesById((prev) => slideIds.current.includes(slideId)
-        ? { ...prev, [slideId]: 'failed' } : prev);
+      setImagesById((prev) => slideIds.current.includes(slideId) && imageVersions.current[slideId] === version &&
+        !presentationData?.slides[slideIndex]?.imageMetadata ? { ...prev, [slideId]: 'failed' } : prev);
     } finally {
       setGeneratingById((prev) => {
+        if (imageVersions.current[slideId] !== version) return prev;
         const updated = { ...prev };
         delete updated[slideId];
         return updated;
       });
     }
+  };
+
+  const handleSelectNasaImage = (slideId: number, base64: string, metadata: NasaImageMetadata) => {
+    if (!slideIds.current.includes(slideId)) return;
+    imageVersions.current[slideId] = (imageVersions.current[slideId] ?? 0) + 1;
+    setImagesById((prev) => ({ ...prev, [slideId]: `data:${metadata.mimeType};base64,${base64}` }));
+    setGeneratingById((prev) => { const next = { ...prev }; delete next[slideId]; return next; });
+    setPresentationData((prev) => prev ? { ...prev, slides: prev.slides.map((slide, i) =>
+      slideIds.current[i] === slideId ? { ...slide, imageMetadata: metadata } : slide) } : prev);
   };
 
   // Slide Edit Handlers
@@ -442,11 +468,13 @@ function PresentationWorkspace() {
   const handleReset = () => {
     setPresentationData(null);
     slideIds.current = [];
+    imageVersions.current = {};
     setImagesById({});
     setGeneratingById({});
     setExtractedText('');
     setFileName('');
     setSelectedSession('');
+    setSelectedSubject('');
     setErrorMsg('');
   };
 
@@ -463,6 +491,8 @@ function PresentationWorkspace() {
             onUploadSuccess={handleUploadSuccess}
             selectedSession={selectedSession}
             onSessionChange={setSelectedSession}
+            selectedSubject={selectedSubject}
+            onSubjectChange={setSelectedSubject}
             onGenerate={handleGenerate}
             isLoading={isLoading}
             loadingStage={loadingStage}
@@ -583,8 +613,9 @@ function PresentationWorkspace() {
 
             {/* Responsive Slides Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {presentationData.slides.map((slide, idx) => (
-                <SlideCard
+              {presentationData.slides.map((slide, idx) => {
+                const id = slideIds.current[idx];
+                return <SlideCard
                   key={slideIds.current[idx]}
                   slide={slide}
                   index={idx}
@@ -599,8 +630,9 @@ function PresentationWorkspace() {
                   onDeleteBullet={handleDeleteBullet}
                   onDeleteSlide={handleDeleteSlide}
                   onRegenerateImage={handleRegenerateImage}
-                />
-              ))}
+                  onSelectNasaImage={(base64, metadata) => handleSelectNasaImage(id, base64, metadata)}
+                />;
+              })}
             </div>
           </div>
         )}
