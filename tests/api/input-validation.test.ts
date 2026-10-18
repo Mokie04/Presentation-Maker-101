@@ -67,11 +67,29 @@ describe('generate-image input', () => {
     ['a blank prompt', { prompt: '   ', slideIndex: 3 }, /prompt/],
     ['a non-integer slideIndex', { prompt: 'Roots', slideIndex: 2.5 }, /slideIndex/],
     ['an over-long title', { prompt: 'Roots', slideIndex: 3, title: 't'.repeat(301) }, /title/],
+    ['a negative variation', { prompt: 'Roots', slideIndex: 3, variation: -1 }, /variation/],
+    ['a fractional variation', { prompt: 'Roots', slideIndex: 3, variation: 1.5 }, /variation/],
+    ['a variation above 1000', { prompt: 'Roots', slideIndex: 3, variation: 1001 }, /variation/],
   ])('rejects %s and keeps slideIndex in the body', async (_, body, pattern) => {
     const generateSpy = vi.spyOn(imageProvider, 'generateSlideImage').mockResolvedValue('image');
     const json = await expectRejected(await call(generateImage, body), pattern, 'midjourney');
     expect(json).toHaveProperty('slideIndex', body.slideIndex);
     expect(generateSpy).not.toHaveBeenCalled();
+  });
+});
+
+describe('generate-image variation', () => {
+  it('passes a valid variation to the image provider', async () => {
+    const spy = vi.spyOn(imageProvider, 'generateSlideImage').mockResolvedValueOnce('image');
+    const res = await call(generateImage, { prompt: 'Roots', slideIndex: 3, variation: 1000 });
+    expect(res.status).toBe(200);
+    expect(spy).toHaveBeenCalledWith('Roots', { variation: 1000 });
+  });
+
+  it('keeps the old provider call when no variation is sent', async () => {
+    const spy = vi.spyOn(imageProvider, 'generateSlideImage').mockResolvedValueOnce('image');
+    await call(generateImage, { prompt: 'Roots', slideIndex: 3 });
+    expect(spy).toHaveBeenCalledWith('Roots');
   });
 });
 

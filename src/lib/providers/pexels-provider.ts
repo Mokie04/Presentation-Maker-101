@@ -27,6 +27,20 @@ export interface PexelsFetchOptions {
   apiKey?: string;
   title?: string;
   fetchFn?: typeof fetch;
+  /** Non-negative integer choosing among the results; 0 is the top result. */
+  variation?: number;
+}
+
+/** Results fetched per search so a regenerate can pick a different photo. Pexels ranks them the same either way. */
+export const PEXELS_RESULTS_PER_PAGE = 15;
+
+function searchEndpoint(query: string): string {
+  return `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=${PEXELS_RESULTS_PER_PAGE}&orientation=landscape`;
+}
+
+// Variation 0 is the top result, the photo the old single-result search returned.
+function pickPhoto(photos: PexelsPhoto[] | undefined, variation = 0): PexelsPhoto | undefined {
+  return photos?.length ? photos[variation % photos.length] : undefined;
 }
 
 const STOP_WORDS = new Set([
@@ -88,9 +102,7 @@ export async function searchPexelsPhoto(
   }
 
   const customFetch = options?.fetchFn ?? fetch;
-  const endpoint = `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape`;
-
-  const response = await customFetch(endpoint, {
+  const response = await customFetch(searchEndpoint(query), {
     headers: {
       Authorization: apiKey,
     },
@@ -101,23 +113,22 @@ export async function searchPexelsPhoto(
   }
 
   const data = (await response.json()) as PexelsSearchResponse;
-  const firstPhoto = data.photos?.[0];
+  const photo = pickPhoto(data.photos, options?.variation);
 
-  if (firstPhoto) {
-    return firstPhoto.src.medium || firstPhoto.src.large || firstPhoto.src.large2x || firstPhoto.src.original;
+  if (photo) {
+    return photo.src.medium || photo.src.large || photo.src.large2x || photo.src.original;
   }
 
   // If initial search returned 0 results, retry with first 2 words or a broader term
   const parts = query.split(' ');
   if (parts.length > 2) {
     const broaderQuery = parts.slice(0, 2).join(' ');
-    const fallbackEndpoint = `https://api.pexels.com/v1/search?query=${encodeURIComponent(broaderQuery)}&per_page=1&orientation=landscape`;
-    const fallbackRes = await customFetch(fallbackEndpoint, {
+    const fallbackRes = await customFetch(searchEndpoint(broaderQuery), {
       headers: { Authorization: apiKey },
     });
     if (fallbackRes.ok) {
       const fallbackData = (await fallbackRes.json()) as PexelsSearchResponse;
-      const fallbackPhoto = fallbackData.photos?.[0];
+      const fallbackPhoto = pickPhoto(fallbackData.photos, options?.variation);
       if (fallbackPhoto) {
         return fallbackPhoto.src.medium || fallbackPhoto.src.large || fallbackPhoto.src.large2x;
       }

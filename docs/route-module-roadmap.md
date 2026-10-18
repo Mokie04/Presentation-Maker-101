@@ -58,7 +58,7 @@ Final limits (Phase 2). Body over the cap → 413 `Request body exceeds the size
 - Migrate `upload`, `nasa-images/*`, `commons-images/*` (keeping the Commons 413 and 429 + `Retry-After` behaviour through `PublicError`), and `health`.
 - `tests/api/auth-protection.test.ts` becomes table-driven over every route handler.
 
-### After Phase 2 (separate PR)
+### After Phase 2 (separate PR) — done
 - Regenerate variation fix (Q5).
 
 ## Shipping rule

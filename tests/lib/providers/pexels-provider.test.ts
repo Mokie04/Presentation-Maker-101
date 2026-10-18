@@ -3,6 +3,7 @@ import {
   extractSearchKeywords,
   searchPexelsPhoto,
   fetchPexelsImageBase64,
+  PEXELS_RESULTS_PER_PAGE,
 } from '@/lib/providers/pexels-provider';
 import { generateSlideImage } from '@/lib/providers/image-provider';
 import type OpenAI from 'openai';
@@ -166,4 +167,57 @@ describe('pexels-provider', () => {
       }
     });
   });
+
+  describe('variation', () => {
+    const photos = (count: number) => Array.from({ length: count }, (_, i) => ({
+      src: { medium: `https://images.pexels.com/photos/${i}/medium.jpg` },
+    }));
+    const results = (count: number) => ({ ok: true, json: async () => ({ total_results: count, photos: photos(count) }) });
+    const search = (variation: number | undefined, mockFetch: ReturnType<typeof vi.fn>, query = 'volcano eruption') =>
+      searchPexelsPhoto(query, { apiKey: 'test-pexels-key', fetchFn: mockFetch as unknown as typeof fetch, variation });
+
+    it('asks Pexels for a page of results', async () => {
+      const mockFetch = vi.fn().mockResolvedValue(results(5));
+      await search(undefined, mockFetch);
+      expect(mockFetch.mock.calls[0][0]).toContain(`per_page=${PEXELS_RESULTS_PER_PAGE}&`);
+      expect(PEXELS_RESULTS_PER_PAGE).toBe(15);
+    });
+
+    it.each([
+      ['no variation picks the first photo, as before', undefined, 0],
+      ['variation 0 picks the first photo', 0, 0],
+      ['variation 2 picks the third photo', 2, 2],
+      ['a variation past the result count wraps around', 17, 2],
+    ])('%s', async (_, variation, expected) => {
+      const mockFetch = vi.fn().mockResolvedValue(results(5));
+      expect(await search(variation, mockFetch)).toBe(`https://images.pexels.com/photos/${expected}/medium.jpg`);
+    });
+
+    it('applies the variation to the broader-query retry', async () => {
+      const mockFetch = vi.fn()
+        .mockResolvedValueOnce(results(0))
+        .mockResolvedValueOnce(results(3));
+      const url = await search(4, mockFetch, 'very specific biological cell mitosis');
+      expect(url).toBe('https://images.pexels.com/photos/1/medium.jpg');
+      expect(mockFetch.mock.calls[1][0]).toContain('query=very%20specific');
+      expect(mockFetch.mock.calls[1][0]).toContain(`per_page=${PEXELS_RESULTS_PER_PAGE}&`);
+    });
+
+    it('still returns null when neither search finds a photo', async () => {
+      const mockFetch = vi.fn().mockResolvedValue(results(0));
+      expect(await search(3, mockFetch, 'very specific biological cell mitosis')).toBeNull();
+    });
+
+    it('fetchPexelsImageBase64 downloads the varied photo', async () => {
+      const mockFetch = vi.fn()
+        .mockResolvedValueOnce(results(5))
+        .mockResolvedValueOnce({ ok: true, arrayBuffer: async () => new Uint8Array(Buffer.from('third')).buffer });
+      const base64 = await fetchPexelsImageBase64('volcano eruption lava', {
+        apiKey: 'test-pexels-key', fetchFn: mockFetch as unknown as typeof fetch, variation: 2,
+      });
+      expect(mockFetch.mock.calls[1][0]).toBe('https://images.pexels.com/photos/2/medium.jpg');
+      expect(base64).toBe(Buffer.from('third').toString('base64'));
+    });
+  });
 });
+
