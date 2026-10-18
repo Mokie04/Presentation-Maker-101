@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import { SlideCard } from '@/components/SlideCard';
 import type { SlideData } from '@/types/presentation';
 
@@ -21,7 +21,7 @@ describe('SlideCard component', () => {
     render(
       <SlideCard
         slide={sampleSlide}
-        index={0}
+        slideId={7}
         totalSlides={5}
         isEditing={false}
         onUpdateTitle={vi.fn()}
@@ -50,7 +50,7 @@ describe('SlideCard component', () => {
     render(
       <SlideCard
         slide={sampleSlide}
-        index={0}
+        slideId={7}
         totalSlides={5}
         isEditing={true}
         onUpdateTitle={handleUpdateTitle}
@@ -65,27 +65,27 @@ describe('SlideCard component', () => {
     // Title input
     const titleInput = screen.getByDisplayValue('Discovering Plant Superpowers');
     fireEvent.change(titleInput, { target: { value: 'New Slide Title' } });
-    expect(handleUpdateTitle).toHaveBeenCalledWith(0, 'New Slide Title');
+    expect(handleUpdateTitle).toHaveBeenCalledWith(7, 'New Slide Title');
 
     // Bullet input
     const bulletInput = screen.getByDisplayValue('Plants make their own food through sunlight');
     fireEvent.change(bulletInput, { target: { value: 'Updated first point' } });
-    expect(handleUpdateBullet).toHaveBeenCalledWith(0, 0, 'Updated first point');
+    expect(handleUpdateBullet).toHaveBeenCalledWith(7, 0, 'Updated first point');
 
     // Add bullet button
     const addBulletBtn = screen.getByRole('button', { name: /\+ Add Bullet Point/i });
     fireEvent.click(addBulletBtn);
-    expect(handleAddBullet).toHaveBeenCalledWith(0);
+    expect(handleAddBullet).toHaveBeenCalledWith(7);
 
     // Delete first bullet
     const deleteBulletBtns = screen.getAllByRole('button', { name: /Remove Bullet/i });
     fireEvent.click(deleteBulletBtns[0]);
-    expect(handleDeleteBullet).toHaveBeenCalledWith(0, 0);
+    expect(handleDeleteBullet).toHaveBeenCalledWith(7, 0);
 
     // Delete slide button
     const deleteSlideBtn = screen.getByRole('button', { name: /Delete Slide/i });
     fireEvent.click(deleteSlideBtn);
-    expect(handleDeleteSlide).toHaveBeenCalledWith(0);
+    expect(handleDeleteSlide).toHaveBeenCalledWith(7);
   });
 
   it('renders image when slideImage is provided, and button triggers regeneration', () => {
@@ -94,7 +94,7 @@ describe('SlideCard component', () => {
     const { rerender } = render(
       <SlideCard
         slide={sampleSlide}
-        index={0}
+        slideId={7}
         totalSlides={5}
         isEditing={false}
         slideImage="sample-base64-data"
@@ -111,13 +111,13 @@ describe('SlideCard component', () => {
 
     const regenBtn = screen.getByRole('button', { name: /Regenerate AI Graphic/i });
     fireEvent.click(regenBtn);
-    expect(handleRegen).toHaveBeenCalledWith(0, sampleSlide.visualDescription);
+    expect(handleRegen).toHaveBeenCalledWith(7, sampleSlide.visualDescription);
 
     // Rerender without image -> shows prompt and render button
     rerender(
       <SlideCard
         slide={sampleSlide}
-        index={0}
+        slideId={7}
         totalSlides={5}
         isEditing={false}
         slideImage={undefined}
@@ -133,6 +133,69 @@ describe('SlideCard component', () => {
     expect(screen.getByText(/Cartoon of a smiling sunflower/i)).toBeTruthy();
     const renderBtn = screen.getByRole('button', { name: /Render Visual Concept Image/i });
     fireEvent.click(renderBtn);
-    expect(handleRegen).toHaveBeenCalledWith(0, sampleSlide.visualDescription);
+    expect(handleRegen).toHaveBeenCalledWith(7, sampleSlide.visualDescription);
+  });
+
+  it('passes its slideId to the part callback', () => {
+    const handleUpdatePart = vi.fn();
+    render(
+      <SlideCard
+        slide={sampleSlide}
+        slideId={7}
+        totalSlides={5}
+        isEditing={true}
+        onUpdatePart={handleUpdatePart}
+        onUpdateTitle={vi.fn()}
+        onUpdateBullet={vi.fn()}
+        onAddBullet={vi.fn()}
+        onDeleteBullet={vi.fn()}
+        onDeleteSlide={vi.fn()}
+        onRegenerateImage={vi.fn()}
+      />
+    );
+
+    fireEvent.change(screen.getByLabelText('Pedagogical Part'), { target: { value: 'Assessment' } });
+    expect(handleUpdatePart).toHaveBeenCalledWith(7, 'Assessment');
+  });
+
+  describe('failed regeneration message', () => {
+    function renderCard(props: { slideImage?: string; imageError?: string; isGeneratingImage?: boolean }) {
+      return render(
+        <SlideCard
+          slide={sampleSlide}
+          slideId={7}
+          totalSlides={5}
+          isEditing={false}
+          onUpdateTitle={vi.fn()}
+          onUpdateBullet={vi.fn()}
+          onAddBullet={vi.fn()}
+          onDeleteBullet={vi.fn()}
+          onDeleteSlide={vi.fn()}
+          onRegenerateImage={vi.fn()}
+          {...props}
+        />
+      );
+    }
+
+    it('says the previous image was kept when a regeneration fails over an image', () => {
+      renderCard({ slideImage: 'sample-base64-data', imageError: 'quota exceeded' });
+      expect(screen.getByText('Regeneration failed. Kept the previous image.')).toBeTruthy();
+      expect(screen.queryByText(/quota exceeded/)).toBeNull();
+      expect(screen.getByRole('button', { name: /Regenerate AI Graphic/i }).hasAttribute('disabled')).toBe(false);
+    });
+
+    it('asks to try again when a slide without an image fails', () => {
+      renderCard({ slideImage: 'failed', imageError: 'upstream 500 at https://internal' });
+      expect(screen.getByText('Image generation failed. Try again.')).toBeTruthy();
+      expect(screen.queryByText(/internal/)).toBeNull();
+    });
+
+    it('shows no message while generating or without an error', () => {
+      renderCard({ slideImage: 'sample-base64-data', imageError: 'quota', isGeneratingImage: true });
+      expect(screen.queryByText(/failed\./)).toBeNull();
+      cleanup();
+      renderCard({ slideImage: 'sample-base64-data' });
+      expect(screen.queryByText(/failed\./)).toBeNull();
+    });
   });
 });

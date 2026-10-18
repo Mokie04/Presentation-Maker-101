@@ -18,13 +18,6 @@ export function useSlideDeck() {
     setState(next);
   }, []);
 
-  const idAt = (index: number) => stateRef.current.slides[index]?.id;
-
-  const withSlide = (index: number, run: (slideId: number) => void) => {
-    const slideId = idAt(index);
-    if (slideId !== undefined) run(slideId);
-  };
-
   const presentationData = useMemo(() => toPresentationData(state), [state]);
   const slideImages = useMemo(() => toSlideImages(state), [state]);
   const generatingImages = useMemo(() => toGeneratingFlags(state), [state]);
@@ -68,9 +61,9 @@ export function useSlideDeck() {
   };
 
   // Single slide image generation / regeneration
-  const regenerateImage = async (slideIndex: number, visualDescription: string) => {
-    const slideId = idAt(slideIndex);
-    if (slideId === undefined) return;
+  const regenerateImage = async (slideId: number, visualDescription: string) => {
+    const slideIndex = stateRef.current.slides.findIndex((s) => s.id === slideId);
+    if (slideIndex === -1) return;
     dispatch({ type: 'regenerationStarted', slideId });
     const version = stateRef.current.slides.find((s) => s.id === slideId)!.image.version;
     const token: ImageToken = { slideId, version };
@@ -105,15 +98,14 @@ export function useSlideDeck() {
     slideIds,
     loadPresentation,
     reset: () => dispatch({ type: 'reset' }),
-    updatePart: (index: number, part: string) => withSlide(index, (slideId) => dispatch({ type: 'partUpdated', slideId, part })),
-    updateTitle: (index: number, title: string) => withSlide(index, (slideId) => dispatch({ type: 'titleUpdated', slideId, title })),
-    updateBullet: (index: number, bulletIndex: number, text: string) =>
-      withSlide(index, (slideId) => dispatch({ type: 'bulletUpdated', slideId, bulletIndex, text })),
-    addBullet: (index: number) => withSlide(index, (slideId) => dispatch({ type: 'bulletAdded', slideId })),
-    deleteBullet: (index: number, bulletIndex: number) =>
-      withSlide(index, (slideId) => dispatch({ type: 'bulletDeleted', slideId, bulletIndex })),
+    updatePart: (slideId: number, part: string) => dispatch({ type: 'partUpdated', slideId, part }),
+    updateTitle: (slideId: number, title: string) => dispatch({ type: 'titleUpdated', slideId, title }),
+    updateBullet: (slideId: number, bulletIndex: number, text: string) =>
+      dispatch({ type: 'bulletUpdated', slideId, bulletIndex, text }),
+    addBullet: (slideId: number) => dispatch({ type: 'bulletAdded', slideId }),
+    deleteBullet: (slideId: number, bulletIndex: number) => dispatch({ type: 'bulletDeleted', slideId, bulletIndex }),
     addSlide: () => dispatch({ type: 'slideAdded' }),
-    deleteSlide: (index: number) => withSlide(index, (slideId) => dispatch({ type: 'slideDeleted', slideId })),
+    deleteSlide: (slideId: number) => dispatch({ type: 'slideDeleted', slideId }),
     regenerateImage,
     selectLibraryImage: (slideId: number, base64: string, metadata: ImageMetadata) =>
       dispatch({ type: 'libraryImageSelected', slideId, base64, metadata }),
