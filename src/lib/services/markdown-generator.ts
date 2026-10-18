@@ -1,5 +1,5 @@
 import type { PresentationData } from '@/types/presentation';
-import { imageSourceNotes } from '@/lib/image-metadata';
+import { describeImageCredit } from '@/lib/image-credit';
 import { formatFormulaToUnicode } from '@/lib/utils/formula-parser';
 
 export function buildPresentationMarkdown(
@@ -21,12 +21,13 @@ export function buildPresentationMarkdown(
       ? `\n\n*Suggested Visual:* ${slide.visualDescription}`
       : '';
 
-    const credits = slide.imageMetadata
-      ? `\n\n**Selected ${slide.imageMetadata.source === 'commons' ? 'Commons' : 'NASA'} image**\n\n` + imageSourceNotes(slide.imageMetadata)
-        .replace(/[\\`*_{}\[\]()#+.!>|<>]/g, '\\$&').replace(/\n/g, '  \n') + `\n\n[${slide.imageMetadata.source === 'commons' ? 'Commons' : 'NASA'} source](<${slide.imageMetadata.sourceUrl ?? slide.imageMetadata.assetUrl}>)`
+    const credit = slide.imageMetadata && describeImageCredit(slide.imageMetadata);
+    const credits = credit
+      ? `\n\n**Selected ${credit.sourceLabel} image**\n\n` + credit.notes
+        .replace(/[\\`*_{}\[\]()#+.!>|<>]/g, '\\$&').replace(/\n/g, '  \n') + `\n\n[${credit.sourceLabel} source](<${credit.sourceLink}>)`
       : '';
-    const licenseLink = slide.imageMetadata?.source === 'commons' && slide.imageMetadata.licenseUrl
-      ? `\n\n[License: ${slide.imageMetadata.licenseName}](<${slide.imageMetadata.licenseUrl}>)` : '';
+    const licenseLink = credit?.license?.url
+      ? `\n\n[License: ${credit.license.name}](<${credit.license.url}>)` : '';
 
     return `## Slide ${slide.slideNumber} - ${slide.part}
 ### ${formatFormulaToUnicode(slide.title)}

@@ -2,7 +2,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { CommonsImageCandidate } from '@/lib/providers/commons-provider';
 import type { NasaImageCandidate } from '@/lib/providers/nasa-provider';
-import { imageCreditText, imageMetadataSchema, type ImageMetadata } from '@/lib/image-metadata';
+import { imageCreditText, imageSourceLabel } from '@/lib/image-credit';
+import { imageMetadataSchema, type ImageMetadata } from '@/lib/image-metadata';
 
 export function NasaImagePicker({ title, onSelect, onCancel }: {
   title: string;
@@ -11,7 +12,7 @@ export function NasaImagePicker({ title, onSelect, onCancel }: {
 }) {
   const [source, setSource] = useState<'nasa' | 'commons'>('nasa');
   const [commonsRetrySeconds, setCommonsRetrySeconds] = useState(0);
-  const label = source === 'commons' ? 'Commons' : 'NASA';
+  const label = imageSourceLabel(source);
   const limited = source === 'commons' && commonsRetrySeconds > 0;
   const [query, setQuery] = useState(title);
   const [candidates, setCandidates] = useState<(NasaImageCandidate | CommonsImageCandidate)[] | null>(null);
