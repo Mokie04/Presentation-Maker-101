@@ -8,6 +8,6 @@
 
 **Pedagogical part** — `SlideData.part`, the lesson phase a Slide belongs to (`PEDAGOGICAL_PARTS` in `SlideCard`, e.g. Review, Motivation, Discussion, Assessment). It decides whether batch generation makes an image for the Slide (`shouldGenerateImageForPart`).
 
-**Credit (`ImageMetadata`)** — Source and attribution of a library image (NASA or Wikimedia Commons), stored on `SlideData.imageMetadata` and rendered by `imageCreditText`. AI-generated images have no Credit.
+**Credit (`ImageMetadata`)** — Source and attribution of a library image (NASA or Wikimedia Commons), stored on `SlideData.imageMetadata`. `describeImageCredit` in `src/lib/image-credit.ts` describes it once (source label, credit line, source link, license, notes); each renderer only formats that description. AI-generated images have no Credit.
 
 **Image intent** — A user request for a specific Slide image: a single regeneration or a library selection. A new Image intent supersedes any older in-flight result for that Slide, including a pending batch result.

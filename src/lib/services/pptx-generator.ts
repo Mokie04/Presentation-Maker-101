@@ -1,7 +1,7 @@
 import PptxGenJS from 'pptxgenjs';
 import imageSize from 'image-size';
 import type { PresentationData } from '@/types/presentation';
-import { imageCreditText, imageSourceNotes } from '@/lib/image-metadata';
+import { describeImageCredit } from '@/lib/image-credit';
 import { parseFormulaToSegments } from '@/lib/utils/formula-parser';
 
 export const SHADE_PRIMARY = '0284C7';
@@ -65,12 +65,13 @@ export function createPresentationPptx(
     const slideObj = pptx.addSlide();
 
     if (slide.imageMetadata) {
-      slideObj.addText(`${slide.imageMetadata.source === 'commons' ? 'Commons' : `NASA ${slide.imageMetadata.nasaId}`} — ${imageCreditText(slide.imageMetadata)}`, {
+      const credit = describeImageCredit(slide.imageMetadata);
+      slideObj.addText(`${credit.heading} — ${credit.creditLine}`, {
         x: 0.8, y: 7.15, w: 11.7, h: 0.25, fontSize: 8, color: '475569',
         fontFace: DEFAULT_FONT_FACE, fit: 'shrink',
-        hyperlink: { url: slide.imageMetadata.sourceUrl ?? slide.imageMetadata.assetUrl },
+        hyperlink: { url: credit.sourceLink },
       });
-      slideObj.addNotes(imageSourceNotes(slide.imageMetadata));
+      slideObj.addNotes(credit.notes);
     }
 
     // 1. Background

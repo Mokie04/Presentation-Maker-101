@@ -12,7 +12,8 @@ import {
 } from 'lucide-react';
 import type { SlideData } from '@/types/presentation';
 import { NasaImagePicker } from './NasaImagePicker';
-import { imageCreditText, type ImageMetadata } from '@/lib/image-metadata';
+import { describeImageCredit } from '@/lib/image-credit';
+import type { ImageMetadata } from '@/lib/image-metadata';
 import { FormattedFormula } from './FormattedFormula';
 
 export const PEDAGOGICAL_PARTS = [
@@ -82,6 +83,7 @@ export function SlideCard({
     : undefined;
 
   const badgeInfo = getPartBadgeInfo(slide.part);
+  const credit = slide.imageMetadata && describeImageCredit(slide.imageMetadata);
 
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 border border-sky-100/90 overflow-hidden flex flex-col h-full">
@@ -216,7 +218,7 @@ export function SlideCard({
                 />
                 <div className="absolute top-2 left-2 px-2 py-0.5 bg-sky-900/80 backdrop-blur rounded text-[10px] font-bold text-sky-100 flex items-center gap-1 shadow-sm">
                   <CheckCircle className="w-3 h-3 text-sky-300" />
-                  <span>{slide.imageMetadata ? `Selected ${slide.imageMetadata.source === 'commons' ? 'Commons' : 'NASA'} image` : 'Generated live'}</span>
+                  <span>{credit ? `Selected ${credit.sourceLabel} image` : 'Generated live'}</span>
                 </div>
               </div>
             ) : (
@@ -231,11 +233,11 @@ export function SlideCard({
               </div>
             )}
 
-            {slide.imageMetadata && (
+            {credit && (
               <div className="text-xs text-slate-600 space-y-1">
-                <p>{imageCreditText(slide.imageMetadata)}</p>
-                <a href={slide.imageMetadata.sourceUrl ?? slide.imageMetadata.assetUrl} target="_blank" rel="noopener noreferrer" className="text-sky-700 underline">{slide.imageMetadata.source === 'commons' ? 'Commons source' : 'NASA source'}</a>
-                {slide.imageMetadata.description && <details><summary>Source description</summary><p className="whitespace-pre-wrap">{slide.imageMetadata.description}</p></details>}
+                <p>{credit.creditLine}</p>
+                <a href={credit.sourceLink} target="_blank" rel="noopener noreferrer" className="text-sky-700 underline">{`${credit.sourceLabel} source`}</a>
+                {credit.description && <details><summary>Source description</summary><p className="whitespace-pre-wrap">{credit.description}</p></details>}
               </div>
             )}
             {onSelectImage && (
