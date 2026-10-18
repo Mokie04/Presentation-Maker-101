@@ -115,12 +115,12 @@ export function SlideshowModal({
       className="fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between overflow-hidden animate-fadeIn"
     >
       {/* Top Bar */}
-      <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-6 py-3.5 flex items-center justify-between text-white z-10">
-        <div className="flex items-center gap-3">
+      <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3 text-white z-10">
+        <div className="flex items-center gap-3 min-w-0">
           {(() => {
             const badge = getPartBadgeInfo(currentSlide.part);
             return (
-              <span className={`px-2.5 py-1 text-xs font-black uppercase tracking-wider rounded-md ${badge.bg} text-white shadow-sm`}>
+              <span className={`px-2.5 py-1 text-xs font-black uppercase tracking-wider rounded-md whitespace-nowrap ${badge.bg} text-white shadow-sm`}>
                 {badge.label}
               </span>
             );
@@ -130,8 +130,8 @@ export function SlideshowModal({
           </span>
         </div>
 
-        <div className="flex items-center gap-4">
-          <span className="text-xs sm:text-sm font-bold bg-slate-800 border border-slate-700 px-3 py-1 rounded-full text-slate-300">
+        <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
+          <span className="text-xs sm:text-sm font-bold bg-slate-800 border border-slate-700 px-3 py-1 rounded-full text-slate-300 whitespace-nowrap">
             Slide {currentIndex + 1} of {totalSlides}
           </span>
           <button
@@ -147,8 +147,9 @@ export function SlideshowModal({
       </div>
 
       {/* Center Slide Viewport */}
-      <div className="flex-1 flex items-center justify-center p-4 sm:p-8 overflow-y-auto">
-        <div className="w-full max-w-6xl aspect-[16/9] bg-[#F0F9FF] rounded-2xl shadow-2xl border-4 border-sky-600/20 p-6 sm:p-12 flex flex-col justify-between overflow-hidden relative">
+      {/* my-auto centres the card but keeps its top reachable when it is taller than the viewport */}
+      <div className="flex-1 flex justify-center p-4 sm:p-8 overflow-y-auto">
+        <div className="w-full max-w-6xl my-auto md:aspect-[16/9] bg-[#F0F9FF] rounded-2xl shadow-2xl border-4 border-sky-600/20 p-6 sm:p-12 flex flex-col justify-between gap-4 md:gap-0 md:overflow-hidden relative">
           {/* Slide Header: Part & Title */}
           <div className="space-y-2">
             <span className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#0284C7]">
@@ -224,7 +225,7 @@ export function SlideshowModal({
       </div>
 
       {/* Bottom Control Bar */}
-      <div className="bg-slate-900/90 backdrop-blur border-t border-slate-800 px-6 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-white z-10">
+      <div className="bg-slate-900/90 backdrop-blur border-t border-slate-800 px-4 sm:px-6 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-white z-10">
         <p className="text-xs text-slate-400 font-medium hidden sm:block">
           Use <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">←</kbd> <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">→</kbd> or <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">Space</kbd> to navigate, <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">Esc</kbd> to exit.
         </p>
@@ -234,7 +235,7 @@ export function SlideshowModal({
             type="button"
             disabled={currentIndex === 0}
             onClick={handlePrev}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5 flex-shrink-0 transition-all ${
               currentIndex === 0
                 ? 'bg-slate-800 text-slate-600 cursor-not-allowed border border-slate-800'
                 : 'bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 active:scale-95'
@@ -245,12 +246,12 @@ export function SlideshowModal({
           </button>
 
           {/* Jump to Slide Dropdown */}
-          <div className="relative">
+          <div className="relative min-w-0">
             <select
               aria-label="Jump to slide"
               value={currentIndex}
               onChange={(e) => setCurrentIndex(Number(e.target.value))}
-              className="appearance-none bg-slate-800 border border-slate-700 text-xs sm:text-sm font-bold text-slate-200 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer shadow-sm"
+              className="appearance-none w-full truncate bg-slate-800 border border-slate-700 text-xs sm:text-sm font-bold text-slate-200 rounded-xl px-3 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer shadow-sm"
             >
               {slides.map((s, idx) => (
                 <option key={idx} value={idx}>
@@ -265,7 +266,7 @@ export function SlideshowModal({
             type="button"
             disabled={currentIndex === totalSlides - 1}
             onClick={handleNext}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5 flex-shrink-0 transition-all ${
               currentIndex === totalSlides - 1
                 ? 'bg-slate-800 text-slate-600 cursor-not-allowed border border-slate-800'
                 : 'bg-sky-600 hover:bg-sky-500 text-white shadow-md active:scale-95'
