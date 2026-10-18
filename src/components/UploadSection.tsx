@@ -10,6 +10,7 @@ import {
   Clipboard,
   Layers,
 } from 'lucide-react';
+import { SESSION_OPTIONS } from '@/lib/utils/session-options';
 import { SUPPORTED_SUBJECTS, type SupportedSubject } from '@/lib/utils/subject-options';
 
 interface UploadSectionProps {
@@ -259,11 +260,9 @@ export function UploadSection({
                   className="w-full appearance-none bg-white border border-slate-300 font-medium text-slate-800 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 cursor-pointer shadow-sm transition-all"
                 >
                   <option value="">-- Choose Curriculum Session --</option>
-                  <option value="Session 1">Session 1</option>
-                  <option value="Session 2">Session 2</option>
-                  <option value="Session 3">Session 3</option>
-                  <option value="Session 4">Session 4</option>
-                  <option value="Session 5">Session 5</option>
+                  {SESSION_OPTIONS.map((session) => (
+                    <option key={session} value={session}>{session}</option>
+                  ))}
                 </select>
                 <Layers className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>

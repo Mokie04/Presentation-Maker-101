@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest, NextResponse } from 'next/server';
 import { defineRoute, PublicError } from '@/lib/api';
+import { z } from 'zod';
 import * as sessionAuth from '@/lib/sessionAuth';
 
 function post(body: string) {
@@ -8,6 +9,23 @@ function post(body: string) {
     method: 'POST', body, headers: { 'Content-Type': 'application/json' },
   });
 }
+
+/** A body with no Content-Length header, delivered in chunks. */
+function streamed(chunks: string[]) {
+  const encoder = new TextEncoder();
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) { chunks.forEach((chunk) => controller.enqueue(encoder.encode(chunk))); controller.close(); },
+  });
+  return new NextRequest('http://localhost/api/test', { method: 'POST', body: stream, duplex: 'half' } as ConstructorParameters<typeof NextRequest>[1]);
+}
+
+/** A JSON body of exactly `bytes` bytes. */
+function jsonOfSize(bytes: number) {
+  const shell = '{"pad":""}';
+  return `{"pad":"${'x'.repeat(bytes - shell.length)}"}`;
+}
+
+const ok = async () => NextResponse.json({ ok: true });
 
 function route(handler: Parameters<typeof defineRoute>[0]['handler'], extra?: Partial<Parameters<typeof defineRoute>[0]>) {
   return defineRoute({ name: 'test-route', failureMessage: 'Something failed. Please try again.', handler, ...extra });
@@ -44,7 +62,7 @@ describe('defineRoute', () => {
     const request = post('{"text":"lesson"}');
     await route(handler)(request);
     expect(handler).toHaveBeenCalledWith({
-      body: { text: 'lesson' }, request, session: expect.objectContaining({ sub: 'dev-bypass' }),
+      input: { text: 'lesson' }, body: { text: 'lesson' }, request, session: expect.objectContaining({ sub: 'dev-bypass' }),
     });
   });
 
@@ -97,5 +115,92 @@ describe('defineRoute', () => {
       errorExtra: (body) => ({ slideIndex: typeof body.slideIndex === 'number' ? body.slideIndex : 0 }),
     })(post('{"slideIndex":5}'));
     expect(await res.json()).toEqual({ error: 'Something failed. Please try again.', slideIndex: 5 });
+  });
+
+  describe('input schema', () => {
+    const schema = z.object({
+      a: z.string(), b: z.string(), c: z.string(), d: z.string(), e: z.string(), f: z.string(),
+      secret: z.number(),
+    });
+
+    it('rejects invalid input with at most five issues and never echoes the values', async () => {
+      const handler = vi.fn(ok);
+      const res = await defineRoute({ name: 'test-route', failureMessage: 'x', input: schema, handler })(
+        post(JSON.stringify({ secret: 'SECRET-VALUE-123' })));
+      expect(res.status).toBe(400);
+      const { error } = await res.json();
+      expect(error).toMatch(/^Invalid request: a: [^;]+; b: [^;]+; c: [^;]+; d: [^;]+; e: [^;]+$/);
+      expect(error.split('; ')).toHaveLength(5);
+      expect(error).not.toContain('SECRET-VALUE-123');
+      expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('reports the secret field without its value when it is the only problem', async () => {
+      const res = await defineRoute({ name: 'test-route', failureMessage: 'x', input: z.object({ secret: z.number() }), handler: ok })(
+        post(JSON.stringify({ secret: 'SECRET-VALUE-123' })));
+      const { error } = await res.json();
+      expect(error).toMatch(/^Invalid request: secret: /);
+      expect(error).not.toContain('SECRET-VALUE-123');
+    });
+
+    it('includes errorExtra in the 400 body', async () => {
+      const res = await defineRoute({
+        name: 'test-route', failureMessage: 'x', input: z.object({ prompt: z.string() }), handler: ok,
+        errorExtra: (body) => ({ slideIndex: typeof body.slideIndex === 'number' ? body.slideIndex : 0 }),
+      })(post(JSON.stringify({ slideIndex: 3 })));
+      expect(res.status).toBe(400);
+      expect(await res.json()).toEqual({ error: expect.stringMatching(/^Invalid request: prompt: /), slideIndex: 3 });
+    });
+
+    it('passes the parsed input and the raw body to the handler', async () => {
+      const handler = vi.fn(ok);
+      await defineRoute({
+        name: 'test-route', failureMessage: 'x',
+        input: z.object({ delay: z.number().transform((n) => Math.min(n, 10)) }), handler,
+      })(post(JSON.stringify({ delay: 50, extra: true })));
+      expect(handler).toHaveBeenCalledWith(expect.objectContaining({ input: { delay: 10 }, body: { delay: 50, extra: true } }));
+    });
+  });
+
+  describe('body size cap', () => {
+    const tooLarge = { error: 'Request body exceeds the size limit.' };
+
+    it('rejects a declared Content-Length over the cap without reading the body', async () => {
+      const handler = vi.fn(ok);
+      const request = new NextRequest('http://localhost/api/test', {
+        method: 'POST', body: '{}', headers: { 'Content-Type': 'application/json', 'Content-Length': '101' },
+      });
+      const res = await route(handler, { maxBodyBytes: 100 })(request);
+      expect(res.status).toBe(413);
+      expect(await res.json()).toEqual(tooLarge);
+      expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('cuts off a body without Content-Length that streams past the cap', async () => {
+      const handler = vi.fn(ok);
+      const res = await route(handler, { maxBodyBytes: 100 })(streamed(['{"pad":"', 'x'.repeat(60), 'x'.repeat(60), '"}']));
+      expect(res.status).toBe(413);
+      expect(await res.json()).toEqual(tooLarge);
+      expect(handler).not.toHaveBeenCalled();
+    });
+
+    it('accepts a body of exactly the cap', async () => {
+      const handler = vi.fn(ok);
+      const res = await route(handler, { maxBodyBytes: 100 })(streamed([jsonOfSize(100)]));
+      expect(res.status).toBe(200);
+      expect(handler).toHaveBeenCalled();
+    });
+
+    it('applies a 1 MiB cap by default', async () => {
+      expect((await route(ok)(streamed([jsonOfSize(1024 * 1024)]))).status).toBe(200);
+      expect((await route(ok)(streamed([jsonOfSize(1024 * 1024 + 1)]))).status).toBe(413);
+    });
+
+    it('answers an unauthenticated oversized request with 401, not 413', async () => {
+      const denied = NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
+      vi.spyOn(sessionAuth, 'requireSession').mockReturnValueOnce({ ok: false, response: denied });
+      const res = await route(ok, { maxBodyBytes: 10 })(streamed([jsonOfSize(1000)]));
+      expect(res.status).toBe(401);
+    });
   });
 });

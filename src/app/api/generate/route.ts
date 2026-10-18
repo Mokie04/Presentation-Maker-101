@@ -1,28 +1,32 @@
 import { NextResponse } from 'next/server';
+import { z } from 'zod';
 import { defineRoute, PublicError } from '@/lib/api';
 import { generateSlideContent } from '@/lib/providers/text-provider';
 import { detectSubject } from '@/lib/utils/subject-detector';
+import { SESSION_OPTIONS } from '@/lib/utils/session-options';
 import { SUPPORTED_SUBJECTS } from '@/lib/utils/subject-options';
 import type { SubjectEvidence } from '@/types/presentation';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
 
-const VALID_SESSIONS = ['Session 1', 'Session 2', 'Session 3', 'Session 4', 'Session 5'];
+/** Vercel's request body limit. The lesson text has no separate cap: the model prompt forbids truncating it. */
+const MAX_BODY_BYTES = 4_500_000;
+
+// Loose so the subject provenance keys below stay visible on the raw body.
+const inputSchema = z.looseObject({
+  text: z.string().refine((text) => text.trim().length > 0, 'must be a non-empty string'),
+  session: z.enum(SESSION_OPTIONS),
+});
 
 export const POST = defineRoute({
   name: 'generate',
   failureMessage: 'Failed to generate the presentation. Please try again.',
-  handler: async ({ body }) => {
-    const { text, session, subject, subjectSource } = body;
-
-    if (!text || typeof text !== 'string' || text.trim().length === 0) {
-      throw new PublicError('Field "text" is required and must be a non-empty string.', 400);
-    }
-
-    if (!session || typeof session !== 'string' || !VALID_SESSIONS.includes(session)) {
-      throw new PublicError(`Field "session" is required and must be one of: ${VALID_SESSIONS.join(', ')}.`, 400);
-    }
+  input: inputSchema,
+  maxBodyBytes: MAX_BODY_BYTES,
+  handler: async ({ input, body }) => {
+    const { text, session } = input;
+    const { subject, subjectSource } = body;
 
     // The new marker distinguishes an explicit teacher choice from legacy subject input.
     const hasSubjectSource = Object.prototype.hasOwnProperty.call(body, 'subjectSource');
