@@ -29,6 +29,8 @@ export interface GenerateImageOptions {
   source?: 'ai' | 'pexels' | 'auto';
   title?: string;
   pexelsApiKey?: string;
+  /** Picks a different Pexels result on regenerate; 0 is the top result. */
+  variation?: number;
 }
 
 const DEFAULT_RETRY_COUNT = 3;
@@ -50,6 +52,7 @@ export async function generateSlideImage(
     return fetchPexelsImageBase64(visualDescription, {
       apiKey: options?.pexelsApiKey,
       title: options?.title,
+      variation: options?.variation,
     });
   }
 
@@ -57,6 +60,7 @@ export async function generateSlideImage(
   const maxRetries = options?.maxRetries ?? DEFAULT_RETRY_COUNT;
   const backoffMs = options?.backoffMs ?? DEFAULT_BACKOFF_MS;
 
+  // variation is not sent to the AI provider: its output already differs on every call.
   const prompt = `${IMAGE_PROMPT_PREFIX}${visualDescription}`;
 
   let lastError: unknown;
@@ -108,6 +112,7 @@ export async function generateSlideImage(
       return await fetchPexelsImageBase64(visualDescription, {
         apiKey: options?.pexelsApiKey,
         title: options?.title,
+        variation: options?.variation,
       });
     } catch {
       // If Pexels also fails, throw the original AI error

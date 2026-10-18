@@ -71,7 +71,8 @@ export function useSlideDeck() {
       const res = await fetch('/api/generate-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: visualDescription, slideIndex }),
+        // The version rises with every Image intent, so each regenerate asks for a different photo.
+        body: JSON.stringify({ prompt: visualDescription, slideIndex, variation: token.version }),
       });
       const resText = await res.text();
       let data: { base64?: string; error?: string } = {};

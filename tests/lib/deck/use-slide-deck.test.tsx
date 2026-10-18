@@ -104,7 +104,29 @@ describe('useSlideDeck', () => {
     ]);
     act(() => { void result.current.regenerateImage(flowers, 'Blossoms diagram'); });
     const call = vi.mocked(fetch).mock.calls.find(([url]) => url === '/api/generate-image');
-    expect(JSON.parse(String(call?.[1]?.body))).toEqual({ prompt: 'Blossoms diagram', slideIndex: 1 });
+    expect(JSON.parse(String(call?.[1]?.body))).toEqual({ prompt: 'Blossoms diagram', slideIndex: 1, variation: 1 });
     expect(result.current.generatingImages).toEqual({ 1: true });
   });
+
+  it('sends a new variation with each regeneration of a slide', async () => {
+    const { result } = await loadedDeck();
+    const roots = result.current.slideIds[0];
+    const bodies = () => vi.mocked(fetch).mock.calls
+      .filter(([url]) => url === '/api/generate-image')
+      .map(([, init]) => JSON.parse(String(init?.body)));
+
+    act(() => { void result.current.regenerateImage(roots, 'Roots diagram'); });
+    act(() => { void result.current.regenerateImage(roots, 'Roots diagram'); });
+    expect(bodies().map((body) => body.variation)).toEqual([1, 2]);
+
+    act(() => {
+      result.current.selectLibraryImage(roots, '/9j/2Q==', {
+        source: 'nasa', nasaId: 'roots', assetUrl: 'https://images-assets.nasa.gov/image/roots/roots~large.jpg',
+        rendition: 'large', mimeType: 'image/jpeg',
+      });
+    });
+    act(() => { void result.current.regenerateImage(roots, 'Roots diagram'); });
+    expect(bodies()[2]).toEqual({ prompt: 'Roots diagram', slideIndex: 0, variation: 4 });
+  });
 });
+
