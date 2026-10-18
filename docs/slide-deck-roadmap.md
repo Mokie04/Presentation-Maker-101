@@ -56,8 +56,10 @@ The deck exposes the export view (`toPresentationData` plus images with credits 
 
 Phases run strictly one at a time, and each ships before the next prompt is issued. A phase ships only when:
 1. `npx vitest run` matches the baseline plus the phase's new tests, and `npx tsc --noEmit` is clean.
-2. Phases 2 and 3 only: manual smoke test of generate, edit, delete a slide mid-image, regenerate, pick a library image, export PPTX.
-3. The work is committed on `deck/phase-N` and merged to `main` after the user approves. Developers never push or merge on their own.
+2. Phases 2 and 3 only: manual smoke test of generate, edit, delete a slide mid-image, regenerate, pick a library image, export PPTX, run on the Vercel preview deployment of the PR (not production).
+3. The work is committed on `deck/phase-N`, pushed as a branch, and merged through a PR after the user approves. Developers never push or merge on their own, and nothing is pushed to `main` directly.
+
+Production deploys from `main` only after the PR merge, on the user's explicit go. Rollback is `git revert` of the merge commit or Vercel's promote-previous-deployment. Phase 1 (merged locally, unpushed, no behaviour change) rides out in Phase 2's PR; Phase 3 gets its own PR.
 
 Every phase leaves the app fully working, so stopping after any phase is safe.
 
