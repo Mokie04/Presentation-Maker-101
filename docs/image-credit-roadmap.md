@@ -42,7 +42,7 @@ imageCreditText(candidateOrMetadata)   // unchanged signature; the picker still 
 - Migrate `markdown-generator`, `pptx-generator`, `SlideCard` and `NasaImagePicker` onto it. `SlideshowModal` is untouched.
 - Done = new tests green, existing suite green with the credit tests unmodified, no visible change anywhere.
 
-### Phase 2: license link and slideshow caption
+### Phase 2: license link and slideshow caption — done
 - `SlideCard` credit block gains the Commons license link.
 - `SlideshowModal` shows a credit caption for Slides with an image credit.
 - New tests: SlideCard license link; slideshow caption for NASA and Commons, none for AI images.

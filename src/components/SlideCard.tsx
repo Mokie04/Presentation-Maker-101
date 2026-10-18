@@ -237,6 +237,7 @@ export function SlideCard({
               <div className="text-xs text-slate-600 space-y-1">
                 <p>{credit.creditLine}</p>
                 <a href={credit.sourceLink} target="_blank" rel="noopener noreferrer" className="text-sky-700 underline">{`${credit.sourceLabel} source`}</a>
+                {credit.license?.url && <>{' '}<a href={credit.license.url} target="_blank" rel="noopener noreferrer" className="text-sky-700 underline">{`License: ${credit.license.name}`}</a></>}
                 {credit.description && <details><summary>Source description</summary><p className="whitespace-pre-wrap">{credit.description}</p></details>}
               </div>
             )}

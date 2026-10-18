@@ -7,6 +7,7 @@ import {
   ChevronRight,
   Layers,
 } from 'lucide-react';
+import { describeImageCredit } from '@/lib/image-credit';
 import type { PresentationData } from '@/types/presentation';
 import { getPartBadgeInfo } from './SlideCard';
 import { FormattedFormula } from './FormattedFormula';
@@ -103,6 +104,7 @@ export function SlideshowModal({
       ? currentImage
       : `data:image/png;base64,${currentImage}`
     : undefined;
+  const credit = hasValidImage && currentSlide.imageMetadata ? describeImageCredit(currentSlide.imageMetadata) : undefined;
 
   return (
     <div
@@ -179,14 +181,24 @@ export function SlideshowModal({
             {currentSlide.visualDescription && (
               <div className="md:col-span-5 h-full flex items-center justify-center">
                 {hasValidImage ? (
-                  <div className="rounded-xl overflow-hidden shadow-lg border-2 border-sky-300 w-full aspect-video bg-black flex items-center justify-center">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={imageSrc}
-                      alt={currentSlide.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  <figure className="w-full flex flex-col items-center gap-1.5">
+                    <div className="rounded-xl overflow-hidden shadow-lg border-2 border-sky-300 w-full aspect-video bg-black flex items-center justify-center">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={imageSrc}
+                        alt={currentSlide.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    {/* Library images must carry their credit (CC BY) wherever they are shown */}
+                    {credit && (
+                      <figcaption className="w-full text-center text-[11px] sm:text-xs leading-snug text-slate-600 break-words">
+                        <span>{credit.creditLine}</span>{' '}
+                        <a href={credit.sourceLink} target="_blank" rel="noopener noreferrer" className="text-sky-700 underline">{`${credit.sourceLabel} source`}</a>
+                        {credit.license?.url && <>{' '}<a href={credit.license.url} target="_blank" rel="noopener noreferrer" className="text-sky-700 underline">{`License: ${credit.license.name}`}</a></>}
+                      </figcaption>
+                    )}
+                  </figure>
                 ) : (
                   <div className="w-full aspect-video bg-[#E0F2FE] border-2 border-dashed border-[#7DD3FC] rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-inner">
                     <span className="text-[11px] font-black uppercase tracking-wider text-[#0369A1] mb-1">

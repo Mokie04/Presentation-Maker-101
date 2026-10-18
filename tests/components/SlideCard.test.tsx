@@ -3,6 +3,7 @@ import React from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import { SlideCard } from '@/components/SlideCard';
+import type { ImageMetadata } from '@/lib/image-metadata';
 import type { SlideData } from '@/types/presentation';
 
 describe('SlideCard component', () => {
@@ -197,5 +198,53 @@ describe('SlideCard component', () => {
       renderCard({ slideImage: 'sample-base64-data' });
       expect(screen.queryByText(/failed\./)).toBeNull();
     });
+  });
+});
+
+describe('SlideCard license link', () => {
+  const nasa: ImageMetadata = {
+    source: 'nasa', nasaId: 'roots', photographer: 'Jane',
+    assetUrl: 'https://images-assets.nasa.gov/image/roots/roots~large.jpg', rendition: 'large', mimeType: 'image/jpeg',
+  };
+  const commons: ImageMetadata = {
+    source: 'commons', fileId: 42, title: 'File:Roots.png', creator: 'Original artist',
+    licenseKind: 'cc-by', licenseName: 'CC BY 4.0', licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
+    sourceUrl: 'https://commons.wikimedia.org/wiki/File:Roots.png',
+    assetUrl: 'https://upload.wikimedia.org/wikipedia/commons/a/ab/Roots.png', rendition: 'thumbnail', mimeType: 'image/png',
+  };
+
+  function renderWith(imageMetadata: ImageMetadata) {
+    render(
+      <SlideCard
+        slide={{ slideNumber: 1, part: 'Discussion', title: 'Roots', contentPoints: ['Roots'], visualDescription: 'Roots', imageMetadata }}
+        slideId={7}
+        totalSlides={1}
+        isEditing={false}
+        slideImage="sample-base64-data"
+        onUpdateTitle={vi.fn()}
+        onUpdateBullet={vi.fn()}
+        onAddBullet={vi.fn()}
+        onDeleteBullet={vi.fn()}
+        onDeleteSlide={vi.fn()}
+        onRegenerateImage={vi.fn()}
+      />
+    );
+  }
+
+  it('links the Commons license after the source link', () => {
+    renderWith(commons);
+    const license = screen.getByRole('link', { name: 'License: CC BY 4.0' });
+    expect(license.getAttribute('href')).toBe('https://creativecommons.org/licenses/by/4.0/');
+    expect(license.getAttribute('target')).toBe('_blank');
+    expect(license.getAttribute('rel')).toBe('noopener noreferrer');
+    expect(screen.getByRole('link', { name: 'Commons source' }).nextElementSibling).toBe(license);
+  });
+
+  it.each([
+    ['Commons without a license URL', { ...commons, licenseUrl: undefined }],
+    ['NASA', nasa],
+  ])('shows no license link for %s', (_, metadata) => {
+    renderWith(metadata as ImageMetadata);
+    expect(screen.queryByRole('link', { name: /^License:/ })).toBeNull();
   });
 });
