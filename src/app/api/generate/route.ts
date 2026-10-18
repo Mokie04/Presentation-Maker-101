@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import { defineRoute, PublicError } from '@/lib/api';
 import { generateSlideContent } from '@/lib/providers/text-provider';
 import { detectSubject } from '@/lib/utils/subject-detector';
-import { requireSession } from '@/lib/sessionAuth';
 import { SUPPORTED_SUBJECTS } from '@/lib/utils/subject-options';
 import type { SubjectEvidence } from '@/types/presentation';
 
@@ -10,37 +10,18 @@ export const maxDuration = 300;
 
 const VALID_SESSIONS = ['Session 1', 'Session 2', 'Session 3', 'Session 4', 'Session 5'];
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
-  const auth = requireSession(request);
-  if (!auth.ok) return auth.response;
-
-  try {
-    let body: Record<string, unknown>;
-    try {
-      body = (await request.json()) as Record<string, unknown>;
-    } catch {
-      return NextResponse.json(
-        { error: 'Invalid JSON request body.' },
-        { status: 400 }
-      );
-    }
-
-    const { text, session, subject, subjectSource } = body || {};
+export const POST = defineRoute({
+  name: 'generate',
+  failureMessage: 'Failed to generate the presentation. Please try again.',
+  handler: async ({ body }) => {
+    const { text, session, subject, subjectSource } = body;
 
     if (!text || typeof text !== 'string' || text.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Field "text" is required and must be a non-empty string.' },
-        { status: 400 }
-      );
+      throw new PublicError('Field "text" is required and must be a non-empty string.', 400);
     }
 
     if (!session || typeof session !== 'string' || !VALID_SESSIONS.includes(session)) {
-      return NextResponse.json(
-        {
-          error: `Field "session" is required and must be one of: ${VALID_SESSIONS.join(', ')}.`,
-        },
-        { status: 400 }
-      );
+      throw new PublicError(`Field "session" is required and must be one of: ${VALID_SESSIONS.join(', ')}.`, 400);
     }
 
     // The new marker distinguishes an explicit teacher choice from legacy subject input.
@@ -48,9 +29,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     if (Object.prototype.hasOwnProperty.call(body, 'subjectEvidence') ||
         (hasSubjectSource && (subjectSource !== 'teacher-supplied' ||
           !SUPPORTED_SUBJECTS.some((label) => label === subject)))) {
-      return NextResponse.json(
-        { error: 'Invalid subject provenance: use a supported subject with subjectSource "teacher-supplied"; subjectEvidence is server-recorded.' },
-        { status: 400 }
+      throw new PublicError(
+        'Invalid subject provenance: use a supported subject with subjectSource "teacher-supplied"; subjectEvidence is server-recorded.',
+        400
       );
     }
 
@@ -67,8 +48,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       ...presentation,
       subjectEvidence: [inputEvidence, { subject: presentation.subject, source: 'model-generated' }],
     }, { status: 200 });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : 'Internal Server Error';
-    return NextResponse.json({ error: message }, { status: 500 });
-  }
-}
+  },
+});

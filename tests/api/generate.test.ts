@@ -121,6 +121,6 @@ describe('POST /api/generate', () => {
     const res = await POST(req);
     expect(res.status).toBe(500);
     const json = await res.json();
-    expect(json.error).toBe('AI generation timeout');
+    expect(json.error).toBe('Failed to generate the presentation. Please try again.');
   });
 });

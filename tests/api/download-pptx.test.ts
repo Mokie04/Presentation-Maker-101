@@ -92,6 +92,6 @@ describe('POST /api/download-pptx', () => {
     const res = await POST(req);
     expect(res.status).toBe(500);
     const json = await res.json();
-    expect(json.error).toBe('PPTX memory error');
+    expect(json.error).toBe('Failed to compile the PowerPoint file. Please try again.');
   });
 });

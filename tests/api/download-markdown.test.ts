@@ -87,6 +87,6 @@ describe('POST /api/download-markdown', () => {
     const res = await POST(req);
     expect(res.status).toBe(500);
     const json = await res.json();
-    expect(json.error).toBe('Markdown compilation failure');
+    expect(json.error).toBe('Failed to generate the Markdown outline. Please try again.');
   });
 });

@@ -1,37 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import { defineRoute, PublicError } from '@/lib/api';
 import { generateSlideImage } from '@/lib/providers/image-provider';
-import { requireSession } from '@/lib/sessionAuth';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 120;
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
-  const auth = requireSession(request);
-  if (!auth.ok) return auth.response;
+const slideIndexOf = (body: Record<string, unknown>) => (typeof body.slideIndex === 'number' ? body.slideIndex : 0);
 
-  let slideIndex: number = 0;
-  try {
-    let body: Record<string, unknown>;
-    try {
-      body = (await request.json()) as Record<string, unknown>;
-    } catch {
-      return NextResponse.json(
-        { error: 'Invalid JSON request body.' },
-        { status: 400 }
-      );
-    }
-
-    const { prompt, slideIndex: rawIndex, source, title } = body || {};
-
-    if (typeof rawIndex === 'number') {
-      slideIndex = rawIndex;
-    }
+export const POST = defineRoute({
+  name: 'generate-image',
+  failureMessage: 'Failed to render the image. Please try again.',
+  errorExtra: (body) => ({ slideIndex: slideIndexOf(body) }),
+  handler: async ({ body }) => {
+    const { prompt, source, title } = body;
+    const slideIndex = slideIndexOf(body);
 
     if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
-      return NextResponse.json(
-        { error: 'Field "prompt" is required and must be a non-empty string.', slideIndex },
-        { status: 400 }
-      );
+      throw new PublicError('Field "prompt" is required and must be a non-empty string.', 400, { extra: { slideIndex } });
     }
 
     const imgOptions: { source?: 'ai' | 'pexels' | 'auto'; title?: string } = {};
@@ -49,14 +34,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       },
       { status: 200 }
     );
-  } catch (err) {
-    const message = err instanceof Error ? err.message : 'Internal Server Error';
-    return NextResponse.json(
-      {
-        error: message,
-        slideIndex,
-      },
-      { status: 500 }
-    );
-  }
-}
+  },
+});

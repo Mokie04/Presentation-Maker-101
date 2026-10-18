@@ -62,7 +62,7 @@ describe('POST /api/generate-image', () => {
     expect(res.status).toBe(500);
     const json = await res.json();
     expect(json).toEqual({
-      error: 'Image provider failed',
+      error: 'Failed to render the image. Please try again.',
       slideIndex: 5,
     });
   });

@@ -1,35 +1,21 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import { defineRoute, PublicError } from '@/lib/api';
 import {
   processBatchImages,
   type SlideImageBatchItem,
 } from '@/lib/services/image-batch';
-import { requireSession } from '@/lib/sessionAuth';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
-  const auth = requireSession(request);
-  if (!auth.ok) return auth.response;
-
-  try {
-    let body: Record<string, unknown>;
-    try {
-      body = (await request.json()) as Record<string, unknown>;
-    } catch {
-      return NextResponse.json(
-        { error: 'Invalid JSON request body.' },
-        { status: 400 }
-      );
-    }
-
-    const { slides, delayMs, source } = body || {};
+export const POST = defineRoute({
+  name: 'generate-images',
+  failureMessage: 'Failed to generate images. Please try again.',
+  handler: async ({ body }) => {
+    const { slides, delayMs, source } = body;
 
     if (!Array.isArray(slides)) {
-      return NextResponse.json(
-        { error: 'Field "slides" is required and must be an array.' },
-        { status: 400 }
-      );
+      throw new PublicError('Field "slides" is required and must be an array.', 400);
     }
 
     const parsedDelay =
@@ -41,8 +27,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     });
 
     return NextResponse.json({ images }, { status: 200 });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : 'Internal Server Error';
-    return NextResponse.json({ error: message }, { status: 500 });
-  }
-}
+  },
+});
