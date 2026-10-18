@@ -1,9 +1,8 @@
 'use client';
 
-import type { ImageMetadata } from '@/lib/image-metadata';
 import type { SupportedSubject } from '@/lib/utils/subject-options';
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   FileDown,
   FileText,
@@ -20,7 +19,8 @@ import { UploadSection } from '@/components/UploadSection';
 import { SlideCard } from '@/components/SlideCard';
 import { SlideshowModal } from '@/components/SlideshowModal';
 import { SessionGate } from '@/components/SessionGate';
-import type { PresentationData, SlideData } from '@/types/presentation';
+import { useSlideDeck } from '@/lib/deck/use-slide-deck';
+import type { PresentationData } from '@/types/presentation';
 
 async function compressImageForExport(base64: string): Promise<string> {
   if (typeof window === 'undefined') return base64;
@@ -72,19 +72,11 @@ function PresentationWorkspace() {
   const [fileName, setFileName] = useState('');
   const [selectedSession, setSelectedSession] = useState('');
   const [selectedSubject, setSelectedSubject] = useState<SupportedSubject | ''>('');
-  const [presentationData, setPresentationData] = useState<PresentationData | null>(null);
-  const [imagesById, setImagesById] = useState<Record<number, string>>({});
-  const [generatingById, setGeneratingById] = useState<Record<number, boolean>>({});
-  // Image ownership stays stable when deleting slides changes their positions.
-  const slideIds = useRef<number[]>([]);
-  const nextSlideId = useRef(0);
-  const imageVersions = useRef<Record<number, number>>({});
-  const slideImages: Record<number, string> = {};
-  const generatingImages: Record<number, boolean> = {};
-  slideIds.current.forEach((id, index) => {
-    if (imagesById[id] !== undefined) slideImages[index] = imagesById[id];
-    if (generatingById[id]) generatingImages[index] = true;
-  });
+  const {
+    presentationData, slideImages, generatingImages, slideIds, loadPresentation, reset: resetDeck,
+    updatePart, updateTitle, updateBullet, addBullet, deleteBullet, addSlide, deleteSlide,
+    regenerateImage, selectLibraryImage,
+  } = useSlideDeck();
 
   const [isEditing, setIsEditing] = useState(false);
   const [isSlideShowActive, setIsSlideShowActive] = useState(false);
@@ -146,14 +138,9 @@ function PresentationWorkspace() {
         throw new Error(data?.error || 'Failed to generate presentation slides.');
       }
 
-      slideIds.current = data.slides.map(() => nextSlideId.current++);
-      setPresentationData(data);
-      setImagesById({});
-      setGeneratingById({});
       setIsEditing(false);
-
-      // Auto-trigger background batch image generation
-      triggerBatchImageGeneration(data.slides);
+      // Loads the deck and auto-triggers background batch image generation
+      loadPresentation(data);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'An error occurred during generation.';
       setErrorMsg(msg);
@@ -161,175 +148,6 @@ function PresentationWorkspace() {
       setIsLoading(false);
       setLoadingStage('');
     }
-  };
-
-  // Background batch image generation for eligible slides
-  const triggerBatchImageGeneration = (slides: SlideData[]) => {
-    const requestSlideIds = [...slideIds.current];
-    const requestVersions = { ...imageVersions.current };
-    const slidesForBatch = slides.map((s, index) => ({
-      slideIndex: index,
-      part: s.part,
-      visualDescription: s.visualDescription,
-    }));
-
-    fetch('/api/generate-images', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ slides: slidesForBatch }),
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          const errText = await res.text().catch(() => '');
-          throw new Error(errText || 'Batch image generation failed');
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (data?.images) {
-          setImagesById((prev) => {
-            const updated = { ...prev };
-            requestSlideIds.forEach((id, index) => {
-              if (slideIds.current.includes(id) && data.images[index] !== undefined &&
-                  (imageVersions.current[id] ?? 0) === (requestVersions[id] ?? 0)) {
-                updated[id] = data.images[index];
-              }
-            });
-            return updated;
-          });
-        }
-      })
-      .catch((err) => {
-        console.error('Batch image generation error:', err);
-      });
-  };
-
-  // Single slide image generation / regeneration
-  const handleRegenerateImage = async (slideIndex: number, visualDescription: string) => {
-    const slideId = slideIds.current[slideIndex];
-    const version = (imageVersions.current[slideId] ?? 0) + 1;
-    imageVersions.current[slideId] = version;
-    setGeneratingById((prev) => ({ ...prev, [slideId]: true }));
-    try {
-      const res = await fetch('/api/generate-image', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: visualDescription, slideIndex }),
-      });
-      const resText = await res.text();
-      let data: { base64?: string; error?: string } = {};
-      try {
-        data = JSON.parse(resText) as { base64?: string; error?: string };
-      } catch {
-        throw new Error(resText.slice(0, 120) || 'Failed to parse image response');
-      }
-      if (!res.ok || !data.base64) {
-        throw new Error(data.error || 'Failed to render image.');
-      }
-      if (slideIds.current.includes(slideId) && imageVersions.current[slideId] === version) {
-        setImagesById((prev) => ({ ...prev, [slideId]: data.base64! }));
-        setPresentationData((prev) => prev ? { ...prev, slides: prev.slides.map((slide, i) => {
-          if (slideIds.current[i] !== slideId) return slide;
-          return { ...slide, imageMetadata: undefined };
-        }) } : prev);
-      }
-    } catch (err) {
-      console.error('Image regeneration failed:', err);
-      setImagesById((prev) => slideIds.current.includes(slideId) && imageVersions.current[slideId] === version &&
-        !presentationData?.slides[slideIndex]?.imageMetadata ? { ...prev, [slideId]: 'failed' } : prev);
-    } finally {
-      setGeneratingById((prev) => {
-        if (imageVersions.current[slideId] !== version) return prev;
-        const updated = { ...prev };
-        delete updated[slideId];
-        return updated;
-      });
-    }
-  };
-
-  const handleSelectLibraryImage = (slideId: number, base64: string, metadata: ImageMetadata) => {
-    if (!slideIds.current.includes(slideId)) return;
-    imageVersions.current[slideId] = (imageVersions.current[slideId] ?? 0) + 1;
-    setImagesById((prev) => ({ ...prev, [slideId]: `data:${metadata.mimeType};base64,${base64}` }));
-    setGeneratingById((prev) => { const next = { ...prev }; delete next[slideId]; return next; });
-    setPresentationData((prev) => prev ? { ...prev, slides: prev.slides.map((slide, i) =>
-      slideIds.current[i] === slideId ? { ...slide, imageMetadata: metadata } : slide) } : prev);
-  };
-
-  // Slide Edit Handlers
-  const handleUpdatePart = (slideIndex: number, newPart: string) => {
-    if (!presentationData) return;
-    const updated = [...presentationData.slides];
-    updated[slideIndex] = { ...updated[slideIndex], part: newPart };
-    setPresentationData({ ...presentationData, slides: updated });
-  };
-
-  const handleUpdateTitle = (slideIndex: number, newTitle: string) => {
-    if (!presentationData) return;
-    const updated = [...presentationData.slides];
-    updated[slideIndex] = { ...updated[slideIndex], title: newTitle };
-    setPresentationData({ ...presentationData, slides: updated });
-  };
-
-  const handleUpdateBullet = (slideIndex: number, bulletIndex: number, text: string) => {
-    if (!presentationData) return;
-    const updated = [...presentationData.slides];
-    const points = [...updated[slideIndex].contentPoints];
-    points[bulletIndex] = text;
-    updated[slideIndex] = { ...updated[slideIndex], contentPoints: points };
-    setPresentationData({ ...presentationData, slides: updated });
-  };
-
-  const handleAddBullet = (slideIndex: number) => {
-    if (!presentationData) return;
-    const updated = [...presentationData.slides];
-    const points = [...updated[slideIndex].contentPoints, 'New primary discussion point'];
-    updated[slideIndex] = { ...updated[slideIndex], contentPoints: points };
-    setPresentationData({ ...presentationData, slides: updated });
-  };
-
-  const handleDeleteBullet = (slideIndex: number, bulletIndex: number) => {
-    if (!presentationData) return;
-    const updated = [...presentationData.slides];
-    const points = updated[slideIndex].contentPoints.filter((_, idx) => idx !== bulletIndex);
-    updated[slideIndex] = { ...updated[slideIndex], contentPoints: points };
-    setPresentationData({ ...presentationData, slides: updated });
-  };
-
-  const handleDeleteSlide = (slideIndex: number) => {
-    if (!presentationData) return;
-    const deletedId = slideIds.current[slideIndex];
-    slideIds.current = slideIds.current.filter((_, idx) => idx !== slideIndex);
-    setImagesById((prev) => {
-      const updated = { ...prev };
-      delete updated[deletedId];
-      return updated;
-    });
-    setGeneratingById((prev) => {
-      const updated = { ...prev };
-      delete updated[deletedId];
-      return updated;
-    });
-    const updated = presentationData.slides
-      .filter((_, idx) => idx !== slideIndex)
-      .map((s, idx) => ({ ...s, slideNumber: idx + 1 }));
-    setPresentationData({ ...presentationData, slides: updated });
-  };
-
-  const handleAddSlide = () => {
-    if (!presentationData) return;
-    slideIds.current = [...slideIds.current, nextSlideId.current++];
-    const newSlide: SlideData = {
-      slideNumber: presentationData.slides.length + 1,
-      part: 'Discussion',
-      title: 'New Slide Topic',
-      contentPoints: ['Key takeaway for learners', 'Guided classroom discussion question'],
-      visualDescription: 'Philippine classroom illustration showing interactive group discussion',
-    };
-    setPresentationData({
-      ...presentationData,
-      slides: [...presentationData.slides, newSlide],
-    });
   };
 
   // Download Handlers
@@ -466,11 +284,7 @@ function PresentationWorkspace() {
   };
 
   const handleReset = () => {
-    setPresentationData(null);
-    slideIds.current = [];
-    imageVersions.current = {};
-    setImagesById({});
-    setGeneratingById({});
+    resetDeck();
     setExtractedText('');
     setFileName('');
     setSelectedSession('');
@@ -598,7 +412,7 @@ function PresentationWorkspace() {
 
                 <button
                   type="button"
-                  onClick={handleAddSlide}
+                  onClick={addSlide}
                   className="px-3.5 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 transition-all"
                 >
                   <Plus className="w-3.5 h-3.5 text-sky-600" />
@@ -614,23 +428,22 @@ function PresentationWorkspace() {
             {/* Responsive Slides Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {presentationData.slides.map((slide, idx) => {
-                const id = slideIds.current[idx];
                 return <SlideCard
-                  key={slideIds.current[idx]}
+                  key={slideIds[idx]}
                   slide={slide}
                   index={idx}
                   totalSlides={presentationData.slides.length}
                   isEditing={isEditing}
                   slideImage={slideImages[idx]}
                   isGeneratingImage={Boolean(generatingImages[idx])}
-                  onUpdatePart={handleUpdatePart}
-                  onUpdateTitle={handleUpdateTitle}
-                  onUpdateBullet={handleUpdateBullet}
-                  onAddBullet={handleAddBullet}
-                  onDeleteBullet={handleDeleteBullet}
-                  onDeleteSlide={handleDeleteSlide}
-                  onRegenerateImage={handleRegenerateImage}
-                  onSelectImage={(base64, metadata) => handleSelectLibraryImage(id, base64, metadata)}
+                  onUpdatePart={updatePart}
+                  onUpdateTitle={updateTitle}
+                  onUpdateBullet={updateBullet}
+                  onAddBullet={addBullet}
+                  onDeleteBullet={deleteBullet}
+                  onDeleteSlide={deleteSlide}
+                  onRegenerateImage={regenerateImage}
+                  onSelectImage={(base64, metadata) => selectLibraryImage(slideIds[idx], base64, metadata)}
                 />;
               })}
             </div>
