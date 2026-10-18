@@ -25,13 +25,13 @@ Race rules to preserve:
 
 ## Phases
 
-### Phase 1: pure Slide deck module (no UI changes)
+### Phase 1: pure Slide deck module (no UI changes) — done
 - Add `GLOSSARY.md` (Slide, Slide deck, Slide image, Pedagogical part, Credit, Image intent).
 - New `src/lib/deck/` with types, `deckReducer`, selectors (`toPresentationData`, `toSlideImages`, `toGeneratingFlags`).
 - TDD: `tests/lib/deck/deck-reducer.test.ts` encodes the race matrix plus content edits, add/delete/renumber, Q4.
 - `page.tsx` untouched. Done = new tests green, existing suite still green.
 
-### Phase 2: wire the hook, migrate page.tsx
+### Phase 2: wire the hook, migrate page.tsx — done
 - `useSlideDeck()` owns fetches for batch generation and single regeneration and exposes derived views plus action callbacks.
 - `PresentationWorkspace` swaps its image and deck state for the hook. Delete `slideIds`, `imagesById`, `generatingById`, `imageVersions` and the five hand-written edit handlers.
 - `SlideCard`/`SlideshowModal` props unchanged at this stage (index-based view derived from the deck), so the diff stays reviewable.
@@ -43,10 +43,10 @@ Phase 1 outcomes that shape this phase (accepted):
 - `libraryImageSelected` carries no token (it is itself an Image intent).
 - Tokens are captured when the request is made, so the hook needs synchronous access to the latest state: keep it in a ref, compute `deckReducer(ref.current, action)` in a dispatch wrapper, assign the ref, then `setState(next)`. Never read React state inside a resolver.
 
-### Phase 3: id-based SlideCard + Q4 UI
+### Phase 3: id-based SlideCard + Q4 UI — done
 - `SlideCard` callbacks take the Slide id, not the index (removes the mixed identity).
 - Show the transient "regeneration failed, kept previous image" state.
-- Trim the integration tests that the reducer tests now cover; keep a few UI smoke tests.
+- Integration tests kept; overlap with the reducer tests reported.
 - Done = `SlideCard` has one identity model; coverage of the race matrix lives in the reducer tests.
 
 ### Phase 4: handoff to candidate 06 (separate roadmap)

@@ -110,3 +110,20 @@ describe('workspace slide deletion', () => {
   });
 
 });
+
+describe('workspace regeneration failure', () => {
+  it('keeps the image and shows a fixed message when regeneration fails', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    await openWorkspace();
+    await finishBatch();
+    fireEvent.click(screen.getAllByRole('button', { name: 'Regenerate AI Graphic' })[1]);
+    await act(async () => {
+      single.resolve(Response.json({ error: 'Invalid size 1024x576 for model', slideIndex: 1 }, { status: 500 }));
+    });
+    expect(screen.getByRole('img', { name: 'Leaves' }).getAttribute('src')).toContain('leaves-image');
+    expect(screen.getByText('Regeneration failed. Kept the previous image.')).toBeTruthy();
+    expect(screen.queryByText(/1024x576/)).toBeNull();
+    expect(screen.getAllByRole('button', { name: 'Regenerate AI Graphic' })).toHaveLength(3);
+    consoleError.mockRestore();
+  });
+});

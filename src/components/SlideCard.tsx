@@ -40,28 +40,30 @@ export function getPartBadgeInfo(part?: string): { bg: string; label: string } {
 
 interface SlideCardProps {
   slide: SlideData;
-  index: number;
+  slideId: number;
   totalSlides: number;
   isEditing: boolean;
   slideImage?: string;
   isGeneratingImage?: boolean;
-  onUpdatePart?: (index: number, part: string) => void;
-  onUpdateTitle: (index: number, title: string) => void;
-  onUpdateBullet: (slideIndex: number, bulletIndex: number, text: string) => void;
-  onAddBullet: (slideIndex: number) => void;
-  onDeleteBullet: (slideIndex: number, bulletIndex: number) => void;
-  onDeleteSlide: (index: number) => void;
-  onRegenerateImage: (index: number, visualDescription: string) => void;
-  onSelectImage?: (base64: string, metadata: ImageMetadata) => void;
+  imageError?: string;
+  onUpdatePart?: (slideId: number, part: string) => void;
+  onUpdateTitle: (slideId: number, title: string) => void;
+  onUpdateBullet: (slideId: number, bulletIndex: number, text: string) => void;
+  onAddBullet: (slideId: number) => void;
+  onDeleteBullet: (slideId: number, bulletIndex: number) => void;
+  onDeleteSlide: (slideId: number) => void;
+  onRegenerateImage: (slideId: number, visualDescription: string) => void;
+  onSelectImage?: (slideId: number, base64: string, metadata: ImageMetadata) => void;
 }
 
 export function SlideCard({
   slide,
-  index,
+  slideId,
   totalSlides,
   isEditing,
   slideImage,
   isGeneratingImage = false,
+  imageError,
   onUpdatePart,
   onUpdateTitle,
   onUpdateBullet,
@@ -90,14 +92,14 @@ export function SlideCard({
             {badgeInfo.label}
           </span>
           <span className="text-xs font-semibold text-slate-500">
-            Slide {slide.slideNumber || index + 1} of {totalSlides}
+            Slide {slide.slideNumber} of {totalSlides}
           </span>
         </div>
 
         <button
           type="button"
           aria-label="Delete Slide"
-          onClick={() => onDeleteSlide(index)}
+          onClick={() => onDeleteSlide(slideId)}
           className="text-slate-400 hover:text-rose-600 p-1 rounded-md hover:bg-rose-50 transition-colors"
           title="Delete Slide"
         >
@@ -119,7 +121,7 @@ export function SlideCard({
                 <select
                   aria-label="Pedagogical Part"
                   value={slide.part}
-                  onChange={(e) => onUpdatePart?.(index, e.target.value)}
+                  onChange={(e) => onUpdatePart?.(slideId, e.target.value)}
                   className="w-full text-xs font-bold text-slate-800 p-2.5 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
                 >
                   {PEDAGOGICAL_PARTS.map((p) => (
@@ -140,7 +142,7 @@ export function SlideCard({
                 <input
                   type="text"
                   value={slide.title}
-                  onChange={(e) => onUpdateTitle(index, e.target.value)}
+                  onChange={(e) => onUpdateTitle(slideId, e.target.value)}
                   className="w-full text-sm sm:text-base font-bold text-sky-950 p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
                 />
               </div>
@@ -164,13 +166,13 @@ export function SlideCard({
                     <textarea
                       rows={2}
                       value={bullet}
-                      onChange={(e) => onUpdateBullet(index, bIdx, e.target.value)}
+                      onChange={(e) => onUpdateBullet(slideId, bIdx, e.target.value)}
                       className="flex-1 text-xs sm:text-sm p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none resize-y text-slate-800"
                     />
                     <button
                       type="button"
                       aria-label="Remove Bullet"
-                      onClick={() => onDeleteBullet(index, bIdx)}
+                      onClick={() => onDeleteBullet(slideId, bIdx)}
                       className="text-slate-400 hover:text-rose-600 p-1.5 mt-1 rounded hover:bg-rose-50 transition-colors"
                       title="Remove Bullet"
                     >
@@ -181,7 +183,7 @@ export function SlideCard({
 
                 <button
                   type="button"
-                  onClick={() => onAddBullet(index)}
+                  onClick={() => onAddBullet(slideId)}
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-700 hover:text-sky-800 bg-sky-50 hover:bg-sky-100/80 px-3 py-1.5 rounded-lg border border-sky-200 transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" />
@@ -238,15 +240,22 @@ export function SlideCard({
             )}
             {onSelectImage && (
               nasaPickerOpen ? <NasaImagePicker title={slide.title} onCancel={() => setNasaPickerOpen(false)}
-                onSelect={(base64, metadata) => { onSelectImage(base64, metadata); setNasaPickerOpen(false); }} />
+                onSelect={(base64, metadata) => { onSelectImage(slideId, base64, metadata); setNasaPickerOpen(false); }} />
                 : <button type="button" onClick={() => setNasaPickerOpen(true)}
                   className="w-full py-2 px-3 rounded-lg text-xs font-bold text-sky-800 bg-sky-50 border border-sky-200">Find image</button>
+            )}
+
+            {/* Fixed text only: provider errors can contain internal details */}
+            {imageError && !isGeneratingImage && (
+              <p className="text-[11px] font-semibold text-rose-600">
+                {hasValidImage ? 'Regeneration failed. Kept the previous image.' : 'Image generation failed. Try again.'}
+              </p>
             )}
 
             <button
               type="button"
               disabled={isGeneratingImage}
-              onClick={() => onRegenerateImage(index, slide.visualDescription)}
+              onClick={() => onRegenerateImage(slideId, slide.visualDescription)}
               className={`w-full py-2 px-3 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-150 ${
                 isGeneratingImage
                   ? 'bg-slate-100 text-slate-400 cursor-not-allowed'

@@ -73,7 +73,7 @@ function PresentationWorkspace() {
   const [selectedSession, setSelectedSession] = useState('');
   const [selectedSubject, setSelectedSubject] = useState<SupportedSubject | ''>('');
   const {
-    presentationData, slideImages, generatingImages, slideIds, loadPresentation, reset: resetDeck,
+    presentationData, slideImages, generatingImages, imageErrors, slideIds, loadPresentation, reset: resetDeck,
     updatePart, updateTitle, updateBullet, addBullet, deleteBullet, addSlide, deleteSlide,
     regenerateImage, selectLibraryImage,
   } = useSlideDeck();
@@ -431,11 +431,12 @@ function PresentationWorkspace() {
                 return <SlideCard
                   key={slideIds[idx]}
                   slide={slide}
-                  index={idx}
+                  slideId={slideIds[idx]}
                   totalSlides={presentationData.slides.length}
                   isEditing={isEditing}
                   slideImage={slideImages[idx]}
                   isGeneratingImage={Boolean(generatingImages[idx])}
+                  imageError={imageErrors[idx]}
                   onUpdatePart={updatePart}
                   onUpdateTitle={updateTitle}
                   onUpdateBullet={updateBullet}
@@ -443,7 +444,7 @@ function PresentationWorkspace() {
                   onDeleteBullet={deleteBullet}
                   onDeleteSlide={deleteSlide}
                   onRegenerateImage={regenerateImage}
-                  onSelectImage={(base64, metadata) => selectLibraryImage(slideIds[idx], base64, metadata)}
+                  onSelectImage={selectLibraryImage}
                 />;
               })}
             </div>
