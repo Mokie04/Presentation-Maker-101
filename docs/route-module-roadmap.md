@@ -38,10 +38,21 @@ defineRoute({
 - Tests that pin raw 500 messages change on purpose (generate, generate-image, download-pptx, download-markdown, plus any other the developer finds). A table-driven regression test proves that a thrown `Error` containing a secret-looking string never appears in any of the five routes' responses.
 - Done = suite green, `auth-protection` test unmodified, no raw error text in responses.
 
-### Phase 2: input validation and body caps
+### Phase 2: input validation and body caps — done
 - Add the zod `input` option and `maxBodyBytes` to the module.
 - Schemas: `generate-images` (typed slide items, capped count, `delayMs` clamped, `source` enum), `generate-image` (prompt length, `source` enum, `slideIndex` int), `download-pptx` (`slideImages` validated as base64 with size limits; malformed input is a 400, not a 500), `generate` (session enum shared with the UI, text length).
 - Done = malformed or oversized input gets a 4xx with a clear message; valid existing payloads unchanged.
+
+Final limits (Phase 2). Body over the cap → 413 `Request body exceeds the size limit.`; schema failure → 400 `Invalid request: <path>: <message>; …` (at most 5 issues, values never echoed).
+
+| Route | Body cap | Field limits |
+|---|---|---|
+| `generate` | 4,500,000 B (Vercel limit) | `text` non-blank string, no length cap (sent untrimmed to the model); `session` one of `SESSION_OPTIONS`; subject provenance keys read from the raw body, unchanged |
+| `generate-image` | 64 KiB | `prompt` non-blank, ≤ 4000; `slideIndex` optional int 0–100000 (kept in 400 and 500 bodies); `source` optional `ai`/`pexels`/`auto`; `title` optional ≤ 300 |
+| `generate-images` | 256 KiB | `slides` ≤ 100 items of `{ slideIndex` int 0–999, `part` ≤ 100, `visualDescription` ≤ 4000, `title?` ≤ 300 `}`; `source` optional `ai`/`pexels`/`auto`; `delayMs` non-number or negative → 800, above 2000 → 2000 |
+| `download-markdown` | 4,500,000 B | `presentationData` = export schema with `slides` ≤ 200; `session` optional ≤ 100 |
+| `download-pptx` | 4,500,000 B | as Markdown, plus `slideImages` optional object: keys are slide indexes below the slide count; values `''`, `'failed'`, or raw base64 / `data:image/(png\|jpeg);base64,` starting with a JPEG (`/9j/`) or PNG (`iVBORw0KGgo`) signature, ≤ 1,500,000 characters |
+| any other `defineRoute` route | 1 MiB default | none until it defines `input` |
 
 ### Phase 3: remaining routes
 - Migrate `upload`, `nasa-images/*`, `commons-images/*` (keeping the Commons 413 and 429 + `Retry-After` behaviour through `PublicError`), and `health`.
