@@ -16,6 +16,7 @@ import { describeImageCredit } from '@/lib/image-credit';
 import type { ImageMetadata } from '@/lib/image-metadata';
 import { FormattedFormula } from './FormattedFormula';
 import { getPartBadgeInfo } from './part-badge';
+import { isUsableImage, toDataUrl } from '@/lib/slide-image';
 import { normalizePart, PEDAGOGICAL_PARTS } from '@/lib/pedagogy';
 
 interface SlideCardProps {
@@ -54,12 +55,8 @@ export function SlideCard({
   onSelectImage,
 }: SlideCardProps) {
   const [nasaPickerOpen, setNasaPickerOpen] = useState(false);
-  const hasValidImage = Boolean(slideImage && slideImage !== 'failed');
-  const imageSrc = hasValidImage
-    ? slideImage?.startsWith('data:')
-      ? slideImage
-      : `data:image/png;base64,${slideImage}`
-    : undefined;
+  const hasValidImage = isUsableImage(slideImage);
+  const imageSrc = hasValidImage && slideImage ? toDataUrl(slideImage) : undefined;
 
   const badgeInfo = getPartBadgeInfo(slide.part);
   const credit = slide.imageMetadata && describeImageCredit(slide.imageMetadata);

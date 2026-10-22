@@ -1,5 +1,6 @@
 import { generateSlideImage } from '@/lib/providers/image-provider';
 import { partWantsAutoImage } from '@/lib/pedagogy';
+import { FAILED_IMAGE } from '@/lib/slide-image';
 
 export interface SlideImageBatchItem {
   visualDescription: string;
@@ -42,7 +43,7 @@ export async function processBatchImages(
         : await generateSlideImage(slide.visualDescription);
       images[slide.slideIndex] = base64;
     } catch {
-      images[slide.slideIndex] = 'failed';
+      images[slide.slideIndex] = FAILED_IMAGE;
     }
 
     if (i < eligibleSlides.length - 1 && delayMs > 0) {

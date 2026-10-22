@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { defineRoute } from '@/lib/api';
 import { exportRequestSchema } from '@/lib/schemas/presentation-export';
+import { exportFilename } from '@/lib/export/filename';
 import { buildPresentationMarkdown } from '@/lib/services/markdown-generator';
 
 export const dynamic = 'force-dynamic';
@@ -15,15 +16,7 @@ export const POST = defineRoute({
   maxBodyBytes: MAX_BODY_BYTES,
   handler: async ({ input }) => {
     const { presentationData: validatedData, session } = input;
-    const sessionString =
-      typeof session === 'string' && session.trim().length > 0
-        ? session.trim()
-        : 'session';
-    const sanitizedTopic = (validatedData.topic || 'presentation')
-      .replace(/[^a-z0-9]/gi, '_')
-      .toLowerCase();
-    const sanitizedSession = sessionString.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-    const sanitizedFileName = `${sanitizedTopic}_${sanitizedSession}_Outline.md`;
+    const sanitizedFileName = exportFilename({ topic: validatedData.topic, session, suffix: 'Outline.md' });
 
     const markdown = buildPresentationMarkdown(validatedData, session);
 
