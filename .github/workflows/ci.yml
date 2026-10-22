@@ -1,0 +1,47 @@
+# Checks typecheck, lint and unit tests; Vercel handles builds and deploys.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Latest Node 22 LTS: jsdom 30 needs >=22.22.2 and vitest 5 needs >=22.12.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+        # Placeholders, not secrets: src/lib/env.ts validates these on first use, and every provider call in the tests is mocked.
+        env:
+          TEXT_PROVIDER_BASE_URL: http://127.0.0.1:9/v1
+          TEXT_PROVIDER_API_KEY: ci-placeholder-not-a-secret
+          TEXT_PROVIDER_MODEL: ci-placeholder-model
+          IMAGE_PROVIDER_API_KEY: ci-placeholder-not-a-secret
