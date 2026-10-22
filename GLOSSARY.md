@@ -6,7 +6,7 @@
 
 **Slide image** — The picture shown on a Slide and exported to PPTX: base64 or a `data:` URL. The UI and export routes receive them as `slideImages: Record<index, string>`, where `'failed'` means generation failed and nothing is shown.
 
-**Pedagogical part** — `SlideData.part`, the lesson phase a Slide belongs to (`PEDAGOGICAL_PARTS` in `SlideCard`, e.g. Review, Motivation, Discussion, Assessment). It decides whether batch generation makes an image for the Slide (`shouldGenerateImageForPart`).
+**Pedagogical part** — `SlideData.part`, the lesson phase a Slide belongs to. `src/lib/pedagogy.ts` owns the rules: `PEDAGOGICAL_PARTS` (Title Page, then the six numbered lesson parts Review to Assessment), `normalizePart` / `canonicalPart` (maps wording such as "Activity" to a canonical part; unknown text is kept), `partOrdinal`, `partLabel` (badge text) and `partWantsAutoImage` (Motivation, Lesson Presentation and Discussion get batch images). The UI adds only colours (`src/components/part-badge.ts`).
 
 **Credit (`ImageMetadata`)** — Source and attribution of a library image (NASA or Wikimedia Commons), stored on `SlideData.imageMetadata`. `describeImageCredit` in `src/lib/image-credit.ts` describes it once (source label, credit line, source link, license, notes); each renderer only formats that description. AI-generated images have no Credit.
 

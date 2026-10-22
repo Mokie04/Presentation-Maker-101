@@ -1,9 +1,12 @@
+import type { PedagogicalPart } from '@/lib/pedagogy';
 import type { DeckAction, DeckSlide, DeckState, ImageToken, SlideImage } from './types';
 
 export const initialDeckState: DeckState = { presentation: null, slides: [], nextSlideId: 0 };
 
+const NEW_SLIDE_PART: PedagogicalPart = 'Discussion';
+
 const NEW_SLIDE = {
-  part: 'Discussion',
+  part: NEW_SLIDE_PART,
   title: 'New Slide Topic',
   contentPoints: ['Key takeaway for learners', 'Guided classroom discussion question'],
   visualDescription: 'Philippine classroom illustration showing interactive group discussion',

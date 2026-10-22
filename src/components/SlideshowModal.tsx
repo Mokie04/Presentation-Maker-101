@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { describeImageCredit } from '@/lib/image-credit';
 import type { PresentationData } from '@/types/presentation';
-import { getPartBadgeInfo } from './SlideCard';
+import { getPartBadgeInfo } from './part-badge';
 import { FormattedFormula } from './FormattedFormula';
 
 interface SlideshowModalProps {
