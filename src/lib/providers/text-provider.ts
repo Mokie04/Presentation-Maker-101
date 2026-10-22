@@ -1,12 +1,14 @@
 import OpenAI from 'openai';
 import { z } from 'zod';
 import { env } from '@/lib/env';
+import { canonicalPart } from '@/lib/pedagogy';
 import { SYSTEM_PROMPT, USER_PROMPT_TEMPLATE } from '@/lib/prompts/slide-generation';
 import type { PresentationData } from '@/types/presentation';
 
 export const slideDataSchema = z.object({
   slideNumber: z.number(),
-  part: z.string(),
+  // Canonical name when recognizable, so exports and badges agree; unknown parts pass through.
+  part: z.string().transform(canonicalPart),
   title: z.string(),
   contentPoints: z.array(z.string()),
   visualDescription: z.string(),

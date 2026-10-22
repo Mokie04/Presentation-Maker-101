@@ -15,29 +15,8 @@ import { NasaImagePicker } from './NasaImagePicker';
 import { describeImageCredit } from '@/lib/image-credit';
 import type { ImageMetadata } from '@/lib/image-metadata';
 import { FormattedFormula } from './FormattedFormula';
-
-export const PEDAGOGICAL_PARTS = [
-  'Title Page',
-  'Review',
-  'Motivation',
-  'Lesson Presentation',
-  'Discussion',
-  'Activities',
-  'Assessment',
-] as const;
-
-export function getPartBadgeInfo(part?: string): { bg: string; label: string } {
-  if (!part) return { bg: 'bg-slate-600', label: 'SLIDE' };
-  const p = part.toLowerCase();
-  if (p.includes('review')) return { bg: 'bg-amber-600', label: '1. REVIEW' };
-  if (p.includes('motivation')) return { bg: 'bg-emerald-600', label: '2. MOTIVATION' };
-  if (p.includes('lesson presentation') || p === 'presentation') return { bg: 'bg-sky-600', label: '3. LESSON PRESENTATION' };
-  if (p.includes('discussion')) return { bg: 'bg-cyan-700', label: '4. DISCUSSION' };
-  if (p.includes('activit')) return { bg: 'bg-purple-600', label: '5. ACTIVITIES' };
-  if (p.includes('assess')) return { bg: 'bg-rose-600', label: '6. ASSESSMENT' };
-  if (p.includes('title')) return { bg: 'bg-indigo-600', label: 'TITLE PAGE' };
-  return { bg: 'bg-sky-600', label: part.toUpperCase() };
-}
+import { getPartBadgeInfo } from './part-badge';
+import { normalizePart, PEDAGOGICAL_PARTS } from '@/lib/pedagogy';
 
 interface SlideCardProps {
   slide: SlideData;
@@ -131,7 +110,8 @@ export function SlideCard({
                       {p}
                     </option>
                   ))}
-                  {!PEDAGOGICAL_PARTS.includes(slide.part as (typeof PEDAGOGICAL_PARTS)[number]) && (
+                  {/* Keep a non-canonical part selectable so the select shows what the slide has */}
+                  {normalizePart(slide.part) !== slide.part && (
                     <option value={slide.part}>{slide.part}</option>
                   )}
                 </select>

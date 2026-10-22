@@ -1,4 +1,5 @@
 import { generateSlideImage } from '@/lib/providers/image-provider';
+import { partWantsAutoImage } from '@/lib/pedagogy';
 
 export interface SlideImageBatchItem {
   visualDescription: string;
@@ -11,12 +12,7 @@ export function shouldGenerateImageForPart(part: string): boolean {
   if (!part || typeof part !== 'string') {
     return false;
   }
-  const lower = part.toLowerCase();
-  return (
-    lower.includes('motivation') ||
-    lower.includes('presentation') ||
-    lower.includes('discussion')
-  );
+  return partWantsAutoImage(part);
 }
 
 function sleep(ms: number): Promise<void> {
