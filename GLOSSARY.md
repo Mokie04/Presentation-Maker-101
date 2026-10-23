@@ -4,9 +4,11 @@
 
 **Slide deck** — The ordered Slides of one generated presentation plus its metadata (`subject`, `originalWriters`, `topic`). The wire and export shape is `PresentationData`. Inside the client, each Slide also carries an internal id that is never reused and never sent to the server.
 
-**Slide image** — The picture shown on a Slide and exported to PPTX: base64 or a `data:` URL. The UI and export routes receive them as `slideImages: Record<index, string>`, where `FAILED_IMAGE` (`'failed'`) means generation failed and nothing is shown. `src/lib/slide-image.ts` owns the wire rules: `isUsableImage`, `toRawBase64`, `sniffImageMime`, `toDataUrl` and the export validation (`hasWireImageFormat`, `isValidWireImage`, `MAX_SLIDE_IMAGE_CHARS`).
+**Slide image** — The picture shown on a Slide and exported to PPTX: base64 or a `data:` URL. The UI and export routes receive them as `slideImages: Record<index, string>`, where `FAILED_IMAGE` (`'failed'`) means generation failed and nothing is shown. `src/lib/slide-image.ts` owns the wire rules: `isUsableImage`, `toRawBase64`, `sniffImageMime`, `toDataUrl` and the export validation (`hasWireImageFormat`, `MAX_SLIDE_IMAGE_CHARS`).
 
 **Pedagogical part** — `SlideData.part`, the lesson phase a Slide belongs to. `src/lib/pedagogy.ts` owns the rules: `PEDAGOGICAL_PARTS` (Title Page, then the six numbered lesson parts Review to Assessment), `normalizePart` / `canonicalPart` (maps wording such as "Activity" to a canonical part; unknown text is kept), `partOrdinal`, `partLabel` (badge text) and `partWantsAutoImage` (Motivation, Lesson Presentation and Discussion get batch images). The UI adds only colours (`src/components/part-badge.ts`).
+
+**Export payload** — The `/api/download-pptx` request: `{ presentationData, slideImages, session }`. `src/lib/export/` builds it: `buildPptxExportRequest` compresses usable images (`compress-image.ts`) and drops them from the last slide down until the body fits `CLIENT_EXPORT_BUDGET_CHARS`, removing the Credit of each dropped image; `limits.ts` holds that budget and the server cap `MAX_EXPORT_BODY_BYTES`; `filename.ts` names exports; `use-deck-export.ts` runs both downloads.
 
 **Credit (`ImageMetadata`)** — Source and attribution of a library image (NASA or Wikimedia Commons), stored on `SlideData.imageMetadata`. `describeImageCredit` in `src/lib/image-credit.ts` describes it once (source label, credit line, source link, license, notes); each renderer only formats that description. AI-generated images have no Credit.
 

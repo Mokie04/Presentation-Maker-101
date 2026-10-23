@@ -27,7 +27,7 @@ Beyond this list, refactoring has diminishing returns; later changes should be d
 |---|---|---|---|---|
 | 1 | Make the `verify` CI check required on `main` (GitHub Settings, Branches) | S | 3 | user action |
 | 2 | **Pedagogical part module** (candidate 03): one list, normalizer, label, ordinal and image-eligibility rule | S | 1 | done |
-| 3 | **Export payload module** (candidate 06): one Slide image value (removes the `'failed'` sentinel), testable `buildExportRequest` with the compression and 3.5 MB budget logic, de-duplicated filename and error parsing | M | 1 | 3a done, 3b next |
+| 3 | **Export payload module** (candidate 06): one Slide image value (removes the `'failed'` sentinel), testable `buildExportRequest` with the compression and 3.5 MB budget logic, de-duplicated filename and error parsing | M | 1 | done |
 | 4 | **Env/config module**: validate settings per feature so image and health routes do not need text-provider keys; delete the CI placeholder env vars | M | 3 | |
 | 5 | **Route Phase 3**: migrate upload, NASA, Commons and health onto `defineRoute`; add an architecture test that fails if a route bypasses it; table-driven auth-protection | M | 2 | |
 | 6 | **Image library seam** (candidate 04): NASA and Commons as two adapters of one interface; one bounded-fetch; uniform route protections | M | 1, 2 | |

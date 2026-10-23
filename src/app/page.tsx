@@ -20,55 +20,8 @@ import { SlideCard } from '@/components/SlideCard';
 import { SlideshowModal } from '@/components/SlideshowModal';
 import { SessionGate } from '@/components/SessionGate';
 import { useSlideDeck } from '@/lib/deck/use-slide-deck';
-import { downloadBlob, readErrorMessage } from '@/lib/export/client';
-import { exportFilename } from '@/lib/export/filename';
-import { isUsableImage, toDataUrl, toRawBase64 } from '@/lib/slide-image';
+import { useDeckExport } from '@/lib/export/use-deck-export';
 import type { PresentationData } from '@/types/presentation';
-
-async function compressImageForExport(base64: string): Promise<string> {
-  if (typeof window === 'undefined') return base64;
-  if (!isUsableImage(base64)) return base64;
-  return new Promise((resolve) => {
-    const img = new Image();
-    // Only set crossOrigin for remote http(s) URLs; setting on data: URIs taints canvas in WebKit
-    if (base64.startsWith('http://') || base64.startsWith('https://')) {
-      img.crossOrigin = 'anonymous';
-    }
-    img.onload = () => {
-      try {
-        // 480px is optimal for ~4" slide visual container at standard presentation DPI
-        const maxDim = 480;
-        let width = img.width;
-        let height = img.height;
-        if (width > maxDim || height > maxDim) {
-          if (width > height) {
-            height = Math.round((height * maxDim) / width);
-            width = maxDim;
-          } else {
-            width = Math.round((width * maxDim) / height);
-            height = maxDim;
-          }
-        }
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          resolve(base64.length > 150000 ? '' : base64);
-          return;
-        }
-        ctx.drawImage(img, 0, 0, width, height);
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.65);
-        const compressedBase64 = toRawBase64(dataUrl);
-        resolve(compressedBase64);
-      } catch {
-        resolve(base64.length > 150000 ? '' : base64);
-      }
-    };
-    img.onerror = () => resolve(base64.length > 150000 ? '' : base64);
-    img.src = toDataUrl(base64);
-  });
-}
 
 function PresentationWorkspace() {
   const [extractedText, setExtractedText] = useState('');
@@ -80,6 +33,9 @@ function PresentationWorkspace() {
     updatePart, updateTitle, updateBullet, addBullet, deleteBullet, addSlide, deleteSlide,
     regenerateImage, selectLibraryImage,
   } = useSlideDeck();
+  const { downloadPptx, downloadMarkdown, isDownloadingPptx, isDownloadingMarkdown } = useDeckExport({
+    presentationData, slideImages, session: selectedSession, onError: (message) => alert(message),
+  });
 
   const [isEditing, setIsEditing] = useState(false);
   const [isSlideShowActive, setIsSlideShowActive] = useState(false);
@@ -88,8 +44,6 @@ function PresentationWorkspace() {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingStage, setLoadingStage] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [isDownloadingPptx, setIsDownloadingPptx] = useState(false);
-  const [isDownloadingMd, setIsDownloadingMd] = useState(false);
 
   // Handle successful document upload or paste
   const handleUploadSuccess = (text: string, name: string) => {
@@ -150,110 +104,6 @@ function PresentationWorkspace() {
     } finally {
       setIsLoading(false);
       setLoadingStage('');
-    }
-  };
-
-  // Download Handlers
-  const handleDownloadPptx = async () => {
-    if (!presentationData) return;
-    setIsDownloadingPptx(true);
-    const filename = exportFilename({ topic: presentationData.topic, session: selectedSession, suffix: 'SayunaAI.pptx' });
-
-    try {
-      // Compress slide images client-side before sending to keep payload well within Vercel's 4.5MB limit
-      const optimizedImages: Record<number, string> = {};
-      const entries = Object.entries(slideImages);
-      await Promise.all(
-        entries.map(async ([key, val]) => {
-          const idx = Number(key);
-          if (isUsableImage(val)) {
-            optimizedImages[idx] = await compressImageForExport(val);
-          } else {
-            optimizedImages[idx] = val;
-          }
-        })
-      );
-
-      // Enforce a strict 3.5MB payload budget to stay safely within Vercel's 4.5MB request limit
-      const payload: {
-        presentationData: PresentationData;
-        slideImages: Record<number, string>;
-        session: string;
-      } = {
-        presentationData,
-        slideImages: optimizedImages,
-        session: selectedSession,
-      };
-
-      let bodyString = JSON.stringify(payload);
-      if (bodyString.length > 3.5 * 1024 * 1024) {
-        // If total JSON exceeds 3.5MB, progressively trim non-essential images starting from last slides
-        const imageKeys = Object.keys(optimizedImages).map(Number).sort((a, b) => b - a);
-        for (const key of imageKeys) {
-          if (bodyString.length <= 3.5 * 1024 * 1024) break;
-          delete optimizedImages[key];
-          payload.slideImages = optimizedImages;
-          bodyString = JSON.stringify(payload);
-        }
-      }
-
-      const res = await fetch('/api/download-pptx', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: bodyString,
-      });
-
-      if (!res.ok) {
-        throw new Error(await readErrorMessage(res, 'Failed to download PowerPoint.'));
-      }
-
-      downloadBlob(await res.blob(), filename);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : '';
-      if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
-        alert(
-          'Network connection interrupted during download. Please try downloading again or use the Markdown outline.'
-        );
-      } else {
-        alert(msg || 'Error generating PPTX file.');
-      }
-    } finally {
-      setIsDownloadingPptx(false);
-    }
-  };
-
-  const handleDownloadMarkdown = async () => {
-    if (!presentationData) return;
-    setIsDownloadingMd(true);
-    try {
-      const res = await fetch('/api/download-markdown', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          presentationData,
-          session: selectedSession,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error(await readErrorMessage(res, 'Failed to download Markdown outline.'));
-      }
-
-      const text = await res.text();
-      const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
-
-      const disposition = res.headers.get('Content-Disposition');
-      let filename = exportFilename({ topic: presentationData.topic, session: selectedSession, suffix: 'Outline.md' });
-      if (disposition && disposition.includes('filename=')) {
-        const match = disposition.match(/filename="?([^"]+)"?/);
-        if (match?.[1]) filename = match[1];
-      }
-
-      downloadBlob(blob, filename);
-    } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error generating Markdown outline.');
-    } finally {
-      setIsDownloadingMd(false);
     }
   };
 
@@ -319,7 +169,7 @@ function PresentationWorkspace() {
                 <button
                   type="button"
                   disabled={isDownloadingPptx}
-                  onClick={handleDownloadPptx}
+                  onClick={downloadPptx}
                   className="px-4 py-2.5 bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
                 >
                   <FileDown className="w-4 h-4" />
@@ -328,12 +178,12 @@ function PresentationWorkspace() {
 
                 <button
                   type="button"
-                  disabled={isDownloadingMd}
-                  onClick={handleDownloadMarkdown}
+                  disabled={isDownloadingMarkdown}
+                  onClick={downloadMarkdown}
                   className="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 active:bg-slate-950 text-white rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2 shadow-sm transition-all"
                 >
                   <FileText className="w-4 h-4" />
-                  <span>{isDownloadingMd ? 'Exporting...' : 'Download Outline'}</span>
+                  <span>{isDownloadingMarkdown ? 'Exporting...' : 'Download Outline'}</span>
                 </button>
 
                 <button

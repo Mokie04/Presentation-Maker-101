@@ -31,7 +31,3 @@ export function toDataUrl(value: string): string {
 export function hasWireImageFormat(value: string): boolean {
   return value === '' || value === FAILED_IMAGE || WIRE_IMAGE_PATTERN.test(value);
 }
-
-export function isValidWireImage(value: string): boolean {
-  return value.length <= MAX_SLIDE_IMAGE_CHARS && hasWireImageFormat(value);
-}
