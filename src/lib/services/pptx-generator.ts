@@ -123,14 +123,16 @@ export function createPresentationPptx(
       }
 
       if (contentPoints.length > 0) {
-        const textItems = contentPoints.map((pt, pIdx) => ({
-          text: pt + (pIdx < contentPoints.length - 1 ? '\n' : ''),
-          options: {
+        const textItems = contentPoints.flatMap((pt, pIdx) => {
+          const pointOptions = {
             fontSize: pIdx === 0 ? 28 : 22,
             color: pIdx === 0 ? '1E293B' : '475569',
             bold: pIdx === 0 || pt.toLowerCase().includes('writer') || pt.toLowerCase().includes('author'),
-          },
-        }));
+          };
+          return formulaToTextRuns(pt + (pIdx < contentPoints.length - 1 ? '\n' : '')).map((run) => ({
+            ...run, options: { ...pointOptions, ...run.options },
+          }));
+        });
 
         slideObj.addText(textItems, {
           x: 0.8,
