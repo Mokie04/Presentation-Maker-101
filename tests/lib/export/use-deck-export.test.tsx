@@ -32,14 +32,14 @@ function setup(data: PresentationData | null = presentationData) {
 
 describe('downloadPptx', () => {
   it('posts the compressed payload, downloads the file and toggles the flag', async () => {
-    let finish!: (res: Response) => void;
-    fetchMock.mockReturnValueOnce(new Promise<Response>((resolve) => { finish = resolve; }));
+    let finish!: (res: Pick<Response, 'ok' | 'blob'>) => void;
+    fetchMock.mockReturnValueOnce(new Promise<Pick<Response, 'ok' | 'blob'>>((resolve) => { finish = resolve; }));
     const { result } = setup();
     let done!: Promise<void>;
     act(() => { done = result.current.downloadPptx(); });
     expect(result.current.isDownloadingPptx).toBe(true);
     await act(async () => { await Promise.resolve(); });
-    await act(async () => { finish(new Response(new Blob(['pptx']))); await done; });
+    await act(async () => { finish({ ok: true, blob: async () => new Blob(['pptx']) }); await done; });
 
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe('/api/download-pptx');
