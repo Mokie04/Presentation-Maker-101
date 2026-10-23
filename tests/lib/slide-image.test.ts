@@ -3,7 +3,6 @@ import {
   FAILED_IMAGE,
   hasWireImageFormat,
   isUsableImage,
-  isValidWireImage,
   MAX_SLIDE_IMAGE_CHARS,
   sniffImageMime,
   toDataUrl,
@@ -64,7 +63,6 @@ describe('wire image validation', () => {
     ['the largest allowed image', `/9j/${'A'.repeat(MAX_SLIDE_IMAGE_CHARS - 4)}`],
   ])('accepts %s', (_, value) => {
     expect(hasWireImageFormat(value)).toBe(true);
-    expect(isValidWireImage(value)).toBe(true);
   });
 
   it.each([
@@ -74,13 +72,10 @@ describe('wire image validation', () => {
     ['a non-image data URL', `data:text/plain;base64,${PNG}`],
   ])('rejects %s', (_, value) => {
     expect(hasWireImageFormat(value)).toBe(false);
-    expect(isValidWireImage(value)).toBe(false);
   });
 
-  it('rejects an image over the length limit while its format is fine', () => {
-    const oversized = `/9j/${'A'.repeat(MAX_SLIDE_IMAGE_CHARS)}`;
-    expect(hasWireImageFormat(oversized)).toBe(true);
-    expect(isValidWireImage(oversized)).toBe(false);
+  it('leaves the length limit to the caller: the format alone accepts an oversized image', () => {
+    expect(hasWireImageFormat(`/9j/${'A'.repeat(MAX_SLIDE_IMAGE_CHARS)}`)).toBe(true);
     expect(MAX_SLIDE_IMAGE_CHARS).toBe(1_500_000);
   });
 });
