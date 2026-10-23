@@ -30,7 +30,7 @@ describe('manual NASA endpoints', () => {
   it('returns search candidates and keeps empty results separate from failure', async () => {
     const spy = vi.spyOn(nasa, 'searchNasaImages').mockResolvedValueOnce([candidate]).mockResolvedValueOnce([])
       .mockRejectedValueOnce(new Error('NASA failed'));
-    expect(await (await search(req({ query: ' roots ' }))).json()).toEqual({ candidates: [candidate] });
+    expect(await (await search(req({ query: ' roots ' }))).json()).toEqual({ candidates: [{ ...candidate, source: 'nasa', selectable: true }] });
     expect(spy).toHaveBeenCalledWith('roots');
     expect(await (await search(req({ query: 'missing' }))).json()).toEqual({ candidates: [] });
     expect((await search(req({ query: 'error' }))).status).toBe(502);

@@ -14,4 +14,6 @@
 
 **Image intent** — A user request for a specific Slide image: a single regeneration or a library selection. A new Image intent supersedes any older in-flight result for that Slide, including a pending batch result.
 
+**Image library** — A searchable source of manually selected images. `ImageLibrary` in `src/lib/image-library/library.ts` defines its source, label, selection schema, search/select operations and public error mapping. `nasa.ts` and `commons.ts` adapt the existing providers; `route-definitions.ts` supplies their shared route policy. Client-safe candidate types, labels, paths and selection helpers live in `types.ts`. To add a third library, add its adapter here, extend the source/metadata and candidate unions and library constants, wire its routes through the shared definitions, and add it to the picker and adapter contract tests.
+
 **Configuration** — Feature settings validated only when needed. `src/lib/env.ts` owns pure `readTextProviderConfig`, `readImageProviderConfig`, `readPexelsConfig` and `readAppConfig` readers, with matching lazy, cached `get*Config` accessors. `resetConfigCache` isolates tests; App Store auth remains in `src/lib/sessionAuth.ts`.

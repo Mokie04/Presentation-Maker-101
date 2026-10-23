@@ -1,21 +1,20 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
-import type { CommonsImageCandidate } from '@/lib/providers/commons-provider';
-import type { NasaImageCandidate } from '@/lib/providers/nasa-provider';
-import { imageCreditText, imageSourceLabel } from '@/lib/image-credit';
+import { IMAGE_LIBRARIES, candidateId, selectRequestBody, type ImageCandidate, type ImageSource } from '@/lib/image-library/types';
+import { imageCreditText } from '@/lib/image-credit';
 import { imageMetadataSchema, type ImageMetadata } from '@/lib/image-metadata';
 
-export function NasaImagePicker({ title, onSelect, onCancel }: {
+export function ImageLibraryPicker({ title, onSelect, onCancel }: {
   title: string;
   onSelect: (base64: string, metadata: ImageMetadata) => void;
   onCancel: () => void;
 }) {
-  const [source, setSource] = useState<'nasa' | 'commons'>('nasa');
+  const [source, setSource] = useState<ImageSource>('nasa');
   const [commonsRetrySeconds, setCommonsRetrySeconds] = useState(0);
-  const label = imageSourceLabel(source);
+  const { label, basePath } = IMAGE_LIBRARIES[source];
   const limited = source === 'commons' && commonsRetrySeconds > 0;
   const [query, setQuery] = useState(title);
-  const [candidates, setCandidates] = useState<(NasaImageCandidate | CommonsImageCandidate)[] | null>(null);
+  const [candidates, setCandidates] = useState<ImageCandidate[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const request = useRef<AbortController | null>(null);
@@ -55,7 +54,7 @@ export function NasaImagePicker({ title, onSelect, onCancel }: {
       <label className="block text-xs font-bold text-slate-700">
         Image source
         <select value={source} onChange={(e) => {
-          request.current?.abort(); setSource(e.target.value as 'nasa' | 'commons');
+          request.current?.abort(); setSource(e.target.value as ImageSource);
           setCandidates(null); setError(''); setBusy(false);
         }} className="ml-2 p-2 border border-slate-300 rounded-lg bg-white">
           <option value="nasa">NASA</option><option value="commons">Wikimedia Commons</option>
@@ -63,9 +62,10 @@ export function NasaImagePicker({ title, onSelect, onCancel }: {
       </label>
       <form onSubmit={(event) => {
         event.preventDefault(); setCandidates(null);
-        void run(`/api/${source === 'commons' ? 'commons' : 'nasa'}-images/search`, { query }, (data) => {
+        void run(`${basePath}/search`, { query }, (data) => {
           if (!Array.isArray(data.candidates)) throw new Error(`Invalid ${label} search response.`);
-          setCandidates(data.candidates.slice(0, 5));
+          // Older NASA responses omit the tags; the requested library supplies their defaults.
+          setCandidates(data.candidates.slice(0, 5).map((candidate) => ({ source, selectable: true, ...candidate })));
         });
       }} className="space-y-2">
         <label className="block text-xs font-bold text-slate-700">
@@ -82,21 +82,22 @@ export function NasaImagePicker({ title, onSelect, onCancel }: {
       {limited && <p className="text-sm text-slate-600">Try again in {commonsRetrySeconds} seconds.</p>}
       {candidates?.length === 0 && <p className="text-sm text-slate-600">No {label} images found.</p>}
       {candidates?.map((candidate) => (
-        <article key={'fileId' in candidate ? candidate.fileId : candidate.nasaId} className="p-3 rounded-lg bg-white border border-sky-100 space-y-2">
+        <article key={candidateId(candidate)} className="p-3 rounded-lg bg-white border border-sky-100 space-y-2">
           {candidate.previewUrl && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={candidate.previewUrl} alt={candidate.title ?? ('nasaId' in candidate ? candidate.nasaId : String(candidate.fileId))} className="max-h-36 w-full object-contain" />
+            <img src={candidate.previewUrl} alt={candidate.title ?? String(candidateId(candidate))} className="max-h-36 w-full object-contain" />
           )}
           <p className="text-sm font-bold text-slate-800">{candidate.title ?? 'Title not provided'}</p>
           <p className="text-xs text-slate-600">{imageCreditText(candidate)}</p>
-          {'center' in candidate && candidate.center && <p className="text-xs text-slate-600">Publishing center: {candidate.center}</p>}
-          {'licenseUrl' in candidate && candidate.licenseUrl && <a href={candidate.licenseUrl} target="_blank" rel="noopener noreferrer" className="block text-xs text-sky-700 underline">License details</a>}
-          {'unavailableReason' in candidate && candidate.unavailableReason && <p className="text-xs text-slate-600">{candidate.unavailableReason}</p>}
+          {candidate.source === 'nasa' && candidate.center && <p className="text-xs text-slate-600">Publishing center: {candidate.center}</p>}
+          {candidate.source === 'commons' && candidate.licenseUrl && <a href={candidate.licenseUrl} target="_blank" rel="noopener noreferrer" className="block text-xs text-sky-700 underline">License details</a>}
+          {candidate.source === 'commons' && candidate.unavailableReason && <p className="text-xs text-slate-600">{candidate.unavailableReason}</p>}
           {candidate.description && <details className="text-xs text-slate-600"><summary>Source description</summary><p className="whitespace-pre-wrap">{candidate.description}</p></details>}
           {candidate.sourceUrl && <a href={candidate.sourceUrl} target="_blank" rel="noopener noreferrer" className="block text-xs text-sky-700 underline">{label} source</a>}
-          <button type="button" disabled={busy || limited || ('selectable' in candidate && !candidate.selectable)} className="px-3 py-2 bg-sky-600 text-white rounded-lg text-xs font-bold disabled:opacity-50"
-            onClick={() => void run(`/api/${source === 'commons' ? 'commons' : 'nasa'}-images/select`, 'fileId' in candidate ? { fileId: candidate.fileId } : { nasaId: candidate.nasaId }, (data) => {
+          <button type="button" disabled={busy || limited || !candidate.selectable} className="px-3 py-2 bg-sky-600 text-white rounded-lg text-xs font-bold disabled:opacity-50"
+            onClick={() => void run(`${basePath}/select`, selectRequestBody(candidate), (data) => {
               const metadata = imageMetadataSchema.parse(data.metadata);
+              if (metadata.source !== source) throw new Error(`Invalid ${label} image response.`);
               if (typeof data.base64 !== 'string' || !data.base64) throw new Error(`${label} returned no image.`);
               onSelect(data.base64, metadata);
             })}>Use this image</button>

@@ -11,7 +11,7 @@ import {
   CheckCircle,
 } from 'lucide-react';
 import type { SlideData } from '@/types/presentation';
-import { NasaImagePicker } from './NasaImagePicker';
+import { ImageLibraryPicker } from './ImageLibraryPicker';
 import { describeImageCredit } from '@/lib/image-credit';
 import type { ImageMetadata } from '@/lib/image-metadata';
 import { FormattedFormula } from './FormattedFormula';
@@ -54,7 +54,7 @@ export function SlideCard({
   onRegenerateImage,
   onSelectImage,
 }: SlideCardProps) {
-  const [nasaPickerOpen, setNasaPickerOpen] = useState(false);
+  const [imageLibraryPickerOpen, setImageLibraryPickerOpen] = useState(false);
   const hasValidImage = isUsableImage(slideImage);
   const imageSrc = hasValidImage && slideImage ? toDataUrl(slideImage) : undefined;
 
@@ -219,9 +219,9 @@ export function SlideCard({
               </div>
             )}
             {onSelectImage && (
-              nasaPickerOpen ? <NasaImagePicker title={slide.title} onCancel={() => setNasaPickerOpen(false)}
-                onSelect={(base64, metadata) => { onSelectImage(slideId, base64, metadata); setNasaPickerOpen(false); }} />
-                : <button type="button" onClick={() => setNasaPickerOpen(true)}
+              imageLibraryPickerOpen ? <ImageLibraryPicker title={slide.title} onCancel={() => setImageLibraryPickerOpen(false)}
+                onSelect={(base64, metadata) => { onSelectImage(slideId, base64, metadata); setImageLibraryPickerOpen(false); }} />
+                : <button type="button" onClick={() => setImageLibraryPickerOpen(true)}
                   className="w-full py-2 px-3 rounded-lg text-xs font-bold text-sky-800 bg-sky-50 border border-sky-200">Find image</button>
             )}
 
