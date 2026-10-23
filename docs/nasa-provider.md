@@ -64,32 +64,7 @@ size cap fail explicitly. The four selected assets passed live retrieval after t
 inspection found a cell-image/description mismatch. Collection-wide compatibility,
 automatic suitability, and application/export rendering remain unverified.
 
-## Inactive search-eligibility pilot
-
-`src/lib/utils/nasa-search-eligibility.ts` exposes a provider-free decision for
-**may search**, never image approval or selection. Caller contract:
-
-- Supply `subjectEvidence`, a list of `{ subject, source }` claims. Sources are
-  `teacher-supplied`, `keyword-detected`, `model-generated`, or `unknown`. Preserve
-  all available claims, including disagreements; do not relabel inference as teacher
-  input. Only an actual teacher-supplied subject can establish this pilot's subject.
-- Supply `slideTopic` separately from visual descriptions or whole-lesson text.
-  A missing topic or a cartoon prompt cannot establish a supported lesson topic.
-- Missing/empty evidence, blank/unknown/General Study labels, unknown provenance,
-  or absence of teacher evidence return `subject-not-established`. Differing
-  normalized claims return `subject-conflict`. A consistent established subject
-  other than exactly `Science` returns `non-science-subject`.
-- Only these complete topic phrases qualify (case-insensitive; whitespace collapsed):
-  `solar system distances`, `solar system scale` (also `solar-system`);
-  `Earth atmosphere observations`, `Earth's atmosphere observations` (straight or
-  curly apostrophe); `plant root observations`, `plant roots observations`, and
-  `plant seedling observations` / `plant seedlings observations`.
-  Matching uses bounded, anchored phrases, not substrings or a synonym classifier.
-  Other wording returns `unsupported-topic`; false negatives are intentional.
-- Eligible decisions contain `eligible: true`, `reason: 'supported-pilot-topic'`,
-  and `pilotTopic`: `solar-system-scale`, `earth-atmosphere-observations`, or
-  `plant-root-seedling-observations`. Ineligible decisions contain only
-  `eligible: false` and the reason. Subject checks precede topic checks.
+## Subject provenance for future routing
 
 Current provenance flow (2026-10-12): the optional Subject control beside Session
 starts at `Automatic` and offers the detector's existing labels: Science,
@@ -125,9 +100,9 @@ and model output never preselect a teacher choice.
 
 Remaining integration dependencies: image requests still lack subject evidence
 and a separate instructional slide topic. Carry server-recorded history to those
-callers and establish individual topics before using the eligibility policy;
-slide titles and visual prompts are not converted into pilot topics here. Neither
-NASA nor its policy is invoked by generation/image requests. Candidate review,
+callers and establish individual topics before defining a NASA routing policy;
+slide titles and visual prompts are not treated as instructional topics here.
+NASA is not invoked by generation/image requests. Candidate review,
 caption accuracy, metadata/credit preservation, usage review, and bounded routing
 remain separate work. The existing AI → Pexels flow remains unchanged.
 
@@ -169,8 +144,7 @@ for the automatic AI/Pexels path.
 Verification used mocked provider, DOM, and browser responses. No live NASA calls
 were made for this manual-picker implementation. Metadata conflicts found in the
 earlier live evaluation remain unresolved; teachers must review relevance, captions,
-and usage conditions. Subject provenance and the inactive eligibility policy were
-not extended or connected to the manual flow.
+and usage conditions. Subject provenance was not extended or connected to the manual flow.
 
 ## Production hosting limit
 
