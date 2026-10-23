@@ -57,7 +57,7 @@ describe('Commons provider with mocked HTTP', () => {
     expect(candidate.creator).not.toContain('<'); expect(candidate.creator).not.toContain('evil');
     const [url, init] = fetchFn.mock.calls[0]; const params = new URL(String(url)).searchParams;
     expect(params.get('generator')).toBe('search'); expect(params.get('gsrnamespace')).toBe('6');
-    expect(params.get('gsrlimit')).toBe('5'); expect(params.get('iiurlwidth')).toBe('1200');
+    expect(params.get('gsrlimit')).toBe('20'); expect(params.get('iiurlwidth')).toBe('1200');
     expect(params.get('iiprop')).toContain('extmetadata');
     expect(init).toMatchObject({ redirect: 'error', signal: expect.any(AbortSignal), headers: {
       'User-Agent': expect.stringContaining('SayunaPresentationMaker/'),

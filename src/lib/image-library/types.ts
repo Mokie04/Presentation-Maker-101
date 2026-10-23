@@ -5,6 +5,9 @@ import { imageSourceLabel, type ImageSource, type ImageSourceLabel } from '@/lib
 export type { ImageSource } from '@/lib/image-credit';
 export type ImageCandidate = (NasaImageCandidate & { source: 'nasa'; selectable: true }) | CommonsImageCandidate;
 
+/** Results the picker shows at most: Commons returns up to 8 usable plus 4 unavailable, NASA up to 5. */
+export const MAX_DISPLAYED_CANDIDATES = 12;
+
 export const IMAGE_LIBRARIES: Record<ImageSource, { label: ImageSourceLabel; basePath: string }> = {
   nasa: { label: imageSourceLabel('nasa'), basePath: '/api/nasa-images' },
   commons: { label: imageSourceLabel('commons'), basePath: '/api/commons-images' },
