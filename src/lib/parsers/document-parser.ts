@@ -2,9 +2,16 @@ import mammoth from 'mammoth';
 import pdfParse from 'pdf-parse';
 import path from 'path';
 
+export class DocumentParseError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'DocumentParseError';
+  }
+}
+
 export async function parseDocument(buffer: Buffer, fileName: string): Promise<string> {
   if (!buffer || buffer.length === 0) {
-    throw new Error(`File is empty: ${fileName}`);
+    throw new DocumentParseError(`File is empty: ${fileName}`);
   }
 
   const ext = path.extname(fileName).toLowerCase();
@@ -27,13 +34,13 @@ export async function parseDocument(buffer: Buffer, fileName: string): Promise<s
       break;
     }
     default:
-      throw new Error(
+      throw new DocumentParseError(
         `Unsupported file type: "${ext}". Supported types are .docx, .pdf, .txt, .md`
       );
   }
 
   if (!extractedText || extractedText.trim().length === 0) {
-    throw new Error(`Document contains no text content: ${fileName}`);
+    throw new DocumentParseError(`Document contains no text content: ${fileName}`);
   }
 
   return extractedText;

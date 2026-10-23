@@ -1,29 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import path from 'path';
 import { getAppConfig } from '@/lib/env';
-import { parseDocument } from '@/lib/parsers/document-parser';
-import { requireSession } from '@/lib/sessionAuth';
+import { parseDocument, DocumentParseError } from '@/lib/parsers/document-parser';
+import { defineRoute, PublicError } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
 
 const ALLOWED_EXTENSIONS = ['.docx', '.pdf', '.txt', '.md'];
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
-  const auth = requireSession(request);
-  if (!auth.ok) return auth.response;
-
-  try {
-    let formData: FormData;
-    try {
-      formData = await request.formData();
-    } catch {
-      return NextResponse.json(
-        { error: 'Invalid form data payload.' },
-        { status: 400 }
-      );
-    }
-
-    const file = formData.get('file');
+export const POST = defineRoute({
+  name: 'upload',
+  parse: 'form',
+  failureMessage: 'Failed to process the upload. Please try again.',
+  maxBodyBytes: () => getAppConfig().maxFileSizeMb * 1024 * 1024 * 2,
+  handler: async ({ form }) => {
+    const file = form.get('file');
 
     if (!file || !(file instanceof Blob)) {
       return NextResponse.json(
@@ -61,8 +52,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     try {
       parsedText = await parseDocument(buffer, fileName);
     } catch (parseError) {
-      const message = parseError instanceof Error ? parseError.message : String(parseError);
-      return NextResponse.json({ error: message }, { status: 500 });
+      if (parseError instanceof DocumentParseError) throw new PublicError(parseError.message, 422);
+      console.error('[upload]', parseError);
+      throw new PublicError('The document could not be read. Check that it is a valid .docx, .pdf, .txt or .md file.', 422);
     }
 
     return NextResponse.json(
@@ -74,8 +66,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       },
       { status: 200 }
     );
-  } catch (err) {
-    const message = err instanceof Error ? err.message : 'Internal Server Error';
-    return NextResponse.json({ error: message }, { status: 500 });
-  }
-}
+  },
+});

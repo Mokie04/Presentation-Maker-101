@@ -2,36 +2,38 @@ import { NextRequest, NextResponse } from 'next/server';
 import type { z } from 'zod';
 import { requireSession, type SessionClaims } from '@/lib/sessionAuth';
 import { PublicError } from './public-error';
-import { BodyTooLargeError, readBodyText } from './read-body';
+import { BodyTooLargeError, readBodyText, readBodyForm } from './read-body';
 
 /** Default request body cap when a route does not set its own. */
 const DEFAULT_MAX_BODY_BYTES = 1024 * 1024;
 /** Schema issues listed in a 400 message; the rest are dropped to keep it readable. */
 const MAX_REPORTED_ISSUES = 5;
 
-export interface RouteContext<Input = unknown> {
+type ParseMode = 'json' | 'none' | 'form';
+
+export type RouteContext<Input = unknown, Parse extends ParseMode = ParseMode> = {
   /** The parsed input when the route defines a schema, otherwise the raw body. */
   input: Input;
   body: Record<string, unknown>;
   request: NextRequest;
   session: SessionClaims;
-}
+} & (Parse extends 'form' ? { form: FormData } : unknown);
 
-export interface RouteDefinition<Schema extends z.ZodType = z.ZodType<Record<string, unknown>>> {
+export interface RouteDefinition<Schema extends z.ZodType = z.ZodType<Record<string, unknown>>, Parse extends ParseMode = ParseMode> {
   /** Used in server logs only. */
   name: string;
   /** Fixed client message for unexpected failures; the original error is logged, never returned. */
   failureMessage: string;
   failureStatus?: number;
   /** Skip body reads for routes such as GET health checks. Defaults to JSON parsing. */
-  parse?: 'json' | 'none';
+  parse?: Parse;
   /** Apply Cache-Control: no-store to every response, including auth and validation failures. */
   noStore?: boolean;
   input?: Schema;
-  maxBodyBytes?: number;
+  maxBodyBytes?: number | (() => number);
   /** Extra fields for schema and unexpected-failure bodies, derived from the parsed request body. */
   errorExtra?: (body: Record<string, unknown>) => Record<string, unknown>;
-  handler: (context: RouteContext<z.output<Schema>>) => Promise<NextResponse>;
+  handler: (context: RouteContext<z.output<Schema>, Parse>) => Promise<NextResponse>;
 }
 
 // Paths and zod's messages only; zod messages describe the expected shape, never the received value.
@@ -41,10 +43,10 @@ function describeIssues(issues: z.core.$ZodIssue[]): string {
     .join('; ');
 }
 
-export function defineRoute<Schema extends z.ZodType = z.ZodType<Record<string, unknown>>>({
-  name, failureMessage, failureStatus = 500, parse = 'json', noStore = false,
+export function defineRoute<Schema extends z.ZodType = z.ZodType<Record<string, unknown>>, Parse extends ParseMode = 'json'>({
+  name, failureMessage, failureStatus = 500, parse, noStore = false,
   input, maxBodyBytes = DEFAULT_MAX_BODY_BYTES, errorExtra, handler,
-}: RouteDefinition<Schema>) {
+}: RouteDefinition<Schema, Parse>) {
   const respond = (response: NextResponse): NextResponse => {
     if (noStore) response.headers.set('Cache-Control', 'no-store');
     return response;
@@ -56,31 +58,42 @@ export function defineRoute<Schema extends z.ZodType = z.ZodType<Record<string, 
     if (!auth.ok) return respond(auth.response);
 
     let body: Record<string, unknown> = {};
-    if (parse === 'json') {
-      try {
-        body = (JSON.parse(await readBodyText(request, maxBodyBytes)) as Record<string, unknown>) || {};
-      } catch (err) {
-        if (err instanceof BodyTooLargeError) {
-          return respond(NextResponse.json({ error: 'Request body exceeds the size limit.' }, { status: 413 }));
-        }
-        return respond(NextResponse.json({ error: 'Invalid JSON request body.' }, { status: 400 }));
-      }
-    }
-
-    let parsed: z.output<Schema> = body as z.output<Schema>;
-    if (input) {
-      const result = input.safeParse(body);
-      if (!result.success) {
-        return respond(NextResponse.json(
-          { error: `Invalid request: ${describeIssues(result.error.issues)}`, ...errorExtra?.(body) },
-          { status: 400 }
-        ));
-      }
-      parsed = result.data;
-    }
-
     try {
-      return respond(await handler({ input: parsed, body, request, session: auth.claims }));
+      let form: FormData | undefined;
+      const parsing = parse ?? 'json';
+      if (parsing !== 'none') {
+        // Resolve configuration after auth, outside the malformed-body catch.
+        const limit = typeof maxBodyBytes === 'function' ? maxBodyBytes() : maxBodyBytes;
+        try {
+          if (parsing === 'form') {
+            form = await readBodyForm(request, limit);
+          } else {
+            body = (JSON.parse(await readBodyText(request, limit)) as Record<string, unknown>) || {};
+          }
+        } catch (err) {
+          if (err instanceof BodyTooLargeError) {
+            return respond(NextResponse.json({ error: 'Request body exceeds the size limit.' }, { status: 413 }));
+          }
+          const error = parsing === 'form' ? 'Invalid form data payload.' : 'Invalid JSON request body.';
+          return respond(NextResponse.json({ error }, { status: 400 }));
+        }
+      }
+
+      let parsed: z.output<Schema> = body as z.output<Schema>;
+      if (input) {
+        const result = input.safeParse(body);
+        if (!result.success) {
+          return respond(NextResponse.json(
+            { error: `Invalid request: ${describeIssues(result.error.issues)}`, ...errorExtra?.(body) },
+            { status: 400 }
+          ));
+        }
+        parsed = result.data;
+      }
+
+      // The parse mode guarantees a form context only after successful form parsing.
+      const context = { input: parsed, body, request, session: auth.claims, ...(form ? { form } : {}) } as RouteContext<z.output<Schema>, Parse>;
+      return respond(await handler(context));
     } catch (err) {
       if (err instanceof PublicError) {
         return respond(NextResponse.json({ error: err.message, ...err.extra }, { status: err.status, headers: err.headers }));
