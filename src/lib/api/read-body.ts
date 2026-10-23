@@ -2,11 +2,11 @@ import type { NextRequest } from 'next/server';
 
 export class BodyTooLargeError extends Error {}
 
-/** Reads the body as text, stopping as soon as it exceeds `limit` bytes, declared or streamed. */
-export async function readBodyText(request: NextRequest, limit: number): Promise<string> {
+/** Reads bytes once, stopping as soon as the declared or streamed body exceeds `limit`. */
+async function readBodyBytes(request: NextRequest, limit: number): Promise<Buffer> {
   if (Number(request.headers.get('content-length')) > limit) throw new BodyTooLargeError();
   const reader = request.body?.getReader();
-  if (!reader) return '';
+  if (!reader) return Buffer.alloc(0);
   const chunks: Uint8Array[] = [];
   let size = 0;
   try {
@@ -23,5 +23,16 @@ export async function readBodyText(request: NextRequest, limit: number): Promise
   } finally {
     reader.releaseLock();
   }
-  return Buffer.concat(chunks).toString('utf8');
+  return Buffer.concat(chunks);
+}
+
+export async function readBodyText(request: NextRequest, limit: number): Promise<string> {
+  return (await readBodyBytes(request, limit)).toString('utf8');
+}
+
+export async function readBodyForm(request: NextRequest, limit: number): Promise<FormData> {
+  const bytes = await readBodyBytes(request, limit);
+  return new Response(new Uint8Array(bytes), {
+    headers: { 'Content-Type': request.headers.get('content-type') ?? '' },
+  }).formData();
 }

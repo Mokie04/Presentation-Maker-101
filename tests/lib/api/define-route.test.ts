@@ -293,3 +293,107 @@ describe('defineRoute GET and response policy', () => {
     expect(handler).not.toHaveBeenCalled();
   });
 });
+
+describe('defineRoute multipart parsing and dynamic limits', () => {
+  function multipartRequest() {
+    // Use wire bytes so cancelling at the cap does not race Node's FormData encoder.
+    const bytes = Buffer.concat([
+      Buffer.from('--test\r\nContent-Disposition: form-data; name="title"\r\n\r\nLesson\r\n' +
+        '--test\r\nContent-Disposition: form-data; name="file"; filename="lesson.pdf"\r\nContent-Type: application/pdf\r\n\r\n'),
+      Buffer.from([0, 255, 13, 10, 195, 169]), Buffer.from('\r\n--test--\r\n'),
+    ]);
+    return new NextRequest('http://localhost/api/test', {
+      method: 'POST', body: new Uint8Array(bytes), headers: { 'Content-Type': 'multipart/form-data; boundary=test' },
+    });
+  }
+
+  it('provides parsed multipart fields and intact file bytes in the form context', async () => {
+    const response = await defineRoute({
+      name: 'form-test', parse: 'form', failureMessage: 'Failed',
+      handler: async ({ form, body }) => {
+        expect(body).toEqual({});
+        expect(form.get('title')).toBe('Lesson');
+        const file = form.get('file') as File;
+        expect(file.name).toBe('lesson.pdf');
+        expect(file.type).toBe('application/pdf');
+        expect(Array.from(new Uint8Array(await file.arrayBuffer()))).toEqual([0, 255, 13, 10, 195, 169]);
+        return NextResponse.json({ ok: true });
+      },
+    })(multipartRequest());
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ok: true });
+  });
+
+  it.each(['text/plain', 'multipart/form-data; boundary=missing'])('rejects malformed form data (%s)', async (contentType) => {
+    const handler = vi.fn(ok);
+    const response = await route(handler, { parse: 'form' })(new NextRequest('http://localhost/api/test', {
+      method: 'POST', body: 'not a form', headers: { 'Content-Type': contentType },
+    }));
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ error: 'Invalid form data payload.' });
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it.each(['json', 'form'] as const)('evaluates the %s body cap anew for each request', async (parse) => {
+    let limit = 10000;
+    const cap = vi.fn(() => limit);
+    const handler = vi.fn(ok);
+    const endpoint = route(handler, { parse, maxBodyBytes: cap });
+    const request = () => parse === 'form' ? multipartRequest() : post('{"title":"Lesson"}');
+    expect((await endpoint(request())).status).toBe(200);
+    limit = 1;
+    const rejected = await endpoint(request());
+    expect(rejected.status).toBe(413);
+    expect(await rejected.json()).toEqual({ error: 'Request body exceeds the size limit.' });
+    expect(cap).toHaveBeenCalledTimes(2);
+    expect(handler).toHaveBeenCalledTimes(1);
+  });
+
+  it('rejects a declared oversized form without reading the stream', async () => {
+    const request = multipartRequest();
+    request.headers.set('Content-Length', '101');
+    const body = vi.spyOn(request, 'body', 'get');
+    const handler = vi.fn(ok);
+    const response = await route(handler, { parse: 'form', maxBodyBytes: 100 })(request);
+    expect(response.status).toBe(413);
+    expect(body).not.toHaveBeenCalled();
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('cancels a form stream over the cap without Content-Length', async () => {
+    const cancel = vi.fn();
+    const stream = new ReadableStream<Uint8Array>({
+      pull(controller) { controller.enqueue(new Uint8Array(64)); }, cancel,
+    });
+    const request = new NextRequest('http://localhost/api/test', {
+      method: 'POST', body: stream, duplex: 'half', headers: { 'Content-Type': 'multipart/form-data; boundary=test' },
+    } as ConstructorParameters<typeof NextRequest>[1]);
+    const handler = vi.fn(ok);
+    const response = await route(handler, { parse: 'form', maxBodyBytes: () => 100 })(request);
+    expect(response.status).toBe(413);
+    expect(await response.json()).toEqual({ error: 'Request body exceeds the size limit.' });
+    expect(cancel).toHaveBeenCalledTimes(1);
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('authenticates before evaluating the form cap or accessing the body', async () => {
+    vi.spyOn(sessionAuth, 'requireSession').mockReturnValueOnce({
+      ok: false, response: NextResponse.json({ error: 'Authentication required.' }, { status: 401 }),
+    });
+    const request = multipartRequest();
+    const body = vi.spyOn(request, 'body', 'get');
+    const cap = vi.fn(() => { throw new Error('configuration must not be read'); });
+    const handler = vi.fn(ok);
+    expect((await route(handler, { parse: 'form', maxBodyBytes: cap })(request)).status).toBe(401);
+    expect(cap).not.toHaveBeenCalled(); expect(body).not.toHaveBeenCalled(); expect(handler).not.toHaveBeenCalled();
+  });
+
+  it('sanitizes a failing dynamic cap as an unexpected failure, not malformed input', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const error = new Error('LEAK invalid upload configuration');
+    const response = await route(ok, { parse: 'form', maxBodyBytes: () => { throw error; } })(multipartRequest());
+    expect(response.status).toBe(500);
+    expect(await response.json()).toEqual({ error: 'Something failed. Please try again.' });
+    expect(log).toHaveBeenCalledWith('[test-route]', error);
+  });
+});
