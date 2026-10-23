@@ -30,10 +30,12 @@ Beyond this list, refactoring has diminishing returns; later changes should be d
 | 3 | **Export payload module** (candidate 06): one Slide image value (removes the `'failed'` sentinel), testable `buildExportRequest` with the compression and 3.5 MB budget logic, de-duplicated filename and error parsing | M | 1 | done |
 | 4 | **Env/config module**: validate settings per feature so image and health routes do not need text-provider keys; delete the CI placeholder env vars | M | 3 | done |
 | 5 | **Route Phase 3**: migrate upload, NASA, Commons and health onto `defineRoute`; add an architecture test that fails if a route bypasses it; table-driven auth-protection | M | 2 | done |
-| 6 | **Image library seam** (candidate 04): NASA and Commons as two adapters of one interface; one bounded-fetch; uniform route protections | M | 1, 2 | |
+| 6 | **Image library seam** (candidate 04): NASA and Commons as two adapters of one interface; one bounded-fetch; uniform route protections | M | 1, 2 | 6a done, 6b next |
 | 7 | **Image provider seam**: `ImageProvider` interface with the OpenAI-compatible and Pexels adapters; request details (size, quality, format) move into each adapter | M | 1 | |
 | 8 | **Hygiene**: delete dead `nasa-search-eligibility.ts`, fix the 9 lint errors in old tests, fix the formula leak in the PPTX title slide, use `object-contain` for Commons images in the slideshow | S | 1, 3 | |
 | 9 | **Docs**: `ARCHITECTURE.md`, ADRs for the deck, credit, route, export and seam decisions, refreshed `GLOSSARY.md` | S | 4 | last |
+
+6b plan: an `ImageLibrary` interface (`source`, `label`, `selectInputSchema`, `search`, `select` returning `{ base64, metadata }`, `mapError`) with NASA and Commons adapters; shared `searchDefinition(library)` / `selectDefinition(library)` route definitions so the four route files stay one `defineRoute(...)` call each; NASA candidates gain `source` and `selectable`; the picker stops sniffing structure and is renamed `ImageLibraryPicker`.
 
 Then: Bedrock image provider (see the Bedrock questions in the planning conversation: Nova Canvas, IAM role through Vercel OIDC, ships disabled, AWS Budgets alarm, AI-generated label).
 

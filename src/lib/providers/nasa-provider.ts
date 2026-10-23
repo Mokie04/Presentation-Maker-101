@@ -1,5 +1,6 @@
-import { Buffer } from 'node:buffer';
 import { z } from 'zod';
+import { nasaAssetUrlSchema } from '@/lib/image-metadata';
+import { boundedFetch } from './bounded-fetch';
 
 export class NasaProviderError extends Error {
   constructor(message: string, public status: number) {
@@ -72,84 +73,28 @@ function trustedAssetUrl(value: string): string {
   } catch {
     throw new Error('Untrusted NASA asset URL.');
   }
-  if ((url.protocol !== 'http:' && url.protocol !== 'https:') ||
-      url.hostname !== 'images-assets.nasa.gov' ||
-      url.port || url.username || url.password) {
-    throw new Error('Untrusted NASA asset URL.');
-  }
-  // NASA manifests can advertise HTTP; validate first and only ever return HTTPS.
-  url.protocol = 'https:';
-  return url.href;
+  // Only upgrade HTTP's default port; e.g. HTTP :443 must remain rejected.
+  if (url.protocol === 'http:' && !url.port) url.protocol = 'https:';
+  const parsed = nasaAssetUrlSchema.safeParse(url.href);
+  if (!parsed.success) throw new Error('Untrusted NASA asset URL.');
+  return parsed.data;
 }
 
-async function readBody(response: Response, limit: number, signal: AbortSignal): Promise<Buffer> {
-  if (Number(response.headers.get('content-length')) > limit) {
-    await response.body?.cancel();
-    throw new Error('NASA response exceeds size limit.');
-  }
-  if (!response.body) return Buffer.alloc(0);
-  const reader = response.body.getReader();
-  const cancel = () => { void reader.cancel().catch(() => {}); };
-  signal.addEventListener('abort', cancel, { once: true });
-  const chunks: Buffer[] = [];
-  let size = 0;
-  try {
-    signal.throwIfAborted();
-    while (true) {
-      const { done, value } = await reader.read();
-      signal.throwIfAborted();
-      if (done) break;
-      size += value.byteLength;
-      if (size > limit) {
-        await reader.cancel();
-        throw new Error('NASA response exceeds size limit.');
-      }
-      chunks.push(Buffer.from(value));
-    }
-    return Buffer.concat(chunks, size);
-  } finally {
-    signal.removeEventListener('abort', cancel);
-    reader.releaseLock();
-  }
-}
-
-/** Server-side only. Deadline covers both response headers and body consumption. */
-async function request<T>(
-  url: string,
-  options: NasaFetchOptions | undefined,
-  consume: (response: Response, signal: AbortSignal) => Promise<T>
-): Promise<T> {
-  if (typeof window !== 'undefined') throw new Error('NASA provider is server-side only.');
-  const controller = new AbortController();
-  let timer: ReturnType<typeof setTimeout> | undefined;
-  const deadline = new Promise<never>((_resolve, reject) => {
-    timer = setTimeout(() => {
-      reject(new Error('NASA request timed out.'));
-      controller.abort();
-    }, REQUEST_TIMEOUT_MS);
-  });
-  try {
-    const operation = (async () => {
-      // Never follow a redirect off the trusted API/asset origin.
-      const response = await (options?.fetchFn ?? fetch)(url, {
-        signal: controller.signal,
-        redirect: 'error',
-      });
-      if (!response.ok) {
-        await response.body?.cancel();
-        throw new Error(`NASA request failed (${response.status}).`);
-      }
-      return consume(response, controller.signal);
-    })();
-    return await Promise.race([operation, deadline]);
-  } finally {
-    clearTimeout(timer);
-  }
+function fetchOptions(limitBytes: number, options?: NasaFetchOptions) {
+  return {
+    limitBytes, timeoutMs: REQUEST_TIMEOUT_MS, fetchFn: options?.fetchFn,
+    errors: {
+      timeout: () => new Error('NASA request timed out.'),
+      tooLarge: () => new Error('NASA response exceeds size limit.'),
+      http: (response: Response) => new Error(`NASA request failed (${response.status}).`),
+      serverSideOnly: () => new Error('NASA provider is server-side only.'),
+    },
+  };
 }
 
 async function requestJson<T>(url: string, schema: z.ZodType<T>, options?: NasaFetchOptions): Promise<T> {
-  return request(url, options, async (response, signal) => {
-    const body = await readBody(response, JSON_LIMIT_BYTES, signal);
+  return boundedFetch(url, fetchOptions(JSON_LIMIT_BYTES, options), async (_response, read) => {
+    const body = await read();
     try {
       return schema.parse(JSON.parse(body.toString('utf8')));
     } catch {
@@ -208,13 +153,12 @@ export async function fetchNasaImageBase64(
     const sourceUrl = urls.find((url) =>
       new RegExp(`~${rendition}\\.(jpe?g|png)$`, 'i').test(new URL(url).pathname));
     if (!sourceUrl) continue;
-    return request(sourceUrl, options, async (response, signal) => {
+    return boundedFetch(sourceUrl, fetchOptions(IMAGE_LIMIT_BYTES, options), async (response, read) => {
       const mimeType = response.headers.get('content-type')?.split(';')[0].trim().toLowerCase();
       if (mimeType !== 'image/jpeg' && mimeType !== 'image/png') {
-        await response.body?.cancel();
         throw new Error('Unsupported NASA image content type.');
       }
-      const body = await readBody(response, IMAGE_LIMIT_BYTES, signal);
+      const body = await read();
       if (!body.length) throw new Error('NASA image download is empty.');
       return { nasaId, sourceUrl, rendition, mimeType, base64: body.toString('base64') };
     });

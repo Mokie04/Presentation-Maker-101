@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const nasaUrl = z.string().url().refine((value) => {
+export const nasaAssetUrlSchema = z.string().url().refine((value) => {
   const url = new URL(value);
   return url.protocol === 'https:' && url.hostname === 'images-assets.nasa.gov' &&
     !url.username && !url.password && !url.port;
@@ -11,9 +11,9 @@ export const nasaImageMetadataSchema = z.object({
   nasaId: z.string().min(1),
   title: z.string().optional(),
   description: z.string().optional(),
-  previewUrl: nasaUrl.optional(),
-  sourceUrl: nasaUrl.optional(),
-  assetUrl: nasaUrl,
+  previewUrl: nasaAssetUrlSchema.optional(),
+  sourceUrl: nasaAssetUrlSchema.optional(),
+  assetUrl: nasaAssetUrlSchema,
   photographer: z.string().optional(),
   secondaryCreator: z.string().optional(),
   center: z.string().optional(),

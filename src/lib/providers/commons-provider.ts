@@ -2,6 +2,7 @@ import { Buffer } from 'node:buffer';
 import { parseFragment, type DefaultTreeAdapterTypes } from 'parse5';
 import imageSize from 'image-size';
 import { z } from 'zod';
+import { boundedFetch } from './bounded-fetch';
 import { commonsAssetUrlSchema, commonsSourceUrlSchema, commonsImageMetadataSchema, type CommonsImageMetadata } from '@/lib/image-metadata';
 
 const API = 'https://commons.wikimedia.org/w/api.php';
@@ -43,41 +44,18 @@ const responseSchema = z.object({
   })) }).optional(),
 }).refine(data => data.query || data.batchcomplete === true, 'Invalid Commons response');
 
-async function request<T>(url: string, limit: number, options: FetchOptions | undefined,
-  consume: (buffer: Buffer, response: Response) => T): Promise<T> {
-  if (typeof window !== 'undefined') throw new Error('Commons provider is server-side only.');
-  const parsed = new URL(url);
-  if (parsed.origin !== 'https://commons.wikimedia.org' || parsed.pathname !== '/w/api.php') commonsAssetUrlSchema.parse(url);
-  const controller = new AbortController(); let timer: ReturnType<typeof setTimeout> | undefined;
-  const timeout = new Promise<never>((_resolve, reject) => { timer = setTimeout(() => {
-    reject(new Error('Commons request timed out.')); controller.abort();
-  }, 10_000); });
-  const operation = (async () => {
-    const response = await (options?.fetchFn ?? fetch)(url, { headers: { 'User-Agent': USER_AGENT },
-      signal: controller.signal, redirect: 'error' });
-    if (!response.ok) {
-      await response.body?.cancel();
-      throw new CommonsProviderError(`Commons request failed (${response.status}).`, response.status === 429 ? 429 : 502,
-        Math.min(300, Math.max(1, Number(response.headers.get('retry-after')) || 60)));
-    }
-    if (Number(response.headers.get('content-length')) > limit) { await response.body?.cancel(); throw new Error('Commons response exceeds size limit.'); }
-    if (!response.body) throw new Error('Commons response body is empty.');
-    const reader = response.body.getReader(); const chunks: Buffer[] = []; let bytes = 0;
-    const cancel = () => { void reader.cancel().catch(() => {}); };
-    controller.signal.addEventListener('abort', cancel, { once: true });
-    try {
-      controller.signal.throwIfAborted();
-      while (true) {
-        const { done, value } = await reader.read(); controller.signal.throwIfAborted();
-        if (done) break;
-        bytes += value.byteLength;
-        if (bytes > limit) { await reader.cancel(); throw new Error('Commons response exceeds size limit.'); }
-        chunks.push(Buffer.from(value));
-      }
-      return consume(Buffer.concat(chunks, bytes), response);
-    } finally { controller.signal.removeEventListener('abort', cancel); reader.releaseLock(); }
-  })();
-  try { return await Promise.race([operation, timeout]); } finally { clearTimeout(timer); }
+function fetchOptions(limitBytes: number, options?: FetchOptions) {
+  return {
+    limitBytes, timeoutMs: 10_000, headers: { 'User-Agent': USER_AGENT }, fetchFn: options?.fetchFn,
+    errors: {
+      timeout: () => new Error('Commons request timed out.'),
+      tooLarge: () => new Error('Commons response exceeds size limit.'),
+      http: (response: Response) => new CommonsProviderError(`Commons request failed (${response.status}).`,
+        response.status === 429 ? 429 : 502,
+        Math.min(300, Math.max(1, Number(response.headers.get('retry-after')) || 60))),
+      serverSideOnly: () => new Error('Commons provider is server-side only.'),
+    },
+  };
 }
 
 async function query(params: Record<string, string>, options?: FetchOptions) {
@@ -85,7 +63,9 @@ async function query(params: Record<string, string>, options?: FetchOptions) {
     iiprop: 'url|mime|thumbmime|extmetadata', iiurlwidth: '1200', iiurlheight: '900', iiextmetadatalanguage: 'en',
     iiextmetadatafilter: 'Artist|Credit|Attribution|AttributionRequired|LicenseShortName|LicenseUrl|Copyrighted|UsageTerms|Restrictions|ImageDescription',
     ...params });
-  return request(`${API}?${search}`, JSON_LIMIT, options, (buffer) => {
+  return boundedFetch(`${API}?${search}`, fetchOptions(JSON_LIMIT, options), async (response, read) => {
+    const buffer = await read();
+    if (!response.body) throw new Error('Commons response body is empty.');
     let json;
     try { json = JSON.parse(buffer.toString('utf8')); } catch { throw new Error('Invalid Commons JSON response.'); }
     if (json && typeof json === 'object' && json.error) {
@@ -150,7 +130,11 @@ export async function fetchCommonsImageBase64(fileId: number, options?: FetchOpt
   if (!page) throw new Error('No matching Commons file found.');
   const selected = candidate(page);
   if (!selected?.selectable || !selected.previewUrl) throw new CommonsProviderError(selected?.unavailableReason ?? 'Commons image unavailable.', 422);
-  return request(selected.previewUrl, IMAGE_LIMIT, options, (buffer, response) => {
+  // URL trust stays with the provider, before the shared fetch is invoked.
+  const assetUrl = commonsAssetUrlSchema.parse(selected.previewUrl);
+  return boundedFetch(assetUrl, fetchOptions(IMAGE_LIMIT, options), async (response, read) => {
+    const buffer = await read();
+    if (!response.body) throw new Error('Commons response body is empty.');
     const mimeType = response.headers.get('content-type')?.split(';')[0].trim().toLowerCase();
     if (mimeType !== selected.mimeType || (mimeType !== 'image/jpeg' && mimeType !== 'image/png')) throw new Error('Unsupported Commons image content type.');
     let dimensions;
