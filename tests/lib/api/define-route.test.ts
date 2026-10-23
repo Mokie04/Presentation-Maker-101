@@ -204,3 +204,92 @@ describe('defineRoute', () => {
     });
   });
 });
+
+describe('defineRoute GET and response policy', () => {
+  it.each(['GET', 'POST'])('parse none does not read a %s body and supplies an empty context body', async (method) => {
+    const request = method === 'GET' ? new NextRequest('http://localhost/api/test') : post('not JSON');
+    request.headers.set('Content-Length', '10000');
+    const body = vi.spyOn(request, 'body', 'get');
+    const json = vi.spyOn(request, 'json');
+    const text = vi.spyOn(request, 'text');
+    const handler = vi.fn(ok);
+    const response = await route(handler, { parse: 'none', maxBodyBytes: 1 })(request);
+    expect(response.status).toBe(200);
+    expect(handler).toHaveBeenCalledWith({ input: {}, body: {}, request, session: expect.objectContaining({ sub: 'dev-bypass' }) });
+    expect(body).not.toHaveBeenCalled();
+    expect(json).not.toHaveBeenCalled();
+    expect(text).not.toHaveBeenCalled();
+  });
+
+  it('uses failureStatus for unknown failures while retaining the fixed message, extras and server log', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const error = new Error('LEAK TEXT_PROVIDER_API_KEY schema dump');
+    const response = await route(async () => { throw error; }, {
+      failureStatus: 502, errorExtra: (body) => ({ id: body.id }),
+    })(post('{"id":3}'));
+    expect(response.status).toBe(502);
+    expect(await response.json()).toEqual({ error: 'Something failed. Please try again.', id: 3 });
+    expect(log).toHaveBeenCalledWith('[test-route]', error);
+  });
+
+  it('noStore overrides success caching without losing handler headers or content', async () => {
+    const response = await route(async () => new NextResponse('image', {
+      status: 201, headers: { 'Content-Disposition': 'inline', 'Cache-Control': 'public, max-age=60' },
+    }), { noStore: true })(post('{}'));
+    expect(response.status).toBe(201);
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(response.headers.get('Content-Disposition')).toBe('inline');
+    expect(await response.text()).toBe('image');
+  });
+
+  it('noStore merges PublicError headers and preserves its status and extra fields', async () => {
+    const response = await route(async () => {
+      throw new PublicError('Slow down', 429, {
+        extra: { retryAfterSeconds: 120 }, headers: { 'Retry-After': '120', 'Cache-Control': 'max-age=60' },
+      });
+    }, { noStore: true, failureStatus: 502 })(post('{}'));
+    expect(response.status).toBe(429);
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(response.headers.get('Retry-After')).toBe('120');
+    expect(await response.json()).toEqual({ error: 'Slow down', retryAfterSeconds: 120 });
+  });
+
+  it('noStore applies to unexpected failures', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    const response = await route(async () => { throw new Error('internal'); }, { noStore: true })(post('{}'));
+    expect(response.status).toBe(500);
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(await response.json()).toEqual({ error: 'Something failed. Please try again.' });
+  });
+
+  it.each([
+    { body: 'not JSON', status: 400, message: 'Invalid JSON request body.' },
+    { body: '{}', status: 400, message: expect.stringMatching(/^Invalid request: query:/) },
+    { body: 'x'.repeat(101), status: 413, message: 'Request body exceeds the size limit.' },
+  ])('noStore applies to validation failures: $message', async ({ body, status, message }) => {
+    const handler = vi.fn(ok);
+    const response = await defineRoute({
+      name: 'test-route', failureMessage: 'Failed', noStore: true, maxBodyBytes: 100,
+      input: z.object({ query: z.string() }), handler,
+    })(post(body));
+    expect(response.status).toBe(status);
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(await response.json()).toEqual({ error: message });
+    expect(handler).not.toHaveBeenCalled();
+  });
+
+  it.each(['json', 'none'] as const)('auth still runs first with parse %s and noStore', async (parse) => {
+    const denied = NextResponse.json({ error: 'Authentication required.' }, { status: 401, headers: { 'X-Auth': 'denied' } });
+    vi.spyOn(sessionAuth, 'requireSession').mockReturnValueOnce({ ok: false, response: denied });
+    const request = post('not JSON');
+    const body = vi.spyOn(request, 'body', 'get');
+    const handler = vi.fn(ok);
+    const response = await route(handler, { parse, noStore: true, maxBodyBytes: 1 })(request);
+    expect(response.status).toBe(401);
+    expect(await response.json()).toEqual({ error: 'Authentication required.' });
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(response.headers.get('X-Auth')).toBe('denied');
+    expect(body).not.toHaveBeenCalled();
+    expect(handler).not.toHaveBeenCalled();
+  });
+});

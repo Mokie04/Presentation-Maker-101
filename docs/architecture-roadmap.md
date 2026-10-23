@@ -29,7 +29,7 @@ Beyond this list, refactoring has diminishing returns; later changes should be d
 | 2 | **Pedagogical part module** (candidate 03): one list, normalizer, label, ordinal and image-eligibility rule | S | 1 | done |
 | 3 | **Export payload module** (candidate 06): one Slide image value (removes the `'failed'` sentinel), testable `buildExportRequest` with the compression and 3.5 MB budget logic, de-duplicated filename and error parsing | M | 1 | done |
 | 4 | **Env/config module**: validate settings per feature so image and health routes do not need text-provider keys; delete the CI placeholder env vars | M | 3 | done |
-| 5 | **Route Phase 3**: migrate upload, NASA, Commons and health onto `defineRoute`; add an architecture test that fails if a route bypasses it; table-driven auth-protection | M | 2 | |
+| 5 | **Route Phase 3**: migrate upload, NASA, Commons and health onto `defineRoute`; add an architecture test that fails if a route bypasses it; table-driven auth-protection | M | 2 | 5a done, 5b next |
 | 6 | **Image library seam** (candidate 04): NASA and Commons as two adapters of one interface; one bounded-fetch; uniform route protections | M | 1, 2 | |
 | 7 | **Image provider seam**: `ImageProvider` interface with the OpenAI-compatible and Pexels adapters; request details (size, quality, format) move into each adapter | M | 1 | |
 | 8 | **Hygiene**: delete dead `nasa-search-eligibility.ts`, fix the 9 lint errors in old tests, fix the formula leak in the PPTX title slide, use `object-contain` for Commons images in the slideshow | S | 1, 3 | |

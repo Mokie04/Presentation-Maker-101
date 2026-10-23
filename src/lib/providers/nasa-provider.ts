@@ -1,6 +1,13 @@
 import { Buffer } from 'node:buffer';
 import { z } from 'zod';
 
+export class NasaProviderError extends Error {
+  constructor(message: string, public status: number) {
+    super(message);
+    this.name = 'NasaProviderError';
+  }
+}
+
 export interface NasaFetchOptions {
   fetchFn?: typeof fetch;
 }
@@ -184,7 +191,7 @@ export async function getNasaImageCandidate(nasaId: string, options?: NasaFetchO
   const params = new URLSearchParams({ nasa_id: nasaId, media_type: 'image', page_size: String(CANDIDATE_LIMIT) });
   const data = await requestJson(`${API_ROOT}/search?${params}`, searchSchema, options);
   const candidate = imageCandidates(data.collection.items).find((item) => item.nasaId === nasaId);
-  if (!candidate) throw new Error('No matching NASA image found.');
+  if (!candidate) throw new NasaProviderError('No matching NASA image found.', 502);
   return candidate;
 }
 
@@ -212,5 +219,5 @@ export async function fetchNasaImageBase64(
       return { nasaId, sourceUrl, rendition, mimeType, base64: body.toString('base64') };
     });
   }
-  throw new Error('No supported NASA presentation rendition available.');
+  throw new NasaProviderError('No supported NASA presentation rendition available.', 502);
 }
