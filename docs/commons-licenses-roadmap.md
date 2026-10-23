@@ -23,7 +23,7 @@ Teachers often search Commons and find images they cannot use. Today the picker 
 - The picker shows selectable results and a "Show N unavailable results" toggle; an empty-usable state says so and offers the toggle.
 - Done = no license rule changed; a search with mixed results shows usable images first.
 
-### Phase 2: CC BY-SA
+### Phase 2: CC BY-SA — done
 - `licenseKind` gains `cc-by-sa`; the Commons provider accepts BY-SA versions with a matching canonical URL under the same gates as CC BY.
 - The credit description marks ShareAlike; the picker shows a short ShareAlike hint before selection; speaker notes and Markdown state that the exported copy is an adapted copy that remains under the same license, with the license link; the visible credit line keeps one source hyperlink.
 - ADR 0011 records the decision and its consequences; `docs/commons-provider.md` and the glossary are updated.

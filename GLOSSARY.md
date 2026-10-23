@@ -10,7 +10,7 @@
 
 **Export payload** — The `/api/download-pptx` request: `{ presentationData, slideImages, session }`. `src/lib/export/` builds it: `buildPptxExportRequest` compresses usable images (`compress-image.ts`) and drops them from the last slide down until the body fits `CLIENT_EXPORT_BUDGET_CHARS`, removing the Credit of each dropped image; `limits.ts` holds that budget and the server cap `MAX_EXPORT_BODY_BYTES`; `filename.ts` names exports; `use-deck-export.ts` runs both downloads.
 
-**Credit (`ImageMetadata`)** — Source and attribution of a library image (NASA or Wikimedia Commons), stored on `SlideData.imageMetadata`. `describeImageCredit` in `src/lib/image-credit.ts` describes it once (source label, credit line, source link, license, notes); each renderer only formats that description. AI-generated images have no Credit.
+**Credit (`ImageMetadata`)** — Source and attribution of a library image (NASA or Wikimedia Commons), stored on `SlideData.imageMetadata`. `describeImageCredit` in `src/lib/image-credit.ts` describes it once (source label, credit line, source link, license, notes); each renderer only formats that description. A CC BY-SA Commons Credit is marked ShareAlike (`license.shareAlike`), and its notes state that the exported copy is an adapted copy that stays under the same license (`docs/adr/0011-commons-cc-by-sa.md`). AI-generated images have no Credit.
 
 **Image intent** — A user request for a specific Slide image: a single regeneration or a library selection. A new Image intent supersedes any older in-flight result for that Slide, including a pending batch result.
 

@@ -37,7 +37,7 @@ export const commonsImageMetadataSchema = z.object({
   source: z.literal('commons'), fileId: z.number().int().positive(), title: z.string().min(1),
   creator: z.string().optional(), credit: z.string().optional(), attribution: z.string().optional(),
   attributionRequired: z.boolean().optional(), usageTerms: z.string().optional(), restrictions: z.string().optional(), description: z.string().optional(),
-  licenseKind: z.enum(['public-domain', 'cc0', 'cc-by']), licenseName: z.string().min(1), licenseUrl: licenseUrl.optional(),
+  licenseKind: z.enum(['public-domain', 'cc0', 'cc-by', 'cc-by-sa']), licenseName: z.string().min(1), licenseUrl: licenseUrl.optional(),
   sourceUrl: commonsSourceUrlSchema, previewUrl: commonsAssetUrlSchema.optional(), assetUrl: commonsAssetUrlSchema,
   rendition: z.literal('thumbnail'), mimeType: z.enum(['image/jpeg', 'image/png']),
 });

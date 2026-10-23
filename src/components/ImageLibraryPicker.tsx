@@ -112,6 +112,9 @@ export function ImageLibraryPicker({ title, onSelect, onCancel }: {
           {candidate.source === 'commons' && candidate.unavailableReason && <p className="text-xs text-slate-600">{candidate.unavailableReason}</p>}
           {candidate.description && <details className="text-xs text-slate-600"><summary>Source description</summary><p className="whitespace-pre-wrap">{candidate.description}</p></details>}
           {candidate.sourceUrl && <a href={candidate.sourceUrl} target="_blank" rel="noopener noreferrer" className="block text-xs text-sky-700 underline">{label} source</a>}
+          {candidate.source === 'commons' && candidate.licenseKind === 'cc-by-sa' && (
+            <p className="text-xs text-slate-600">ShareAlike: the copy in your deck is an adapted copy and stays under the same license.</p>
+          )}
           <button type="button" disabled={busy || limited || !candidate.selectable} className="px-3 py-2 bg-sky-600 text-white rounded-lg text-xs font-bold disabled:opacity-50"
             onClick={() => void run(`${basePath}/select`, selectRequestBody(candidate), (data) => {
               const metadata = imageMetadataSchema.parse(data.metadata);

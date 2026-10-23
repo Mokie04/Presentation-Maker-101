@@ -108,7 +108,7 @@ describe('Commons provider with mocked HTTP', () => {
     expect(fetchFn).toHaveBeenCalledTimes(3);
   });
   it.each([
-    { LicenseShortName: { value: 'CC BY-SA 4.0' }, LicenseUrl: { value: 'https://creativecommons.org/licenses/by-sa/4.0/' } },
+    { LicenseShortName: { value: 'CC BY-NC 4.0' }, LicenseUrl: { value: 'https://creativecommons.org/licenses/by-nc/4.0/' } },
     { LicenseShortName: { value: 'Unknown' } }, { LicenseUrl: { value: '' } },
     { LicenseUrl: { value: 'https://creativecommons.org.evil.example/licenses/by/4.0/' } },
     { LicenseUrl: { value: 'https://creativecommons.org/licenses/by-sa/4.0/' } },

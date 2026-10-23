@@ -12,7 +12,7 @@ const reasonFor = async (name: string) => {
 
 describe('unavailable reasons', () => {
   it.each([
-    ['CC BY-SA 4.0', 'License "CC BY-SA 4.0" is not supported in this version.'],
+    ['CC BY-SA 4.0', undefined],
     ['CC BY-NC 4.0', 'License "CC BY-NC 4.0" is not supported in this version.'],
     ['GFDL', 'License "GFDL" is not supported in this version.'],
     ['no license name', 'The license could not be identified.'],
