@@ -11,7 +11,8 @@ export interface ImageCredit {
   heading: string;
   creditLine: string;
   sourceLink: string;
-  license?: { name: string; url?: string };
+  /** shareAlike: the copy in the export stays under the same license (CC BY-SA). */
+  license?: { name: string; url?: string; shareAlike?: true };
   description?: string;
   notes: string;
 }
@@ -39,6 +40,8 @@ export function imageSourceNotes(metadata: ImageMetadata): string {
     metadata.usageTerms && `Usage terms: ${metadata.usageTerms}`,
     metadata.restrictions && `Restrictions: ${metadata.restrictions}`, metadata.description && `Source description: ${metadata.description}`,
     'Changes: Raster thumbnail; presentation export may resize and compress the image.',
+    metadata.licenseKind === 'cc-by-sa' &&
+      `ShareAlike: this exported copy is an adapted copy of the original image and remains licensed under ${metadata.licenseName}; see the license link above.`,
   ].filter(Boolean).join('\n');
   return [`NASA image: ${metadata.nasaId}`, metadata.title, imageCreditText(metadata),
     metadata.center && `Publishing center: ${metadata.center}`, `Source: ${metadata.sourceUrl ?? metadata.assetUrl}`,
@@ -55,7 +58,8 @@ export function describeImageCredit(metadata: ImageMetadata): ImageCredit {
     creditLine: imageCreditText(metadata),
     sourceLink: metadata.sourceUrl ?? metadata.assetUrl,
     ...(metadata.source === 'commons'
-      ? { license: { name: metadata.licenseName, ...(metadata.licenseUrl ? { url: metadata.licenseUrl } : {}) } } : {}),
+      ? { license: { name: metadata.licenseName, ...(metadata.licenseUrl ? { url: metadata.licenseUrl } : {}),
+        ...(metadata.licenseKind === 'cc-by-sa' ? { shareAlike: true as const } : {}) } } : {}),
     ...(metadata.description ? { description: metadata.description } : {}),
     notes: imageSourceNotes(metadata),
   };

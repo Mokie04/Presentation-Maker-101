@@ -96,12 +96,26 @@ function cappedName(name: string): string {
   return trimmed.length > MAX_LICENSE_NAME_CHARS ? `${trimmed.slice(0, MAX_LICENSE_NAME_CHARS - 1)}…` : trimmed;
 }
 
+/** Attribution licenses accepted with an identified creator and their canonical URL (ADR 0011 for BY-SA). */
+const ATTRIBUTION_LICENSES = [
+  { kind: 'cc-by', name: /^CC BY (1\.0|2\.0|2\.5|3\.0|4\.0)$/i, path: 'by' },
+  { kind: 'cc-by-sa', name: /^CC BY-SA (1\.0|2\.0|2\.5|3\.0|4\.0)$/i, path: 'by-sa' },
+] as const;
+
+function attributionLicense(licenseName?: string) {
+  for (const license of ATTRIBUTION_LICENSES) {
+    const version = licenseName?.match(license.name)?.[1];
+    if (version) return { kind: license.kind, canonicalUrl: `https://creativecommons.org/licenses/${license.path}/${version}/` };
+  }
+  return undefined;
+}
+
 /** Why a license was not accepted; our wording, with only the capped plain-text license name from Commons. */
-function licenseProblem(licenseName: string | undefined, ccByWithCanonicalUrl: boolean): string {
+function licenseProblem(licenseName: string | undefined, attributionWithCanonicalUrl: boolean): string {
   if (!licenseName) return 'The license could not be identified.';
-  if (ccByWithCanonicalUrl) return 'The creator is not identified, which this license requires.';
+  if (attributionWithCanonicalUrl) return 'The creator is not identified, which this license requires.';
   const supportedFamily = /^public domain$/i.test(licenseName) || /^CC0(?: 1\.0(?: Universal)?)?$/i.test(licenseName) ||
-    /^CC BY (1\.0|2\.0|2\.5|3\.0|4\.0)$/i.test(licenseName);
+    attributionLicense(licenseName) !== undefined;
   return supportedFamily ? `The license details for "${cappedName(licenseName)}" are incomplete or inconsistent.`
     : `License "${cappedName(licenseName)}" is not supported in this version.`;
 }
@@ -117,7 +131,7 @@ function candidate(page: NonNullable<z.infer<typeof responseSchema>['query']>['p
     if (['http:', 'https:'].includes(url.protocol) && ['creativecommons.org', 'www.creativecommons.org'].includes(url.hostname) && !url.port && !url.username && !url.password) {
       url.protocol = 'https:'; url.hostname = 'creativecommons.org';
       // Commons can omit the trailing slash on canonical CC BY license URLs.
-      if (/^\/licenses\/by\/(1\.0|2\.0|2\.5|3\.0|4\.0)$/.test(url.pathname)) url.pathname += '/';
+      if (/^\/licenses\/by(?:-sa)?\/(1\.0|2\.0|2\.5|3\.0|4\.0)$/.test(url.pathname)) url.pathname += '/';
       licenseUrl = url.href;
     }
   } catch { /* Missing license URL remains missing. */ }
@@ -129,15 +143,16 @@ function candidate(page: NonNullable<z.infer<typeof responseSchema>['query']>['p
   const required = text('AttributionRequired')?.toLowerCase();
   const attributionRequired = required === 'true' ? true : required === 'false' ? false : undefined;
   let licenseKind: CommonsImageMetadata['licenseKind'] | undefined;
-  const byVersion = licenseName?.match(/^CC BY (1\.0|2\.0|2\.5|3\.0|4\.0)$/i)?.[1];
+  const attribution = attributionLicense(licenseName);
+  const attributionUrlMatches = attribution !== undefined && licenseUrl === attribution.canonicalUrl;
   if (licenseName?.toLowerCase() === 'public domain' && text('Copyrighted')?.toLowerCase() === 'false' &&
       (!fields.LicenseUrl?.value || licenseUrl === 'https://creativecommons.org/publicdomain/mark/1.0/')) licenseKind = 'public-domain';
   if (/^CC0(?: 1\.0(?: Universal)?)?$/i.test(licenseName ?? '') && licenseUrl === 'https://creativecommons.org/publicdomain/zero/1.0/') licenseKind = 'cc0';
-  if (byVersion && licenseUrl === `https://creativecommons.org/licenses/by/${byVersion}/` && creator &&
-      !/^unknown(?: author)?$/i.test(creator) && attributionRequired !== false) licenseKind = 'cc-by';
+  if (attribution && attributionUrlMatches && creator &&
+      !/^unknown(?: author)?$/i.test(creator) && attributionRequired !== false) licenseKind = attribution.kind;
   const restrictions = text('Restrictions');
   const unavailableReason = preview && !preview.success ? 'Untrusted Commons thumbnail URL; unavailable in this version.'
-    : !licenseKind ? licenseProblem(licenseName, byVersion !== undefined && licenseUrl === `https://creativecommons.org/licenses/by/${byVersion}/`)
+    : !licenseKind ? licenseProblem(licenseName, attributionUrlMatches)
     : restrictions ? 'Additional restrictions require review; unavailable in this version.'
     : !previewUrl || !mimeType ? 'No suitable JPEG/PNG thumbnail is available.' : undefined;
   return { source: 'commons', fileId: page.pageid, title: page.title, sourceUrl, previewUrl: mimeType ? previewUrl : undefined, creator,

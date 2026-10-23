@@ -17,7 +17,7 @@ const today: Record<string, [boolean, string | null]> = {
   'CC BY with restrictions': [false, 'cc-by'],
   'CC BY with a CC BY-SA URL': [false, null],
   'CC BY with a non-CC URL': [false, null],
-  'CC BY-SA 4.0': [false, null],
+  'CC BY-SA 4.0': [true, 'cc-by-sa'],
   'CC BY-NC 4.0': [false, null],
   'GFDL': [false, null],
   'no license name': [false, null],
