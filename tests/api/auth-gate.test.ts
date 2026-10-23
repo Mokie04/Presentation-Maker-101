@@ -46,8 +46,8 @@ describe('discovered API auth gates', () => {
       vi.spyOn(commons, 'searchCommonsImages').mockImplementation(unexpected),
       vi.spyOn(commons, 'fetchCommonsImageBase64').mockImplementation(unexpected),
     ];
-    const module = await load();
-    const handlers = (['GET', 'POST'] as const).filter((method) => typeof module[method] === 'function');
+    const routeModule = await load();
+    const handlers = (['GET', 'POST'] as const).filter((method) => typeof routeModule[method] === 'function');
     expect(handlers.length).toBeGreaterThan(0);
     for (const method of handlers) {
       const request = new NextRequest(`http://localhost${file.slice('/src/app'.length, -'/route.ts'.length)}`, {
@@ -56,7 +56,7 @@ describe('discovered API auth gates', () => {
       const body = vi.spyOn(request, 'body', 'get');
       const json = vi.spyOn(request, 'json');
       const form = vi.spyOn(request, 'formData');
-      const response = await module[method]!(request);
+      const response = await routeModule[method]!(request);
       expect(response.status).toBe(401);
       expect(await response.json()).toEqual({ error: 'Authentication required.' });
       expect(body).not.toHaveBeenCalled(); expect(json).not.toHaveBeenCalled(); expect(form).not.toHaveBeenCalled();

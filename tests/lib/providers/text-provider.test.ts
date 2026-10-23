@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   generateSlideContent,
   presentationDataSchema,
-  createTextProviderClient,
 } from '@/lib/providers/text-provider';
 import type OpenAI from 'openai';
 

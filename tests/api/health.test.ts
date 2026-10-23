@@ -3,6 +3,7 @@ import { checkHealth } from '@/lib/health';
 import { GET } from '@/app/api/health/route';
 import * as textProvider from '@/lib/providers/text-provider';
 import { NextRequest } from 'next/server';
+import OpenAI from 'openai';
 
 beforeEach(() => {
   vi.stubEnv('TEXT_PROVIDER_BASE_URL', 'http://127.0.0.1:9/v1');
@@ -14,16 +15,14 @@ afterEach(() => { vi.unstubAllEnvs(); });
 
 describe('Health Check API', () => {
   it('returns ok for both providers when text provider call succeeds and image provider is configured', async () => {
-    const mockChatCreate = vi.fn().mockResolvedValue({
+    const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(Response.json({
       choices: [{ message: { content: 'hello' } }],
-    });
-
-    const mockTextClient = {
-      chat: { completions: { create: mockChatCreate } },
-    };
+    }));
+    const mockTextClient = new OpenAI({ apiKey: 'test-key', fetch: mockFetch });
+    const mockChatCreate = vi.spyOn(mockTextClient.chat.completions, 'create');
 
     const data = await checkHealth({
-      textClient: mockTextClient as any,
+      textClient: mockTextClient,
     });
 
     expect(data.textProvider).toBe('ok');
@@ -36,14 +35,13 @@ describe('Health Check API', () => {
   });
 
   it('returns textProvider: error when text provider call fails', async () => {
-    const mockChatCreate = vi.fn().mockRejectedValue(new Error('Invalid API key: 401'));
-
-    const mockTextClient = {
-      chat: { completions: { create: mockChatCreate } },
-    };
+    const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(Response.json({
+      error: { message: 'Invalid API key: 401', type: 'invalid_request_error', code: 'invalid_api_key' },
+    }, { status: 401 }));
+    const mockTextClient = new OpenAI({ apiKey: 'test-key', fetch: mockFetch });
 
     const data = await checkHealth({
-      textClient: mockTextClient as any,
+      textClient: mockTextClient,
     });
 
     expect(data.textProvider).toBe('error');
@@ -53,15 +51,10 @@ describe('Health Check API', () => {
   });
 
   it('GET handler returns NextResponse with 200 status', async () => {
-    vi.spyOn(textProvider, 'getTextProviderClient').mockReturnValue({
-      chat: {
-        completions: {
-          create: vi.fn().mockResolvedValue({
-            choices: [{ message: { content: 'hello' } }],
-          }),
-        },
-      },
-    } as any);
+    const mockFetch = vi.fn<typeof fetch>().mockResolvedValue(Response.json({
+      choices: [{ message: { content: 'hello' } }],
+    }));
+    vi.spyOn(textProvider, 'getTextProviderClient').mockReturnValue(new OpenAI({ apiKey: 'test-key', fetch: mockFetch }));
 
     const response = await GET(new NextRequest('http://localhost:3000/api/health'));
     expect(response.status).toBe(200);

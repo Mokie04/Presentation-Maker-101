@@ -50,8 +50,8 @@ describe('parseDocument', () => {
       numrender: 1,
       info: {},
       metadata: null,
-      version: '1.10.100',
-    } as any);
+      version: 'v1.10.100',
+    });
 
     const result = await parseDocument(buffer, 'curriculum.pdf');
     expect(result).toBe('Extracted text from pdf');
