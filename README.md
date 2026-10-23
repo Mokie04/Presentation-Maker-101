@@ -1,65 +1,37 @@
 # SAYUNA AI PRESENTATION MAKER
 
 > **Empowering Teachers with Automated, Pedagogically-Aligned PowerPoint Presentations.**
-> Built with Next.js 14 App Router, TypeScript, Tailwind CSS, and Server-Side Dual AI Providers.
+> Built with Next.js 14 App Router, TypeScript, Tailwind CSS, and server-side text and image providers.
 
 ---
 
 ## 1. Project Overview & Architecture
 
-**SAYUNA AI PRESENTATION MAKER** is a high-performance Next.js 14 web application designed specifically for educators. It transforms Daily Lesson Logs (DLL) and lesson plan documents into comprehensive, classroom-ready PowerPoint (`.pptx`) presentations and Markdown (`.md`) curriculum outlines in seconds.
+**SAYUNA AI PRESENTATION MAKER** is a Next.js 14 web application designed specifically for educators. It transforms Daily Lesson Logs (DLL) and lesson plan documents into editable presentations, PowerPoint (`.pptx`) files and Markdown (`.md`) curriculum outlines.
 
-### Architectural Evolution: Legacy vs. SAYUNA AI PRESENTATION MAKER
+For the current request flow, module map and extension recipes, read [ARCHITECTURE.md](ARCHITECTURE.md). The [glossary](GLOSSARY.md), [architecture decisions](docs/adr/README.md) and [documentation index](docs/README.md) provide the supporting detail.
 
-| Dimension | Legacy (Client-Side) | SAYUNA AI PRESENTATION MAKER |
-| :--- | :--- | :--- |
-| **Execution Model** | Client-side single-file HTML / JS | Next.js 14 App Router (Server-side architecture) |
-| **API Key Security** | Teachers pasted raw API keys stored in `localStorage` | **100% Server-side credential isolation** — zero user keys required |
-| **AI Provider Model** | Single hardcoded provider endpoint | **Dual OpenAI-compatible provider abstraction** (Text & Image) |
-| **Document Ingestion** | Manual copy-pasting required | Multi-format parser (`.docx`, `.pdf`, `.txt`, `.md`) + paste toggle |
-| **Slide Volume & Depth** | 8–12 summarized slides | **25+ exhaustive sequential slides** covering all annexes and questions |
-| **PowerPoint Engine** | Client-side DOM export | Server-side binary compilation with `pptxgenjs` & embedded graphics |
-| **Reliability & Retries** | Browser fetch failures aborted flow | Automatic exponential backoff (5 retries for text, 3 for image) |
+### Current architecture
 
-### Dual Provider Routing Architecture
+| Step | Current owner |
+| :--- | :--- |
+| **Upload or paste** | `src/components/UploadSection.tsx`, `src/app/api/upload/route.ts`, `src/lib/parsers/document-parser.ts` |
+| **Generate slides** | `src/app/api/generate/route.ts`, `src/lib/providers/text-provider.ts` |
+| **Edit and attach images** | `src/lib/deck/`, `src/lib/providers/image/`, `src/lib/image-library/` |
+| **Export** | `src/lib/export/`, `src/lib/services/pptx-generator.ts`, `src/lib/services/markdown-generator.ts` |
 
-To give schools, institutions, and developers ultimate freedom and cost optimization, Presentation Maker 101 abstracts AI synthesis into two isolated, swappable server-side provider pipelines:
+### Provider routing
+
+Text generation uses a configurable OpenAI-compatible chat endpoint. Automatic images use an OpenAI-compatible image adapter or Pexels; manual image search and selection use the separate NASA and Wikimedia Commons libraries. Provider credentials stay on the server.
 
 ```
-                            ┌──────────────────────────────────────────────┐
-                            │               Teacher Browser                │
-                            └──────────────────────┬───────────────────────┘
-                                                   │
-                                                   ▼
-┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                 Next.js 14 Serverless Backend                                    │
-│                                                                                                  │
-│  ┌─────────────────────────┐               ┌──────────────────────────────────────────────────┐  │
-│  │     Text AI Provider    │               │                Image AI Provider                 │  │
-│  │ (/v1/chat/completions)  │               │             (/v1/images/generations)             │  │
-│  └────────────┬────────────┘               └────────────────────────┬─────────────────────────┘  │
-└───────────────┼─────────────────────────────────────────────────────┼────────────────────────────┘
-                │                                                     │
-                ▼                                                     ▼
-┌───────────────────────────────┐                     ┌───────────────────────────────┐
-│     Text Provider Engine      │                     │     Image Provider Engine     │
-│  - OpenAI (gpt-4o)            │                     │  - OpenAI (dall-e-3)          │
-│  - Groq (llama-3.3-70b)       │                     │  - Together AI (FLUX / SDXL)  │
-│  - DeepSeek / OpenRouter      │                     │  - OpenRouter Image Models    │
-│  - Local Ollama Engine        │                     │  - Local Stable Diffusion     │
-└───────────────────────────────┘                     └───────────────────────────────┘
+Teacher browser → authenticated Next.js routes → text provider → slide deck
+                                             ↘ image provider (AI / Pexels)
+                                             ↘ image library (NASA / Commons)
+Slide deck → export payload → PPTX or Markdown route
 ```
 
-1. **Text AI Provider (`/v1/chat/completions`)**:
-   - Analyzes curriculum content against strict instructional design directives.
-   - Enforces structured JSON output matching `PresentationData`.
-   - Automatic 5-retry exponential backoff (`1s, 2s, 4s, 8s, 16s`).
-2. **Image Provider (`/v1/images/generations` or Pexels API)**:
-   - **AI Mode**: Generates educational illustrations set in Philippine elementary classrooms.
-   - **Pexels Mode**: Free curated real-world stock photos via Pexels API (with intelligent stop-word removal and keyword extraction).
-   - **Auto Mode (Default)**: Attempts AI illustration first; automatically falls back to Pexels stock photos if AI image generation fails, times out, or has no quota.
-   - Outputs 16:9 widescreen visuals encoded directly into base64.
-   - Automatic retries and fallback protection.
+The text client validates structured `PresentationData` and retries up to five times after the initial attempt. The OpenAI-compatible image adapter retries up to three times after the initial attempt; `auto` falls back to Pexels only when `PEXELS_API_KEY` is configured. Pexels search and the NASA/Commons libraries have separate retrieval paths.
 
 ---
 
@@ -67,20 +39,20 @@ To give schools, institutions, and developers ultimate freedom and cost optimiza
 
 ### Prerequisites
 
-- **Node.js**: v18.17.0+ (Tested on Node v20, v22, and v26)
-- **npm**: v9+ (or pnpm / yarn / bun)
+- **Node.js**: 22.22.2 or newer for the test suite (`.github/workflows/ci.yml` uses Node 22; this checkout was also tested on Node 26).
+- **npm**: install from the committed lockfile with `npm ci`.
 
 ### Installation
 
 1. Clone or download the repository:
    ```bash
-   git clone https://github.com/your-username/presentation-maker-101.git
-   cd presentation-maker-101
+   git clone https://github.com/Mokie04/Presentation-Maker-101.git
+   cd Presentation-Maker-101
    ```
 
 2. Install dependencies:
    ```bash
-   npm install
+   npm ci
    ```
 
 3. Configure environment variables:
@@ -90,32 +62,38 @@ To give schools, institutions, and developers ultimate freedom and cost optimiza
 
 ### Environment Configuration Guide (`.env.local`)
 
-All environment variables are validated at startup using Zod in `src/lib/env.ts`.
+`src/lib/env.ts` validates settings lazily per feature, so an upload does not need text or image provider keys. `src/lib/sessionAuth.ts` reads App Store authentication settings separately. Copy `.env.example` and replace sample credentials only for the features you use; automated tests need no provider keys.
 
 ```env
-# ==========================================
-# Text AI Provider (/v1/chat/completions)
-# ==========================================
+# Required when generating slides or checking text-provider health
 TEXT_PROVIDER_BASE_URL=https://api.openai.com/v1
-TEXT_PROVIDER_API_KEY=sk-your-text-provider-api-key
+TEXT_PROVIDER_API_KEY=sk-your-key
 TEXT_PROVIDER_MODEL=gpt-4o
 
-# ==========================================
-# Image AI Provider (/v1/images/generations)
-# ==========================================
+# Used for AI images; choose ai, pexels or auto
+IMAGE_SOURCE=auto
 IMAGE_PROVIDER_BASE_URL=https://api.openai.com/v1
-IMAGE_PROVIDER_API_KEY=sk-your-image-provider-api-key
+IMAGE_PROVIDER_API_KEY=sk-your-key
 IMAGE_PROVIDER_MODEL=dall-e-3
+PEXELS_API_KEY=
 
-# ==========================================
-# Application Configuration
-# ==========================================
+# Upload file-size check (MB); see the Vercel request limit below
 MAX_FILE_SIZE_MB=10
 ```
 
+| Setting | Current behavior |
+|---|---|
+| `TEXT_PROVIDER_BASE_URL`, `TEXT_PROVIDER_API_KEY`, `TEXT_PROVIDER_MODEL` | Required when the text client is used. |
+| `IMAGE_SOURCE` | `auto` by default; `ai` uses the OpenAI-compatible adapter, `pexels` uses Pexels, and `auto` tries AI then Pexels only if a Pexels key is present. |
+| `IMAGE_PROVIDER_BASE_URL`, `IMAGE_PROVIDER_API_KEY`, `IMAGE_PROVIDER_MODEL` | Image adapter defaults are the OpenAI URL, `not-configured` and `dall-e-3`; a usable key is needed for AI image requests. |
+| `PEXELS_API_KEY` | Optional unless using Pexels; also enables fallback in `auto`. |
+| `MAX_FILE_SIZE_MB` | Positive number, default 10; the upload route applies this file-size check. |
+
+Vercel Functions have a [4.5 MB request-body limit](https://vercel.com/docs/functions/limitations#request-body-size). That limit can reject an upload before the application's default 10 MB file check runs.
+
 #### App Store SSO Configuration
 
-Presentation Maker Pro is launched from the Sayuna AI App Store with a short-lived signed `access` handoff. The application exchanges that handoff once for the `presentation_maker_pro_session` HttpOnly cookie; generation, upload, image, download, and health APIs require that session.
+Presentation Maker Pro is launched from the Sayuna AI App Store with a short-lived signed `access` handoff. The application exchanges that handoff once for the `presentation_maker_pro_session` HttpOnly cookie; when App Store auth is enabled, generation, upload, image, download, and health APIs require that session.
 
 For local development without an App Store launch, set:
 
@@ -140,10 +118,10 @@ APPSTORE_COOKIE_DOMAIN=
 
 The App Store issuer and this application must use the same `APPSTORE_AUDIENCE` value. Numeric settings are bounded by the server, and a production `APPSTORE_AUTH_ENABLED=false` value is not treated as a bypass. `APPSTORE_COOKIE_DOMAIN` is optional; leave it empty unless the deployment requires an explicit cookie domain.
 
-#### Multi-Provider Setup Examples
+#### Provider setup examples
 
 <details>
-<summary><b>1. OpenAI + OpenAI (Default Setup)</b></summary>
+<summary><b>1. OpenAI-compatible text and AI images</b></summary>
 
 ```env
 TEXT_PROVIDER_BASE_URL=https://api.openai.com/v1
@@ -153,52 +131,23 @@ TEXT_PROVIDER_MODEL=gpt-4o
 IMAGE_PROVIDER_BASE_URL=https://api.openai.com/v1
 IMAGE_PROVIDER_API_KEY=sk-proj-xxxx
 IMAGE_PROVIDER_MODEL=dall-e-3
+IMAGE_SOURCE=ai
 ```
 </details>
 
 <details>
-<summary><b>2. Groq (Ultra-Fast Text) + Together AI (Affordable FLUX Images)</b></summary>
+<summary><b>2. OpenAI-compatible text with Pexels images</b></summary>
 
 ```env
-# Groq for lightning-fast slide outline generation
-TEXT_PROVIDER_BASE_URL=https://api.groq.com/openai/v1
-TEXT_PROVIDER_API_KEY=gsk_xxxx
-TEXT_PROVIDER_MODEL=llama-3.3-70b-versatile
-
-# Together AI for high-quality educational illustrations
-IMAGE_PROVIDER_BASE_URL=https://api.together.xyz/v1
-IMAGE_PROVIDER_API_KEY=xxxx
-IMAGE_PROVIDER_MODEL=black-forest-labs/FLUX.1-schnell
+TEXT_PROVIDER_BASE_URL=https://api.openai.com/v1
+TEXT_PROVIDER_API_KEY=sk-proj-xxxx
+TEXT_PROVIDER_MODEL=gpt-4o
+IMAGE_SOURCE=pexels
+PEXELS_API_KEY=your-pexels-key
 ```
 </details>
 
-<details>
-<summary><b>3. OpenRouter (Unified Gateway)</b></summary>
-
-```env
-TEXT_PROVIDER_BASE_URL=https://openrouter.ai/api/v1
-TEXT_PROVIDER_API_KEY=sk-or-v1-xxxx
-TEXT_PROVIDER_MODEL=anthropic/claude-3.5-sonnet
-
-IMAGE_PROVIDER_BASE_URL=https://openrouter.ai/api/v1
-IMAGE_PROVIDER_API_KEY=sk-or-v1-xxxx
-IMAGE_PROVIDER_MODEL=openai/dall-e-3
-```
-</details>
-
-<details>
-<summary><b>4. Ollama (100% Free & Local Offline Execution)</b></summary>
-
-```env
-TEXT_PROVIDER_BASE_URL=http://localhost:11434/v1
-TEXT_PROVIDER_API_KEY=ollama
-TEXT_PROVIDER_MODEL=llama3.1:8b
-
-IMAGE_PROVIDER_BASE_URL=https://api.openai.com/v1
-IMAGE_PROVIDER_API_KEY=sk-xxxx
-IMAGE_PROVIDER_MODEL=dall-e-3
-```
-</details>
+Other OpenAI-compatible endpoints can be configured, but their model and image-request compatibility must be verified separately. The AI image adapter currently sends a fixed `1024x576` size, `standard` quality and `b64_json` response format.
 
 ### Running Development Server & Tests
 
@@ -212,47 +161,52 @@ IMAGE_PROVIDER_MODEL=dall-e-3
   ```bash
   npm test
   ```
+  The tests use local fixtures and mocks; no provider environment variables are needed.
+
+- **Typecheck and lint source plus tests**:
+  ```bash
+  npx tsc --noEmit
+  npm run lint
+  ```
+  `.github/workflows/ci.yml` runs these and `npm test` in its `verify` job for PRs and pushes to `main`.
 
 - **Run Production Build Verification**:
   ```bash
   npm run build
   ```
 
-- **Verify AI Providers Health**:
-  ```bash
-  curl http://localhost:3000/api/health
-  ```
+- **Check provider health**: `/api/health` requires an auth session when App Store auth is enabled; its text check calls the configured text endpoint. Use it only when you intend a live provider check.
 
 ---
 
 ## 3. Core Feature Walkthrough
 
 ### 1. Multi-Format Document Ingestion
-- Upload `.docx` (Microsoft Word via `mammoth`), `.pdf` (via `pdf-parse`), `.txt`, or `.md` files up to `MAX_FILE_SIZE_MB`.
+- Upload `.docx` (Microsoft Word via `mammoth`), `.pdf` (via `pdf-parse`), `.txt`, or `.md` files, subject to the configured file-size check and the hosting request-body limit.
 - Instant "Paste Lesson Plan Text" toggle for educators who prefer pasting raw text.
 - Live character counter and upload status feedback.
 
 ### 2. DepEd 6-Part Instructional Structure
-Presentations map directly to the Philippine Department of Education 4A's and 5E's curriculum flow across 6 distinct slide parts:
+The generation prompt asks for six lesson parts, following a Title Page:
 1. **Review**: Activates prior knowledge and checks prerequisite competencies.
 2. **Motivation**: Real-world hook or game engaging learners.
 3. **Lesson Presentation**: Clear step-by-step introduction of new learning competencies.
 4. **Discussion**: Deep pedagogical explanation without summarizing or truncating story annexes.
 5. **Activities**: Complete group activity instructions, rubrics, and guide questions.
 6. **Assessment**: Individual slide per multiple-choice or identification question for formative assessment.
-- **Deep Coverage Guarantee**: Expands comprehensive lessons across 25+ slides.
+- **Deep Coverage Prompt**: Requests at least 25 slides and full lesson coverage; the response schema checks structure, not slide count or pedagogical quality.
 
 ### 3. Subject-Specific Prompt Directives
-Automatic keyword classifier identifies curriculum subjects and instructs the AI to inject specialized prompts:
+The teacher can select a subject; otherwise a keyword classifier supplies one. The generation prompt asks the text provider for subject-specific visual descriptions:
 - **Science**: Process illustrations, cross-sections, and anatomical diagrams.
 - **Mathematics**: Visual manipulatives (blocks, fraction pies) and large numerical headers.
 - **English / Reading**: Contextual story scenes and high-contrast vocabulary keywords.
 - **Social Studies / History**: Character profiles and illustrated Philippine maps.
 
 ### 4. Background Sequential Visual Synthesis
-- Following slide generation, background batch synthesis generates illustrations for `motivation`, `presentation`, and `discussion` slides.
+- Following slide generation, background batch synthesis requests images for Motivation, Lesson Presentation and Discussion slides.
 - Sequenced with an `800ms` inter-request delay to respect external API rate limits.
-- Fault-tolerant: If any single image fails, it is marked `"failed"` while the rest of the presentation continues unhindered.
+- Fault-tolerant: If an image request fails, the batch emits the `"failed"` wire value and continues; the deck preserves an existing image when appropriate.
 - Individual "Render Visual Concept Image" / "Regenerate AI Graphic" buttons on each slide card.
 
 ### 5. Interactive Slide Editor
@@ -271,8 +225,8 @@ Automatic keyword classifier identifies curriculum subjects and instructs the AI
 ### 7. Server-Side PowerPoint (.pptx) & Markdown (.md) Exports
 - **PowerPoint Export (`POST /api/download-pptx`)**:
   - Compiled server-side with `pptxgenjs` in 16:9 widescreen format.
-  - Formatted with DepEd Tambayan color palette (Emerald `#047857`, Accent `#10B981`, Background `#F0FDF4`).
-  - Embeds base64 illustrations or renders rounded mint placeholder boxes.
+  - Uses sky/cyan colours (`#0284C7`, `#06B6D4`) and a pale blue background (`#F0F9FF`).
+  - Embeds base64 illustrations or renders rounded pale-blue placeholder boxes.
 - **Curriculum Markdown Outline (`POST /api/download-markdown`)**:
   - Clean formatted Markdown outline ready for lesson archiving or syllabus planning.
 
@@ -280,74 +234,19 @@ Automatic keyword classifier identifies curriculum subjects and instructs the AI
 
 ## 4. Vercel Deployment Guide
 
-### Deploying via Vercel Dashboard (GitHub / GitLab / Bitbucket)
+Use a change branch and PR for the connected Vercel project. Configure the feature keys you need from `.env.example` in the Vercel project, plus production App Store settings: `APPSTORE_AUTH_ENABLED=true`, the matching `APPSTORE_SHARED_SECRET` and `APPSTORE_AUDIENCE`, and any required clock, lifetime or cookie overrides. Production rejects disabled App Store auth; the default cookie is host-only when `APPSTORE_COOKIE_DOMAIN` is omitted.
 
-1. Push your repository to GitHub:
-   ```bash
-   git push origin main
-   ```
-2. Log in to [Vercel](https://vercel.com) and click **"Add New Project"**.
-3. Select your `presentation-maker-101` repository.
-4. Leave framework preset as **Next.js** (root directory `./`).
-5. Open the **"Environment Variables"** section and add the keys from your `.env.local`:
-   - `TEXT_PROVIDER_BASE_URL`
-   - `TEXT_PROVIDER_API_KEY`
-   - `TEXT_PROVIDER_MODEL`
-   - `IMAGE_PROVIDER_BASE_URL`
-   - `IMAGE_PROVIDER_API_KEY`
-   - `IMAGE_PROVIDER_MODEL`
-   - `MAX_FILE_SIZE_MB` (e.g. `10`)
-   - `APPSTORE_AUTH_ENABLED=true`
-   - `APPSTORE_SHARED_SECRET` (the matching App Store issuer secret)
-   - `APPSTORE_AUDIENCE=presentation-maker`
-   - `APPSTORE_ALLOWED_CLOCK_SKEW_SECONDS=20`
-   - `APPSTORE_MAX_TOKEN_TTL_SECONDS=900`
-   - `APPSTORE_SESSION_MAX_AGE_SECONDS=3600`
-   - `APPSTORE_COOKIE_SAMESITE=none`
-   - `APPSTORE_COOKIE_SECURE=true`
-   - `APPSTORE_COOKIE_DOMAIN` (optional; omit for host-only cookies)
-6. Click **Deploy**.
-
-### Deploying via Vercel CLI
-
-```bash
-npm install -g vercel
-vercel login
-vercel
-```
-Set environment variables:
-```bash
-vercel env add TEXT_PROVIDER_BASE_URL
-vercel env add TEXT_PROVIDER_API_KEY
-vercel env add TEXT_PROVIDER_MODEL
-vercel env add IMAGE_PROVIDER_BASE_URL
-vercel env add IMAGE_PROVIDER_API_KEY
-vercel env add IMAGE_PROVIDER_MODEL
-vercel env add MAX_FILE_SIZE_MB
-vercel env add APPSTORE_AUTH_ENABLED
-vercel env add APPSTORE_SHARED_SECRET
-vercel env add APPSTORE_AUDIENCE
-vercel env add APPSTORE_ALLOWED_CLOCK_SKEW_SECONDS
-vercel env add APPSTORE_MAX_TOKEN_TTL_SECONDS
-vercel env add APPSTORE_SESSION_MAX_AGE_SECONDS
-vercel env add APPSTORE_COOKIE_SAMESITE
-vercel env add APPSTORE_COOKIE_SECURE
-vercel env add APPSTORE_COOKIE_DOMAIN
-vercel --prod
-```
-
-After deployment, complete an authenticated browser smoke test by opening the tool from the Sayuna AI App Store and exercising upload, generation, image generation, and both export actions. Local tests, a successful build, or an unauthenticated request to `/api/health` do not prove this production handoff or browser flow.
+Wait for the `verify` CI job and the Vercel preview. Smoke-test the preview through the App Store handoff: upload or paste, generate, obtain an image, edit, and download both formats. Merge only after approval. Local tests, a build or an unauthenticated health request do not prove this browser flow. Making `verify` a required GitHub branch-protection check is still a separate user action in `docs/architecture-roadmap.md`.
 
 ### Notes on Serverless Function Timeouts (`maxDuration`)
 
-LLM generation for 25+ detailed slides and batch image generation can take between 15 and 45 seconds depending on model latency. To prevent Vercel's default 10s (Hobby) or 15s (Pro) timeouts from terminating in-flight generations, the following routes are configured with explicit `maxDuration` segment settings:
+The route files currently set these `maxDuration` values; actual execution still depends on deployment settings and provider latency:
 
-- `POST /api/generate` ➔ `maxDuration = 60`
-- `POST /api/generate-image` ➔ `maxDuration = 60`
-- `POST /api/generate-images` ➔ `maxDuration = 60`
-- `POST /api/download-pptx` ➔ `maxDuration = 30`
+- `POST /api/generate` ➔ `maxDuration = 300`
+- `POST /api/generate-image` ➔ `maxDuration = 120`
+- `POST /api/generate-images` ➔ `maxDuration = 300`
+- `POST /api/download-pptx` ➔ `maxDuration = 120`
 
-*(Note: Vercel Hobby accounts support up to 60 seconds; Pro accounts support up to 300 seconds).*
 
 ---
 
@@ -365,36 +264,9 @@ LLM generation for 25+ detailed slides and batch image generation can take betwe
 - **Validation**: `zod`
 - **Testing**: `vitest`, `@testing-library/react`, `jsdom`, `@vitejs/plugin-react`
 
-### Test Suite (100% Passing)
+### Test Suite
 
-The project adheres to strict Test-Driven Development (Red-Green-Refactor) with comprehensive unit and component test suites:
-
-```
- RUN  v5.0.3 /Users/johnnavarro/Sayuna Projects/Presentation Maker 101
-
- ✓ tests/lib/services/pptx-generator.test.ts (4 tests)
- ✓ tests/lib/providers/text-provider.test.ts (6 tests)
- ✓ tests/api/upload.test.ts (4 tests)
- ✓ tests/lib/env.test.ts (3 tests)
- ✓ tests/lib/providers/image-provider.test.ts (3 tests)
- ✓ tests/api/generate-images.test.ts (3 tests)
- ✓ tests/api/download-markdown.test.ts (3 tests)
- ✓ tests/api/generate.test.ts (5 tests)
- ✓ tests/api/health.test.ts (3 tests)
- ✓ tests/api/download-pptx.test.ts (3 tests)
- ✓ tests/components/SlideshowModal.test.tsx (4 tests)
- ✓ tests/components/SlideCard.test.tsx (3 tests)
- ✓ tests/components/UploadSection.test.tsx (3 tests)
- ✓ tests/lib/parsers/document-parser.test.ts (7 tests)
- ✓ tests/lib/utils/subject-detector.test.ts (5 tests)
- ✓ tests/lib/services/markdown-generator.test.ts (2 tests)
- ✓ tests/api/generate-image.test.ts (3 tests)
- ✓ tests/prompts/slide-generation.test.ts (3 tests)
- ✓ tests/lib/providers/pexels-provider.test.ts (8 tests)
-
- Test Files  19 passed (19)
-      Tests  75 passed (75)
-```
+Run `npm test` for the current count. Tests cover route policy, configuration boundaries, deck image races, libraries, providers, exports and React components; `npm run lint` checks both `src/` and `tests/`. The CI `verify` job runs typecheck, lint and tests without provider credentials.
 
 ---
 

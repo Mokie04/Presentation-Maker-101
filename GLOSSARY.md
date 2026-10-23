@@ -2,9 +2,9 @@
 
 **Slide** — One page of a presentation: `SlideData` (`slideNumber`, `part`, `title`, `contentPoints`, `visualDescription`, optional `imageMetadata`). `slideNumber` is its 1-based position and is renumbered when a Slide is deleted.
 
-**Slide deck** — The ordered Slides of one generated presentation plus its metadata (`subject`, `originalWriters`, `topic`). The wire and export shape is `PresentationData`. Inside the client, each Slide also carries an internal id that is never reused and never sent to the server.
+**Slide deck** — The ordered Slides of one generated presentation plus its metadata (`subject`, `originalWriters`, `topic`, and optional server-recorded `subjectEvidence`). The wire and export shape is `PresentationData`. Inside the client, each Slide also carries a stable internal id that is never reused and never sent to the server. `src/lib/deck/deck-reducer.ts` owns its edits and image race rules.
 
-**Slide image** — The picture shown on a Slide and exported to PPTX: base64 or a `data:` URL. The UI and export routes receive them as `slideImages: Record<index, string>`, where `FAILED_IMAGE` (`'failed'`) means generation failed and nothing is shown. `src/lib/slide-image.ts` owns the wire rules: `isUsableImage`, `toRawBase64`, `sniffImageMime`, `toDataUrl` and the export validation (`hasWireImageFormat`, `MAX_SLIDE_IMAGE_CHARS`).
+**Slide image** — The picture shown on a Slide and exported to PPTX: raw base64 or a `data:` URL. The UI and PPTX route use index-keyed `slideImages`; `FAILED_IMAGE` (`'failed'`) means generation failed and nothing is shown. `src/lib/slide-image.ts` owns the wire rules: `isUsableImage`, `toRawBase64`, `sniffImageMime`, `toDataUrl` and export validation (`hasWireImageFormat`, `MAX_SLIDE_IMAGE_CHARS`).
 
 **Pedagogical part** — `SlideData.part`, the lesson phase a Slide belongs to. `src/lib/pedagogy.ts` owns the rules: `PEDAGOGICAL_PARTS` (Title Page, then the six numbered lesson parts Review to Assessment), `normalizePart` / `canonicalPart` (maps wording such as "Activity" to a canonical part; unknown text is kept), `partOrdinal`, `partLabel` (badge text) and `partWantsAutoImage` (Motivation, Lesson Presentation and Discussion get batch images). The UI adds only colours (`src/components/part-badge.ts`).
 
@@ -18,4 +18,12 @@
 
 **Image library** — A searchable source of manually selected images. `ImageLibrary` in `src/lib/image-library/library.ts` defines its source, label, selection schema, search/select operations and public error mapping. `nasa.ts` and `commons.ts` adapt the existing providers; `route-definitions.ts` supplies their shared route policy. Client-safe candidate types, labels, paths and selection helpers live in `types.ts`. To add a third library, add its adapter here, extend the source/metadata and candidate unions and library constants, wire its routes through the shared definitions, and add it to the picker and adapter contract tests.
 
+**Image candidate** — A search result shown before selection, discriminated by `source` in `src/lib/image-library/types.ts`. NASA results carry a `nasaId`; Commons results carry a `fileId` and may be unselectable. `candidateId` identifies a displayed result and `selectRequestBody` sends only its ID to the select route; finished image attribution is `ImageMetadata`, not the candidate.
+
 **Configuration** — Feature settings validated only when needed. `src/lib/env.ts` owns pure `readTextProviderConfig`, `readImageProviderConfig`, `readPexelsConfig` and `readAppConfig` readers, with matching lazy, cached `get*Config` accessors. `resetConfigCache` isolates tests; App Store auth remains in `src/lib/sessionAuth.ts`.
+
+**Route** — An HTTP handler under `src/app/api/` assigned from `defineRoute` in `src/lib/api/`, which authenticates before parsing, caps bodies, optionally validates an `input` schema and sanitizes unexpected errors. `src/app/api/session/route.ts` bootstraps authentication and is the sole exception.
+
+**Lesson session** — The teacher's selected `Session 1` through `Session 5`, listed in `src/lib/utils/session-options.ts` and validated for generation. It labels a lesson and its exports; it is unrelated to login.
+
+**Auth session** — The signed `presentation_maker_pro_session` cookie created after the App Store handoff by `src/app/api/session/route.ts`. `requireSession` in `src/lib/sessionAuth.ts` checks it for protected API routes.
