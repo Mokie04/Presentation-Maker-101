@@ -53,3 +53,103 @@ describe('protected manual Commons endpoints', () => {
     expect((await select(req(body))).status).toBe(400);
   });
 });
+
+const routeCases = [
+  { name: 'search', endpoint: search, body: { query: 'roots' }, field: 'query',
+    prepare: () => vi.spyOn(commons, 'searchCommonsImages').mockResolvedValue([candidate]) },
+  { name: 'select', endpoint: select, body: { fileId: 42 }, field: 'fileId',
+    prepare: () => vi.spyOn(commons, 'fetchCommonsImageBase64').mockResolvedValue(selected) },
+];
+
+describe.each(routeCases)('Commons $name response policy', ({ name, endpoint, body, field, prepare }) => {
+  it('returns a non-cacheable 401 before reading an invalid body or calling the provider', async () => {
+    vi.stubEnv('APPSTORE_AUTH_ENABLED', 'true'); vi.stubEnv('APPSTORE_SHARED_SECRET', 'test-shared-secret');
+    const provider = prepare();
+    const request = new NextRequest('http://localhost/api/commons-images', { method: 'POST', body: 'not JSON', headers: { 'Content-Length': '9000' } });
+    const stream = vi.spyOn(request, 'body', 'get');
+    const response = await endpoint(request);
+    expect(response.status).toBe(401);
+    expect(await response.json()).toEqual({ error: 'Authentication required.' });
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(stream).not.toHaveBeenCalled(); expect(provider).not.toHaveBeenCalled();
+  });
+
+  it('keeps successful responses non-cacheable', async () => {
+    prepare();
+    const response = await endpoint(req(body));
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+  });
+
+  it.each(['declared', 'streamed'])('caps %s bodies at 8192 bytes', async (mode) => {
+    const provider = prepare();
+    const request = req({ ...body, ignored: 'x'.repeat(8192) });
+    if (mode === 'declared') request.headers.set('Content-Length', '8193');
+    const response = await endpoint(request);
+    expect(response.status).toBe(413);
+    expect(await response.json()).toEqual({ error: 'Request body exceeds the size limit.' });
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(provider).not.toHaveBeenCalled();
+  });
+
+  it('accepts exactly 8192 body bytes', async () => {
+    const provider = prepare();
+    const shell = JSON.stringify({ ...body, ignored: '' });
+    const response = await endpoint(req({ ...body, ignored: 'x'.repeat(8192 - Buffer.byteLength(shell)) }));
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(provider).toHaveBeenCalledTimes(1);
+  });
+
+  it('normalizes invalid JSON errors', async () => {
+    const provider = prepare();
+    const response = await endpoint(new NextRequest('http://localhost/api/commons-images', { method: 'POST', body: 'not JSON' }));
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ error: 'Invalid JSON request body.' });
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(provider).not.toHaveBeenCalled();
+  });
+
+  it('reports schema errors by field without echoing the input', async () => {
+    const provider = prepare();
+    const response = await endpoint(req({ [field]: ['LEAK'] }));
+    expect(response.status).toBe(400);
+    const result = await response.json();
+    expect(result.error).toMatch(new RegExp(`^Invalid request: ${field}:`));
+    expect(result.error).not.toContain('LEAK');
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(provider).not.toHaveBeenCalled();
+  });
+
+  it('logs unexpected provider errors and returns only the fixed 502 message', async () => {
+    const log = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const error = new Error('LEAK TEXT_PROVIDER_API_KEY schema dump');
+    prepare().mockRejectedValueOnce(error);
+    const response = await endpoint(req(body));
+    expect(response.status).toBe(502);
+    expect(await response.json()).toEqual({ error: 'Commons request failed.' });
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+    expect(log).toHaveBeenCalledWith(`[commons-images/${name}]`, error);
+  });
+
+  it.each([120, 60])('preserves the full 429 body and headers with %i seconds cooldown', async (seconds) => {
+    prepare().mockRejectedValueOnce(new commons.CommonsProviderError('Slow down', 429, seconds));
+    const response = await endpoint(req(body));
+    expect(response.status).toBe(429);
+    expect(await response.json()).toEqual({ error: 'Slow down', retryAfterSeconds: seconds });
+    expect(response.headers.get('Retry-After')).toBe(String(seconds));
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+  });
+
+  it.each([
+    { status: 422, message: 'Commons image unavailable.' },
+    { status: 502, message: 'Commons request failed (503).' },
+  ])('preserves authored provider errors with status $status', async ({ status, message }) => {
+    prepare().mockRejectedValueOnce(new commons.CommonsProviderError(message, status));
+    const response = await endpoint(req(body));
+    expect(response.status).toBe(status);
+    expect(await response.json()).toEqual({ error: message });
+    expect(response.headers.get('Retry-After')).toBeNull();
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
+  });
+});
