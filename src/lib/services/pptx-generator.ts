@@ -2,6 +2,7 @@ import PptxGenJS from 'pptxgenjs';
 import imageSize from 'image-size';
 import type { PresentationData } from '@/types/presentation';
 import { describeImageCredit } from '@/lib/image-credit';
+import { isUsableImage, sniffImageMime, toRawBase64 } from '@/lib/slide-image';
 import { parseFormulaToSegments } from '@/lib/utils/formula-parser';
 
 export const SHADE_PRIMARY = '0284C7';
@@ -39,14 +40,14 @@ function formulaToTextRuns(
 
 /** Fit selected library images using decoded dimensions; legacy sizing uses box dimensions. */
 function addLibraryImage(slide: PptxGenJS.Slide, image: string, box: { x: number; y: number; w: number; h: number }): void {
-  const raw = image.replace(/^data:image\/[a-z]+;base64,/, '');
+  const raw = toRawBase64(image);
   const dimensions = imageSize(Buffer.from(raw, 'base64'));
   if (!dimensions.width || !dimensions.height) throw new Error('Library export image dimensions are unavailable.');
   const scale = Math.min(box.w / dimensions.width, box.h / dimensions.height);
   const w = dimensions.width * scale;
   const h = dimensions.height * scale;
   slide.addImage({
-    data: `${raw.startsWith('/9j/') ? 'image/jpeg' : 'image/png'};base64,${raw}`,
+    data: `${sniffImageMime(raw)};base64,${raw}`,
     x: box.x + (box.w - w) / 2, y: box.y + (box.h - h) / 2, w, h,
   });
 }
@@ -142,8 +143,9 @@ export function createPresentationPptx(
         });
       }
 
-      if (slide.imageMetadata && slideImages?.[idx] && slideImages[idx] !== 'failed') {
-        addLibraryImage(slideObj, slideImages[idx], { x: 9, y: 3.4, w: 3.5, h: 2.6 });
+      const titleImage = slideImages?.[idx];
+      if (slide.imageMetadata && titleImage && isUsableImage(titleImage)) {
+        addLibraryImage(slideObj, titleImage, { x: 9, y: 3.4, w: 3.5, h: 2.6 });
       }
 
       // Slide counter
@@ -228,15 +230,13 @@ export function createPresentationPptx(
         line: { color: FALLBACK_BORDER, width: 1.5 },
       });
 
-      if (imageData && imageData !== 'failed') {
+      if (imageData && isUsableImage(imageData)) {
         if (slide.imageMetadata) {
           addLibraryImage(slideObj, imageData, { x: (40 / 3) * 0.625, y: 2.15, w: 4.2, h: 4.4 });
         } else {
-          const rawBase64 = imageData.replace(/^data:image\/[a-z]+;base64,/, '');
-          const isJpeg = rawBase64.startsWith('/9j/');
-          const mime = isJpeg ? 'image/jpeg' : 'image/png';
+          const rawBase64 = toRawBase64(imageData);
           slideObj.addImage({
-            data: `${mime};base64,` + rawBase64,
+            data: `${sniffImageMime(rawBase64)};base64,` + rawBase64,
             x: '62.5%',
             y: 2.15,
             w: '32%',

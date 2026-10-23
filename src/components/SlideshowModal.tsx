@@ -10,6 +10,7 @@ import {
 import { describeImageCredit } from '@/lib/image-credit';
 import type { PresentationData } from '@/types/presentation';
 import { getPartBadgeInfo } from './part-badge';
+import { isUsableImage, toDataUrl } from '@/lib/slide-image';
 import { FormattedFormula } from './FormattedFormula';
 
 interface SlideshowModalProps {
@@ -98,12 +99,8 @@ export function SlideshowModal({
   }
 
   const currentImage = slideImages[currentIndex];
-  const hasValidImage = Boolean(currentImage && currentImage !== 'failed');
-  const imageSrc = hasValidImage
-    ? currentImage.startsWith('data:')
-      ? currentImage
-      : `data:image/png;base64,${currentImage}`
-    : undefined;
+  const hasValidImage = isUsableImage(currentImage);
+  const imageSrc = hasValidImage ? toDataUrl(currentImage) : undefined;
   const credit = hasValidImage && currentSlide.imageMetadata ? describeImageCredit(currentSlide.imageMetadata) : undefined;
 
   return (

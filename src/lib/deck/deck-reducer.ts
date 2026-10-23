@@ -1,4 +1,5 @@
 import type { PedagogicalPart } from '@/lib/pedagogy';
+import { FAILED_IMAGE } from '@/lib/slide-image';
 import type { DeckAction, DeckSlide, DeckState, ImageToken, SlideImage } from './types';
 
 export const initialDeckState: DeckState = { presentation: null, slides: [], nextSlideId: 0 };
@@ -84,7 +85,7 @@ export function deckReducer(state: DeckState, action: DeckAction): DeckState {
       return action.tokens.reduce((next, token, index) => {
         const data = action.images[index];
         if (data === undefined) return next;
-        return resolveImage(next, token, (image) => (data === 'failed'
+        return resolveImage(next, token, (image) => (data === FAILED_IMAGE
           ? { ...image, status: image.data ? 'ready' : 'failed' }
           : { ...image, status: 'ready', data }));
       }, state);

@@ -1,4 +1,5 @@
 import type { PresentationData } from '@/types/presentation';
+import { FAILED_IMAGE } from '@/lib/slide-image';
 import type { DeckState } from './types';
 
 export function toPresentationData(state: DeckState): PresentationData | null {
@@ -9,12 +10,12 @@ export function toPresentationData(state: DeckState): PresentationData | null {
   };
 }
 
-/** Index-keyed view used by SlideCard, SlideshowModal and export; `'failed'` only for Slides with no image. */
+/** Index-keyed view used by SlideCard, SlideshowModal and export; FAILED_IMAGE only for Slides with no image. */
 export function toSlideImages(state: DeckState): Record<number, string> {
   const images: Record<number, string> = {};
   state.slides.forEach(({ image }, index) => {
     if (image.data !== undefined) images[index] = image.data;
-    else if (image.status === 'failed') images[index] = 'failed';
+    else if (image.status === 'failed') images[index] = FAILED_IMAGE;
   });
   return images;
 }

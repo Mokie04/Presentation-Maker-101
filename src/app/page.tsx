@@ -20,11 +20,14 @@ import { SlideCard } from '@/components/SlideCard';
 import { SlideshowModal } from '@/components/SlideshowModal';
 import { SessionGate } from '@/components/SessionGate';
 import { useSlideDeck } from '@/lib/deck/use-slide-deck';
+import { downloadBlob, readErrorMessage } from '@/lib/export/client';
+import { exportFilename } from '@/lib/export/filename';
+import { isUsableImage, toDataUrl, toRawBase64 } from '@/lib/slide-image';
 import type { PresentationData } from '@/types/presentation';
 
 async function compressImageForExport(base64: string): Promise<string> {
   if (typeof window === 'undefined') return base64;
-  if (!base64 || base64 === 'failed') return base64;
+  if (!isUsableImage(base64)) return base64;
   return new Promise((resolve) => {
     const img = new Image();
     // Only set crossOrigin for remote http(s) URLs; setting on data: URIs taints canvas in WebKit
@@ -56,14 +59,14 @@ async function compressImageForExport(base64: string): Promise<string> {
         }
         ctx.drawImage(img, 0, 0, width, height);
         const dataUrl = canvas.toDataURL('image/jpeg', 0.65);
-        const compressedBase64 = dataUrl.replace(/^data:image\/[a-z]+;base64,/, '');
+        const compressedBase64 = toRawBase64(dataUrl);
         resolve(compressedBase64);
       } catch {
         resolve(base64.length > 150000 ? '' : base64);
       }
     };
     img.onerror = () => resolve(base64.length > 150000 ? '' : base64);
-    img.src = base64.startsWith('data:') ? base64 : `data:image/png;base64,${base64}`;
+    img.src = toDataUrl(base64);
   });
 }
 
@@ -154,7 +157,7 @@ function PresentationWorkspace() {
   const handleDownloadPptx = async () => {
     if (!presentationData) return;
     setIsDownloadingPptx(true);
-    const filename = `${presentationData.topic.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${selectedSession.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_SayunaAI.pptx`;
+    const filename = exportFilename({ topic: presentationData.topic, session: selectedSession, suffix: 'SayunaAI.pptx' });
 
     try {
       // Compress slide images client-side before sending to keep payload well within Vercel's 4.5MB limit
@@ -163,7 +166,7 @@ function PresentationWorkspace() {
       await Promise.all(
         entries.map(async ([key, val]) => {
           const idx = Number(key);
-          if (val && val !== 'failed') {
+          if (isUsableImage(val)) {
             optimizedImages[idx] = await compressImageForExport(val);
           } else {
             optimizedImages[idx] = val;
@@ -201,25 +204,10 @@ function PresentationWorkspace() {
       });
 
       if (!res.ok) {
-        const errText = await res.text().catch(() => '');
-        let errMsg = 'Failed to download PowerPoint.';
-        try {
-          errMsg = JSON.parse(errText).error || errMsg;
-        } catch {
-          if (errText) errMsg = errText.slice(0, 150);
-        }
-        throw new Error(errMsg);
+        throw new Error(await readErrorMessage(res, 'Failed to download PowerPoint.'));
       }
 
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
+      downloadBlob(await res.blob(), filename);
     } catch (err) {
       const msg = err instanceof Error ? err.message : '';
       if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
@@ -248,34 +236,20 @@ function PresentationWorkspace() {
       });
 
       if (!res.ok) {
-        const errText = await res.text().catch(() => '');
-        let errMsg = 'Failed to download Markdown outline.';
-        try {
-          errMsg = JSON.parse(errText).error || errMsg;
-        } catch {
-          if (errText) errMsg = errText.slice(0, 150);
-        }
-        throw new Error(errMsg);
+        throw new Error(await readErrorMessage(res, 'Failed to download Markdown outline.'));
       }
 
       const text = await res.text();
       const blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
 
       const disposition = res.headers.get('Content-Disposition');
-      let filename = `${presentationData.topic.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${selectedSession.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_Outline.md`;
+      let filename = exportFilename({ topic: presentationData.topic, session: selectedSession, suffix: 'Outline.md' });
       if (disposition && disposition.includes('filename=')) {
         const match = disposition.match(/filename="?([^"]+)"?/);
         if (match?.[1]) filename = match[1];
       }
 
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
+      downloadBlob(blob, filename);
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Error generating Markdown outline.');
     } finally {
