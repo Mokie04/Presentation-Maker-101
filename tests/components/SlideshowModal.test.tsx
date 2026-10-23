@@ -222,4 +222,15 @@ describe('SlideshowModal image credit caption', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Next/i }));
     expect(caption()).toBeNull();
   });
+
+  it.each([
+    { source: 'Commons', metadata: commons, fit: 'object-contain', otherFit: 'object-cover' },
+    { source: 'NASA', metadata: nasa, fit: 'object-cover', otherFit: 'object-contain' },
+    { source: 'AI', metadata: undefined, fit: 'object-cover', otherFit: 'object-contain' },
+  ])('uses $fit for a $source image', ({ metadata, fit, otherFit }) => {
+    renderSlides([slide('Planets', metadata)], { 0: 'image' });
+    const image = screen.getByRole('img', { name: 'Planets' });
+    expect(image.classList.contains(fit)).toBe(true);
+    expect(image.classList.contains(otherFit)).toBe(false);
+  });
 });

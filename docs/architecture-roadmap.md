@@ -32,7 +32,7 @@ Beyond this list, refactoring has diminishing returns; later changes should be d
 | 5 | **Route Phase 3**: migrate upload, NASA, Commons and health onto `defineRoute`; add an architecture test that fails if a route bypasses it; table-driven auth-protection | M | 2 | done |
 | 6 | **Image library seam** (candidate 04): NASA and Commons as two adapters of one interface; one bounded-fetch; uniform route protections | M | 1, 2 | done |
 | 7 | **Image provider seam**: `ImageProvider` interface with the OpenAI-compatible and Pexels adapters; request details (size, quality, format) move into each adapter | M | 1 | done |
-| 8 | **Hygiene**: delete dead `nasa-search-eligibility.ts`, fix the 9 lint errors in old tests, fix the formula leak in the PPTX title slide, use `object-contain` for Commons images in the slideshow | S | 1, 3 | |
+| 8 | **Hygiene**: delete dead `nasa-search-eligibility.ts`, fix the 8 lint errors in old tests, fix the formula leak in the PPTX title slide, use `object-contain` for Commons images in the slideshow | S | 1, 3 | done |
 | 9 | **Docs**: `ARCHITECTURE.md`, ADRs for the deck, credit, route, export and seam decisions, refreshed `GLOSSARY.md` | S | 4 | last |
 
 6b complete: `src/lib/image-library/` owns the `ImageLibrary` interface, NASA and Commons adapters, client-safe candidate helpers, and shared `searchDefinition(library)` / `selectDefinition(library)` route definitions. Each library route stays one `defineRoute(...)` call. NASA candidates carry `source` and `selectable`; `ImageLibraryPicker` uses source discrimination and rejects selection metadata from another library.

@@ -185,7 +185,7 @@ export function SlideshowModal({
                       <img
                         src={imageSrc}
                         alt={currentSlide.title}
-                        className="w-full h-full object-cover"
+                        className={`w-full h-full ${currentSlide.imageMetadata?.source === 'commons' ? 'object-contain' : 'object-cover'}`}
                       />
                     </div>
                     {/* Library images must carry their credit (CC BY) wherever they are shown */}
