@@ -1,6 +1,6 @@
 import OpenAI from 'openai';
 import { z } from 'zod';
-import { env } from '@/lib/env';
+import { getTextProviderConfig } from '@/lib/env';
 import { canonicalPart } from '@/lib/pedagogy';
 import { SYSTEM_PROMPT, USER_PROMPT_TEMPLATE } from '@/lib/prompts/slide-generation';
 import type { PresentationData } from '@/types/presentation';
@@ -26,8 +26,8 @@ export function createTextProviderClient(options?: {
   apiKey?: string;
 }): OpenAI {
   return new OpenAI({
-    baseURL: options?.baseURL ?? env.textProvider.baseUrl,
-    apiKey: options?.apiKey ?? env.textProvider.apiKey,
+    baseURL: options?.baseURL ?? getTextProviderConfig().baseUrl,
+    apiKey: options?.apiKey ?? getTextProviderConfig().apiKey,
   });
 }
 
@@ -68,7 +68,7 @@ export async function generateSlideContent(
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       const response = await client.chat.completions.create({
-        model: env.textProvider.model,
+        model: getTextProviderConfig().model,
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },
           {

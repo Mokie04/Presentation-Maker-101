@@ -1,4 +1,4 @@
-import { env } from '@/lib/env';
+import { getPexelsConfig } from '@/lib/env';
 
 export interface PexelsPhoto {
   id: number;
@@ -96,7 +96,7 @@ export async function searchPexelsPhoto(
   query: string,
   options?: PexelsFetchOptions
 ): Promise<string | null> {
-  const apiKey = options?.apiKey ?? env.pexels?.apiKey;
+  const apiKey = options?.apiKey ?? getPexelsConfig().apiKey;
   if (!apiKey || apiKey.trim().length === 0) {
     throw new Error('PEXELS_API_KEY is not configured.');
   }

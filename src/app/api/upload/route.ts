@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
-import { env } from '@/lib/env';
+import { getAppConfig } from '@/lib/env';
 import { parseDocument } from '@/lib/parsers/document-parser';
 import { requireSession } from '@/lib/sessionAuth';
 
@@ -44,11 +44,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const maxBytes = env.app.maxFileSizeMb * 1024 * 1024;
+    const maxBytes = getAppConfig().maxFileSizeMb * 1024 * 1024;
     if (file.size > maxBytes) {
       return NextResponse.json(
         {
-          error: `File size exceeds maximum allowed limit of ${env.app.maxFileSizeMb}MB.`,
+          error: `File size exceeds maximum allowed limit of ${getAppConfig().maxFileSizeMb}MB.`,
         },
         { status: 400 }
       );

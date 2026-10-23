@@ -1,8 +1,16 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { checkHealth } from '@/lib/health';
 import { GET } from '@/app/api/health/route';
 import * as textProvider from '@/lib/providers/text-provider';
 import { NextRequest } from 'next/server';
+
+beforeEach(() => {
+  vi.stubEnv('TEXT_PROVIDER_BASE_URL', 'http://127.0.0.1:9/v1');
+  vi.stubEnv('TEXT_PROVIDER_API_KEY', 'test-text-key');
+  vi.stubEnv('TEXT_PROVIDER_MODEL', 'test-text-model');
+  vi.stubEnv('IMAGE_PROVIDER_API_KEY', 'test-image-key');
+});
+afterEach(() => { vi.unstubAllEnvs(); });
 
 describe('Health Check API', () => {
   it('returns ok for both providers when text provider call succeeds and image provider is configured', async () => {

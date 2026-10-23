@@ -39,9 +39,3 @@ jobs:
 
       - name: Unit tests
         run: npm test
-        # Placeholders, not secrets: src/lib/env.ts validates these on first use, and every provider call in the tests is mocked.
-        env:
-          TEXT_PROVIDER_BASE_URL: http://127.0.0.1:9/v1
-          TEXT_PROVIDER_API_KEY: ci-placeholder-not-a-secret
-          TEXT_PROVIDER_MODEL: ci-placeholder-model
-          IMAGE_PROVIDER_API_KEY: ci-placeholder-not-a-secret
