@@ -20,6 +20,14 @@ Beyond this list, refactoring has diminishing returns; later changes should be d
 | Route module, Phases 1-2 (`docs/route-module-roadmap.md`) | `defineRoute` on 5 routes: sanitized errors, validation, body caps |
 | Regenerate variation | Regenerate shows a different Pexels photo |
 | CI workflow | Typecheck, lint and tests on every PR |
+| Pedagogical part (item 2) | Part names, labels, ordinals and image eligibility in one module |
+| Export payload (item 3) | Shared PPTX request builder, compression and budget; the `'failed'` wire sentinel remains in current code |
+| Configuration (item 4) | Lazy per-feature readers; direct environment reads restricted to config and session auth |
+| Route Phase 3 (item 5) | Upload, NASA, Commons and health use `defineRoute`; architecture and auth tests cover the routes |
+| Image library (item 6) | NASA and Commons adapters share route definitions and bounded retrieval |
+| Image provider (item 7) | OpenAI-compatible and Pexels adapters selected by the provider composition module |
+| Hygiene (item 8) | Unused eligibility module removed; tests linted; title formulas and Commons slideshow fit fixed |
+| Architecture docs (item 9) | Architecture map, ADRs, glossary, README and documentation-path guard |
 
 ## Remaining items, in order
 
@@ -33,11 +41,13 @@ Beyond this list, refactoring has diminishing returns; later changes should be d
 | 6 | **Image library seam** (candidate 04): NASA and Commons as two adapters of one interface; one bounded-fetch; uniform route protections | M | 1, 2 | done |
 | 7 | **Image provider seam**: `ImageProvider` interface with the OpenAI-compatible and Pexels adapters; request details (size, quality, format) move into each adapter | M | 1 | done |
 | 8 | **Hygiene**: delete dead `nasa-search-eligibility.ts`, fix the 8 lint errors in old tests, fix the formula leak in the PPTX title slide, use `object-contain` for Commons images in the slideshow | S | 1, 3 | done |
-| 9 | **Docs**: `ARCHITECTURE.md`, ADRs for the deck, credit, route, export and seam decisions, refreshed `GLOSSARY.md` | S | 4 | last |
+| 9 | **Docs**: `ARCHITECTURE.md`, ADRs for the deck, credit, route, export and seam decisions, refreshed `GLOSSARY.md` | S | 4 | done |
 
 6b complete: `src/lib/image-library/` owns the `ImageLibrary` interface, NASA and Commons adapters, client-safe candidate helpers, and shared `searchDefinition(library)` / `selectDefinition(library)` route definitions. Each library route stays one `defineRoute(...)` call. NASA candidates carry `source` and `selectable`; `ImageLibraryPicker` uses source discrimination and rejects selection metadata from another library.
 
 Adding an image provider (for example Bedrock) = one adapter file implementing ImageProvider, registration in resolveImageProviders, and its own config reader in src/lib/env.ts; known issue to handle then: the OpenAI adapter's hard-coded size 1024x576.
+
+Current-code qualification: `ImageProvider.id` and client-selectable image-source unions are closed. A selectable new provider also needs the source schema and route/facade types extended; see `ARCHITECTURE.md`.
 
 Then: Bedrock image provider (see the Bedrock questions in the planning conversation: Nova Canvas, IAM role through Vercel OIDC, ships disabled, AWS Budgets alarm, AI-generated label).
 
@@ -46,3 +56,5 @@ Then: Bedrock image provider (see the Bedrock questions in the planning conversa
 - Items run one at a time. Items 2 and 3 barely overlap in files and could run in parallel if speed matters; the cost is two merges to coordinate.
 - Item 7 is the prerequisite for Bedrock; item 6 is independent of it.
 - Each item that changes user-visible behaviour gets a smoke test on the Vercel preview before merge.
+
+Architecture roadmap complete — 2026-10-23. Item 1 remains a user-owned GitHub branch-protection setting.
