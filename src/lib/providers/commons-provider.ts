@@ -7,7 +7,19 @@ import { commonsAssetUrlSchema, commonsSourceUrlSchema, commonsImageMetadataSche
 
 const API = 'https://commons.wikimedia.org/w/api.php';
 const USER_AGENT = 'SayunaPresentationMaker/0.1 (https://github.com/Mokie04/Presentation-Maker-101; manual classroom image picker)';
+// Measured 2026-10-24 over 7 searches (350 pages): 20 results are 47-66 KB, the largest page 8.6 KB,
+// so 20 of the largest pages stay near 172 KB. An oversized page of 20 falls back to the old 5 below.
 const JSON_LIMIT = 512 * 1024;
+/** Results requested per search, so a few unusable ones do not leave the teacher with nothing. */
+export const SEARCH_FETCH_LIMIT = 20;
+/** Today's request size, retried when a full page exceeds JSON_LIMIT so a longer list never fails a search. */
+const FALLBACK_FETCH_LIMIT = 5;
+/** Usable results returned per search, in Commons' rank order. */
+export const MAX_SELECTABLE = 8;
+/** Unavailable results returned after the usable ones, so teachers can see why images were left out. */
+export const MAX_UNAVAILABLE = 4;
+/** License names come from Commons; capped so a long value cannot flood the picker. */
+const MAX_LICENSE_NAME_CHARS = 60;
 const IMAGE_LIMIT = 2 * 1024 * 1024; // Base64 plus metadata stays below Vercel's 4.5 MB response budget.
 interface FetchOptions { fetchFn?: typeof fetch }
 export interface CommonsImageCandidate {
@@ -19,6 +31,7 @@ export interface CommonsImageCandidate {
 export class CommonsProviderError extends Error {
   constructor(message: string, public status = 502, public retryAfterSeconds = 60) { super(message); }
 }
+class CommonsResponseTooLargeError extends Error {}
 
 /** Parse untrusted metadata HTML without executing it or keeping any attributes. */
 function plainText(html?: string): string | undefined {
@@ -49,7 +62,7 @@ function fetchOptions(limitBytes: number, options?: FetchOptions) {
     limitBytes, timeoutMs: 10_000, headers: { 'User-Agent': USER_AGENT }, fetchFn: options?.fetchFn,
     errors: {
       timeout: () => new Error('Commons request timed out.'),
-      tooLarge: () => new Error('Commons response exceeds size limit.'),
+      tooLarge: () => new CommonsResponseTooLargeError('Commons response exceeds size limit.'),
       http: (response: Response) => new CommonsProviderError(`Commons request failed (${response.status}).`,
         response.status === 429 ? 429 : 502,
         Math.min(300, Math.max(1, Number(response.headers.get('retry-after')) || 60))),
@@ -76,6 +89,21 @@ async function query(params: Record<string, string>, options?: FetchOptions) {
     if (!parsed.success) throw new Error('Invalid Commons response shape.');
     return parsed.data.query?.pages ?? [];
   });
+}
+
+function cappedName(name: string): string {
+  const trimmed = name.trim();
+  return trimmed.length > MAX_LICENSE_NAME_CHARS ? `${trimmed.slice(0, MAX_LICENSE_NAME_CHARS - 1)}…` : trimmed;
+}
+
+/** Why a license was not accepted; our wording, with only the capped plain-text license name from Commons. */
+function licenseProblem(licenseName: string | undefined, ccByWithCanonicalUrl: boolean): string {
+  if (!licenseName) return 'The license could not be identified.';
+  if (ccByWithCanonicalUrl) return 'The creator is not identified, which this license requires.';
+  const supportedFamily = /^public domain$/i.test(licenseName) || /^CC0(?: 1\.0(?: Universal)?)?$/i.test(licenseName) ||
+    /^CC BY (1\.0|2\.0|2\.5|3\.0|4\.0)$/i.test(licenseName);
+  return supportedFamily ? `The license details for "${cappedName(licenseName)}" are incomplete or inconsistent.`
+    : `License "${cappedName(licenseName)}" is not supported in this version.`;
 }
 
 function candidate(page: NonNullable<z.infer<typeof responseSchema>['query']>['pages'][number]): CommonsImageCandidate | null {
@@ -109,7 +137,7 @@ function candidate(page: NonNullable<z.infer<typeof responseSchema>['query']>['p
       !/^unknown(?: author)?$/i.test(creator) && attributionRequired !== false) licenseKind = 'cc-by';
   const restrictions = text('Restrictions');
   const unavailableReason = preview && !preview.success ? 'Untrusted Commons thumbnail URL; unavailable in this version.'
-    : !licenseKind ? 'License or required creator metadata is unsupported or unclear.'
+    : !licenseKind ? licenseProblem(licenseName, byVersion !== undefined && licenseUrl === `https://creativecommons.org/licenses/by/${byVersion}/`)
     : restrictions ? 'Additional restrictions require review; unavailable in this version.'
     : !previewUrl || !mimeType ? 'No suitable JPEG/PNG thumbnail is available.' : undefined;
   return { source: 'commons', fileId: page.pageid, title: page.title, sourceUrl, previewUrl: mimeType ? previewUrl : undefined, creator,
@@ -120,8 +148,23 @@ function candidate(page: NonNullable<z.infer<typeof responseSchema>['query']>['p
 
 export async function searchCommonsImages(terms: string, options?: FetchOptions): Promise<CommonsImageCandidate[]> {
   if (!terms.trim()) throw new Error('Commons search terms must not be empty.');
-  const pages = await query({ generator: 'search', gsrsearch: terms, gsrnamespace: '6', gsrlimit: '5' }, options);
-  return pages.sort((a, b) => (a.index ?? 0) - (b.index ?? 0)).slice(0, 5).map(candidate).filter((item): item is CommonsImageCandidate => item !== null);
+  const search = (limit: number) => query({ generator: 'search', gsrsearch: terms, gsrnamespace: '6', gsrlimit: String(limit) }, options);
+  let pages;
+  try {
+    pages = await search(SEARCH_FETCH_LIMIT);
+  } catch (error) {
+    if (!(error instanceof CommonsResponseTooLargeError)) throw error;
+    // An upstream status from the retry (rate limit, HTTP error) wins; otherwise report the size problem.
+    pages = await search(FALLBACK_FETCH_LIMIT).catch((retryError) => {
+      throw retryError instanceof CommonsProviderError ? retryError : error;
+    });
+  }
+  const ranked = pages.sort((a, b) => (a.index ?? 0) - (b.index ?? 0)).slice(0, SEARCH_FETCH_LIMIT)
+    .map(candidate).filter((item): item is CommonsImageCandidate => item !== null);
+  return [
+    ...ranked.filter((item) => item.selectable).slice(0, MAX_SELECTABLE),
+    ...ranked.filter((item) => !item.selectable).slice(0, MAX_UNAVAILABLE),
+  ];
 }
 export async function fetchCommonsImageBase64(fileId: number, options?: FetchOptions): Promise<{ base64: string; metadata: CommonsImageMetadata }> {
   if (!Number.isSafeInteger(fileId) || fileId <= 0) throw new Error('A valid Commons file ID is required.');

@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
-import { IMAGE_LIBRARIES, candidateId, selectRequestBody, type ImageCandidate, type ImageSource } from '@/lib/image-library/types';
+import { IMAGE_LIBRARIES, MAX_DISPLAYED_CANDIDATES, candidateId, selectRequestBody, type ImageCandidate, type ImageSource } from '@/lib/image-library/types';
 import { imageCreditText } from '@/lib/image-credit';
 import { imageMetadataSchema, type ImageMetadata } from '@/lib/image-metadata';
 
@@ -17,6 +17,8 @@ export function ImageLibraryPicker({ title, onSelect, onCancel }: {
   const [candidates, setCandidates] = useState<ImageCandidate[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  // null follows the default: unavailable results stay hidden unless nothing usable was found.
+  const [unavailableOpen, setUnavailableOpen] = useState<boolean | null>(null);
   const request = useRef<AbortController | null>(null);
   useEffect(() => () => { request.current?.abort(); }, []);
 
@@ -49,23 +51,28 @@ export function ImageLibraryPicker({ title, onSelect, onCancel }: {
       if (!controller.signal.aborted) setBusy(false);
     }
   };
+  const usable = candidates?.filter((candidate) => candidate.selectable) ?? [];
+  const unavailable = candidates?.filter((candidate) => !candidate.selectable) ?? [];
+  const showUnavailable = unavailableOpen ?? usable.length === 0;
+  const shown = showUnavailable ? [...usable, ...unavailable] : usable;
+  const results = (count: number) => (count === 1 ? '1 result is' : `${count} results are`);
   return (
     <section aria-label={`${label} image search`} className="p-3 bg-sky-50 border border-sky-200 rounded-xl space-y-3">
       <label className="block text-xs font-bold text-slate-700">
         Image source
         <select value={source} onChange={(e) => {
           request.current?.abort(); setSource(e.target.value as ImageSource);
-          setCandidates(null); setError(''); setBusy(false);
+          setCandidates(null); setError(''); setBusy(false); setUnavailableOpen(null);
         }} className="ml-2 p-2 border border-slate-300 rounded-lg bg-white">
           <option value="nasa">NASA</option><option value="commons">Wikimedia Commons</option>
         </select>
       </label>
       <form onSubmit={(event) => {
-        event.preventDefault(); setCandidates(null);
+        event.preventDefault(); setCandidates(null); setUnavailableOpen(null);
         void run(`${basePath}/search`, { query }, (data) => {
           if (!Array.isArray(data.candidates)) throw new Error(`Invalid ${label} search response.`);
           // Older NASA responses omit the tags; the requested library supplies their defaults.
-          setCandidates(data.candidates.slice(0, 5).map((candidate) => ({ source, selectable: true, ...candidate })));
+          setCandidates(data.candidates.slice(0, MAX_DISPLAYED_CANDIDATES).map((candidate) => ({ source, selectable: true, ...candidate })));
         });
       }} className="space-y-2">
         <label className="block text-xs font-bold text-slate-700">
@@ -81,7 +88,18 @@ export function ImageLibraryPicker({ title, onSelect, onCancel }: {
       {error && <p role="alert" className="text-sm text-rose-700">{error}</p>}
       {limited && <p className="text-sm text-slate-600">Try again in {commonsRetrySeconds} seconds.</p>}
       {candidates?.length === 0 && <p className="text-sm text-slate-600">No {label} images found.</p>}
-      {candidates?.map((candidate) => (
+      {usable.length === 0 && unavailable.length > 0 && (
+        <p className="text-sm text-slate-600">
+          No usable images found. {results(unavailable.length)} unavailable because of {unavailable.length === 1 ? 'its license' : 'their licenses'}.
+        </p>
+      )}
+      {unavailable.length > 0 && (
+        <button type="button" onClick={() => setUnavailableOpen(!showUnavailable)} className="text-xs font-bold text-sky-700 underline">
+          {showUnavailable ? 'Hide unavailable results'
+            : `Show ${unavailable.length} unavailable result${unavailable.length === 1 ? '' : 's'}`}
+        </button>
+      )}
+      {shown.map((candidate) => (
         <article key={candidateId(candidate)} className="p-3 rounded-lg bg-white border border-sky-100 space-y-2">
           {candidate.previewUrl && (
             // eslint-disable-next-line @next/next/no-img-element
