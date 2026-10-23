@@ -1,10 +1,17 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   generateSlideContent,
   presentationDataSchema,
   createTextProviderClient,
 } from '@/lib/providers/text-provider';
 import type OpenAI from 'openai';
+
+beforeEach(() => {
+  vi.stubEnv('TEXT_PROVIDER_BASE_URL', 'http://127.0.0.1:9/v1');
+  vi.stubEnv('TEXT_PROVIDER_API_KEY', 'test-text-key');
+  vi.stubEnv('TEXT_PROVIDER_MODEL', 'test-text-model');
+});
+afterEach(() => { vi.unstubAllEnvs(); });
 
 describe('text-provider', () => {
   const samplePresentation = {

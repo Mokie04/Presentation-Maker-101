@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { env } from '@/lib/env';
+import { getImageProviderConfig, getPexelsConfig } from '@/lib/env';
 import { IMAGE_PROMPT_PREFIX } from '@/lib/prompts/slide-generation';
 import { fetchPexelsImageBase64 } from '@/lib/providers/pexels-provider';
 
@@ -8,8 +8,8 @@ export function createImageProviderClient(options?: {
   apiKey?: string;
 }): OpenAI {
   return new OpenAI({
-    baseURL: options?.baseURL ?? env.imageProvider.baseUrl,
-    apiKey: options?.apiKey ?? env.imageProvider.apiKey,
+    baseURL: options?.baseURL ?? getImageProviderConfig().baseUrl,
+    apiKey: options?.apiKey ?? getImageProviderConfig().apiKey,
   });
 }
 
@@ -44,8 +44,8 @@ export async function generateSlideImage(
   visualDescription: string,
   options?: GenerateImageOptions
 ): Promise<string> {
-  const chosenSource = options?.source ?? env.imageProvider.source ?? 'auto';
-  const hasPexelsKey = Boolean(options?.pexelsApiKey || env.pexels?.apiKey);
+  const chosenSource = options?.source ?? getImageProviderConfig().source ?? 'auto';
+  const hasPexelsKey = Boolean(options?.pexelsApiKey || getPexelsConfig().apiKey);
 
   // If source is explicitly set to Pexels, bypass AI and fetch from Pexels directly
   if (chosenSource === 'pexels') {
@@ -70,7 +70,7 @@ export async function generateSlideImage(
     try {
       // Support size and quality params where supported
       const response = await client.images.generate({
-        model: env.imageProvider.model,
+        model: getImageProviderConfig().model,
         prompt,
         size: '1024x576' as '1024x1024',
         quality: 'standard',

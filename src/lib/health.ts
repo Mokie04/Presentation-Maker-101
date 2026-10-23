@@ -1,4 +1,4 @@
-import { env } from '@/lib/env';
+import { getTextProviderConfig, getImageProviderConfig, getPexelsConfig } from '@/lib/env';
 import { getTextProviderClient } from '@/lib/providers/text-provider';
 import { getImageProviderClient } from '@/lib/providers/image-provider';
 import type OpenAI from 'openai';
@@ -23,7 +23,7 @@ export async function checkHealth(options?: HealthCheckOptions): Promise<HealthC
   try {
     const textClient = options?.textClient ?? getTextProviderClient();
     await textClient.chat.completions.create({
-      model: env.textProvider.model,
+      model: getTextProviderConfig().model,
       messages: [{ role: 'user', content: 'say hello' }],
       max_tokens: 5,
     });
@@ -36,8 +36,9 @@ export async function checkHealth(options?: HealthCheckOptions): Promise<HealthC
 
   // 2. Image Provider check: verify client or pexels config is valid
   try {
-    if (env.imageProvider.source === 'pexels') {
-      if (!env.pexels?.apiKey) {
+    const imageConfig = getImageProviderConfig();
+    if (imageConfig.source === 'pexels') {
+      if (!getPexelsConfig().apiKey) {
         throw new Error('Pexels API key is not configured.');
       }
       imageStatus = 'ok';
@@ -45,10 +46,10 @@ export async function checkHealth(options?: HealthCheckOptions): Promise<HealthC
       const imageClient = options?.imageClient ?? getImageProviderClient();
       if (
         !imageClient ||
-        !env.imageProvider.baseUrl ||
-        !env.imageProvider.apiKey ||
-        env.imageProvider.apiKey === 'not-configured' ||
-        !env.imageProvider.model
+        !imageConfig.baseUrl ||
+        !imageConfig.apiKey ||
+        imageConfig.apiKey === 'not-configured' ||
+        !imageConfig.model
       ) {
         throw new Error('Image provider client configuration is missing or incomplete.');
       }
