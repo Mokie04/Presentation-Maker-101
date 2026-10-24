@@ -15,6 +15,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(process.cwd(), './src'),
+      'next/font/local': path.resolve(process.cwd(), './tests/helpers/next-font-local.ts'),
     },
   },
 });

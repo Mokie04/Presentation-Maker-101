@@ -38,9 +38,11 @@ A clickable HTML mock of the Normal view and the Sorter view, approved before Ph
 - Local verification also compared the three sample PPTX archives against the generator on main with a fixed export time: whole archives were byte-identical.
 - Poppins regular, bold and italic are bundled locally under `src/app/fonts/` with their SIL Open Font License and loaded only by `SlideView` through `next/font/local`. Builds need no Google Fonts connection. Browser wrapping and PowerPoint shrink-to-fit may still differ, especially for dense text; the PPTX remains the source of truth.
 
-### Phase 2: Normal view
-- Selection by slide id, a thumbnail rail built from `SlideView`, the large slide, a right panel with today's controls, a status bar, keyboard navigation (arrows, Home, End), and a view switch that keeps the old grid available.
-- The 15 integration tests that click through the card grid are adapted in this phase (select a slide, then act); race rules stay covered by the reducer tests.
+### Phase 2: Normal view — done
+- Implemented: Normal is the default, with a memoized `SlideView` rail, a fitted 16:9 stage, an always-editable selected-slide panel, a compact header and a live status bar with Normal/Grid switching. Selection uses stable slide IDs in `useSlideSelection`, outside the deck reducer; one workspace keyboard listener handles arrows, page keys, Home and End while leaving form keys alone.
+- At lg (1024 px) and above the rail and panel are 188 px and 300 px with an expanding stage. At md the panel moves below the stage; below md the stage, horizontal rail and panel stack. Rail and panel scroll independently, and reduced-motion preferences are respected.
+- Grid view, its Edit Slides toggle and Add Slide button, and the legacy card integration tests stay until Phase 6. Their opening helpers choose Grid; assertions and race checks remain intact. Image controls are shared by `SlideCard` and `SlidePanel` with unchanged card markup.
+- Local visual verification uses eight stubbed slides at 1440, 1024, 768 and 390 px; no provider credits are spent. The slide renderer, reducer, routes and exports remain unchanged.
 
 ### Phase 3: Slide sorter and reordering
 - Thumbnail grid view, drag to reorder, duplicate, add after the current slide, delete. New deck actions `slideMoved`, `slideDuplicated`, `slideAdded` (after a given slide), with reducer tests including image ownership and renumbering.

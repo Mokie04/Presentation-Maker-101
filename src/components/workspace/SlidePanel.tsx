@@ -1,0 +1,141 @@
+'use client';
+
+import React, { useId } from 'react';
+import { Trash2, Plus, X } from 'lucide-react';
+import { normalizePart, PEDAGOGICAL_PARTS } from '@/lib/pedagogy';
+import { SlideImageControls } from '../SlideImageControls';
+import type { SlideData } from '@/types/presentation';
+import type { ImageMetadata } from '@/lib/image-metadata';
+
+export interface SlidePanelProps {
+  slide: SlideData;
+  slideId: number;
+  slideImage?: string;
+  isGeneratingImage?: boolean;
+  imageError?: string;
+  onUpdatePart?: (slideId: number, part: string) => void;
+  onUpdateTitle: (slideId: number, title: string) => void;
+  onUpdateBullet: (slideId: number, bulletIndex: number, text: string) => void;
+  onAddBullet: (slideId: number) => void;
+  onDeleteBullet: (slideId: number, bulletIndex: number) => void;
+  onDeleteSlide: (slideId: number) => void;
+  onRegenerateImage: (slideId: number, visualDescription: string) => void;
+  onSelectImage?: (slideId: number, base64: string, metadata: ImageMetadata) => void;
+  onAddSlide: () => void;
+}
+export function SlidePanel({
+  slide,
+  slideId,
+  slideImage,
+  isGeneratingImage = false,
+  imageError,
+  onUpdatePart,
+  onUpdateTitle,
+  onUpdateBullet,
+  onAddBullet,
+  onDeleteBullet,
+  onDeleteSlide,
+  onRegenerateImage,
+  onSelectImage,
+  onAddSlide,
+}: SlidePanelProps) {
+  const titleId = useId();
+  const bulletsId = useId();
+
+  return (
+    <aside aria-label="Slide settings" className="min-w-0 min-h-0 overflow-y-auto overscroll-contain rounded-xl border border-sky-100 bg-white p-3 space-y-4">
+      <div>
+        <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+          Pedagogical Part
+        </label>
+        <select
+          aria-label="Pedagogical Part"
+          value={slide.part}
+          onChange={(e) => onUpdatePart?.(slideId, e.target.value)}
+          className="w-full text-xs font-bold text-slate-800 p-2.5 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
+        >
+          {PEDAGOGICAL_PARTS.map((part) => <option key={part} value={part}>{part}</option>)}
+          {normalizePart(slide.part) !== slide.part && <option value={slide.part}>{slide.part}</option>}
+        </select>
+      </div>
+
+      <div>
+        <label htmlFor={titleId} className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+          Slide Title
+        </label>
+        <input
+          id={titleId}
+          type="text"
+          value={slide.title}
+          onChange={(e) => onUpdateTitle(slideId, e.target.value)}
+          className="w-full min-w-0 text-sm font-bold text-sky-950 p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
+        />
+      </div>
+
+      <div role="group" aria-labelledby={bulletsId} className="space-y-2">
+        <span id={bulletsId} className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          Bullet Content Points
+        </span>
+        {(slide.contentPoints || []).map((bullet, bulletIndex) => (
+          <div key={bulletIndex} className="flex items-start gap-2">
+            <textarea
+              aria-label={`Bullet ${bulletIndex + 1}`}
+              rows={2}
+              value={bullet}
+              onChange={(e) => onUpdateBullet(slideId, bulletIndex, e.target.value)}
+              className="flex-1 min-w-0 text-xs p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none resize-y text-slate-800"
+            />
+            <button
+              type="button"
+              aria-label="Remove Bullet"
+              onClick={() => onDeleteBullet(slideId, bulletIndex)}
+              className="text-slate-400 hover:text-rose-600 p-1.5 mt-1 rounded hover:bg-rose-50 transition-colors"
+              title="Remove Bullet"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => onAddBullet(slideId)}
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-sky-700 hover:text-sky-800 bg-sky-50 hover:bg-sky-100/80 px-3 py-1.5 rounded-lg border border-sky-200 transition-colors"
+        >
+          <Plus className="w-3.5 h-3.5" />
+          <span>+ Add Bullet Point</span>
+        </button>
+      </div>
+
+      <SlideImageControls
+        key={slideId}
+        slide={slide}
+        slideId={slideId}
+        slideImage={slideImage}
+        isGeneratingImage={isGeneratingImage}
+        imageError={imageError}
+        onRegenerateImage={onRegenerateImage}
+        onSelectImage={onSelectImage}
+      />
+
+      <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
+        <button
+          type="button"
+          aria-label="Delete Slide"
+          title="Delete Slide"
+          onClick={() => onDeleteSlide(slideId)}
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+          Delete Slide
+        </button>
+        <button
+          type="button"
+          onClick={() => onAddSlide()}
+          className="rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 text-xs font-bold text-sky-700 hover:bg-sky-100 transition-colors"
+        >
+          + Add Slide
+        </button>
+      </div>
+    </aside>
+  );
+}
