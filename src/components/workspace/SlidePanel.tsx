@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useId } from 'react';
+import React, { useId, useRef } from 'react';
 import { Trash2, Plus, X } from 'lucide-react';
 import { normalizePart, PEDAGOGICAL_PARTS } from '@/lib/pedagogy';
 import { SlideImageControls } from '../SlideImageControls';
@@ -50,6 +50,7 @@ export function SlidePanel({
 }: SlidePanelProps) {
   const titleId = useId();
   const bulletsId = useId();
+  const pointerDelete = useRef<{ slideId: number; index: number; points: string[] } | null>(null);
 
   return (
     <aside aria-label="Slide settings" className="min-w-0 min-h-0 overflow-y-auto overscroll-contain rounded-xl border border-sky-100 bg-white p-3 space-y-4">
@@ -97,7 +98,20 @@ export function SlidePanel({
             <button
               type="button"
               aria-label="Remove Bullet"
-              onClick={() => onDeleteBullet(slideId, bulletIndex)}
+              onMouseDown={() => { pointerDelete.current = { slideId, index: bulletIndex, points: slide.contentPoints }; }}
+              onClick={(event) => {
+                const pending = event.detail > 0 ? pointerDelete.current : null;
+                pointerDelete.current = null;
+                let index = bulletIndex;
+                // Inline empty-blur can remove a point between mousedown and click.
+                if (pending?.slideId === slideId && pending.points.length === slide.contentPoints.length + 1) {
+                  const withoutTarget = pending.points.filter((_, i) => i !== pending.index);
+                  if (withoutTarget.every((point, i) => point === slide.contentPoints[i])) return;
+                  const removed = pending.points.findIndex((point, i) => point !== slide.contentPoints[i]);
+                  index = pending.index - Number(removed < pending.index);
+                }
+                onDeleteBullet(slideId, index);
+              }}
               className="text-slate-400 hover:text-rose-600 p-1.5 mt-1 rounded hover:bg-rose-50 transition-colors"
               title="Remove Bullet"
             >

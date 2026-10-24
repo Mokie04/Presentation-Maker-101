@@ -67,6 +67,11 @@ export function deckReducer(state: DeckState, action: DeckAction): DeckState {
       return updateContent(state, action.slideId, ({ contentPoints }) => ({
         contentPoints: [...contentPoints, 'New primary discussion point'],
       }));
+    case 'bulletInserted':
+      return updateContent(state, action.slideId, ({ contentPoints }) => {
+        const insertIndex = Math.max(0, Math.min(action.afterIndex + 1, contentPoints.length));
+        return { contentPoints: [...contentPoints.slice(0, insertIndex), '', ...contentPoints.slice(insertIndex)] };
+      });
     case 'bulletDeleted':
       return updateContent(state, action.slideId, ({ contentPoints }) => ({
         contentPoints: contentPoints.filter((_, i) => i !== action.bulletIndex),

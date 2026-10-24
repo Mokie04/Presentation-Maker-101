@@ -38,6 +38,7 @@ export type DeckAction =
   | { type: 'titleUpdated'; slideId: number; title: string }
   | { type: 'bulletUpdated'; slideId: number; bulletIndex: number; text: string }
   | { type: 'bulletAdded'; slideId: number }
+  | { type: 'bulletInserted'; slideId: number; afterIndex: number }
   | { type: 'bulletDeleted'; slideId: number; bulletIndex: number }
   | { type: 'slideAdded'; afterSlideId?: number }
   | { type: 'slideMoved'; slideId: number; toIndex: number }
