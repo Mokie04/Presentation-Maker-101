@@ -4,6 +4,7 @@ import React, { useId } from 'react';
 import { Trash2, Plus, X } from 'lucide-react';
 import { normalizePart, PEDAGOGICAL_PARTS } from '@/lib/pedagogy';
 import { SlideImageControls } from '../SlideImageControls';
+import { SlideMoveButtons } from './SlideMoveButtons';
 import type { SlideData } from '@/types/presentation';
 import type { ImageMetadata } from '@/lib/image-metadata';
 
@@ -22,6 +23,10 @@ export interface SlidePanelProps {
   onRegenerateImage: (slideId: number, visualDescription: string) => void;
   onSelectImage?: (slideId: number, base64: string, metadata: ImageMetadata) => void;
   onAddSlide: () => void;
+  slideIndex?: number;
+  totalSlides?: number;
+  onMoveSlide?: (slideId: number, toIndex: number) => void;
+  onDuplicateSlide?: (slideId: number) => void;
 }
 export function SlidePanel({
   slide,
@@ -38,6 +43,10 @@ export function SlidePanel({
   onRegenerateImage,
   onSelectImage,
   onAddSlide,
+  slideIndex,
+  totalSlides,
+  onMoveSlide,
+  onDuplicateSlide,
 }: SlidePanelProps) {
   const titleId = useId();
   const bulletsId = useId();
@@ -118,6 +127,9 @@ export function SlidePanel({
       />
 
       <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
+        {onMoveSlide && slideIndex !== undefined && totalSlides !== undefined && (
+          <SlideMoveButtons slideId={slideId} index={slideIndex} total={totalSlides} onMove={onMoveSlide} />
+        )}
         <button
           type="button"
           aria-label="Delete Slide"
@@ -128,6 +140,10 @@ export function SlidePanel({
           <Trash2 className="w-3.5 h-3.5" />
           Delete Slide
         </button>
+        {onDuplicateSlide && <button type="button" onClick={() => onDuplicateSlide(slideId)}
+          className="rounded-lg border border-sky-200 px-3 py-2 text-xs font-bold text-sky-700 hover:bg-sky-50">
+          Duplicate slide
+        </button>}
         <button
           type="button"
           onClick={() => onAddSlide()}

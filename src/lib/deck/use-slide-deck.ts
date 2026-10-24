@@ -105,7 +105,9 @@ export function useSlideDeck() {
       dispatch({ type: 'bulletUpdated', slideId, bulletIndex, text }),
     addBullet: (slideId: number) => dispatch({ type: 'bulletAdded', slideId }),
     deleteBullet: (slideId: number, bulletIndex: number) => dispatch({ type: 'bulletDeleted', slideId, bulletIndex }),
-    addSlide: () => dispatch({ type: 'slideAdded' }),
+    addSlide: (afterSlideId?: number) => dispatch({ type: 'slideAdded', afterSlideId }),
+    moveSlide: (slideId: number, toIndex: number) => dispatch({ type: 'slideMoved', slideId, toIndex }),
+    duplicateSlide: (slideId: number) => dispatch({ type: 'slideDuplicated', slideId }),
     deleteSlide: (slideId: number) => dispatch({ type: 'slideDeleted', slideId }),
     regenerateImage,
     selectLibraryImage: (slideId: number, base64: string, metadata: ImageMetadata) =>

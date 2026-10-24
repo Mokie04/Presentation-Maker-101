@@ -39,7 +39,9 @@ export type DeckAction =
   | { type: 'bulletUpdated'; slideId: number; bulletIndex: number; text: string }
   | { type: 'bulletAdded'; slideId: number }
   | { type: 'bulletDeleted'; slideId: number; bulletIndex: number }
-  | { type: 'slideAdded' }
+  | { type: 'slideAdded'; afterSlideId?: number }
+  | { type: 'slideMoved'; slideId: number; toIndex: number }
+  | { type: 'slideDuplicated'; slideId: number }
   | { type: 'slideDeleted'; slideId: number }
   /** `tokens[i]` pairs with `images[i]`, the batch's request position. */
   | { type: 'batchImagesResolved'; tokens: ImageToken[]; images: Record<number, string> }

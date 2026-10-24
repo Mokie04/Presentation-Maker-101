@@ -10,6 +10,7 @@ import { useSlideSelection } from '@/lib/deck/use-slide-selection';
 import { SlideRail } from './SlideRail';
 import { SlideStage } from './SlideStage';
 import { SlidePanel } from './SlidePanel';
+import { SlideSorter } from './SlideSorter';
 import { navigateSlides } from './slide-navigation';
 
 export interface PresentationWorkspaceViewProps {
@@ -21,13 +22,13 @@ export interface PresentationWorkspaceViewProps {
 }
 
 export function PresentationWorkspaceView({ deck, downloads, session: selectedSession, onReset, onPreview }: PresentationWorkspaceViewProps) {
-  const [view, setView] = useState<'normal' | 'grid'>('normal');
+  const [view, setView] = useState<'normal' | 'grid' | 'sorter'>('normal');
   const [isEditing, setIsEditing] = useState(false);
   const selection = useSlideSelection(deck.slideIds);
   const {
     presentationData, slideImages, slideIds, generatingImages, imageErrors,
     updatePart, updateTitle, updateBullet, addBullet, deleteBullet, addSlide, deleteSlide,
-    regenerateImage, selectLibraryImage,
+    regenerateImage, selectLibraryImage, moveSlide, duplicateSlide,
   } = deck;
   const { downloadPptx, downloadMarkdown, isDownloadingPptx, isDownloadingMarkdown } = downloads;
   if (!presentationData) return null;
@@ -110,6 +111,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   <div className="order-2 grid min-h-0 min-w-0 md:order-1 md:col-start-1 md:row-span-2 md:row-start-1 lg:row-span-1">
                     <SlideRail slides={presentationData.slides} slideIds={slideIds} selectedId={selection.selectedId}
                       onSelect={selection.selectSlide} total={presentationData.slides.length} slideImages={slideImages}
+                      onMove={moveSlide}
                       originalWriters={presentationData.originalWriters} />
                   </div>
                   <div className="order-1 grid min-h-0 min-w-0 md:order-2 md:col-start-2 md:row-start-1">
@@ -121,15 +123,23 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                       slideImage={slideImages[selectedIndex]} isGeneratingImage={Boolean(generatingImages[selectedIndex])}
                       imageError={imageErrors[selectedIndex]} onUpdatePart={updatePart} onUpdateTitle={updateTitle}
                       onUpdateBullet={updateBullet} onAddBullet={addBullet} onDeleteBullet={deleteBullet}
-                      onDeleteSlide={deleteSlide} onAddSlide={addSlide} onRegenerateImage={regenerateImage} onSelectImage={selectLibraryImage} />
+                      onDeleteSlide={deleteSlide} onAddSlide={() => addSlide(slideIds[selectedIndex])}
+                      onRegenerateImage={regenerateImage} onSelectImage={selectLibraryImage}
+                      slideIndex={selectedIndex} totalSlides={presentationData.slides.length}
+                      onMoveSlide={moveSlide} onDuplicateSlide={duplicateSlide} />
                   </div>
                 </div>
               ) : (
                 <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-slate-600">
                   <p className="mb-3">No slides yet.</p>
-                  <button type="button" onClick={addSlide} className="rounded-lg bg-sky-600 px-3 py-2 text-sm font-bold text-white">+ Add Slide</button>
+                  <button type="button" onClick={() => addSlide()} className="rounded-lg bg-sky-600 px-3 py-2 text-sm font-bold text-white">+ Add Slide</button>
                 </div>
               )
+            ) : view === 'sorter' ? (
+              <SlideSorter slides={presentationData.slides} slideIds={slideIds} selectedId={selection.selectedId}
+                onSelect={selection.selectSlide} onOpen={(id) => { selection.selectSlide(id); setView('normal'); }}
+                onMove={moveSlide} onDuplicate={duplicateSlide} onDelete={deleteSlide}
+                slideImages={slideImages} originalWriters={presentationData.originalWriters} />
             ) : (
               <>
             {/* Slide Action Strip */}
@@ -159,7 +169,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
 
                 <button
                   type="button"
-                  onClick={addSlide}
+                  onClick={() => addSlide()}
                   className="px-3.5 py-1.5 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 transition-all"
                 >
                   <Plus className="w-3.5 h-3.5 text-sky-600" />
@@ -203,10 +213,10 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                 {selectedSlide ? `Slide ${selectedIndex + 1} of ${presentationData.slides.length} · ${partLabel(selectedSlide.part)}` : 'No slides'}
               </span>
               <div role="group" aria-label="Workspace view" className="inline-flex overflow-hidden rounded-lg border border-slate-200">
-                {(['normal', 'grid'] as const).map((mode) => (
+                {(['normal', 'grid', 'sorter'] as const).map((mode) => (
                   <button key={mode} type="button" aria-pressed={view === mode} onClick={() => setView(mode)}
                     className={`min-h-9 px-3 font-bold transition-colors motion-reduce:transition-none ${view === mode ? 'bg-sky-600 text-white' : 'bg-white text-slate-600 hover:bg-sky-50'}`}>
-                    {mode === 'normal' ? 'Normal' : 'Grid'}
+                    {mode === 'normal' ? 'Normal' : mode === 'grid' ? 'Grid' : 'Slide sorter'}
                   </button>
                 ))}
               </div>

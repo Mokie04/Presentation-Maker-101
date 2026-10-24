@@ -15,3 +15,4 @@ Dates are recorded by month. Accepted describes the current design; Proposed and
 | [0009](0009-ppt-master-not-adopted.md) | Not adopted | ppt-master export engine |
 | [0010](0010-bedrock-provider-plan.md) | Proposed | Amazon Bedrock image provider |
 | [0011](0011-commons-cc-by-sa.md) | Accepted | Accept CC BY-SA Commons images with ShareAlike credit notes |
+| [0012](0012-slide-reordering.md) | Accepted | Reducer-owned reordering, duplication and add-after |
