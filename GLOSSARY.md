@@ -4,6 +4,10 @@
 
 **Slide deck** — The ordered Slides of one generated presentation plus its metadata (`subject`, `originalWriters`, `topic`, and optional server-recorded `subjectEvidence`). The wire and export shape is `PresentationData`. Inside the client, each Slide also carries a stable internal id that is never reused and never sent to the server. `src/lib/deck/deck-reducer.ts` owns its edits and image race rules.
 
+**Slide view** — `src/components/SlideView.tsx`, a passive 16:9 rendering of one Slide from the shared theme. It accepts the Slide, zero-based index, total, optional image and original writers, plus full or thumbnail mode. Text and formulas stay accessible in full mode; thumbnails are hidden from assistive technology and ignore pointer events. Phase 1 ships it unused.
+
+**Slide theme** — `src/lib/slide-theme.ts`, the pure shared PPTX palette, Poppins font face, point sizes and title/content geometry. Coordinates preserve the export's inches and percentages; the Slide view converts them to slide percentages and container-scaled type. Index zero uses the title layout.
+
 **Slide image** — The picture shown on a Slide and exported to PPTX: raw base64 or a `data:` URL. The UI and PPTX route use index-keyed `slideImages`; `FAILED_IMAGE` (`'failed'`) means generation failed and nothing is shown. `src/lib/slide-image.ts` owns the wire rules: `isUsableImage`, `toRawBase64`, `sniffImageMime`, `toDataUrl` and export validation (`hasWireImageFormat`, `MAX_SLIDE_IMAGE_CHARS`).
 
 **Pedagogical part** — `SlideData.part`, the lesson phase a Slide belongs to. `src/lib/pedagogy.ts` owns the rules: `PEDAGOGICAL_PARTS` (Title Page, then the six numbered lesson parts Review to Assessment), `normalizePart` / `canonicalPart` (maps wording such as "Activity" to a canonical part; unknown text is kept), `partOrdinal`, `partLabel` (badge text) and `partWantsAutoImage` (Motivation, Lesson Presentation and Discussion get batch images). The UI adds only colours (`src/components/part-badge.ts`).
