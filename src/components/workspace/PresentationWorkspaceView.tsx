@@ -27,7 +27,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
   const selection = useSlideSelection(deck.slideIds);
   const {
     presentationData, slideImages, slideIds, generatingImages, imageErrors,
-    updatePart, updateTitle, updateBullet, addBullet, deleteBullet, addSlide, deleteSlide,
+    updatePart, updateTitle, updateBullet, addBullet, insertBullet, deleteBullet, addSlide, deleteSlide,
     regenerateImage, selectLibraryImage, moveSlide, duplicateSlide,
   } = deck;
   const { downloadPptx, downloadMarkdown, isDownloadingPptx, isDownloadingMarkdown } = downloads;
@@ -115,8 +115,13 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                       originalWriters={presentationData.originalWriters} />
                   </div>
                   <div className="order-1 grid min-h-0 min-w-0 md:order-2 md:col-start-2 md:row-start-1">
-                    <SlideStage slide={selectedSlide} index={selectedIndex} total={presentationData.slides.length}
-                      image={slideImages[selectedIndex]} originalWriters={presentationData.originalWriters} />
+                    <SlideStage key={slideIds[selectedIndex]} slide={selectedSlide} index={selectedIndex} total={presentationData.slides.length}
+                      image={slideImages[selectedIndex]} originalWriters={presentationData.originalWriters}
+                      onTitleChange={title => updateTitle(slideIds[selectedIndex], title)}
+                      onPointChange={(index, text) => updateBullet(slideIds[selectedIndex], index, text)}
+                      onPointInsert={index => insertBullet(slideIds[selectedIndex], index)}
+                      onPointDelete={index => deleteBullet(slideIds[selectedIndex], index)}
+                      onPointAdd={() => addBullet(slideIds[selectedIndex])} />
                   </div>
                   <div className="order-3 grid max-h-[520px] min-h-0 min-w-0 md:col-start-2 md:row-start-2 md:max-h-none lg:col-start-3 lg:row-start-1">
                     <SlidePanel key={selection.selectedId} slide={selectedSlide} slideId={slideIds[selectedIndex]}

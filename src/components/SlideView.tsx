@@ -1,6 +1,6 @@
 'use client';
 
-import React, { type CSSProperties } from 'react';
+import React, { type CSSProperties, type ReactNode } from 'react';
 import localFont from 'next/font/local';
 import type { SlideData } from '@/types/presentation';
 import { describeImageCredit } from '@/lib/image-credit';
@@ -31,6 +31,8 @@ export interface SlideViewProps {
   image?: string;
   originalWriters?: string;
   variant?: 'full' | 'thumbnail';
+  renderTitle?: (title: ReactNode) => ReactNode;
+  renderPoint?: (point: ReactNode, pointIndex: number, editable: boolean) => ReactNode;
 }
 
 function percent(value: SlideCoordinate, dimension: number): string {
@@ -59,7 +61,7 @@ function textStyle(box: SlideBox & { fontSize?: number }): CSSProperties {
 }
 
 /** A passive slide preview. Phase 1 deliberately leaves it unwired from the workspace. */
-export function SlideView({ slide, index, total, image, originalWriters, variant = 'full' }: SlideViewProps) {
+export function SlideView({ slide, index, total, image, originalWriters, variant = 'full', renderTitle, renderPoint }: SlideViewProps) {
   const titleLayout = slideLayoutFor(index) === 'title';
   const layout = titleLayout ? TITLE_LAYOUT : CONTENT_LAYOUT;
   const visual = !titleLayout && hasVisual(slide);
@@ -77,6 +79,11 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
     ? CONTENT_LAYOUT.longTitleFontSize : layout.title.fontSize;
   const imageBox = titleLayout ? TITLE_LAYOUT.image
     : slide.imageMetadata ? CONTENT_LAYOUT.libraryImage : CONTENT_LAYOUT.image;
+  const title = <FormattedFormula text={slide.title || (titleLayout ? 'Lesson Presentation' : '')} />;
+  const pointContent = (point: string, pointIndex: number) => {
+    const content = <FormattedFormula text={point} />;
+    return renderPoint ? renderPoint(content, pointIndex, pointIndex < slide.contentPoints.length) : content;
+  };
 
   return (
     <div
@@ -95,7 +102,7 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
         {(slide.part || (titleLayout ? 'TITLE PAGE' : '')).toUpperCase()}
       </p>
       <h2 style={{ ...textStyle(layout.title), fontSize: typeSize(titleFontSize), color: `#${SHADE_PRIMARY}`, fontWeight: 700 }}>
-        <FormattedFormula text={slide.title || (titleLayout ? 'Lesson Presentation' : '')} />
+        {renderTitle ? renderTitle(title) : title}
       </h2>
 
       {titleLayout ? (
@@ -111,7 +118,7 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
               color: `#${pointIndex === 0 ? TEXT_HEADING : TEXT_MUTED}`,
               fontWeight: pointIndex === 0 || /writer|author/i.test(point) ? 700 : 400,
             }}>
-              <FormattedFormula text={point} />
+              {pointContent(point, pointIndex)}
             </p>
           ))}
         </div>
@@ -122,7 +129,7 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
           lineHeight: typeSize(CONTENT_LAYOUT.bullets.lineSpacing),
           padding: 0, listStylePosition: 'inside', listStyleType: 'disc',
         }}>
-          {points.map((point, pointIndex) => <li key={pointIndex}><FormattedFormula text={point} /></li>)}
+          {points.map((point, pointIndex) => <li key={pointIndex}>{pointContent(point, pointIndex)}</li>)}
         </ul>
       )}
 

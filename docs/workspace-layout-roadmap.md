@@ -50,8 +50,11 @@ A clickable HTML mock of the Normal view and the Sorter view, approved before Ph
 - New reducer, selection, interaction and integration tests cover ownership, renumbering and the PowerPoint request's reordered slides, images and credits. Existing tests remain unchanged. Local eight-slide browser checks cover 1440, 768 and 390 px, both drag surfaces and the visible controls without provider calls.
 - The first-slide title layout stays an export rule. See `docs/adr/0012-slide-reordering.md`; preview smoke and CI remain release gates.
 
-### Phase 4: edit on the slide
-- Click the title or a bullet on the big slide to edit in place; formulas render when not editing.
+### Phase 4: edit on the slide — done
+- Normal stage titles and stored bullets open as plain textareas with inherited typography, a visible focus ring and raw formula syntax. Live updates use the same deck handlers as the panel; Enter finishes a title or inserts/focuses a new bullet, empty Backspace deletes and edits the previous bullet, empty blur deletes, and Escape restores the session's starting text. Composition events retain Enter/Backspace behavior.
+- `SlideView` remains passive with optional title/point render functions. The derived writers line, part, visual, credit and counter stay passive; thumbnails and the slideshow never pass editing functions. Phones use the panel; on-slide editing starts at 768 px.
+- New reducer, field, wrapper and workspace tests cover insertion, cancellation, focus, navigation, breakpoint behavior and panel/thumbnail synchronization. Existing tests remain unchanged. Local eight-slide browser checks cover 1440, 1024, 768 and 390 px without provider calls.
+- Long text is clipped by the browser slide boxes rather than shrunk to fit; raw and formatted formulas can wrap differently. See `docs/adr/0013-edit-on-slide.md`; CI and preview smoke remain release gates.
 
 ### Phase 5: phones, accessibility, polish
 - Stacked mobile layout, roles and labels, focus handling, optional zoom.
