@@ -28,6 +28,7 @@ Beyond this list, refactoring has diminishing returns; later changes should be d
 | Image provider (item 7) | OpenAI-compatible and Pexels adapters selected by the provider composition module |
 | Hygiene (item 8) | Unused eligibility module removed; tests linted; title formulas and Commons slideshow fit fixed |
 | Architecture docs (item 9) | Architecture map, ADRs, glossary, README and documentation-path guard |
+| Workspace layout (`docs/workspace-layout-roadmap.md`) | Normal view, Slide sorter, edit on the slide, slideshow on `SlideView` and an accessibility pass; the card grid is retired |
 
 ## Remaining items, in order
 
