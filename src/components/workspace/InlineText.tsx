@@ -67,7 +67,7 @@ export function InlineText({
   if (!editing) {
     return (
       <span role="button" tabIndex={0} aria-label={label}
-        className="cursor-text rounded-sm outline-none hover:outline hover:outline-1 hover:outline-sky-400 focus-visible:ring-2 focus-visible:ring-sky-500"
+        className="cursor-text rounded-sm outline-none hover:outline hover:outline-1 hover:outline-sky-400 focus-visible:ring-2 focus-visible:ring-sky-700"
         style={{ display: 'block', boxSizing: 'border-box', width: '100%', minHeight: '1lh', flexShrink: 0 }}
         onMouseDown={(event) => {
           if (event.button !== 0) return;
@@ -93,7 +93,7 @@ export function InlineText({
 
   return (
     <textarea ref={textarea} aria-label={label} value={value} rows={1}
-      className="rounded-sm outline-none focus:ring-2 focus:ring-sky-500"
+      className="rounded-sm outline-none focus:ring-2 focus:ring-sky-700"
       style={{
         display: 'block', boxSizing: 'border-box', flexShrink: 0,
         font: 'inherit', color: 'inherit', textAlign: 'inherit', lineHeight: 'inherit',

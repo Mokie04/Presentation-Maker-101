@@ -63,7 +63,7 @@ export function ImageLibraryPicker({ title, onSelect, onCancel }: {
         <select value={source} onChange={(e) => {
           request.current?.abort(); setSource(e.target.value as ImageSource);
           setCandidates(null); setError(''); setBusy(false); setUnavailableOpen(null);
-        }} className="ml-2 p-2 border border-slate-300 rounded-lg bg-white">
+        }} className="ml-2 p-2 border border-slate-500 rounded-lg bg-white">
           <option value="nasa">NASA</option><option value="commons">Wikimedia Commons</option>
         </select>
       </label>
@@ -77,13 +77,13 @@ export function ImageLibraryPicker({ title, onSelect, onCancel }: {
       }} className="space-y-2">
         <label className="block text-xs font-bold text-slate-700">
           {label} search terms
-          <input value={query} onChange={(e) => setQuery(e.target.value)} maxLength={500}
-            className="mt-1 w-full p-2 border border-slate-300 rounded-lg text-sm" />
+          <input autoFocus value={query} onChange={(e) => setQuery(e.target.value)} maxLength={500}
+            className="mt-1 w-full p-2 border border-slate-500 rounded-lg text-sm" />
         </label>
-        <button type="submit" disabled={busy || limited || !query.trim()} className="px-3 py-2 bg-sky-600 text-white rounded-lg text-xs font-bold disabled:opacity-50">
+        <button type="submit" disabled={busy || limited || !query.trim()} className="px-3 py-2 bg-sky-700 text-white rounded-lg text-xs font-bold disabled:opacity-50">
           {busy ? `Loading ${label} images…` : `Search ${label}`}
         </button>
-        <button type="button" onClick={cancel} aria-label="Cancel NASA picker" className="ml-2 px-3 py-2 rounded-lg text-xs font-bold text-slate-600">Cancel</button>
+        <button type="button" onClick={cancel} aria-label={`Cancel ${label} picker`} className="ml-2 px-3 py-2 rounded-lg text-xs font-bold text-slate-600">Cancel</button>
       </form>
       {error && <p role="alert" className="text-sm text-rose-700">{error}</p>}
       {limited && <p className="text-sm text-slate-600">Try again in {commonsRetrySeconds} seconds.</p>}
@@ -115,7 +115,7 @@ export function ImageLibraryPicker({ title, onSelect, onCancel }: {
           {candidate.source === 'commons' && candidate.licenseKind === 'cc-by-sa' && (
             <p className="text-xs text-slate-600">ShareAlike: the copy in your deck is an adapted copy and stays under the same license.</p>
           )}
-          <button type="button" disabled={busy || limited || !candidate.selectable} className="px-3 py-2 bg-sky-600 text-white rounded-lg text-xs font-bold disabled:opacity-50"
+          <button type="button" disabled={busy || limited || !candidate.selectable} className="px-3 py-2 bg-sky-700 text-white rounded-lg text-xs font-bold disabled:opacity-50"
             onClick={() => void run(`${basePath}/select`, selectRequestBody(candidate), (data) => {
               const metadata = imageMetadataSchema.parse(data.metadata);
               if (metadata.source !== source) throw new Error(`Invalid ${label} image response.`);

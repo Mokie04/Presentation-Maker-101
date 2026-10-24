@@ -67,14 +67,14 @@ export function SlidePanel({
         <summary className="cursor-pointer rounded text-sm font-bold text-slate-700">Slide details</summary>
         <div className="space-y-4 pt-3">
       <div>
-        <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+        <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1">
           Pedagogical Part
         </label>
         <select
           aria-label="Pedagogical Part"
           value={slide.part}
           onChange={(e) => onUpdatePart?.(slideId, e.target.value)}
-          className="w-full text-xs font-bold text-slate-800 p-2.5 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
+          className="w-full text-xs font-bold text-slate-800 p-2.5 bg-white border border-slate-500 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-sky-700 outline-none transition-all"
         >
           {PEDAGOGICAL_PARTS.map((part) => <option key={part} value={part}>{part}</option>)}
           {normalizePart(slide.part) !== slide.part && <option value={slide.part}>{slide.part}</option>}
@@ -82,7 +82,7 @@ export function SlidePanel({
       </div>
 
       <div>
-        <label htmlFor={titleId} className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+        <label htmlFor={titleId} className="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1">
           Slide Title
         </label>
         <input
@@ -90,12 +90,12 @@ export function SlidePanel({
           type="text"
           value={slide.title}
           onChange={(e) => onUpdateTitle(slideId, e.target.value)}
-          className="w-full min-w-0 text-sm font-bold text-sky-950 p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
+          className="w-full min-w-0 text-sm font-bold text-sky-950 p-2 border border-slate-500 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-sky-700 outline-none transition-all"
         />
       </div>
 
       <div role="group" aria-labelledby={bulletsId} className="space-y-2">
-        <span id={bulletsId} className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+        <span id={bulletsId} className="block text-[10px] font-bold uppercase tracking-wider text-slate-600">
           Bullet Content Points
         </span>
         {(slide.contentPoints || []).map((bullet, bulletIndex) => (
@@ -105,7 +105,7 @@ export function SlidePanel({
               rows={2}
               value={bullet}
               onChange={(e) => onUpdateBullet(slideId, bulletIndex, e.target.value)}
-              className="flex-1 min-w-0 text-xs p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none resize-y text-slate-800"
+              className="flex-1 min-w-0 text-xs p-2 border border-slate-500 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-sky-700 outline-none resize-y text-slate-800"
             />
             <button
               type="button"
@@ -124,7 +124,7 @@ export function SlidePanel({
                 }
                 onDeleteBullet(slideId, index);
               }}
-              className="text-slate-400 hover:text-rose-600 p-1.5 mt-1 rounded hover:bg-rose-50 transition-colors"
+              className="text-slate-600 hover:text-rose-600 p-1.5 mt-1 rounded hover:bg-rose-50 transition-colors"
               title="Remove Bullet"
             >
               <X className="w-3.5 h-3.5" />
@@ -166,7 +166,7 @@ export function SlidePanel({
           aria-label="Delete Slide"
           title="Delete Slide"
           onClick={() => onDeleteSlide(slideId)}
-          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50 transition-colors"
         >
           <Trash2 className="w-3.5 h-3.5" />
           Delete Slide

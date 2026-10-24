@@ -56,9 +56,11 @@ A clickable HTML mock of the Normal view and the Sorter view, approved before Ph
 - New reducer, field, wrapper and workspace tests cover insertion, cancellation, focus, navigation, breakpoint behavior and panel/thumbnail synchronization. Existing tests remain unchanged. Local eight-slide browser checks cover 1440, 1024, 768 and 390 px without provider calls.
 - Long text is clipped by the browser slide boxes rather than shrunk to fit; raw and formatted formulas can wrap differently. See `docs/adr/0013-edit-on-slide.md`; CI and preview smoke remain release gates.
 
-### Phase 5: phones, accessibility, polish
-- Stacked mobile layout, roles and labels, focus handling, optional zoom.
-- Converge the fullscreen slideshow onto `SlideView` (its mobile behaviour needs care).
+### Phase 5: phones, accessibility, polish — done
+- The slideshow draws the current slide with `SlideView`, fitted at 16:9 between its bars; credited images keep clickable source and license links below the slide, and portrait phones get a dismissible rotate hint. See `docs/adr/0014-slideshow-on-slide-view.md`.
+- Touch: status-bar Previous/Next, a shared `useSwipe` for the stage and slideshow, 44 px targets below 768 px and collapsible Slide details/Image panel sections on phones.
+- Accessibility: view switching and slide removal keep focus in the workspace, the slideshow traps focus and returns it to Preview, form fields and the upload drop zone are named, focus rings are two-tone, reduced motion is honoured and UI chrome text meets WCAG AA. An axe-core jsdom run (colour contrast excluded) covers Normal, Slide sorter, Grid and the slideshow.
+- Existing tests remain unchanged except slideshow assertions that pinned the old layout. Local eight-slide browser checks cover 320, 390, 768, 1024 and 1440 px without provider calls. Part badges and slide colours keep their palette; their contrast findings are recorded for a later change.
 
 ### Phase 6: retire the old grid
 - Remove the editing card grid, update docs and add an ADR.

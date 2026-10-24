@@ -36,14 +36,14 @@ export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, on
                 event.preventDefault(); onOpen(id);
               }
             }}
-            className={`min-w-0 cursor-grab space-y-2 rounded-xl border-2 p-2 outline-none focus-visible:ring-2 focus-visible:ring-sky-500 ${
-              reorder.dropTargetId === id ? 'border-dashed border-cyan-500 bg-cyan-50'
-                : selectedId === id ? 'border-sky-500 bg-sky-50' : 'border-slate-200 bg-white'
+            className={`min-w-0 cursor-grab space-y-2 rounded-xl border-2 p-2 outline-none focus-visible:ring-2 focus-visible:ring-sky-700 ${
+              reorder.dropTargetId === id ? 'border-dashed border-cyan-700 bg-cyan-50'
+                : selectedId === id ? 'border-sky-700 bg-sky-50' : 'border-slate-200 bg-white'
             }`}>
             <div className="overflow-hidden rounded border border-slate-200">
               <SlideThumbnail slide={slide} index={index} total={slides.length} image={slideImages?.[index]} originalWriters={originalWriters} />
             </div>
-            <div className="flex min-w-0 items-start gap-2 text-xs text-slate-500">
+            <div className="flex min-w-0 items-start gap-2 text-xs text-slate-600">
               <span className="font-bold tabular-nums text-sky-800">{index + 1}</span>
               <span className="min-w-0 break-words">{partLabel(slide.part)}</span>
             </div>
@@ -51,7 +51,7 @@ export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, on
               <button type="button" aria-label={`Duplicate slide ${index + 1}`} onClick={() => onDuplicate(id)}
                 className="min-h-11 rounded-lg border border-sky-200 bg-white px-2 py-2 text-xs font-semibold text-sky-700">Duplicate</button>
               <button type="button" aria-label={`Delete slide ${index + 1}`} disabled={slides.length === 1} onClick={() => onDelete(id)}
-                className="min-h-11 rounded-lg px-2 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-40">Delete</button>
+                className="min-h-11 rounded-lg px-2 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-40">Delete</button>
               <SlideMoveButtons slideId={id} index={index} total={slides.length} onMove={onMove} />
             </div>
           </li>;

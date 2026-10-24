@@ -14,6 +14,7 @@ import { isUsableImage } from '@/lib/slide-image';
 import { SlideView } from './SlideView';
 import { useMediaQuery } from './workspace/use-media-query';
 import { useSwipe } from './workspace/use-swipe';
+import { useDialogFocus } from './workspace/use-dialog-focus';
 
 interface SlideshowModalProps {
   isOpen: boolean;
@@ -46,6 +47,7 @@ export function SlideshowModal({
   const slides = presentationData?.slides || [];
   const totalSlides = slides.length;
   const currentSlide = slides[currentIndex];
+  const dialogRef = useDialogFocus(isOpen && Boolean(currentSlide));
 
   const handleNext = React.useCallback(() => {
     setCurrentIndex((prev) => (prev < totalSlides - 1 ? prev + 1 : prev));
@@ -60,15 +62,21 @@ export function SlideshowModal({
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+      const target = e.target instanceof Element ? e.target : null;
+      if (target?.closest('input, select, textarea, [contenteditable]:not([contenteditable="false"])')) return;
+      if (e.key === ' ' && target?.closest('button, a[href], summary, [role="button"]')) return;
       if (e.key === 'ArrowRight' || e.key === ' ') {
         e.preventDefault();
         handleNext();
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
         handlePrev();
-      } else if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
       }
     };
 
@@ -88,10 +96,13 @@ export function SlideshowModal({
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
+      aria-label={`Slideshow: ${presentationData.topic}`}
+      tabIndex={-1}
       {...swipe}
-      className="touch-workspace fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between overflow-hidden animate-fadeIn"
+      className="touch-workspace fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between overflow-hidden animate-fadeIn outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-300 motion-reduce:animate-none motion-reduce:[&_*]:transition-none"
     >
       {/* Top Bar */}
       <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-3 sm:px-6 py-3.5 [@media(max-height:500px)]:py-1.5 flex flex-wrap shrink-0 items-center justify-between gap-2 sm:gap-3 text-white z-10">
@@ -110,7 +121,7 @@ export function SlideshowModal({
         </div>
 
         <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
-          <span className="text-xs sm:text-sm font-bold bg-slate-800 border border-slate-700 px-3 py-1 rounded-full text-slate-300 whitespace-nowrap">
+          <span role="status" aria-live="polite" aria-atomic="true" className="text-xs sm:text-sm font-bold bg-slate-800 border border-slate-700 px-3 py-1 rounded-full text-slate-300 whitespace-nowrap">
             Slide {currentIndex + 1} of {totalSlides}
           </span>
           <button
@@ -200,7 +211,7 @@ export function SlideshowModal({
             className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center gap-1.5 flex-shrink-0 transition-all ${
               currentIndex === totalSlides - 1
                 ? 'bg-slate-800 text-slate-600 cursor-not-allowed border border-slate-800'
-                : 'bg-sky-600 hover:bg-sky-500 text-white shadow-md active:scale-95'
+                : 'bg-sky-700 hover:bg-sky-800 text-white shadow-md active:scale-95'
             }`}
           >
             <span>Next</span>

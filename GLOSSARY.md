@@ -4,6 +4,8 @@
 
 **Touch navigation** — Previous/Next controls in the workspace status bar and horizontal stage swipes over 60 px. `src/components/workspace/use-swipe.ts` shares gesture handling with the slideshow, ignoring vertical gestures, active text editing and panel starts. Phone controls have at least 44 px touch targets; the panel uses native Slide details and Image disclosures, with Slide details initially open on phones and both sections open from 768 px.
 
+**Dialog focus** — `src/components/workspace/use-dialog-focus.ts` keeps keyboard focus inside the open slideshow, makes the page behind it inert and returns focus to the Preview button on close.
+
 **Slide** — One page of a presentation: `SlideData` (`slideNumber`, `part`, `title`, `contentPoints`, `visualDescription`, optional `imageMetadata`). `slideNumber` is its 1-based position and is renumbered when the deck order changes.
 
 **Slide deck** — The ordered Slides of one generated presentation plus its metadata (`subject`, `originalWriters`, `topic`, and optional server-recorded `subjectEvidence`). The wire and export shape is `PresentationData`. Inside the client, each Slide also carries a stable internal id that is never reused and never sent to the server. `src/lib/deck/deck-reducer.ts` owns its edits and image race rules.
