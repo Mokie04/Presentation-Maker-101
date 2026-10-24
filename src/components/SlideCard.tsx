@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useId } from 'react';
 import {
   Trash2,
   Plus,
@@ -48,10 +48,11 @@ export function SlideCard({
   onRegenerateImage,
   onSelectImage,
 }: SlideCardProps) {
+  const titleId = useId();
   const badgeInfo = getPartBadgeInfo(slide.part);
 
   return (
-    <div className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 border border-sky-100/90 overflow-hidden flex flex-col h-full">
+    <div role="group" aria-label={`Slide ${slide.slideNumber}: ${slide.title}`} data-grid-slide-id={slideId} tabIndex={-1} className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-200 border border-sky-100/90 overflow-hidden flex flex-col h-full">
       {/* Slide Top Strip */}
       <div className="bg-sky-50/70 px-4 py-2.5 border-b border-sky-100 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -67,7 +68,7 @@ export function SlideCard({
           type="button"
           aria-label="Delete Slide"
           onClick={() => onDeleteSlide(slideId)}
-          className="text-slate-400 hover:text-rose-600 p-1 rounded-md hover:bg-rose-50 transition-colors"
+          className="text-slate-600 hover:text-rose-600 p-1 rounded-md hover:bg-rose-50 transition-colors"
           title="Delete Slide"
         >
           <Trash2 className="w-4 h-4" />
@@ -82,14 +83,14 @@ export function SlideCard({
           {isEditing ? (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div className="sm:col-span-1">
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1">
                   Pedagogical Part
                 </label>
                 <select
                   aria-label="Pedagogical Part"
                   value={slide.part}
                   onChange={(e) => onUpdatePart?.(slideId, e.target.value)}
-                  className="w-full text-xs font-bold text-slate-800 p-2.5 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
+                  className="w-full text-xs font-bold text-slate-800 p-2.5 bg-white border border-slate-500 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-sky-700 outline-none transition-all"
                 >
                   {PEDAGOGICAL_PARTS.map((p) => (
                     <option key={p} value={p}>
@@ -104,14 +105,15 @@ export function SlideCard({
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
+                <label htmlFor={titleId} className="block text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1">
                   Slide Title
                 </label>
                 <input
+                  id={titleId}
                   type="text"
                   value={slide.title}
                   onChange={(e) => onUpdateTitle(slideId, e.target.value)}
-                  className="w-full text-sm sm:text-base font-bold text-sky-950 p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition-all"
+                  className="w-full text-sm sm:text-base font-bold text-sky-950 p-2 border border-slate-500 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-sky-700 outline-none transition-all"
                 />
               </div>
             </div>
@@ -125,23 +127,24 @@ export function SlideCard({
           <div className="space-y-2">
             {isEditing ? (
               <div className="space-y-2">
-                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-600">
                   Bullet Content Points
                 </label>
                 {(slide.contentPoints || []).map((bullet, bIdx) => (
                   <div key={bIdx} className="flex items-start gap-2">
                     <span className="w-2 h-2 rounded-full bg-sky-500 mt-2.5 flex-shrink-0" />
                     <textarea
+                      aria-label={`Bullet ${bIdx + 1}`}
                       rows={2}
                       value={bullet}
                       onChange={(e) => onUpdateBullet(slideId, bIdx, e.target.value)}
-                      className="flex-1 text-xs sm:text-sm p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none resize-y text-slate-800"
+                      className="flex-1 text-xs sm:text-sm p-2 border border-slate-500 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-sky-700 outline-none resize-y text-slate-800"
                     />
                     <button
                       type="button"
                       aria-label="Remove Bullet"
                       onClick={() => onDeleteBullet(slideId, bIdx)}
-                      className="text-slate-400 hover:text-rose-600 p-1.5 mt-1 rounded hover:bg-rose-50 transition-colors"
+                      className="text-slate-600 hover:text-rose-600 p-1.5 mt-1 rounded hover:bg-rose-50 transition-colors"
                       title="Remove Bullet"
                     >
                       <X className="w-3.5 h-3.5" />
@@ -162,7 +165,7 @@ export function SlideCard({
               <ul className="space-y-2">
                 {(slide.contentPoints || []).map((bullet, bIdx) => (
                   <li key={bIdx} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 leading-relaxed">
-                    <span className="w-1.5 h-1.5 rounded-full bg-sky-600 mt-2 flex-shrink-0" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-sky-700 mt-2 flex-shrink-0" />
                     <FormattedFormula text={bullet} className="flex-1" />
                   </li>
                 ))}

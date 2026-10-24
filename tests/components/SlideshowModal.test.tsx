@@ -184,7 +184,7 @@ describe('SlideshowModal image credit caption', () => {
     expect(source.getAttribute('target')).toBe('_blank');
     expect(source.getAttribute('rel')).toBe('noopener noreferrer');
     expect(within(figcaption).queryByRole('link', { name: /^License:/ })).toBeNull();
-    expect(within(screen.getByRole('figure')).getByRole('img', { name: 'Moon' })).toBeTruthy();
+    expect(within(screen.getByRole('figure')).getByRole('img', { name: 'Moon visual' })).toBeTruthy();
   });
 
   it('credits a Commons image with source and license links', () => {
@@ -199,7 +199,8 @@ describe('SlideshowModal image credit caption', () => {
 
   it('shows no caption for an AI image without credit', () => {
     renderSlides([slide('Stars')], { 0: 'ai-image' });
-    expect(screen.getByRole('img', { name: 'Stars' })).toBeTruthy();
+    expect(screen.getByRole('group', { name: 'Slide 1 of 1' })).toBeTruthy();
+    expect(screen.queryByRole('img')).toBeNull();
     expect(caption()).toBeNull();
     expect(screen.queryByRole('link', { name: /source$/ })).toBeNull();
   });
@@ -229,8 +230,10 @@ describe('SlideshowModal image credit caption', () => {
     { source: 'AI', metadata: undefined, fit: 'object-cover', otherFit: 'object-contain' },
   ])('uses $fit for a $source image', ({ metadata, fit, otherFit }) => {
     renderSlides([slide('Planets', metadata)], { 0: 'image' });
-    const image = screen.getByRole('img', { name: 'Planets' });
-    expect(image.classList.contains(fit)).toBe(true);
-    expect(image.classList.contains(otherFit)).toBe(false);
+    const image = screen.queryByRole('img', { name: 'Planets visual' });
+    // The first slide uses the title layout, which shows library images only (as in the export).
+    if (!metadata) return expect(image).toBeNull();
+    expect(image!.classList.contains(fit)).toBe(true);
+    expect(image!.classList.contains(otherFit)).toBe(false);
   });
 });

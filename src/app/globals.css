@@ -25,3 +25,37 @@ body {
     text-wrap: balance;
   }
 }
+
+@media (max-width: 767px) {
+  .touch-workspace button,
+  .touch-workspace summary {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .touch-workspace select {
+    min-height: 44px;
+  }
+}
+
+/* A two-tone indicator stays visible on both light and dark chrome. */
+.touch-workspace :is(button, a, summary, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid #0369a1;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .touch-workspace *,
+  .touch-workspace *::before,
+  .touch-workspace *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .touch-workspace button:active,
+  .touch-workspace [role="button"] {
+    transform: none !important;
+  }
+}

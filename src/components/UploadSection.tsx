@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, ChangeEvent, DragEvent } from 'react';
+import React, { useState, useRef, useId, ChangeEvent, DragEvent } from 'react';
 import {
   UploadCloud,
   CheckCircle2,
@@ -45,6 +45,7 @@ export function UploadSection({
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [showManual, setShowManual] = useState(false);
   const [manualInput, setManualInput] = useState('');
+  const manualId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
@@ -123,12 +124,12 @@ export function UploadSection({
     <section className="w-full max-w-4xl mx-auto my-8 px-4">
       <div className="bg-white rounded-2xl shadow-xl border border-sky-100/80 overflow-hidden">
         {/* Card Header */}
-        <div className="bg-gradient-to-r from-sky-50 via-cyan-50 to-sky-50/50 px-6 py-4 border-b border-sky-100 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="p-2 bg-sky-600 text-white rounded-xl shadow-sm">
+        <div className="bg-gradient-to-r from-sky-50 via-cyan-50 to-sky-50/50 px-4 sm:px-6 py-4 border-b border-sky-100 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="p-2 bg-sky-700 text-white rounded-xl shadow-sm">
               <UploadCloud className="w-5 h-5" />
             </span>
-            <div>
+            <div className="min-w-0">
               <h2 className="text-lg font-bold text-slate-800">
                 Lesson Plan Document Processing
               </h2>
@@ -140,6 +141,8 @@ export function UploadSection({
 
           <button
             type="button"
+            aria-expanded={showManual}
+            aria-controls={manualId}
             onClick={() => setShowManual(!showManual)}
             className="text-xs font-semibold text-sky-700 hover:text-sky-800 bg-sky-100/60 hover:bg-sky-200/60 px-3 py-1.5 rounded-lg border border-sky-300/60 transition-colors flex items-center gap-1.5"
           >
@@ -153,6 +156,10 @@ export function UploadSection({
           {/* Drag & Drop Area */}
           {!showManual ? (
             <div
+              role="button" tabIndex={0} aria-label="Choose lesson plan document"
+              onKeyDown={event => {
+                if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); fileInputRef.current?.click(); }
+              }}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
@@ -160,7 +167,7 @@ export function UploadSection({
               className={`relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 ${
                 isDragging
                   ? 'border-sky-500 bg-sky-50/80 scale-[0.99]'
-                  : 'border-slate-300 hover:border-sky-400 bg-slate-50/50 hover:bg-sky-50/20'
+                  : 'border-slate-500 hover:border-sky-400 bg-slate-50/50 hover:bg-sky-50/20'
               }`}
             >
               <input
@@ -168,6 +175,7 @@ export function UploadSection({
                 type="file"
                 accept=".docx,.pdf,.txt,.md"
                 onChange={handleFileChange}
+                onClick={event => event.stopPropagation()}
                 className="hidden"
               />
 
@@ -196,7 +204,7 @@ export function UploadSection({
             </div>
           ) : (
             /* Monospace Textarea for Manual Paste */
-            <div className="space-y-2">
+            <div id={manualId} className="space-y-2">
               <label
                 htmlFor="manual-lesson-text"
                 className="block text-xs font-bold uppercase tracking-wider text-slate-600"
@@ -209,7 +217,7 @@ export function UploadSection({
                 onChange={handleManualChange}
                 placeholder="Paste raw lesson plan content here (objectives, parts, activities, questions)..."
                 rows={7}
-                className="w-full font-mono text-xs sm:text-sm p-3.5 border border-slate-300 rounded-xl focus:ring-2 focus:ring-sky-500 focus:border-sky-500 bg-slate-50/30 text-slate-800 placeholder-slate-400 transition-all outline-none resize-y"
+                className="w-full font-mono text-xs sm:text-sm p-3.5 border border-slate-500 rounded-xl focus:ring-2 focus:ring-sky-700 focus:border-sky-700 bg-slate-50/30 text-slate-800 placeholder-slate-500 transition-all outline-none resize-y"
               />
             </div>
           )}
@@ -236,7 +244,7 @@ export function UploadSection({
 
           {/* Errors */}
           {(uploadError || errorMsg) && (
-            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2.5 text-rose-800 text-xs sm:text-sm font-medium">
+            <div role="alert" className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2.5 text-rose-800 text-xs sm:text-sm font-medium">
               <AlertTriangle className="w-5 h-5 text-rose-600 flex-shrink-0" />
               <span>{uploadError || errorMsg}</span>
             </div>
@@ -257,14 +265,14 @@ export function UploadSection({
                   aria-label="Select Session"
                   value={selectedSession}
                   onChange={(e) => onSessionChange(e.target.value)}
-                  className="w-full appearance-none bg-white border border-slate-300 font-medium text-slate-800 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 cursor-pointer shadow-sm transition-all"
+                  className="w-full appearance-none bg-white border border-slate-500 font-medium text-slate-800 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-700 focus:border-sky-700 cursor-pointer shadow-sm transition-all"
                 >
                   <option value="">-- Choose Curriculum Session --</option>
                   {SESSION_OPTIONS.map((session) => (
                     <option key={session} value={session}>{session}</option>
                   ))}
                 </select>
-                <Layers className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Layers className="w-4 h-4 text-slate-600 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
             </div>
 
@@ -281,14 +289,14 @@ export function UploadSection({
                   aria-label="Subject"
                   value={selectedSubject}
                   onChange={(e) => onSubjectChange?.(e.target.value as SupportedSubject | '')}
-                  className="w-full appearance-none bg-white border border-slate-300 font-medium text-slate-800 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 cursor-pointer shadow-sm transition-all"
+                  className="w-full appearance-none bg-white border border-slate-500 font-medium text-slate-800 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-700 focus:border-sky-700 cursor-pointer shadow-sm transition-all"
                 >
                   <option value="">Automatic</option>
                   {SUPPORTED_SUBJECTS.map((subject) => (
                     <option key={subject} value={subject}>{subject}</option>
                   ))}
                 </select>
-                <Layers className="w-4 h-4 text-slate-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <Layers className="w-4 h-4 text-slate-600 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
               </div>
             </div>
 
@@ -301,8 +309,8 @@ export function UploadSection({
                   : onGenerate(extractedText, selectedSession)}
                 className={`w-full py-3 px-6 rounded-xl font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 shadow-md transition-all duration-200 ${
                   canGenerate
-                    ? 'bg-gradient-to-r from-sky-600 via-sky-500 to-cyan-600 hover:from-sky-700 hover:to-cyan-700 text-white cursor-pointer hover:shadow-lg active:scale-[0.99]'
-                    : 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
+                    ? 'bg-gradient-to-r from-sky-700 via-sky-700 to-cyan-700 hover:from-sky-800 hover:to-cyan-800 text-white cursor-pointer hover:shadow-lg active:scale-[0.99]'
+                    : 'bg-slate-200 text-slate-600 cursor-not-allowed shadow-none'
                 }`}
               >
                 {isLoading ? (
@@ -323,7 +331,7 @@ export function UploadSection({
           {/* Loading Stage Indicator */}
           {isLoading && loadingStage && (
             <div className="pt-2">
-              <div className="p-4 bg-sky-50/90 border border-sky-200 rounded-xl flex items-center gap-3 animate-pulse">
+              <div role="status" className="p-4 bg-sky-50/90 border border-sky-200 rounded-xl flex items-center gap-3 animate-pulse">
                 <Loader2 className="w-5 h-5 text-sky-700 animate-spin flex-shrink-0" />
                 <p className="text-xs sm:text-sm font-semibold text-sky-900">
                   {loadingStage}

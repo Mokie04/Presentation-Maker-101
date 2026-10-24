@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Sparkles, Loader2, Image as ImageIcon, CheckCircle } from 'lucide-react';
 import { ImageLibraryPicker } from './ImageLibraryPicker';
 import { describeImageCredit } from '@/lib/image-credit';
@@ -27,6 +27,12 @@ export function SlideImageControls({
   onSelectImage,
 }: SlideImageControlsProps) {
   const [imageLibraryPickerOpen, setImageLibraryPickerOpen] = useState(false);
+  const findButton = useRef<HTMLButtonElement>(null);
+  const wasPickerOpen = useRef(false);
+  useLayoutEffect(() => {
+    if (wasPickerOpen.current && !imageLibraryPickerOpen) findButton.current?.focus({ preventScroll: true });
+    wasPickerOpen.current = imageLibraryPickerOpen;
+  }, [imageLibraryPickerOpen]);
   const hasValidImage = isUsableImage(slideImage);
   const imageSrc = hasValidImage && slideImage ? toDataUrl(slideImage) : undefined;
   const credit = slide.imageMetadata && describeImageCredit(slide.imageMetadata);
@@ -71,7 +77,7 @@ export function SlideImageControls({
       {onSelectImage && (
         imageLibraryPickerOpen ? <ImageLibraryPicker title={slide.title} onCancel={() => setImageLibraryPickerOpen(false)}
           onSelect={(base64, metadata) => { onSelectImage(slideId, base64, metadata); setImageLibraryPickerOpen(false); }} />
-          : <button type="button" onClick={() => setImageLibraryPickerOpen(true)}
+          : <button ref={findButton} type="button" onClick={() => setImageLibraryPickerOpen(true)}
             className="w-full py-2 px-3 rounded-lg text-xs font-bold text-sky-800 bg-sky-50 border border-sky-200">Find image</button>
       )}
 
@@ -88,10 +94,10 @@ export function SlideImageControls({
         onClick={() => onRegenerateImage(slideId, slide.visualDescription)}
         className={`w-full py-2 px-3 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-150 ${
           isGeneratingImage
-            ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+            ? 'bg-slate-100 text-slate-600 cursor-not-allowed'
             : hasValidImage
             ? 'bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200'
-            : 'bg-sky-600 hover:bg-sky-700 text-white shadow-xs'
+            : 'bg-sky-700 hover:bg-sky-800 text-white shadow-xs'
         }`}
       >
         {isGeneratingImage ? (

@@ -102,7 +102,7 @@ function PresentationWorkspace() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 selection:bg-sky-200 selection:text-sky-950">
+    <div className="touch-workspace min-h-screen flex flex-col bg-slate-50 selection:bg-sky-200 selection:text-sky-950">
       <Header />
 
       <main className={`flex-1 w-full mx-auto px-3 sm:px-4 lg:px-6 py-4 ${presentationData ? 'max-w-[1600px]' : 'max-w-7xl'}`}>

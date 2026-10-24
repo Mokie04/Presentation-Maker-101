@@ -27,8 +27,8 @@ describe.each(cases)('a %s slide image', (_, image, src) => {
   });
 
   it('renders the same src in the slideshow', () => {
-    render(<SlideshowModal isOpen onClose={vi.fn()} presentationData={{ subject: 'S', originalWriters: 'T', topic: 't', slides: [slide] }}
-      session="S" slideImages={{ 0: image }} />);
+    render(<SlideshowModal isOpen onClose={vi.fn()} presentationData={{ subject: 'S', originalWriters: 'T', topic: 't', slides: [slide, slide] }}
+      session="S" initialIndex={1} slideImages={{ 1: image }} />);
     expect(document.querySelector('[role=dialog] img')?.getAttribute('src') ?? null).toBe(src);
   });
 });
