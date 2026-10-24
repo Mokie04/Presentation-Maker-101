@@ -116,6 +116,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   </div>
                   <div className="order-1 grid min-h-0 min-w-0 md:order-2 md:col-start-2 md:row-start-1">
                     <SlideStage key={slideIds[selectedIndex]} slide={selectedSlide} index={selectedIndex} total={presentationData.slides.length}
+                      onNext={selection.next} onPrevious={selection.previous}
                       image={slideImages[selectedIndex]} originalWriters={presentationData.originalWriters}
                       onTitleChange={title => updateTitle(slideIds[selectedIndex], title)}
                       onPointChange={(index, text) => updateBullet(slideIds[selectedIndex], index, text)}
@@ -217,6 +218,12 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
               <span role="status" aria-live="polite" aria-atomic="true">
                 {selectedSlide ? `Slide ${selectedIndex + 1} of ${presentationData.slides.length} · ${partLabel(selectedSlide.part)}` : 'No slides'}
               </span>
+              <div role="group" aria-label="Slide navigation" className="flex items-center gap-2">
+                <button type="button" aria-label="Previous slide" onClick={selection.previous} disabled={selectedIndex <= 0}
+                  className="min-h-9 rounded-lg border border-slate-300 px-3 font-bold disabled:cursor-not-allowed disabled:opacity-40">Previous</button>
+                <button type="button" aria-label="Next slide" onClick={selection.next} disabled={selectedIndex < 0 || selectedIndex >= slideIds.length - 1}
+                  className="min-h-9 rounded-lg border border-slate-300 px-3 font-bold disabled:cursor-not-allowed disabled:opacity-40">Next</button>
+              </div>
               <div role="group" aria-label="Workspace view" className="inline-flex overflow-hidden rounded-lg border border-slate-200">
                 {(['normal', 'grid', 'sorter'] as const).map((mode) => (
                   <button key={mode} type="button" aria-pressed={view === mode} onClick={() => setView(mode)}

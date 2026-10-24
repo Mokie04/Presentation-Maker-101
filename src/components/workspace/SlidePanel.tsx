@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useId, useRef } from 'react';
+import React, { useEffect, useId, useRef } from 'react';
 import { Trash2, Plus, X } from 'lucide-react';
 import { normalizePart, PEDAGOGICAL_PARTS } from '@/lib/pedagogy';
 import { SlideImageControls } from '../SlideImageControls';
 import { SlideMoveButtons } from './SlideMoveButtons';
+import { useMediaQuery } from './use-media-query';
 import type { SlideData } from '@/types/presentation';
 import type { ImageMetadata } from '@/lib/image-metadata';
 
@@ -51,9 +52,20 @@ export function SlidePanel({
   const titleId = useId();
   const bulletsId = useId();
   const pointerDelete = useRef<{ slideId: number; index: number; points: string[] } | null>(null);
+  const wide = useMediaQuery('(min-width: 768px)');
+  const detailsSection = useRef<HTMLDetailsElement>(null);
+  const imageSection = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    // Native disclosures retain the teacher's choice until the breakpoint changes.
+    if (detailsSection.current) detailsSection.current.open = true;
+    if (imageSection.current) imageSection.current.open = wide;
+  }, [wide]);
 
   return (
     <aside aria-label="Slide settings" className="min-w-0 min-h-0 overflow-y-auto overscroll-contain rounded-xl border border-sky-100 bg-white p-3 space-y-4">
+      <details ref={detailsSection} open>
+        <summary className="cursor-pointer rounded text-sm font-bold text-slate-700">Slide details</summary>
+        <div className="space-y-4 pt-3">
       <div>
         <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">
           Pedagogical Part
@@ -129,7 +141,11 @@ export function SlidePanel({
         </button>
       </div>
 
-      <SlideImageControls
+        </div>
+      </details>
+      <details ref={imageSection} open>
+        <summary className="cursor-pointer rounded text-sm font-bold text-slate-700">Image</summary>
+        <SlideImageControls
         key={slideId}
         slide={slide}
         slideId={slideId}
@@ -139,6 +155,7 @@ export function SlidePanel({
         onRegenerateImage={onRegenerateImage}
         onSelectImage={onSelectImage}
       />
+      </details>
 
       <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
         {onMoveSlide && slideIndex !== undefined && totalSlides !== undefined && (

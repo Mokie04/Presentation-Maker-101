@@ -123,12 +123,12 @@ export function UploadSection({
     <section className="w-full max-w-4xl mx-auto my-8 px-4">
       <div className="bg-white rounded-2xl shadow-xl border border-sky-100/80 overflow-hidden">
         {/* Card Header */}
-        <div className="bg-gradient-to-r from-sky-50 via-cyan-50 to-sky-50/50 px-6 py-4 border-b border-sky-100 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="bg-gradient-to-r from-sky-50 via-cyan-50 to-sky-50/50 px-4 sm:px-6 py-4 border-b border-sky-100 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2">
             <span className="p-2 bg-sky-600 text-white rounded-xl shadow-sm">
               <UploadCloud className="w-5 h-5" />
             </span>
-            <div>
+            <div className="min-w-0">
               <h2 className="text-lg font-bold text-slate-800">
                 Lesson Plan Document Processing
               </h2>

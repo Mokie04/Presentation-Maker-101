@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, TouchEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   X,
   ChevronLeft,
@@ -13,6 +13,7 @@ import { getPartBadgeInfo } from './part-badge';
 import { isUsableImage } from '@/lib/slide-image';
 import { SlideView } from './SlideView';
 import { useMediaQuery } from './workspace/use-media-query';
+import { useSwipe } from './workspace/use-swipe';
 
 interface SlideshowModalProps {
   isOpen: boolean;
@@ -32,7 +33,6 @@ export function SlideshowModal({
   initialIndex = 0,
 }: SlideshowModalProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [hintDismissed, setHintDismissed] = useState(false);
   const portraitPhone = useMediaQuery('(max-width: 767px) and (orientation: portrait)', false);
 
@@ -76,27 +76,7 @@ export function SlideshowModal({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, handleNext, handlePrev, onClose]);
 
-  // Touch Swipe Handling
-  const handleTouchStart = (e: TouchEvent<HTMLDivElement>) => {
-    if (e.touches && e.touches.length > 0) {
-      setTouchStartX(e.touches[0].clientX);
-    }
-  };
-
-  const handleTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
-    if (touchStartX === null) return;
-    if (e.changedTouches && e.changedTouches.length > 0) {
-      const deltaX = e.changedTouches[0].clientX - touchStartX;
-      if (deltaX > 60) {
-        // Swipe right -> Prev
-        handlePrev();
-      } else if (deltaX < -60) {
-        // Swipe left -> Next
-        handleNext();
-      }
-    }
-    setTouchStartX(null);
-  };
+  const swipe = useSwipe({ onNext: handleNext, onPrevious: handlePrev, disabled: !isOpen });
 
   if (!isOpen || !currentSlide) {
     return null;
@@ -110,12 +90,11 @@ export function SlideshowModal({
     <div
       role="dialog"
       aria-modal="true"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      className="fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between overflow-hidden animate-fadeIn"
+      {...swipe}
+      className="touch-workspace fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between overflow-hidden animate-fadeIn"
     >
       {/* Top Bar */}
-      <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-3 sm:px-6 py-3.5 flex flex-wrap shrink-0 items-center justify-between gap-2 sm:gap-3 text-white z-10">
+      <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-3 sm:px-6 py-3.5 [@media(max-height:500px)]:py-1.5 flex flex-wrap shrink-0 items-center justify-between gap-2 sm:gap-3 text-white z-10">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0 max-w-full">
           {(() => {
             const badge = getPartBadgeInfo(currentSlide.part);
@@ -147,7 +126,7 @@ export function SlideshowModal({
       </div>
 
       {/* The shared 16:9 slide fits both dimensions after the bars and caption. */}
-      <div className="flex-1 min-h-0 min-w-0 flex flex-col gap-2 p-2 sm:p-6 overflow-hidden">
+      <div className="flex-1 min-h-0 min-w-0 flex flex-col gap-2 p-2 sm:p-6 [@media(max-height:500px)]:p-1 overflow-hidden">
         {portraitPhone && !hintDismissed && (
           <div className="shrink-0 flex items-center justify-center gap-2 text-xs text-slate-300">
             <span>Rotate your phone for a larger slide</span>
@@ -177,7 +156,7 @@ export function SlideshowModal({
       </div>
 
       {/* Bottom Control Bar */}
-      <div className="bg-slate-900/90 backdrop-blur border-t border-slate-800 px-3 sm:px-6 py-3.5 shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 text-white z-10">
+      <div className="bg-slate-900/90 backdrop-blur border-t border-slate-800 px-3 sm:px-6 py-3.5 [@media(max-height:500px)]:py-1.5 shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 text-white z-10">
         <p className="text-xs text-slate-400 font-medium hidden sm:block">
           Use <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">←</kbd> <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">→</kbd> or <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">Space</kbd> to navigate, <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">Esc</kbd> to exit.
         </p>

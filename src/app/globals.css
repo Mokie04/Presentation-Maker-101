@@ -25,3 +25,15 @@ body {
     text-wrap: balance;
   }
 }
+
+@media (max-width: 767px) {
+  .touch-workspace button,
+  .touch-workspace summary {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .touch-workspace select {
+    min-height: 44px;
+  }
+}

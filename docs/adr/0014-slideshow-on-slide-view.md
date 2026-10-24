@@ -9,7 +9,7 @@ The slideshow used a separate reflowing layout, so a phone preview differed from
 
 ## Decision
 
-`src/components/SlideshowModal.tsx` renders the current slide with `src/components/SlideView.tsx` in full mode, fitted at 16:9 between its controls. Phones show the same slide as larger screens. Portrait phones below 768 px get a dismissible rotate hint, reset on each open.
+`src/components/SlideshowModal.tsx` renders the current slide with `src/components/SlideView.tsx` in full mode, fitted at 16:9 between its controls. Phones show the same slide as larger screens. Portrait phones below 768 px get a dismissible rotate hint, reset on each open; short landscape screens (500 px tall or less) use tighter bars and padding so the slide gains height.
 
 ## Consequences
 
