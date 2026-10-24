@@ -5,14 +5,16 @@ import { describeImageCredit } from '@/lib/image-credit';
 import { isUsableImage, sniffImageMime, toRawBase64 } from '@/lib/slide-image';
 import { parseFormulaToSegments } from '@/lib/utils/formula-parser';
 
-export const SHADE_PRIMARY = '0284C7';
-export const SHADE_SECONDARY = '06B6D4';
-export const SHADE_BACKGROUND = 'F0F9FF';
-export const SHADE_TEXT_DARK = '0F172A';
-export const FALLBACK_BG = 'E0F2FE';
-export const FALLBACK_BORDER = '7DD3FC';
+import {
+  SHADE_PRIMARY, SHADE_SECONDARY, SHADE_BACKGROUND, SHADE_TEXT_DARK,
+  FALLBACK_BG, FALLBACK_BORDER, DEFAULT_FONT_FACE, TEXT_HEADING, TEXT_MUTED, TEXT_SUBTLE,
+  CREDIT_LAYOUT, SLIDE_COUNTER, TITLE_LAYOUT, CONTENT_LAYOUT, slideLayoutFor, hasVisual,
+} from '@/lib/slide-theme';
 
-export const DEFAULT_FONT_FACE = 'Poppins';
+export {
+  SHADE_PRIMARY, SHADE_SECONDARY, SHADE_BACKGROUND, SHADE_TEXT_DARK,
+  FALLBACK_BG, FALLBACK_BORDER, DEFAULT_FONT_FACE,
+} from '@/lib/slide-theme';
 
 /**
  * Converts a text string into PptxGenJS text runs with native subscript/superscript.
@@ -68,7 +70,7 @@ export function createPresentationPptx(
     if (slide.imageMetadata) {
       const credit = describeImageCredit(slide.imageMetadata);
       slideObj.addText(`${credit.heading} — ${credit.creditLine}`, {
-        x: 0.8, y: 7.15, w: 11.7, h: 0.25, fontSize: 8, color: '475569',
+        ...CREDIT_LAYOUT, color: TEXT_MUTED,
         fontFace: DEFAULT_FONT_FACE, fit: 'shrink',
         hyperlink: { url: credit.sourceLink },
       });
@@ -79,15 +81,11 @@ export function createPresentationPptx(
     slideObj.background = { fill: SHADE_BACKGROUND };
 
     // Slide 1: Special Hero Title Slide Layout
-    if (idx === 0) {
+    if (slideLayoutFor(idx) === 'title') {
       // Session Badge
       const partText = (slide.part || 'TITLE PAGE').toUpperCase();
       slideObj.addText(partText, {
-        x: 0.8,
-        y: 1.0,
-        w: '85%',
-        h: 0.45,
-        fontSize: 16,
+        ...TITLE_LAYOUT.part,
         color: SHADE_SECONDARY,
         bold: true,
         fontFace: DEFAULT_FONT_FACE,
@@ -96,11 +94,7 @@ export function createPresentationPptx(
       // Big Title (minimum 40pt, aim 45pt)
       const titleRuns = formulaToTextRuns(slide.title || 'Lesson Presentation');
       slideObj.addText(titleRuns, {
-        x: 0.8,
-        y: 1.55,
-        w: '85%',
-        h: 1.6,
-        fontSize: 45,
+        ...TITLE_LAYOUT.title,
         color: SHADE_PRIMARY,
         bold: true,
         fontFace: DEFAULT_FONT_FACE,
@@ -125,8 +119,8 @@ export function createPresentationPptx(
       if (contentPoints.length > 0) {
         const textItems = contentPoints.flatMap((pt, pIdx) => {
           const pointOptions = {
-            fontSize: pIdx === 0 ? 28 : 22,
-            color: pIdx === 0 ? '1E293B' : '475569',
+            fontSize: pIdx === 0 ? TITLE_LAYOUT.firstPointFontSize : TITLE_LAYOUT.pointFontSize,
+            color: pIdx === 0 ? TEXT_HEADING : TEXT_MUTED,
             bold: pIdx === 0 || pt.toLowerCase().includes('writer') || pt.toLowerCase().includes('author'),
           };
           return formulaToTextRuns(pt + (pIdx < contentPoints.length - 1 ? '\n' : '')).map((run) => ({
@@ -135,29 +129,22 @@ export function createPresentationPptx(
         });
 
         slideObj.addText(textItems, {
-          x: 0.8,
-          y: 3.4,
-          w: slide.imageMetadata ? '58%' : '85%',
-          h: 2.6,
+          ...TITLE_LAYOUT.points,
+          w: slide.imageMetadata ? TITLE_LAYOUT.pointsWithImageWidth : TITLE_LAYOUT.points.w,
           fontFace: DEFAULT_FONT_FACE,
-          lineSpacing: 34,
           fit: 'shrink',
         });
       }
 
       const titleImage = slideImages?.[idx];
       if (slide.imageMetadata && titleImage && isUsableImage(titleImage)) {
-        addLibraryImage(slideObj, titleImage, { x: 9, y: 3.4, w: 3.5, h: 2.6 });
+        addLibraryImage(slideObj, titleImage, TITLE_LAYOUT.image);
       }
 
       // Slide counter
       slideObj.addText(`Slide 1 of ${totalSlides}`, {
-        x: '80%',
-        y: 6.85,
-        w: '16%',
-        h: 0.35,
-        fontSize: 11,
-        color: '94A3B8',
+        ...SLIDE_COUNTER,
+        color: TEXT_SUBTLE,
         align: 'right',
         fontFace: DEFAULT_FONT_FACE,
       });
@@ -168,24 +155,18 @@ export function createPresentationPptx(
     // 2. Part header
     const partText = (slide.part || '').toUpperCase();
     slideObj.addText(partText, {
-      x: 0.8,
-      y: 0.45,
-      w: '85%',
-      h: 0.35,
-      fontSize: 14,
+      ...CONTENT_LAYOUT.part,
       color: SHADE_SECONDARY,
       bold: true,
       fontFace: DEFAULT_FONT_FACE,
     });
 
     // 3. Title (minimum 40pt, aim 45pt)
-    const titleFontSize = slide.title && slide.title.length > 35 ? 40 : 45;
+    const titleFontSize = slide.title && slide.title.length > CONTENT_LAYOUT.longTitleThreshold
+      ? CONTENT_LAYOUT.longTitleFontSize : CONTENT_LAYOUT.title.fontSize;
     const titleRuns = formulaToTextRuns(slide.title || '');
     slideObj.addText(titleRuns, {
-      x: 0.8,
-      y: 0.85,
-      w: '88%',
-      h: 1.15,
+      ...CONTENT_LAYOUT.title,
       fontSize: titleFontSize,
       color: SHADE_PRIMARY,
       bold: true,
@@ -194,8 +175,8 @@ export function createPresentationPptx(
     });
 
     // 4. Bullet content (minimum 35pt body text)
-    const hasVisual = Boolean(slide.visualDescription && slide.visualDescription.trim().length > 0);
-    const contentWidth = hasVisual ? '55%' : '88%';
+    const visual = hasVisual(slide);
+    const contentWidth = visual ? CONTENT_LAYOUT.bulletsWithVisualWidth : CONTENT_LAYOUT.bullets.w;
     const contentPoints = slide.contentPoints || [];
     const textItems: PptxGenJS.TextProps[] = [];
     contentPoints.forEach((pt, pIdx) => {
@@ -206,44 +187,34 @@ export function createPresentationPptx(
 
     if (textItems.length > 0) {
       slideObj.addText(textItems, {
-        x: 0.8,
-        y: 2.1,
+        ...CONTENT_LAYOUT.bullets,
         w: contentWidth,
-        h: 4.6,
-        lineSpacing: 46,
         fontFace: DEFAULT_FONT_FACE,
-        fontSize: 35,
         color: SHADE_TEXT_DARK,
         fit: 'shrink',
       });
     }
 
     // 5. Visual element (occupies <= 40% of slide space)
-    if (hasVisual) {
+    if (visual) {
       const imageData = slideImages ? slideImages[idx] : undefined;
 
       // Always draw a handsome rounded card background container (w: 33% <= 40% of slide space)
       slideObj.addShape(pptx.ShapeType.roundRect, {
-        x: '62%',
-        y: 2.1,
-        w: '33%',
-        h: 4.5,
+        ...CONTENT_LAYOUT.visualCard,
         fill: { color: FALLBACK_BG },
-        line: { color: FALLBACK_BORDER, width: 1.5 },
+        line: { color: FALLBACK_BORDER, width: CONTENT_LAYOUT.visualBorderWidth },
       });
 
       if (imageData && isUsableImage(imageData)) {
         if (slide.imageMetadata) {
-          addLibraryImage(slideObj, imageData, { x: (40 / 3) * 0.625, y: 2.15, w: 4.2, h: 4.4 });
+          addLibraryImage(slideObj, imageData, CONTENT_LAYOUT.libraryImage);
         } else {
           const rawBase64 = toRawBase64(imageData);
           slideObj.addImage({
             data: `${sniffImageMime(rawBase64)};base64,` + rawBase64,
-            x: '62.5%',
-            y: 2.15,
-            w: '32%',
-            h: 4.4,
-            sizing: { type: 'contain', w: 4.2, h: 4.4 },
+            ...CONTENT_LAYOUT.image,
+            sizing: { type: 'contain', ...CONTENT_LAYOUT.imageSizing },
           });
         }
       } else {
@@ -251,11 +222,7 @@ export function createPresentationPptx(
         const placeholderText =
           '[PHILIPPINES CLASSROOM VISUAL DESIGN]\n\n' + slide.visualDescription;
         slideObj.addText(placeholderText, {
-          x: '63%',
-          y: 2.3,
-          w: '31%',
-          h: 4.1,
-          fontSize: 13,
+          ...CONTENT_LAYOUT.placeholder,
           color: SHADE_PRIMARY,
           italic: true,
           align: 'center',
@@ -268,12 +235,8 @@ export function createPresentationPptx(
 
     // 6. Slide counter
     slideObj.addText(`Slide ${idx + 1} of ${totalSlides}`, {
-      x: '80%',
-      y: 6.85,
-      w: '16%',
-      h: 0.35,
-      fontSize: 11,
-      color: '94A3B8',
+      ...SLIDE_COUNTER,
+      color: TEXT_SUBTLE,
       align: 'right',
       fontFace: DEFAULT_FONT_FACE,
     });
