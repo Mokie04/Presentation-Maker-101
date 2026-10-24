@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { SESSION_OPTIONS } from '@/lib/utils/session-options';
 import { SUPPORTED_SUBJECTS, type SupportedSubject } from '@/lib/utils/subject-options';
+import { DEFAULT_MAX_UPLOAD_MB, uploadTooLargeMessage } from '@/lib/upload-limits';
 
 interface UploadSectionProps {
   extractedText: string;
@@ -60,6 +61,11 @@ export function UploadSection({
 
   const processFile = async (file: File) => {
     setUploadError(null);
+    // The hosting platform rejects larger bodies before the route can explain why.
+    if (file.size > DEFAULT_MAX_UPLOAD_MB * 1024 * 1024) {
+      setUploadError(uploadTooLargeMessage(file.size));
+      return;
+    }
     setIsUploading(true);
 
     try {
@@ -71,6 +77,7 @@ export function UploadSection({
         body: formData,
       });
 
+      if (res.status === 413) throw new Error(uploadTooLargeMessage());
       const resText = await res.text();
       let data: { text?: string; fileName?: string; error?: string } = {};
       try {
@@ -196,7 +203,7 @@ export function UploadSection({
                       Drag & Drop Lesson Plan Document
                     </p>
                     <p className="text-xs text-slate-500 mt-1">
-                      or click to browse (.docx, .pdf, .txt, .md — up to 10MB)
+                      or click to browse (.docx, .pdf, .txt, .md — up to {DEFAULT_MAX_UPLOAD_MB}MB)
                     </p>
                   </div>
                 </>

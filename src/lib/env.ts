@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { DEFAULT_MAX_UPLOAD_MB } from '@/lib/upload-limits';
 
 type RawEnv = Record<string, string | undefined>;
 
@@ -20,7 +21,7 @@ const pexelsSchema = z.object({
 });
 
 const appSchema = z.object({
-  MAX_FILE_SIZE_MB: z.coerce.number().positive().default(10),
+  MAX_FILE_SIZE_MB: z.coerce.number().positive().default(DEFAULT_MAX_UPLOAD_MB),
 });
 
 function parseConfig<T extends z.ZodType>(schema: T, raw: RawEnv): z.output<T> {

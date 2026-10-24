@@ -78,7 +78,7 @@ IMAGE_PROVIDER_MODEL=dall-e-3
 PEXELS_API_KEY=
 
 # Upload file-size check (MB); see the Vercel request limit below
-MAX_FILE_SIZE_MB=10
+MAX_FILE_SIZE_MB=4
 ```
 
 | Setting | Current behavior |
@@ -87,9 +87,9 @@ MAX_FILE_SIZE_MB=10
 | `IMAGE_SOURCE` | `auto` by default; `ai` uses the OpenAI-compatible adapter, `pexels` uses Pexels, and `auto` tries AI then Pexels only if a Pexels key is present. |
 | `IMAGE_PROVIDER_BASE_URL`, `IMAGE_PROVIDER_API_KEY`, `IMAGE_PROVIDER_MODEL` | Image adapter defaults are the OpenAI URL, `not-configured` and `dall-e-3`; a usable key is needed for AI image requests. |
 | `PEXELS_API_KEY` | Optional unless using Pexels; also enables fallback in `auto`. |
-| `MAX_FILE_SIZE_MB` | Positive number, default 10; the upload route applies this file-size check. |
+| `MAX_FILE_SIZE_MB` | Positive number, default 4; the upload route applies this file-size check and the upload screen checks the 4 MB default before sending. |
 
-Vercel Functions have a [4.5 MB request-body limit](https://vercel.com/docs/functions/limitations#request-body-size). That limit can reject an upload before the application's default 10 MB file check runs.
+Vercel Functions have a [4.5 MB request-body limit](https://vercel.com/docs/functions/limitations#request-body-size), multipart overhead included. The 4 MB default is chosen to fit under it, and the upload screen explains a rejected file instead of showing platform text. Raising `MAX_FILE_SIZE_MB` above about 4.4 only makes sense when the app is not hosted on Vercel.
 
 #### App Store SSO Configuration
 
