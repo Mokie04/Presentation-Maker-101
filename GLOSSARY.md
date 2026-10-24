@@ -1,5 +1,7 @@
 # Glossary
 
+**Slideshow** — `src/components/SlideshowModal.tsx`, a full-screen view using the same passive Slide view at 16:9. Previous/Next, jump, keyboard and swipe controls navigate independently of Normal selection. Portrait phones show a dismissible rotate hint; credited images retain clickable source and license links below the slide.
+
 **Slide** — One page of a presentation: `SlideData` (`slideNumber`, `part`, `title`, `contentPoints`, `visualDescription`, optional `imageMetadata`). `slideNumber` is its 1-based position and is renumbered when the deck order changes.
 
 **Slide deck** — The ordered Slides of one generated presentation plus its metadata (`subject`, `originalWriters`, `topic`, and optional server-recorded `subjectEvidence`). The wire and export shape is `PresentationData`. Inside the client, each Slide also carries a stable internal id that is never reused and never sent to the server. `src/lib/deck/deck-reducer.ts` owns its edits and image race rules.

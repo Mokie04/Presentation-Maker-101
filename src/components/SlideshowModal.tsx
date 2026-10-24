@@ -10,8 +10,9 @@ import {
 import { describeImageCredit } from '@/lib/image-credit';
 import type { PresentationData } from '@/types/presentation';
 import { getPartBadgeInfo } from './part-badge';
-import { isUsableImage, toDataUrl } from '@/lib/slide-image';
-import { FormattedFormula } from './FormattedFormula';
+import { isUsableImage } from '@/lib/slide-image';
+import { SlideView } from './SlideView';
+import { useMediaQuery } from './workspace/use-media-query';
 
 interface SlideshowModalProps {
   isOpen: boolean;
@@ -32,10 +33,13 @@ export function SlideshowModal({
 }: SlideshowModalProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [hintDismissed, setHintDismissed] = useState(false);
+  const portraitPhone = useMediaQuery('(max-width: 767px) and (orientation: portrait)', false);
 
   useEffect(() => {
     if (isOpen) {
       setCurrentIndex(initialIndex);
+      setHintDismissed(false);
     }
   }, [isOpen, initialIndex]);
 
@@ -100,7 +104,6 @@ export function SlideshowModal({
 
   const currentImage = slideImages[currentIndex];
   const hasValidImage = isUsableImage(currentImage);
-  const imageSrc = hasValidImage ? toDataUrl(currentImage) : undefined;
   const credit = hasValidImage && currentSlide.imageMetadata ? describeImageCredit(currentSlide.imageMetadata) : undefined;
 
   return (
@@ -112,12 +115,12 @@ export function SlideshowModal({
       className="fixed inset-0 z-50 bg-slate-950 flex flex-col justify-between overflow-hidden animate-fadeIn"
     >
       {/* Top Bar */}
-      <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3 text-white z-10">
-        <div className="flex items-center gap-3 min-w-0">
+      <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-3 sm:px-6 py-3.5 flex flex-wrap shrink-0 items-center justify-between gap-2 sm:gap-3 text-white z-10">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 max-w-full">
           {(() => {
             const badge = getPartBadgeInfo(currentSlide.part);
             return (
-              <span className={`px-2.5 py-1 text-xs font-black uppercase tracking-wider rounded-md whitespace-nowrap ${badge.bg} text-white shadow-sm`}>
+              <span className={`px-2.5 py-1 text-xs font-black uppercase tracking-wider rounded-md truncate shrink-0 max-w-[45vw] ${badge.bg} text-white shadow-sm`}>
                 {badge.label}
               </span>
             );
@@ -143,86 +146,38 @@ export function SlideshowModal({
         </div>
       </div>
 
-      {/* Center Slide Viewport */}
-      {/* my-auto centres the card but keeps its top reachable when it is taller than the viewport */}
-      <div className="flex-1 flex justify-center p-4 sm:p-8 overflow-y-auto">
-        <div className="w-full max-w-6xl my-auto md:aspect-[16/9] bg-[#F0F9FF] rounded-2xl shadow-2xl border-4 border-sky-600/20 p-6 sm:p-12 flex flex-col justify-between gap-4 md:gap-0 md:overflow-hidden relative">
-          {/* Slide Header: Part & Title */}
-          <div className="space-y-2">
-            <span className="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-[#0284C7]">
-              {currentSlide.part}
-            </span>
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-[#0369A1] tracking-tight leading-tight">
-              <FormattedFormula text={currentSlide.title} />
-            </h2>
+      {/* The shared 16:9 slide fits both dimensions after the bars and caption. */}
+      <div className="flex-1 min-h-0 min-w-0 flex flex-col gap-2 p-2 sm:p-6 overflow-hidden">
+        {portraitPhone && !hintDismissed && (
+          <div className="shrink-0 flex items-center justify-center gap-2 text-xs text-slate-300">
+            <span>Rotate your phone for a larger slide</span>
+            <button type="button" aria-label="Dismiss rotate hint" onClick={() => setHintDismissed(true)}
+              className="shrink-0 rounded p-1 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500">
+              <X className="h-4 w-4" />
+            </button>
           </div>
-
-          {/* Slide Middle: Bullets & Visual Grid */}
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-8 items-center py-4">
-            {/* Bullets List */}
-            <div
-              className={`${
-                currentSlide.visualDescription ? 'md:col-span-7' : 'md:col-span-12'
-              } space-y-3 sm:space-y-4`}
-            >
-              {(currentSlide.contentPoints || []).map((point, pIdx) => (
-                <div key={pIdx} className="flex items-start gap-3 sm:gap-4">
-                  <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-[#0284C7] mt-2 sm:mt-2.5 flex-shrink-0 shadow-xs" />
-                  <p className="text-base sm:text-xl md:text-2xl font-bold text-[#0F172A] leading-snug">
-                    <FormattedFormula text={point} />
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* Visual Box */}
-            {currentSlide.visualDescription && (
-              <div className="md:col-span-5 h-full flex items-center justify-center">
-                {hasValidImage ? (
-                  <figure className="w-full flex flex-col items-center gap-1.5">
-                    <div className="rounded-xl overflow-hidden shadow-lg border-2 border-sky-300 w-full aspect-video bg-black flex items-center justify-center">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={imageSrc}
-                        alt={currentSlide.title}
-                        className={`w-full h-full ${currentSlide.imageMetadata?.source === 'commons' ? 'object-contain' : 'object-cover'}`}
-                      />
-                    </div>
-                    {/* Library images must carry their credit (CC BY) wherever they are shown */}
-                    {credit && (
-                      <figcaption className="w-full text-center text-[11px] sm:text-xs leading-snug text-slate-600 break-words">
-                        <span>{credit.creditLine}</span>{' '}
-                        <a href={credit.sourceLink} target="_blank" rel="noopener noreferrer" className="text-sky-700 underline">{`${credit.sourceLabel} source`}</a>
-                        {credit.license?.url && <>{' '}<a href={credit.license.url} target="_blank" rel="noopener noreferrer" className="text-sky-700 underline">{`License: ${credit.license.name}`}</a></>}
-                      </figcaption>
-                    )}
-                  </figure>
-                ) : (
-                  <div className="w-full aspect-video bg-[#E0F2FE] border-2 border-dashed border-[#7DD3FC] rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-inner">
-                    <span className="text-[11px] font-black uppercase tracking-wider text-[#0369A1] mb-1">
-                      [PHILIPPINES CLASSROOM VISUAL DESIGN]
-                    </span>
-                    <p className="text-xs sm:text-sm text-sky-900/80 italic line-clamp-4">
-                      &ldquo;{currentSlide.visualDescription}&rdquo;
-                    </p>
-                  </div>
-                )}
+        )}
+        <div className="flex-1 min-h-0 min-w-0 flex flex-col items-center justify-center" style={{ containerType: 'size' }}>
+          <figure className="m-0 w-full max-h-full min-h-0 flex flex-col items-center">
+            <div className="w-full aspect-video min-h-0 shrink flex items-center justify-center" style={{ containerType: 'size' }}>
+              <div className="shrink-0 shadow-2xl" style={{ width: 'min(100cqw, calc(100cqh * 16 / 9))' }}>
+                <SlideView slide={currentSlide} index={currentIndex} total={totalSlides}
+                  image={currentImage} originalWriters={presentationData.originalWriters} variant="full" />
               </div>
+            </div>
+            {credit && (
+              <figcaption className="shrink-0 w-full pt-1.5 text-center text-[11px] sm:text-xs leading-snug text-slate-300 break-words">
+                <span aria-hidden="true">{credit.creditLine}</span>{' '}
+                <a href={credit.sourceLink} target="_blank" rel="noopener noreferrer" className="text-sky-300 underline">{`${credit.sourceLabel} source`}</a>
+                {credit.license?.url && <>{' '}<a href={credit.license.url} target="_blank" rel="noopener noreferrer" className="text-sky-300 underline">{`License: ${credit.license.name}`}</a></>}
+              </figcaption>
             )}
-          </div>
-
-          {/* Slide Bottom: Writers & Counter */}
-          <div className="flex items-center justify-between text-xs sm:text-sm text-slate-500 font-semibold pt-2 border-t border-sky-100">
-            <span>{presentationData.originalWriters || 'JOHN M. NAVARRO'}</span>
-            <span className="text-[#0284C7] font-bold">
-              Slide {currentIndex + 1} of {totalSlides}
-            </span>
-          </div>
+          </figure>
         </div>
       </div>
 
       {/* Bottom Control Bar */}
-      <div className="bg-slate-900/90 backdrop-blur border-t border-slate-800 px-4 sm:px-6 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-3 text-white z-10">
+      <div className="bg-slate-900/90 backdrop-blur border-t border-slate-800 px-3 sm:px-6 py-3.5 shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 text-white z-10">
         <p className="text-xs text-slate-400 font-medium hidden sm:block">
           Use <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">←</kbd> <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">→</kbd> or <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">Space</kbd> to navigate, <kbd className="px-1.5 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-200">Esc</kbd> to exit.
         </p>
@@ -243,7 +198,7 @@ export function SlideshowModal({
           </button>
 
           {/* Jump to Slide Dropdown */}
-          <div className="relative min-w-0">
+          <div className="relative min-w-0 flex-1 sm:flex-initial">
             <select
               aria-label="Jump to slide"
               value={currentIndex}
