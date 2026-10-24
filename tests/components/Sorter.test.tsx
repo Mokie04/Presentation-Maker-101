@@ -75,17 +75,12 @@ describe('Slide sorter workspace', () => {
     expect((screen.getByLabelText('Bullet 1') as HTMLTextAreaElement).value).toBe('Leaves');
   });
 
-  it('inserts after the selected slide while Grid continues to append', async () => {
+  it('inserts after the selected slide', async () => {
     await open();
     fireEvent.click(within(screen.getByRole('listbox')).getByRole('option', { name: 'Slide 1: Plants' }));
     fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
     expect(railTitles()).toEqual(['Slide 1: Plants', 'Slide 2: New Slide Topic', 'Slide 3: Leaves', 'Slide 4: Flowers']);
     expect(screen.getByRole('status').textContent).toBe('Slide 2 of 4 · 4. DISCUSSION');
-    fireEvent.click(screen.getByRole('button', { name: 'Grid' }));
-    fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
-    normal();
-    expect(railTitles()[4]).toBe('Slide 5: New Slide Topic');
-    expect(screen.getByRole('status').textContent).toBe('Slide 5 of 5 · 4. DISCUSSION');
   });
 
   it('moves the selected rail slide with Alt arrows and with the panel buttons', async () => {

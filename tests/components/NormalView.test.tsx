@@ -123,13 +123,14 @@ describe('Normal workspace', () => {
     expect(within(stage()).queryByRole('img')).toBeNull();
   });
 
-  it('switches to the unchanged grid and back while retaining selection and edits', async () => {
+  it('switches to the slide sorter and back while retaining selection and edits', async () => {
     await openWorkspace(); selectSlide(2);
     fireEvent.change(screen.getByLabelText('Slide Title'), { target: { value: 'Edited leaves' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Grid' }));
+    expect(within(screen.getByRole('group', { name: 'Workspace view' })).getAllByRole('button').map(button => button.textContent))
+      .toEqual(['Normal', 'Slide sorter']);
+    fireEvent.click(screen.getByRole('button', { name: 'Slide sorter' }));
     expect(screen.queryByRole('listbox')).toBeNull();
-    expect(screen.getByRole('button', { name: 'Edit Slides' })).toBeTruthy();
-    expect(screen.getAllByRole('button', { name: 'Delete Slide' })).toHaveLength(3);
+    expect(screen.getByRole('listitem', { name: 'Slide 2: Edited leaves' }).getAttribute('aria-current')).toBe('true');
     fireEvent.click(screen.getByRole('button', { name: 'Normal' }));
     expect((screen.getByLabelText('Slide Title') as HTMLInputElement).value).toBe('Edited leaves');
   });

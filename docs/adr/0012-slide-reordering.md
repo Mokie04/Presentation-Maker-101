@@ -11,7 +11,7 @@ Teachers need to arrange a deck without detaching images or credits from their s
 
 `src/lib/deck/deck-reducer.ts` owns moves, duplication and insertion after a stable slide ID. Moves preserve each slide's image state and version; duplicates get a new ID, independent content and image metadata, version zero and no pending request or error. Every operation renumbers the ordered view. Existing ID/version tokens keep late image results on their original slides.
 
-`src/components/workspace/use-slide-reorder.ts` shares HTML5 drag handling between the sorter and Normal rail. Visible move buttons support touch in both views; Alt+ArrowUp/ArrowDown reorders from the rail while plain arrows retain selection navigation. The panel adds after the selected slide; Grid still appends.
+`src/components/workspace/use-slide-reorder.ts` shares HTML5 drag handling between the sorter and Normal rail. Visible move buttons support touch in both views; Alt+ArrowUp/ArrowDown reorders from the rail while plain arrows retain selection navigation. The panel adds after the selected slide. (The card grid's append-only button was retired with the grid; see `docs/adr/0015-retire-the-card-grid.md`.)
 
 ## Consequences
 

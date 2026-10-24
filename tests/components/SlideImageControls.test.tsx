@@ -93,6 +93,23 @@ describe('SlideImageControls', () => {
     expect(onSelectImage).not.toHaveBeenCalled();
   });
 
+  // Ported from the retired SlideCard tests (Phase 6).
+  it('shows no failure message without an error and keeps regeneration available after a failure', () => {
+    const { rerender } = render(<SlideImageControls slide={slide} slideId={17} slideImage="image-data" onRegenerateImage={vi.fn()} />);
+    expect(screen.queryByText(/failed\./)).toBeNull();
+    rerender(<SlideImageControls slide={slide} slideId={17} slideImage="image-data" imageError="quota exceeded" onRegenerateImage={vi.fn()} />);
+    expect(screen.getByRole('button', { name: 'Regenerate AI Graphic' }).hasAttribute('disabled')).toBe(false);
+  });
+
+  it.each<[string, ImageMetadata]>([
+    ['Commons without a license URL', { ...metadata, licenseUrl: undefined } as ImageMetadata],
+    ['NASA', { source: 'nasa', nasaId: 'roots', photographer: 'Jane', assetUrl: 'https://images-assets.nasa.gov/image/roots/roots~large.jpg', rendition: 'large', mimeType: 'image/jpeg' }],
+  ])('shows no license link for %s', (_, imageMetadata) => {
+    render(<SlideImageControls slide={{ ...slide, imageMetadata }} slideId={17} slideImage="image-data" onRegenerateImage={vi.fn()} />);
+    expect(screen.getByRole('link', { name: /source$/ })).toBeTruthy();
+    expect(screen.queryByRole('link', { name: /^License:/ })).toBeNull();
+  });
+
   it('omits the image section when no visual description exists', () => {
     const { container } = render(<SlideImageControls slide={{ ...slide, visualDescription: '' }} slideId={17} onRegenerateImage={vi.fn()} />);
     expect(container.innerHTML).toBe('');
