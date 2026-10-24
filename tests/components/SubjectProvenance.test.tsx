@@ -47,6 +47,8 @@ async function prepare() {
 async function submit() {
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
   await screen.findByRole('button', { name: 'Download Outline' });
+  // Grid view and these legacy card checks retire in Phase 6.
+  fireEvent.click(screen.getByRole('button', { name: 'Grid' }));
 }
 async function exportData() {
   fireEvent.click(screen.getByRole('button', { name: 'Download Outline' }));

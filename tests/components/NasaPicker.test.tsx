@@ -41,6 +41,8 @@ async function open() {
   fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 1' } });
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
   await screen.findByRole('button', { name: 'Download Outline' });
+  // Grid view and these legacy card checks retire in Phase 6.
+  fireEvent.click(screen.getByRole('button', { name: 'Grid' }));
 }
 async function pick(index = 0) {
   fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[index]);

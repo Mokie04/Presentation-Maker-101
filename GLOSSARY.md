@@ -8,6 +8,12 @@
 
 **Slide theme** — `src/lib/slide-theme.ts`, the pure shared PPTX palette, Poppins font face, point sizes and title/content geometry. Coordinates preserve the export's inches and percentages; the Slide view converts them to slide percentages and container-scaled type. Index zero uses the title layout.
 
+**Slide rail** — `src/components/workspace/SlideRail.tsx`, the numbered thumbnail list in Normal view. Selection uses stable slide IDs, with listbox semantics, a highlighted option and memoized `SlideView` thumbnails. It scrolls vertically on tablets and laptops and horizontally below the stage on phones.
+
+**Slide panel** — `src/components/workspace/SlidePanel.tsx`, the always-editable controls for the selected Slide: part, title, bullets, image, delete and add. `src/components/SlideImageControls.tsx` shares the original image and credit controls with the Grid card.
+
+**Workspace view** — Normal is the default three-pane workspace; Grid keeps the original card grid and Edit Slides toggle until Phase 6. `src/components/workspace/PresentationWorkspaceView.tsx` owns the view switch. `src/lib/deck/use-slide-selection.ts` keeps selection as UI state outside the deck reducer; a single workspace keyboard listener navigates without intercepting form-field keys.
+
 **Slide image** — The picture shown on a Slide and exported to PPTX: raw base64 or a `data:` URL. The UI and PPTX route use index-keyed `slideImages`; `FAILED_IMAGE` (`'failed'`) means generation failed and nothing is shown. `src/lib/slide-image.ts` owns the wire rules: `isUsableImage`, `toRawBase64`, `sniffImageMime`, `toDataUrl` and export validation (`hasWireImageFormat`, `MAX_SLIDE_IMAGE_CHARS`).
 
 **Pedagogical part** — `SlideData.part`, the lesson phase a Slide belongs to. `src/lib/pedagogy.ts` owns the rules: `PEDAGOGICAL_PARTS` (Title Page, then the six numbered lesson parts Review to Assessment), `normalizePart` / `canonicalPart` (maps wording such as "Activity" to a canonical part; unknown text is kept), `partOrdinal`, `partLabel` (badge text) and `partWantsAutoImage` (Motivation, Lesson Presentation and Discussion get batch images). The UI adds only colours (`src/components/part-badge.ts`).

@@ -41,6 +41,8 @@ async function openWorkspace() {
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'A lesson about plant parts.' } });
   fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 1' } });
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
+  // Grid view and these legacy card checks retire in Phase 6.
+  fireEvent.click(await screen.findByRole('button', { name: 'Grid' }));
   await screen.findByRole('button', { name: /Edit/i });
   fireEvent.click(screen.getByRole('button', { name: /Edit/i }));
 }
