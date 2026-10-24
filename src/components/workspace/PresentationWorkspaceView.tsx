@@ -17,7 +17,8 @@ export interface PresentationWorkspaceViewProps {
   downloads: ReturnType<typeof useDeckExport>;
   session: string;
   onReset: () => void;
-  onPreview: () => void;
+  /** Opens the slideshow at a 0-based slide index. */
+  onPreview: (slideIndex: number) => void;
 }
 
 export function PresentationWorkspaceView({ deck, downloads, session: selectedSession, onReset, onPreview }: PresentationWorkspaceViewProps) {
@@ -95,7 +96,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
 
                 <button
                   type="button"
-                  onClick={onPreview}
+                  onClick={() => onPreview(Math.max(selectedIndex, 0))}
                   className="px-3 py-2 bg-cyan-700 hover:bg-cyan-800 active:bg-cyan-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-colors motion-reduce:transition-none"
                 >
                   <Play className="w-4 h-4" />

@@ -147,11 +147,23 @@ describe('Normal workspace', () => {
     expect(screen.getByRole('status').textContent).toBe('Slide 2 of 3 · 4. DISCUSSION');
   });
 
+  it('opens the slideshow on the selected slide and keeps the selection after closing', async () => {
+    await openWorkspace(); selectSlide(3);
+    fireEvent.click(screen.getByRole('button', { name: 'Preview' }));
+    const dialog = screen.getByRole('dialog');
+    expect(within(dialog).getByRole('group', { name: 'Slide 3 of 3' })).toBeTruthy();
+    fireEvent.click(within(dialog).getByRole('button', { name: /^Previous/i }));
+    expect(within(dialog).getByRole('group', { name: 'Slide 2 of 3' })).toBeTruthy();
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(screen.getByRole('status').textContent).toBe('Slide 3 of 3 · 4. DISCUSSION');
+  });
+
   it('keeps normal selection independent of fullscreen slideshow navigation', async () => {
     await openWorkspace(); selectSlide(2);
     fireEvent.click(screen.getByRole('button', { name: 'Preview' }));
     const dialog = screen.getByRole('dialog');
-    expect(within(dialog).getAllByText('Slide 1 of 3').length).toBeGreaterThan(0);
+    expect(within(dialog).getAllByText('Slide 2 of 3').length).toBeGreaterThan(0);
     fireEvent.click(within(dialog).getByRole('button', { name: /exit slideshow/i }));
     expect(screen.getByRole('status').textContent).toBe('Slide 2 of 3 · 4. DISCUSSION');
   });
