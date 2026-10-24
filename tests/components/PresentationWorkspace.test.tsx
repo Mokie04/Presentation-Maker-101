@@ -1,8 +1,7 @@
 // @vitest-environment jsdom
-import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
-import Home from '@/app/page';
+import { act, cleanup, fireEvent, screen, within } from '@testing-library/react';
+import { openWorkspace, panel, panelImageSrc, railTitles, selectSlideTitled } from '../helpers/workspace';
 
 const presentation = {
   subject: 'Science', originalWriters: 'Teacher', topic: 'Plants',
@@ -35,18 +34,6 @@ beforeEach(() => {
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 
-async function openWorkspace() {
-  render(<Home />);
-  fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
-  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'A lesson about plant parts.' } });
-  fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 1' } });
-  fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
-  // Grid view and these legacy card checks retire in Phase 6.
-  fireEvent.click(await screen.findByRole('button', { name: 'Grid' }));
-  await screen.findByRole('button', { name: /Edit/i });
-  fireEvent.click(screen.getByRole('button', { name: /Edit/i }));
-}
-
 async function finishBatch() {
   await act(async () => {
     batch.resolve(Response.json({ images: { 0: 'roots-image', 1: 'leaves-image', 2: 'flowers-image' } }));
@@ -54,22 +41,26 @@ async function finishBatch() {
 }
 
 function expectRemainingImages() {
-  expect(screen.getByRole('img', { name: 'Roots' }).getAttribute('src')).toContain('roots-image');
-  expect(screen.getByRole('img', { name: 'Flowers' }).getAttribute('src')).toContain('flowers-image');
-  expect(screen.queryByRole('img', { name: 'Leaves' })).toBeNull();
+  expect(railTitles()).toEqual(['Slide 1: Roots', 'Slide 2: Flowers']);
+  selectSlideTitled('Roots');
+  expect(panelImageSrc('Roots')).toContain('roots-image');
+  selectSlideTitled('Flowers');
+  expect(panelImageSrc('Flowers')).toContain('flowers-image');
 }
 
 describe('workspace slide deletion', () => {
   it('keeps completed images attached to their slides after deleting the middle slide', async () => {
     await openWorkspace();
     await finishBatch();
-    fireEvent.click(screen.getAllByRole('button', { name: 'Delete Slide' })[1]);
+    selectSlideTitled('Leaves');
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
     expectRemainingImages();
   });
 
   it('attaches a pending batch to the remaining slides after deletion', async () => {
     await openWorkspace();
-    fireEvent.click(screen.getAllByRole('button', { name: 'Delete Slide' })[1]);
+    selectSlideTitled('Leaves');
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
     await finishBatch();
     expectRemainingImages();
   });
@@ -77,38 +68,51 @@ describe('workspace slide deletion', () => {
   it('keeps an in-flight regeneration and its loading flag on the shifted slide', async () => {
     await openWorkspace();
     await finishBatch();
-    fireEvent.click(screen.getAllByRole('button', { name: 'Regenerate AI Graphic' })[2]);
-    fireEvent.click(screen.getAllByRole('button', { name: 'Delete Slide' })[1]);
+    selectSlideTitled('Flowers');
+    fireEvent.click(screen.getByRole('button', { name: 'Regenerate AI Graphic' }));
+    selectSlideTitled('Leaves');
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
+    // Deleting Leaves selects its neighbour, the shifted Flowers slide.
+    expect(screen.getByRole('status').textContent).toBe('Slide 2 of 2 · 4. DISCUSSION');
     expect(screen.getByRole('button', { name: 'Rendering Image...' })).toBeTruthy();
     await act(async () => { single.resolve(Response.json({ base64: 'new-flowers-image', slideIndex: 2 })); });
-    expect(screen.getByRole('img', { name: 'Flowers' }).getAttribute('src')).toContain('new-flowers-image');
+    expect(panelImageSrc('Flowers')).toContain('new-flowers-image');
     expect(screen.queryByRole('button', { name: 'Rendering Image...' })).toBeNull();
   });
 
   it.each([
-    { index: 0, remaining: [['Leaves', 'leaves-image'], ['Flowers', 'flowers-image']] },
-    { index: 2, remaining: [['Roots', 'roots-image'], ['Leaves', 'leaves-image']] },
-  ])('preserves images when deleting slide at index $index', async ({ index, remaining }) => {
+    { title: 'Roots', remaining: [['Leaves', 'leaves-image'], ['Flowers', 'flowers-image']] },
+    { title: 'Flowers', remaining: [['Roots', 'roots-image'], ['Leaves', 'leaves-image']] },
+  ])('preserves images when deleting the $title slide', async ({ title, remaining }) => {
     await openWorkspace();
     await finishBatch();
-    fireEvent.click(screen.getAllByRole('button', { name: 'Delete Slide' })[index]);
-    for (const [title, image] of remaining) {
-      expect(screen.getByRole('img', { name: title }).getAttribute('src')).toContain(image);
+    selectSlideTitled(title);
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
+    expect(railTitles()).toEqual(remaining.map(([name], index) => `Slide ${index + 1}: ${name}`));
+    for (const [name, image] of remaining) {
+      selectSlideTitled(name);
+      expect(panelImageSrc(name)).toContain(image);
     }
+    // "+ Add Slide" inserts after the selected slide and selects the new slide.
     fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
-    expect(screen.queryByRole('img', { name: 'New Slide Topic' })).toBeNull();
+    expect((screen.getByLabelText('Slide Title') as HTMLInputElement).value).toBe('New Slide Topic');
+    expect(within(panel()).queryByRole('img')).toBeNull();
   });
 
   it('ignores a deleted slide regeneration when a new slide occupies its old position', async () => {
     await openWorkspace();
     await finishBatch();
-    fireEvent.click(screen.getAllByRole('button', { name: 'Regenerate AI Graphic' })[2]);
-    fireEvent.click(screen.getAllByRole('button', { name: 'Delete Slide' })[2]);
+    selectSlideTitled('Flowers');
+    fireEvent.click(screen.getByRole('button', { name: 'Regenerate AI Graphic' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
+    // Leaves is now selected, so the new slide lands at Flowers' old index 2.
     fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
+    expect(railTitles()).toEqual(['Slide 1: Roots', 'Slide 2: Leaves', 'Slide 3: New Slide Topic']);
     await act(async () => { single.resolve(Response.json({ base64: 'deleted-image', slideIndex: 2 })); });
-    expect(screen.queryByRole('img', { name: 'New Slide Topic' })).toBeNull();
+    expect(within(panel()).queryByRole('img')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Rendering Image...' })).toBeNull();
-    expect(screen.getByRole('img', { name: 'Leaves' }).getAttribute('src')).toContain('leaves-image');
+    selectSlideTitled('Leaves');
+    expect(panelImageSrc('Leaves')).toContain('leaves-image');
   });
 
 });
@@ -118,14 +122,19 @@ describe('workspace regeneration failure', () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     await openWorkspace();
     await finishBatch();
-    fireEvent.click(screen.getAllByRole('button', { name: 'Regenerate AI Graphic' })[1]);
+    selectSlideTitled('Leaves');
+    fireEvent.click(screen.getByRole('button', { name: 'Regenerate AI Graphic' }));
     await act(async () => {
       single.resolve(Response.json({ error: 'Invalid size 1024x576 for model', slideIndex: 1 }, { status: 500 }));
     });
-    expect(screen.getByRole('img', { name: 'Leaves' }).getAttribute('src')).toContain('leaves-image');
+    expect(panelImageSrc('Leaves')).toContain('leaves-image');
     expect(screen.getByText('Regeneration failed. Kept the previous image.')).toBeTruthy();
     expect(screen.queryByText(/1024x576/)).toBeNull();
-    expect(screen.getAllByRole('button', { name: 'Regenerate AI Graphic' })).toHaveLength(3);
+    // Every slide can still regenerate: no loading flag is left behind.
+    for (const title of ['Roots', 'Leaves', 'Flowers']) {
+      selectSlideTitled(title);
+      expect(screen.getByRole('button', { name: 'Regenerate AI Graphic' }).hasAttribute('disabled')).toBe(false);
+    }
     consoleError.mockRestore();
   });
 });

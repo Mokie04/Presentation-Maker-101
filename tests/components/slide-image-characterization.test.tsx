@@ -2,10 +2,11 @@
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from '@testing-library/react';
-import { SlideCard } from '@/components/SlideCard';
+import { SlideImageControls } from '@/components/SlideImageControls';
 import { SlideshowModal } from '@/components/SlideshowModal';
 
 // Captured from SlideCard and SlideshowModal before slide-image.ts existed: [case, slideImage, rendered src].
+// SlideCard retired in Phase 6; its image preview now lives in SlideImageControls (the Normal panel).
 const PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
 const JPG = '/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP8=';
 const cases: [string, string, string | null][] = [
@@ -20,9 +21,8 @@ const cases: [string, string, string | null][] = [
 const slide = { slideNumber: 1, part: 'Discussion', title: 'Roots', contentPoints: ['P'], visualDescription: 'V' };
 
 describe.each(cases)('a %s slide image', (_, image, src) => {
-  it('renders the same src on the card', () => {
-    const { container } = render(<SlideCard slide={slide} slideId={1} totalSlides={1} isEditing={false} slideImage={image}
-      onUpdateTitle={vi.fn()} onUpdateBullet={vi.fn()} onAddBullet={vi.fn()} onDeleteBullet={vi.fn()} onDeleteSlide={vi.fn()} onRegenerateImage={vi.fn()} />);
+  it('renders the same src in the panel image controls', () => {
+    const { container } = render(<SlideImageControls slide={slide} slideId={1} slideImage={image} onRegenerateImage={vi.fn()} />);
     expect(container.querySelector('img')?.getAttribute('src') ?? null).toBe(src);
   });
 

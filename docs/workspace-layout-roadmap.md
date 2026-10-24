@@ -62,8 +62,13 @@ A clickable HTML mock of the Normal view and the Sorter view, approved before Ph
 - Accessibility: view switching and slide removal keep focus in the workspace, the slideshow traps focus and returns it to Preview, form fields and the upload drop zone are named, focus rings are two-tone, reduced motion is honoured and UI chrome text meets WCAG AA. An axe-core jsdom run (colour contrast excluded) covers Normal, Slide sorter, Grid and the slideshow.
 - Existing tests remain unchanged except slideshow assertions that pinned the old layout. Local eight-slide browser checks cover 320, 390, 768, 1024 and 1440 px without provider calls. Part badges and slide colours keep their palette; their contrast findings are recorded for a later change.
 
-### Phase 6: retire the old grid
-- Remove the editing card grid, update docs and add an ADR.
+### Phase 6: retire the old grid — done
+- The card grid, its Edit Slides toggle and its append-only add button are removed; the workspace has two views, Normal and Slide sorter. See `docs/adr/0015-retire-the-card-grid.md`.
+- The legacy integration tests now select a slide in the rail and act in the panel, with every scenario kept; the retired card tests moved to the panel's image controls where they were not already covered.
+- The slideshow opens on the selected slide, and the Review, Motivation, Lesson Presentation and unknown-part badges use -700 shades for WCAG AA contrast with white text.
+- Local eight-slide browser checks cover 1440, 768 and 390 px without provider calls.
+
+Workspace layout roadmap complete — 2026-10-24.
 
 ## Risks
 

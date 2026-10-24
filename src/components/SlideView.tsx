@@ -139,7 +139,7 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
         borderRadius: CONTENT_LAYOUT.visualCornerRadius,
       }} />}
       {showImage ? (
-        // Inline base64 images mirror the existing SlideCard image contract.
+        // Inline base64 images mirror the SlideImageControls image contract.
         // eslint-disable-next-line @next/next/no-img-element
         <img src={toDataUrl(image!)} alt={slide.visualDescription || slide.title}
           className={slide.imageMetadata?.source === 'commons' ? 'object-contain' : 'object-cover'}

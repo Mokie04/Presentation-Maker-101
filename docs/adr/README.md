@@ -18,3 +18,4 @@ Dates are recorded by month. Accepted describes the current design; Proposed and
 | [0012](0012-slide-reordering.md) | Accepted | Reducer-owned reordering, duplication and add-after |
 | [0013](0013-edit-on-slide.md) | Accepted | Plain-text on-slide editing through existing deck actions |
 | [0014](0014-slideshow-on-slide-view.md) | Accepted | Shared slideshow renderer and clickable credit bar |
+| [0015](0015-retire-the-card-grid.md) | Accepted | Retire the card grid; Normal and Slide sorter are the two views |

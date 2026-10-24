@@ -10,7 +10,7 @@ export function toPresentationData(state: DeckState): PresentationData | null {
   };
 }
 
-/** Index-keyed view used by SlideCard, SlideshowModal and export; FAILED_IMAGE only for Slides with no image. */
+/** Index-keyed view used by the workspace, SlideshowModal and export; FAILED_IMAGE only for Slides with no image. */
 export function toSlideImages(state: DeckState): Record<number, string> {
   const images: Record<number, string> = {};
   state.slides.forEach(({ image }, index) => {

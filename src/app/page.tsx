@@ -124,7 +124,7 @@ function PresentationWorkspace() {
         ) : (
           /* Presentation Workspace View */
           <PresentationWorkspaceView deck={deck} downloads={downloads} session={selectedSession}
-            onReset={handleReset} onPreview={() => { setCurrentSlideIndex(0); setIsSlideShowActive(true); }} />
+            onReset={handleReset} onPreview={(slideIndex) => { setCurrentSlideIndex(slideIndex); setIsSlideShowActive(true); }} />
         )}
 
         {/* Fullscreen Slideshow Modal */}

@@ -1,8 +1,7 @@
 // @vitest-environment jsdom
-import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import Home from '@/app/page';
+import { act, cleanup, fireEvent, screen, within } from '@testing-library/react';
+import { generateDeck, openWorkspace, panel, panelImageSrc, selectSlide, selectSlideTitled } from '../helpers/workspace';
 const candidate = { nasaId: 'roots', title: '<b>Seedlings</b>', photographer: 'Jane', secondaryCreator: 'Another credit',
   description: '<script>not HTML</script> Courtesy: Original team', sourceUrl: 'https://images-assets.nasa.gov/image/roots/collection.json' };
 const metadata = { ...candidate, source: 'nasa', assetUrl: 'https://images-assets.nasa.gov/image/roots/roots~large.jpg',
@@ -35,23 +34,26 @@ beforeEach(() => {
   }));
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
-async function open() {
-  render(<Home />); fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
-  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Reading about roots' } });
-  fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 1' } });
-  fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
-  await screen.findByRole('button', { name: 'Download Outline' });
-  // Grid view and these legacy card checks retire in Phase 6.
-  fireEvent.click(screen.getByRole('button', { name: 'Grid' }));
+async function open() { await openWorkspace('Reading about roots'); }
+/** Selects slide `index` in the rail and opens its panel picker. */
+function findImage(index = 0) {
+  selectSlide(index + 1);
+  fireEvent.click(screen.getByRole('button', { name: 'Find image' }));
 }
 async function pick(index = 0) {
-  fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[index]);
+  findImage(index);
   expect(screen.getByLabelText('NASA search terms').getAttribute('value')).toBe(presentation.slides[index].title);
   fireEvent.change(screen.getByLabelText('NASA search terms'), { target: { value: 'seedling roots' } });
   fireEvent.click(screen.getByRole('button', { name: 'Search NASA' }));
   await screen.findByRole('button', { name: 'Use this image' });
 }
-function rootsImage() { return screen.getByRole('img', { name: 'Roots' }).getAttribute('src'); }
+function rootsImage() { selectSlideTitled('Roots'); return panelImageSrc('Roots'); }
+async function exportedSlides() {
+  fireEvent.click(screen.getByRole('button', { name: 'Download Outline' }));
+  await act(async () => {});
+  const exportCall = vi.mocked(fetch).mock.calls.filter(([url]) => url === '/api/download-markdown').at(-1);
+  return JSON.parse(String(exportCall?.[1]?.body)).presentationData.slides as { title: string; imageMetadata?: unknown }[];
+}
 async function finish() { await act(async () => { selected.resolve(Response.json({ base64: '/9j/2Q==', metadata })); }); }
 describe('manual NASA picker with mocked responses', () => {
   it('keeps Commons selection and export credits on the stable slide, then clears them on AI replacement', async () => {
@@ -59,30 +61,34 @@ describe('manual NASA picker with mocked responses', () => {
       licenseKind: 'cc-by', licenseName: 'CC BY 4.0', licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
       sourceUrl: 'https://commons.wikimedia.org/wiki/File:Roots.png',
       assetUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Roots.png/1200px-Roots.png', mimeType: 'image/png', rendition: 'thumbnail' };
-    await open(); fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[2]);
+    await open(); findImage(2);
     fireEvent.change(screen.getByLabelText('Image source'), { target: { value: 'commons' } });
     search.mockResolvedValueOnce(Response.json({ candidates: [commons] }));
     fireEvent.click(screen.getByRole('button', { name: 'Search Commons' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Use this image' }));
-    fireEvent.click(screen.getAllByRole('button', { name: 'Delete Slide' })[0]);
+    // Selecting Roots to delete it would close this picker, so the selection completes first.
     await act(async () => { selected.resolve(Response.json({ base64: 'commons-image', metadata: commons })); });
-    expect(screen.getByRole('img', { name: 'Flowers' }).getAttribute('src')).toContain('commons-image');
-    expect(screen.getByRole('img', { name: 'Flowers' }).className).toContain('object-contain');
-    expect(screen.getByRole('img', { name: 'Leaves' }).getAttribute('src')).toContain('old-leaves');
+    selectSlideTitled('Roots');
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
+    selectSlideTitled('Flowers');
+    expect(panelImageSrc('Flowers')).toContain('commons-image');
+    expect(within(panel()).getByRole('img', { name: 'Flowers' }).className).toContain('object-contain');
+    selectSlideTitled('Leaves');
+    expect(panelImageSrc('Leaves')).toContain('old-leaves');
     const selectCall = vi.mocked(fetch).mock.calls.find(([url]) => url === '/api/commons-images/select');
     expect(JSON.parse(String(selectCall?.[1]?.body))).toEqual({ fileId: 42 });
     fireEvent.click(screen.getByRole('button', { name: 'Download Outline' }));
     await act(async () => {});
     const exportCall = vi.mocked(fetch).mock.calls.find(([url]) => url === '/api/download-markdown');
     expect(JSON.parse(String(exportCall?.[1]?.body)).presentationData.slides[1].imageMetadata.creator).toBe('Original artist');
-    const card = screen.getByRole('img', { name: 'Flowers' }).closest('.rounded-2xl')! as HTMLElement;
-    fireEvent.click(within(card).getByRole('button', { name: 'Regenerate AI Graphic' })); await act(async () => {});
-    expect(screen.getByRole('img', { name: 'Flowers' }).getAttribute('src')).toContain('new-ai');
+    selectSlideTitled('Flowers');
+    fireEvent.click(within(panel()).getByRole('button', { name: 'Regenerate AI Graphic' })); await act(async () => {});
+    expect(panelImageSrc('Flowers')).toContain('new-ai');
     expect(screen.queryByText('Creator: Original artist; License: CC BY 4.0')).toBeNull();
   });
   it('ignores a late search after switching sources', async () => {
     const pending = deferred(); search.mockReturnValueOnce(pending.promise);
-    await open(); fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[0]);
+    await open(); findImage(0);
     fireEvent.click(screen.getByRole('button', { name: 'Search NASA' }));
     fireEvent.change(screen.getByLabelText('Image source'), { target: { value: 'commons' } });
     await act(async () => { pending.resolve(Response.json({ candidates: [candidate] })); });
@@ -98,7 +104,7 @@ describe('manual NASA picker with mocked responses', () => {
     expect(screen.getByRole('button', { name: 'Search Commons' }).hasAttribute('disabled')).toBe(false);
   });
   it.each(['none', 'rate limited', 'unsupported'])('preserves the existing image for Commons %s', async (mode) => {
-    await open(); fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[0]);
+    await open(); findImage(0);
     fireEvent.change(screen.getByLabelText('Image source'), { target: { value: 'commons' } });
     search.mockResolvedValueOnce(mode === 'none' ? Response.json({ candidates: [] })
       : mode === 'rate limited' ? Response.json({ error: 'Slow down', retryAfterSeconds: 120 }, { status: 429 })
@@ -115,17 +121,19 @@ describe('manual NASA picker with mocked responses', () => {
       licenseKind: 'cc-by', licenseName: 'CC BY 4.0', licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
       sourceUrl: 'https://commons.wikimedia.org/wiki/File:Roots.png',
       assetUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Roots.png/1200px-Roots.png', mimeType: 'image/png', rendition: 'thumbnail' };
-    await open(); fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[0]);
+    await open(); findImage(0);
     fireEvent.change(screen.getByLabelText('Image source'), { target: { value: 'commons' } });
     search.mockResolvedValueOnce(Response.json({ candidates: [commons] }));
     fireEvent.click(screen.getByRole('button', { name: 'Search Commons' }));
     fireEvent.click(await screen.findByRole('button', { name: 'Use this image' }));
-    if (mode === 'delete') fireEvent.click(screen.getAllByRole('button', { name: 'Delete Slide' })[0]);
+    if (mode === 'delete') fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
     if (mode === 'reset') fireEvent.click(screen.getByTitle('Reset to New Upload'));
     if (mode === 'switch') fireEvent.change(screen.getByLabelText('Image source'), { target: { value: 'nasa' } });
     await act(async () => { selected.resolve(Response.json({ base64: 'commons-image', metadata: commons })); });
     expect(screen.queryByText('Creator: Original artist; License: CC BY 4.0')).toBeNull();
     if (mode === 'switch') expect(rootsImage()).toContain('old-roots');
+    // Only the selected slide is on screen, so check that no slide received the credit.
+    if (mode === 'delete') expect((await exportedSlides()).map(slide => slide.imageMetadata)).toEqual([undefined, undefined]);
   });
 
   it('searches editable terms, renders plain metadata, and explicitly replaces only the selected slide', async () => {
@@ -136,7 +144,8 @@ describe('manual NASA picker with mocked responses', () => {
     expect(rootsImage()).toContain('old-roots');
     fireEvent.click(screen.getByRole('button', { name: 'Use this image' })); await finish();
     expect(rootsImage()).toContain('/9j/2Q==');
-    expect(screen.getByRole('img', { name: 'Leaves' }).getAttribute('src')).toContain('old-leaves');
+    selectSlideTitled('Leaves');
+    expect(panelImageSrc('Leaves')).toContain('old-leaves');
     const calls = vi.mocked(fetch).mock.calls;
     expect(JSON.parse(String(calls.find(([u]) => u === '/api/nasa-images/search')?.[1]?.body))).toEqual({ query: 'seedling roots' });
     expect(JSON.parse(String(calls.find(([u]) => u === '/api/nasa-images/select')?.[1]?.body))).toEqual({ nasaId: 'roots' });
@@ -154,7 +163,7 @@ describe('manual NASA picker with mocked responses', () => {
         expect(screen.getByRole('alert')).toBeTruthy();
       }
     } else {
-      fireEvent.click(screen.getAllByRole('button', { name: 'Find image' })[0]);
+      findImage(0);
       fireEvent.click(screen.getByRole('button', { name: 'Search NASA' }));
       await screen.findByText(mode === 'empty' ? 'No NASA images found.' : 'upstream failed');
     }
@@ -165,37 +174,35 @@ describe('manual NASA picker with mocked responses', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Cancel NASA picker' })); await finish();
     expect(rootsImage()).toContain('old-roots');
   });
-  it('keeps a pending selection on its stable slide after another slide is deleted', async () => {
-    await open(); await pick(2); fireEvent.click(screen.getByRole('button', { name: 'Use this image' }));
-    fireEvent.click(screen.getAllByRole('button', { name: 'Delete Slide' })[1]); await finish();
-    expect(screen.getByRole('img', { name: 'Flowers' }).getAttribute('src')).toContain('/9j/2Q==');
+  it('keeps a selection on its stable slide after another slide is deleted', async () => {
+    // The Normal panel closes its picker when the selection changes, so the selection completes before the deletion.
+    await open(); await pick(2); fireEvent.click(screen.getByRole('button', { name: 'Use this image' })); await finish();
+    selectSlideTitled('Leaves');
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
+    selectSlideTitled('Flowers');
+    expect(panelImageSrc('Flowers')).toContain('/9j/2Q==');
     expect(rootsImage()).toContain('old-roots');
-    fireEvent.click(screen.getByRole('button', { name: 'Download Outline' }));
-    await screen.findByRole('button', { name: 'Download Outline' });
-    const exportCall = vi.mocked(fetch).mock.calls.find(([url]) => url === '/api/download-markdown');
-    const exported = JSON.parse(String(exportCall?.[1]?.body)).presentationData;
-    expect(exported.slides[0].imageMetadata).toBeUndefined();
-    expect(exported.slides[1].imageMetadata).toEqual(metadata);
+    const exported = await exportedSlides();
+    expect(exported[0].imageMetadata).toBeUndefined();
+    expect(exported[1].imageMetadata).toEqual(metadata);
   });
   it('ignores selection after target deletion, even if a new slide takes its index', async () => {
     await open(); await pick(2); fireEvent.click(screen.getByRole('button', { name: 'Use this image' }));
-    fireEvent.click(screen.getAllByRole('button', { name: 'Delete Slide' })[2]);
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
+    // Leaves is selected after the deletion, so the new slide takes Flowers' old index 2.
     fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' })); await finish();
-    expect(screen.queryByRole('img', { name: 'New Slide Topic' })).toBeNull();
+    expect(within(panel()).queryByRole('img')).toBeNull();
+    expect((await exportedSlides()).map(slide => slide.imageMetadata)).toEqual([undefined, undefined, undefined]);
   });
   it('ignores pending selection after reset and subsequent generation', async () => {
     await open(); await pick(); fireEvent.click(screen.getByRole('button', { name: 'Use this image' }));
     fireEvent.click(screen.getByTitle('Reset to New Upload'));
-    fireEvent.click(screen.getByRole('button', { name: /paste/i }));
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'new lesson' } });
-    fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 1' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
-    await screen.findByRole('button', { name: 'Download Outline' }); await finish();
+    await generateDeck('new lesson'); await finish();
     expect(rootsImage()).toContain('old-roots');
   });
   it('ignores an already-running single AI response after a manual NASA selection', async () => {
     ai = deferred(); await open();
-    fireEvent.click(screen.getAllByRole('button', { name: 'Regenerate AI Graphic' })[0]);
+    fireEvent.click(screen.getByRole('button', { name: 'Regenerate AI Graphic' }));
     await pick(); fireEvent.click(screen.getByRole('button', { name: 'Use this image' })); await finish();
     await act(async () => { ai!.resolve(Response.json({ base64: 'late-single-ai' })); });
     expect(rootsImage()).toContain('/9j/2Q==');
@@ -205,12 +212,10 @@ describe('manual NASA picker with mocked responses', () => {
     batch = deferred(); await open(); await pick(); fireEvent.click(screen.getByRole('button', { name: 'Use this image' })); await finish();
     await act(async () => { batch!.resolve(Response.json({ images: { 0: 'late-ai' } })); });
     expect(rootsImage()).toContain('/9j/2Q==');
-    const card = screen.getByRole('img', { name: 'Roots' }).closest('.rounded-2xl')! as HTMLElement;
-    expect(within(card).getByText(/Jane/)).toBeTruthy();
-    fireEvent.click(within(card).getByRole('button', { name: 'Regenerate AI Graphic' }));
-    await screen.findByRole('img', { name: 'Roots' });
+    expect(within(panel()).getByText(/Jane/)).toBeTruthy();
+    fireEvent.click(within(panel()).getByRole('button', { name: 'Regenerate AI Graphic' }));
     await act(async () => {});
     expect(rootsImage()).toContain('new-ai');
-    expect(within(card).queryByText(/Jane/)).toBeNull();
+    expect(within(panel()).queryByText(/Jane/)).toBeNull();
   });
 });

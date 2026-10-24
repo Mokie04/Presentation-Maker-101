@@ -1,8 +1,7 @@
 // @vitest-environment jsdom
-import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import Home from '@/app/page';
+import { act, cleanup, fireEvent, screen, within } from '@testing-library/react';
+import { openWorkspace, selectSlide, stage } from '../helpers/workspace';
 import { samples } from '../lib/services/credit-samples';
 
 const presentation = {
@@ -34,18 +33,6 @@ beforeEach(() => {
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 
-async function openWorkspace() {
-  render(<Home />);
-  fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
-  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'A lesson about plants.' } });
-  fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 1' } });
-  fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
-  await screen.findByRole('listbox', { name: 'Slides' });
-}
-function stage() { return screen.getByRole('region', { name: 'Slide stage' }); }
-function selectSlide(number: number) {
-  fireEvent.click(within(screen.getByRole('listbox')).getAllByRole('option')[number - 1]);
-}
 
 describe('Normal workspace', () => {
   it('defaults to Normal with rail, stage and always-editable panel and preserves header actions', async () => {
@@ -136,13 +123,14 @@ describe('Normal workspace', () => {
     expect(within(stage()).queryByRole('img')).toBeNull();
   });
 
-  it('switches to the unchanged grid and back while retaining selection and edits', async () => {
+  it('switches to the slide sorter and back while retaining selection and edits', async () => {
     await openWorkspace(); selectSlide(2);
     fireEvent.change(screen.getByLabelText('Slide Title'), { target: { value: 'Edited leaves' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Grid' }));
+    expect(within(screen.getByRole('group', { name: 'Workspace view' })).getAllByRole('button').map(button => button.textContent))
+      .toEqual(['Normal', 'Slide sorter']);
+    fireEvent.click(screen.getByRole('button', { name: 'Slide sorter' }));
     expect(screen.queryByRole('listbox')).toBeNull();
-    expect(screen.getByRole('button', { name: 'Edit Slides' })).toBeTruthy();
-    expect(screen.getAllByRole('button', { name: 'Delete Slide' })).toHaveLength(3);
+    expect(screen.getByRole('listitem', { name: 'Slide 2: Edited leaves' }).getAttribute('aria-current')).toBe('true');
     fireEvent.click(screen.getByRole('button', { name: 'Normal' }));
     expect((screen.getByLabelText('Slide Title') as HTMLInputElement).value).toBe('Edited leaves');
   });
@@ -159,11 +147,23 @@ describe('Normal workspace', () => {
     expect(screen.getByRole('status').textContent).toBe('Slide 2 of 3 · 4. DISCUSSION');
   });
 
+  it('opens the slideshow on the selected slide and keeps the selection after closing', async () => {
+    await openWorkspace(); selectSlide(3);
+    fireEvent.click(screen.getByRole('button', { name: 'Preview' }));
+    const dialog = screen.getByRole('dialog');
+    expect(within(dialog).getByRole('group', { name: 'Slide 3 of 3' })).toBeTruthy();
+    fireEvent.click(within(dialog).getByRole('button', { name: /^Previous/i }));
+    expect(within(dialog).getByRole('group', { name: 'Slide 2 of 3' })).toBeTruthy();
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(screen.getByRole('status').textContent).toBe('Slide 3 of 3 · 4. DISCUSSION');
+  });
+
   it('keeps normal selection independent of fullscreen slideshow navigation', async () => {
     await openWorkspace(); selectSlide(2);
     fireEvent.click(screen.getByRole('button', { name: 'Preview' }));
     const dialog = screen.getByRole('dialog');
-    expect(within(dialog).getAllByText('Slide 1 of 3').length).toBeGreaterThan(0);
+    expect(within(dialog).getAllByText('Slide 2 of 3').length).toBeGreaterThan(0);
     fireEvent.click(within(dialog).getByRole('button', { name: /exit slideshow/i }));
     expect(screen.getByRole('status').textContent).toBe('Slide 2 of 3 · 4. DISCUSSION');
   });

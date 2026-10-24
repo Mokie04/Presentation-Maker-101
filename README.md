@@ -207,14 +207,14 @@ The teacher can select a subject; otherwise a keyword classifier supplies one. T
 - Following slide generation, background batch synthesis requests images for Motivation, Lesson Presentation and Discussion slides.
 - Sequenced with an `800ms` inter-request delay to respect external API rate limits.
 - Fault-tolerant: If an image request fails, the batch emits the `"failed"` wire value and continues; the deck preserves an existing image when appropriate.
-- Individual "Render Visual Concept Image" / "Regenerate AI Graphic" buttons on each slide card.
+- "Render Visual Concept Image" / "Regenerate AI Graphic" and "Find image" (NASA or Wikimedia Commons) for the selected slide in the settings panel.
 
 ### 5. Interactive Slide Editor
-- Toggle between **Slides View** and **Edit Slides**.
-- Inline editing of slide titles and multi-line bullet points.
+- **Normal** view: a thumbnail rail, the selected slide on a 16:9 stage and an always-editable settings panel.
+- Edit titles and bullets directly on the slide (from 768 px wide) or in the panel; change the pedagogical part.
 - Delete individual bullets or click `+ Add Bullet Point`.
-- Delete entire slides (which automatically re-numbers remaining slides).
-- Add new slides with customized parts.
+- Delete, duplicate or move slides; `+ Add Slide` inserts after the selected slide. Remaining slides are renumbered.
+- **Slide sorter** view: reorder by drag or move buttons, duplicate and delete.
 
 ### 6. Fullscreen Slideshow Modal
 - Clean 16:9 viewport with responsive typography (titles up to 5xl, bullets up to 2xl).

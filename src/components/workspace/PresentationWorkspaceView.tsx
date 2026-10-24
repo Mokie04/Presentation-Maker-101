@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { FileDown, FileText, Play, RotateCcw, Edit3, Eye, Plus, UserCheck } from 'lucide-react';
-import { SlideCard } from '@/components/SlideCard';
+import { FileDown, FileText, Play, RotateCcw, UserCheck } from 'lucide-react';
 import { partLabel } from '@/lib/pedagogy';
 import type { useSlideDeck } from '@/lib/deck/use-slide-deck';
 import type { useDeckExport } from '@/lib/export/use-deck-export';
@@ -18,12 +17,12 @@ export interface PresentationWorkspaceViewProps {
   downloads: ReturnType<typeof useDeckExport>;
   session: string;
   onReset: () => void;
-  onPreview: () => void;
+  /** Opens the slideshow at a 0-based slide index. */
+  onPreview: (slideIndex: number) => void;
 }
 
 export function PresentationWorkspaceView({ deck, downloads, session: selectedSession, onReset, onPreview }: PresentationWorkspaceViewProps) {
-  const [view, setView] = useState<'normal' | 'grid' | 'sorter'>('normal');
-  const [isEditing, setIsEditing] = useState(false);
+  const [view, setView] = useState<'normal' | 'sorter'>('normal');
   const workspace = useRef<HTMLDivElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
   const focusContent = useRef(false);
@@ -40,9 +39,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
     const lostFocus = lastFocus.current && (!lastFocus.current.isConnected || lastFocus.current.matches(':disabled'));
     if (!focusContent.current && !(lostFocus && (document.activeElement === document.body || document.activeElement === lastFocus.current))) return;
     focusContent.current = false;
-    const target = view === 'normal' ? '[aria-label="Slide stage"]'
-      : view === 'sorter' ? '[aria-current="true"]'
-      : `[data-grid-slide-id="${selection.selectedId}"]`;
+    const target = view === 'normal' ? '[aria-label="Slide stage"]' : '[aria-current="true"]';
     (workspace.current?.querySelector<HTMLElement>(target) ?? workspace.current?.querySelector<HTMLElement>('button:not(:disabled)'))?.focus({ preventScroll: true });
   });
   const changeView = (mode: typeof view) => { focusContent.current = true; setView(mode); };
@@ -99,7 +96,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
 
                 <button
                   type="button"
-                  onClick={onPreview}
+                  onClick={() => onPreview(Math.max(selectedIndex, 0))}
                   className="px-3 py-2 bg-cyan-700 hover:bg-cyan-800 active:bg-cyan-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-colors motion-reduce:transition-none"
                 >
                   <Play className="w-4 h-4" />
@@ -154,78 +151,11 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   <button type="button" onClick={() => addSlide()} className="rounded-lg bg-sky-700 px-3 py-2 text-sm font-bold text-white">+ Add Slide</button>
                 </div>
               )
-            ) : view === 'sorter' ? (
+            ) : (
               <SlideSorter slides={presentationData.slides} slideIds={slideIds} selectedId={selection.selectedId}
                 onSelect={selection.selectSlide} onOpen={(id) => { selection.selectSlide(id); changeView('normal'); }}
                 onMove={moveSlide} onDuplicate={duplicateSlide} onDelete={deleteSlide}
                 slideImages={slideImages} originalWriters={presentationData.originalWriters} />
-            ) : (
-              <>
-            {/* Slide Action Strip */}
-            <div className="flex flex-wrap items-center justify-between gap-3 px-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsEditing(!isEditing)}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 transition-all ${
-                    isEditing
-                      ? 'bg-sky-700 text-white shadow-sm'
-                      : 'bg-white border border-slate-500 text-slate-700 hover:bg-slate-50'
-                  }`}
-                >
-                  {isEditing ? (
-                    <>
-                      <Eye className="w-3.5 h-3.5" />
-                      <span>Slides View</span>
-                    </>
-                  ) : (
-                    <>
-                      <Edit3 className="w-3.5 h-3.5" />
-                      <span>Edit Slides</span>
-                    </>
-                  )}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => addSlide()}
-                  className="px-3.5 py-1.5 bg-white hover:bg-slate-50 border border-slate-500 rounded-lg text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5 transition-all"
-                >
-                  <Plus className="w-3.5 h-3.5 text-sky-600" />
-                  <span>+ Add Slide</span>
-                </button>
-              </div>
-
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
-                {presentationData.slides.length} Slides Total
-              </span>
-            </div>
-
-            {/* Responsive Slides Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {presentationData.slides.map((slide, idx) => {
-                return <SlideCard
-                  key={slideIds[idx]}
-                  slide={slide}
-                  slideId={slideIds[idx]}
-                  totalSlides={presentationData.slides.length}
-                  isEditing={isEditing}
-                  slideImage={slideImages[idx]}
-                  isGeneratingImage={Boolean(generatingImages[idx])}
-                  imageError={imageErrors[idx]}
-                  onUpdatePart={updatePart}
-                  onUpdateTitle={updateTitle}
-                  onUpdateBullet={updateBullet}
-                  onAddBullet={addBullet}
-                  onDeleteBullet={deleteBullet}
-                  onDeleteSlide={deleteSlide}
-                  onRegenerateImage={regenerateImage}
-                  onSelectImage={selectLibraryImage}
-                />;
-              })}
-            </div>
-
-              </>
             )}
             <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-600">
               <span role="status" aria-live="polite" aria-atomic="true">
@@ -238,10 +168,10 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   className="min-h-9 rounded-lg border border-slate-500 px-3 font-bold disabled:cursor-not-allowed disabled:opacity-40">Next</button>
               </div>
               <div role="group" aria-label="Workspace view" className="inline-flex overflow-hidden rounded-lg border border-slate-200">
-                {(['normal', 'grid', 'sorter'] as const).map((mode) => (
+                {(['normal', 'sorter'] as const).map((mode) => (
                   <button key={mode} type="button" aria-pressed={view === mode} onClick={() => changeView(mode)}
                     className={`min-h-9 px-3 font-bold transition-colors motion-reduce:transition-none ${view === mode ? 'bg-sky-700 text-white' : 'bg-white text-slate-600 hover:bg-sky-50'}`}>
-                    {mode === 'normal' ? 'Normal' : mode === 'grid' ? 'Grid' : 'Slide sorter'}
+                    {mode === 'normal' ? 'Normal' : 'Slide sorter'}
                   </button>
                 ))}
               </div>

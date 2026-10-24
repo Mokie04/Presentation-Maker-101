@@ -25,8 +25,6 @@ it('moves focus to useful content after switching views and opening a sorter sli
   expect(document.activeElement).toBe(screen.getByRole('listitem', { name: 'Slide 2: Leaves' }));
   fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
   expect(document.activeElement).toBe(screen.getByRole('region', { name: 'Slide stage' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Grid' }));
-  expect(document.activeElement).toBe(screen.getByRole('group', { name: 'Slide 2: Leaves' }));
   fireEvent.click(screen.getByRole('button', { name: 'Normal' }));
   expect(document.activeElement).toBe(screen.getByRole('region', { name: 'Slide stage' }));
 });
@@ -40,14 +38,14 @@ it('retains stage focus across selection and rail focus with a consistent active
   expect(rail.getAttribute('aria-activedescendant')).toBe(selected.id);
   expect(selected.getAttribute('aria-selected')).toBe('true');
 });
-it('recovers focus after deleting the focused sorter card or Grid card', async () => {
+it('recovers focus after deleting the focused sorter card or the selected slide in Normal', async () => {
   await open(); fireEvent.click(screen.getByRole('button', { name: 'Slide sorter' }));
   const remove = screen.getByRole('button', { name: 'Delete slide 1' }); remove.focus(); fireEvent.click(remove);
   expect(document.activeElement).toBe(screen.getByRole('listitem', { name: 'Slide 1: Leaves' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Grid' }));
-  const card = screen.getByRole('group', { name: 'Slide 1: Leaves' });
-  const gridRemove = within(card).getByRole('button', { name: 'Delete Slide' }); gridRemove.focus(); fireEvent.click(gridRemove);
-  expect(document.activeElement).toBe(screen.getByRole('group', { name: 'Slide 1: Flowers' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Normal' }));
+  const panelRemove = screen.getByRole('button', { name: 'Delete Slide' }); panelRemove.focus(); fireEvent.click(panelRemove);
+  expect(document.activeElement).toBe(screen.getByRole('region', { name: 'Slide stage' }));
+  expect(screen.getByRole('status').textContent).toBe('Slide 1 of 1 · 4. DISCUSSION');
 });
 it.each(['Enter', 'Escape'])('returns title focus after %s and leaves live slide status unchanged while typing', async key => {
   await open(); const stage = screen.getByRole('region', { name: 'Slide stage' });
@@ -60,10 +58,9 @@ it.each(['Enter', 'Escape'])('returns title focus after %s and leaves live slide
   fireEvent.keyDown(field, { key });
   expect(document.activeElement).toBe(within(stage).getByRole('button', { name: 'Edit slide title' }));
 });
-it('names the editable Grid fields and returns focus when an image picker closes', async () => {
-  await open(); fireEvent.click(screen.getByRole('button', { name: 'Grid' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Edit Slides' }));
-  const card = screen.getByRole('group', { name: 'Slide 1: Plants' });
+it('names the panel fields and returns focus when an image picker closes', async () => {
+  await open();
+  const card = screen.getByRole('complementary', { name: 'Slide settings' });
   expect(within(card).getByRole('textbox', { name: 'Slide Title' })).toBeTruthy();
   expect(within(card).getByRole('textbox', { name: 'Bullet 1' })).toBeTruthy();
   fireEvent.click(within(card).getByRole('button', { name: 'Find image' }));
@@ -71,12 +68,11 @@ it('names the editable Grid fields and returns focus when an image picker closes
   fireEvent.click(within(card).getByRole('button', { name: 'Cancel NASA picker' }));
   expect(document.activeElement).toBe(within(card).getByRole('button', { name: 'Find image' }));
 });
-it.each(['Normal', 'Slide sorter', 'Grid', 'Slideshow'])('has no axe violations in %s (jsdom color contrast excluded)', async mode => {
+it.each(['Normal', 'Slide sorter', 'Slideshow'])('has no axe violations in %s (jsdom color contrast excluded)', async mode => {
   await open();
   if (mode === 'Slideshow') fireEvent.click(screen.getByRole('button', { name: 'Preview' }));
   else if (mode !== 'Normal') {
     fireEvent.click(screen.getByRole('button', { name: mode }));
-    if (mode === 'Grid') fireEvent.click(screen.getByRole('button', { name: 'Edit Slides' }));
   }
   await waitFor(() => expect(screen.getByRole('button', { name: 'Preview', hidden: true })).toBeTruthy());
   const results = await axe.run(document.body, { rules: { 'color-contrast': { enabled: false } } });
