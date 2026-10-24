@@ -94,8 +94,8 @@ describe('readPexelsConfig', () => {
 });
 
 describe('readAppConfig', () => {
-  it('defaults the upload limit to 10 MB without provider settings', () => {
-    expect(readAppConfig({})).toEqual({ maxFileSizeMb: 10 });
+  it('defaults the upload limit to 4 MB without provider settings', () => {
+    expect(readAppConfig({})).toEqual({ maxFileSizeMb: 4 });
   });
 
   it('coerces a positive size independently of providers and auth', () => {
@@ -121,7 +121,7 @@ describe('lazy configuration accessors', () => {
     vi.stubEnv('IMAGE_SOURCE', undefined);
     vi.stubEnv('MAX_FILE_SIZE_MB', undefined);
     vi.stubEnv('PEXELS_API_KEY', undefined);
-    expect(getAppConfig()).toEqual({ maxFileSizeMb: 10 });
+    expect(getAppConfig()).toEqual({ maxFileSizeMb: 4 });
     expect(getImageProviderConfig().model).toBe('dall-e-3');
     expect(getPexelsConfig()).toEqual({ apiKey: undefined });
     // The text config is still unread, so these later values must be used.
