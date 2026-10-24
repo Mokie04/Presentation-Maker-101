@@ -13,6 +13,12 @@ const NEW_SLIDE = {
   visualDescription: 'Philippine classroom illustration showing interactive group discussion',
 };
 
+function renumberSlides(slides: DeckSlide[]): DeckSlide[] {
+  return slides.map((slide, index) => slide.content.slideNumber === index + 1
+    ? slide
+    : { ...slide, content: { ...slide.content, slideNumber: index + 1 } });
+}
+
 function updateSlide(state: DeckState, slideId: number, update: (slide: DeckSlide) => DeckSlide): DeckState {
   if (!state.slides.some((slide) => slide.id === slideId)) return state;
   return { ...state, slides: state.slides.map((slide) => (slide.id === slideId ? update(slide) : slide)) };
@@ -69,10 +75,42 @@ export function deckReducer(state: DeckState, action: DeckAction): DeckState {
       if (!state.presentation) return state;
       const slide: DeckSlide = {
         id: state.nextSlideId,
-        content: { slideNumber: state.slides.length + 1, ...NEW_SLIDE },
+        content: { slideNumber: state.slides.length + 1, ...NEW_SLIDE, contentPoints: [...NEW_SLIDE.contentPoints] },
         image: { status: 'none', version: 0 },
       };
-      return { ...state, slides: [...state.slides, slide], nextSlideId: state.nextSlideId + 1 };
+      const afterIndex = state.slides.findIndex((slide) => slide.id === action.afterSlideId);
+      const insertIndex = afterIndex === -1 ? state.slides.length : afterIndex + 1;
+      const slides = [...state.slides];
+      slides.splice(insertIndex, 0, slide);
+      return { ...state, slides: renumberSlides(slides), nextSlideId: state.nextSlideId + 1 };
+    }
+    case 'slideMoved': {
+      const fromIndex = state.slides.findIndex((slide) => slide.id === action.slideId);
+      if (fromIndex === -1) return state;
+      const toIndex = Math.max(0, Math.min(action.toIndex, state.slides.length - 1));
+      if (fromIndex === toIndex) return state;
+      const slides = [...state.slides];
+      const [slide] = slides.splice(fromIndex, 1);
+      slides.splice(toIndex, 0, slide);
+      return { ...state, slides: renumberSlides(slides) };
+    }
+    case 'slideDuplicated': {
+      const index = state.slides.findIndex((slide) => slide.id === action.slideId);
+      if (index === -1) return state;
+      const original = state.slides[index];
+      const duplicate: DeckSlide = {
+        id: state.nextSlideId,
+        content: { ...original.content, contentPoints: [...original.content.contentPoints] },
+        image: {
+          status: original.image.data ? 'ready' : 'none',
+          ...(original.image.data !== undefined ? { data: original.image.data } : {}),
+          ...(original.image.metadata ? { metadata: { ...original.image.metadata } } : {}),
+          version: 0,
+        },
+      };
+      const slides = [...state.slides];
+      slides.splice(index + 1, 0, duplicate);
+      return { ...state, slides: renumberSlides(slides), nextSlideId: state.nextSlideId + 1 };
     }
     case 'slideDeleted': {
       if (!state.slides.some((slide) => slide.id === action.slideId)) return state;

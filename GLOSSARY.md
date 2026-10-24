@@ -1,6 +1,6 @@
 # Glossary
 
-**Slide** — One page of a presentation: `SlideData` (`slideNumber`, `part`, `title`, `contentPoints`, `visualDescription`, optional `imageMetadata`). `slideNumber` is its 1-based position and is renumbered when a Slide is deleted.
+**Slide** — One page of a presentation: `SlideData` (`slideNumber`, `part`, `title`, `contentPoints`, `visualDescription`, optional `imageMetadata`). `slideNumber` is its 1-based position and is renumbered when the deck order changes.
 
 **Slide deck** — The ordered Slides of one generated presentation plus its metadata (`subject`, `originalWriters`, `topic`, and optional server-recorded `subjectEvidence`). The wire and export shape is `PresentationData`. Inside the client, each Slide also carries a stable internal id that is never reused and never sent to the server. `src/lib/deck/deck-reducer.ts` owns its edits and image race rules.
 
@@ -10,9 +10,11 @@
 
 **Slide rail** — `src/components/workspace/SlideRail.tsx`, the numbered thumbnail list in Normal view. Selection uses stable slide IDs, with listbox semantics, a highlighted option and memoized `SlideView` thumbnails. It scrolls vertically on tablets and laptops and horizontally below the stage on phones.
 
+**Slide sorter** — `src/components/workspace/SlideSorter.tsx`, the responsive thumbnail list for selecting, reordering, duplicating and deleting Slides. Drag handling is shared with the Normal rail; visible move buttons support touch, and Alt+ArrowUp/ArrowDown moves from the rail. Double-click or Enter opens a sorter card in Normal view. The first position uses the title layout in the exported file.
+
 **Slide panel** — `src/components/workspace/SlidePanel.tsx`, the always-editable controls for the selected Slide: part, title, bullets, image, delete and add. `src/components/SlideImageControls.tsx` shares the original image and credit controls with the Grid card.
 
-**Workspace view** — Normal is the default three-pane workspace; Grid keeps the original card grid and Edit Slides toggle until Phase 6. `src/components/workspace/PresentationWorkspaceView.tsx` owns the view switch. `src/lib/deck/use-slide-selection.ts` keeps selection as UI state outside the deck reducer; a single workspace keyboard listener navigates without intercepting form-field keys.
+**Workspace view** — Normal is the default three-pane workspace; Slide sorter arranges the deck; Grid keeps the original card grid and Edit Slides toggle until Phase 6. `src/components/workspace/PresentationWorkspaceView.tsx` owns the view switch. `src/lib/deck/use-slide-selection.ts` keeps selection as UI state outside the deck reducer; a single workspace keyboard listener navigates without intercepting form-field keys.
 
 **Slide image** — The picture shown on a Slide and exported to PPTX: raw base64 or a `data:` URL. The UI and PPTX route use index-keyed `slideImages`; `FAILED_IMAGE` (`'failed'`) means generation failed and nothing is shown. `src/lib/slide-image.ts` owns the wire rules: `isUsableImage`, `toRawBase64`, `sniffImageMime`, `toDataUrl` and export validation (`hasWireImageFormat`, `MAX_SLIDE_IMAGE_CHARS`).
 

@@ -44,8 +44,11 @@ A clickable HTML mock of the Normal view and the Sorter view, approved before Ph
 - Grid view, its Edit Slides toggle and Add Slide button, and the legacy card integration tests stay until Phase 6. Their opening helpers choose Grid; assertions and race checks remain intact. Image controls are shared by `SlideCard` and `SlidePanel` with unchanged card markup.
 - Local visual verification uses eight stubbed slides at 1440, 1024, 768 and 390 px; no provider credits are spent. The slide renderer, reducer, routes and exports remain unchanged.
 
-### Phase 3: Slide sorter and reordering
-- Thumbnail grid view, drag to reorder, duplicate, add after the current slide, delete. New deck actions `slideMoved`, `slideDuplicated`, `slideAdded` (after a given slide), with reducer tests including image ownership and renumbering.
+### Phase 3: Slide sorter and reordering — done
+- Responsive memoized thumbnail grid, shared drag handling in the sorter and Normal rail, visible move buttons, duplication and deletion. Alt+ArrowUp/ArrowDown moves the selected rail slide; plain arrows retain selection navigation.
+- Reducer actions move by stable ID, duplicate with independent content and image metadata, and insert after a given ID. Moves retain image versions, credits and pending state; duplicate IDs isolate late image results. The panel adds after the selection; Grid still appends.
+- New reducer, selection, interaction and integration tests cover ownership, renumbering and the PowerPoint request's reordered slides, images and credits. Existing tests remain unchanged. Local eight-slide browser checks cover 1440, 768 and 390 px, both drag surfaces and the visible controls without provider calls.
+- The first-slide title layout stays an export rule. See `docs/adr/0012-slide-reordering.md`; preview smoke and CI remain release gates.
 
 ### Phase 4: edit on the slide
 - Click the title or a bullet on the big slide to edit in place; formulas render when not editing.
