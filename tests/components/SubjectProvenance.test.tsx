@@ -3,6 +3,7 @@ import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import Home from '@/app/page';
+import { selectSlideTitled } from '../helpers/workspace';
 
 const presentation = { subject: 'Science', originalWriters: 'Teacher', topic: 'Plants',
   slides: ['Roots', 'Leaves'].map((title, index) => ({ slideNumber: index + 1,
@@ -46,9 +47,7 @@ async function prepare() {
 }
 async function submit() {
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
-  await screen.findByRole('button', { name: 'Download Outline' });
-  // Grid view and these legacy card checks retire in Phase 6.
-  fireEvent.click(screen.getByRole('button', { name: 'Grid' }));
+  await screen.findByRole('listbox', { name: 'Slides' });
 }
 async function exportData() {
   fireEvent.click(screen.getByRole('button', { name: 'Download Outline' }));
@@ -93,9 +92,9 @@ describe('teacher subject selection and presentation history', () => {
     await prepare();
     fireEvent.change(screen.getByLabelText('Subject'), { target: { value: 'Science' } });
     await submit();
-    fireEvent.click(screen.getByRole('button', { name: /Edit/i }));
-    fireEvent.change(screen.getAllByDisplayValue('Roots').find(el => el.tagName === 'INPUT')!, { target: { value: 'Edited roots' } });
-    fireEvent.click(screen.getAllByRole('button', { name: 'Delete Slide' })[1]);
+    fireEvent.change(screen.getByLabelText('Slide Title'), { target: { value: 'Edited roots' } });
+    selectSlideTitled('Leaves');
+    fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
     const edited = await exportData();
     expect(edited.subjectEvidence).toEqual(teacherHistory);
     expect(edited.slides).toEqual([expect.objectContaining({ title: 'Edited roots' })]);

@@ -1,8 +1,7 @@
 // @vitest-environment jsdom
-import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
-import Home from '@/app/page';
+import { act, cleanup, fireEvent, screen, within } from '@testing-library/react';
+import { openWorkspace, selectSlide, stage } from '../helpers/workspace';
 import { samples } from '../lib/services/credit-samples';
 
 const presentation = {
@@ -34,18 +33,6 @@ beforeEach(() => {
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 
-async function openWorkspace() {
-  render(<Home />);
-  fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
-  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'A lesson about plants.' } });
-  fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 1' } });
-  fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
-  await screen.findByRole('listbox', { name: 'Slides' });
-}
-function stage() { return screen.getByRole('region', { name: 'Slide stage' }); }
-function selectSlide(number: number) {
-  fireEvent.click(within(screen.getByRole('listbox')).getAllByRole('option')[number - 1]);
-}
 
 describe('Normal workspace', () => {
   it('defaults to Normal with rail, stage and always-editable panel and preserves header actions', async () => {
