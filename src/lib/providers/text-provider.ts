@@ -5,6 +5,14 @@ import { canonicalPart } from '@/lib/pedagogy';
 import { SYSTEM_PROMPT, USER_PROMPT_TEMPLATE } from '@/lib/prompts/slide-generation';
 import type { PresentationData } from '@/types/presentation';
 
+/** A completed request whose model output stopped at its output limit. */
+export class TextOutputTruncatedError extends Error {
+  constructor() {
+    super('Text provider output was truncated.');
+    this.name = 'TextOutputTruncatedError';
+  }
+}
+
 export const slideDataSchema = z.object({
   slideNumber: z.number(),
   // Canonical name when recognizable, so exports and badges agree; unknown parts pass through.
@@ -79,6 +87,7 @@ export async function generateSlideContent(
         response_format: { type: 'json_object' },
       });
 
+      if (response.choices?.[0]?.finish_reason === 'length') throw new TextOutputTruncatedError();
       const messageContent = response.choices?.[0]?.message?.content;
       if (!messageContent) {
         throw new Error('Empty response content received from text provider.');
@@ -100,6 +109,7 @@ export async function generateSlideContent(
 
       return validated.data as PresentationData;
     } catch (err) {
+      if (err instanceof TextOutputTruncatedError) throw err;
       lastError = err;
       if (attempt < maxRetries) {
         const delay = backoffDelays[attempt] ?? (backoffDelays[backoffDelays.length - 1] * 2);

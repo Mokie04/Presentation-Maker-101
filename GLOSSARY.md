@@ -1,5 +1,7 @@
 # Glossary
 
+**Text budget** — Generation guidance of 45 characters per title, up to four content bullets of 60 characters each, or an assessment question up to 100 characters plus separate options A to D. Long content continues across slides without losing text. `src/lib/auto-fit-deck.ts` enforces body fit with whole-bullet splits; titles, single long bullets and unresolved capped originals remain available for manual editing.
+
 **Slide split** — Moving the remaining whole bullets after a fitting prefix into a new continuation immediately after the original. The original retains its image, credit and selection; the continuation shares its part and has no visual or image. `src/lib/slide-split.ts` suggests the boundary; `src/lib/deck/slide-split.ts` increments continuation titles. The title slide and slides with fewer than two bullets cannot offer a split.
 
 **Text fit** — The shared size decision for a slide’s title and body, computed from its current text, layout and Poppins glyph widths by `src/lib/slide-fit.ts`. Text shrinks to readability floors; content still too large is flagged and scrollable on the big slide. The same decision supplies the PowerPoint export.

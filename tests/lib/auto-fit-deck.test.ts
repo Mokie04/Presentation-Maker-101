@@ -48,7 +48,7 @@ describe('autoFitDeck', () => {
     expect(autoFitDeck(titleOverflow)).toBe(titleOverflow);
   });
   it('keeps exactly 20 completed splits, but rolls back an original needing more', () => {
-    const long = 'W'.repeat(600);
+    const long = 'Evidence\n'.repeat(12);
     const boundary = deck(Array.from({ length: 21 }, () => long));
     const fitted = autoFitDeck(boundary);
     expect(fitted.slides).toHaveLength(22);
@@ -59,7 +59,7 @@ describe('autoFitDeck', () => {
     expect(autoFitDeck(autoFitDeck(capped))).toBe(capped);
   });
   it('leaves a capped original intact while fitting other original slides independently', () => {
-    const input = deck(Array.from({ length: 22 }, () => 'W'.repeat(600)));
+    const input = deck(Array.from({ length: 22 }, () => 'Evidence\n'.repeat(12)));
     input.slides.push({ ...input.slides[1], slideNumber: 3, title: 'Next', contentPoints: Array.from({ length: 12 }, () => bullet) });
     const result = autoFitDeck(input);
     expect(result.slides[1]).toBe(input.slides[1]);
