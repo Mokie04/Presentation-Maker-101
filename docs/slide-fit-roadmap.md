@@ -22,8 +22,9 @@ Generated slides often carry more text than the layout can hold. Body text is 35
 - Slides that still do not fit are flagged on the rail thumbnail, under the big slide and in the panel; their text box aligns to the top and scrolls on the big slide so every line can be reached and edited.
 - Done = dense slides show and export fitted text; slides that already fit are byte-identical in the export. Implemented in ADR 0016; branch publication, CI and preview smoke remain shipping gates.
 
-### Phase B: split a full slide
-- A "Split into two slides" action (deck action `slideSplit`, panel button): the second half of the bullets moves to a new slide after the original titled "<title> (cont.)", with the same part and no visual.
+### Phase B: split a full slide — done (local implementation)
+- A "Split into two slides" action (deck action `slideSplit`, panel and stage notices) keeps the largest fitting bullet prefix and moves the rest to a continuation directly after the original, with the same part and no visual, image or credit. The original retains its image and selection.
+- Implemented in ADR 0017; branch publication, CI and preview smoke remain shipping gates.
 
 ### Phase C: prompt tuning
 - Ask the model for shorter bullets and fewer per slide, spreading long content across slides (needs the owner's input on the rules).

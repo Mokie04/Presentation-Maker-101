@@ -2,7 +2,7 @@
 
 import React, { useEffect, useId, useRef } from 'react';
 import type { SlideData } from '@/types/presentation';
-import { fitSlide } from '@/lib/slide-fit';
+import { getSlideOverflow } from '@/lib/slide-fit';
 import { SlideThumbnail } from './SlideThumbnail';
 import { moveSlideWithKeyboard, useSlideReorder } from './use-slide-reorder';
 
@@ -42,8 +42,7 @@ export function SlideRail({ slides, slideIds, selectedId, onSelect, onMove, tota
       onKeyDown={event => moveSlideWithKeyboard(event, slideIds, selectedId, onMove)}
       className="flex min-h-0 min-w-0 gap-2 overflow-x-auto overscroll-contain rounded-xl border border-slate-200 bg-white p-2 outline-none focus-visible:ring-2 focus-visible:ring-sky-700 md:flex-col md:overflow-x-hidden md:overflow-y-auto">
       {slides.map((slide, index) => {
-        const fit = fitSlide(slide, index, originalWriters);
-        const overflow = !fit.title.fits || !fit.body.fits;
+        const overflow = getSlideOverflow(slide, index, originalWriters).any;
         return (
           <button key={slideIds[index]} type="button" role="option" id={optionId(slideIds[index])}
             {...reorder.itemProps(slideIds[index], index)}

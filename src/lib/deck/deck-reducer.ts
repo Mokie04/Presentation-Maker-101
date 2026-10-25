@@ -1,4 +1,5 @@
 import type { PedagogicalPart } from '@/lib/pedagogy';
+import { continuationTitle } from './slide-split';
 import { FAILED_IMAGE } from '@/lib/slide-image';
 import type { DeckAction, DeckSlide, DeckState, ImageToken, SlideImage } from './types';
 
@@ -115,6 +116,27 @@ export function deckReducer(state: DeckState, action: DeckAction): DeckState {
       };
       const slides = [...state.slides];
       slides.splice(index + 1, 0, duplicate);
+      return { ...state, slides: renumberSlides(slides), nextSlideId: state.nextSlideId + 1 };
+    }
+    case 'slideSplit': {
+      const index = state.slides.findIndex((slide) => slide.id === action.slideId);
+      if (index === -1) return state;
+      const original = state.slides[index];
+      const { contentPoints } = original.content;
+      const { atBulletIndex } = action;
+      if (!Number.isInteger(atBulletIndex) || atBulletIndex < 1 || atBulletIndex >= contentPoints.length) return state;
+      const continuation: DeckSlide = {
+        id: state.nextSlideId,
+        content: {
+          ...original.content, title: continuationTitle(original.content.title),
+          contentPoints: contentPoints.slice(atBulletIndex), visualDescription: '',
+        },
+        image: { status: 'none', version: 0 },
+      };
+      const slides = [...state.slides];
+      slides.splice(index, 1,
+        { ...original, content: { ...original.content, contentPoints: contentPoints.slice(0, atBulletIndex) } },
+        continuation);
       return { ...state, slides: renumberSlides(slides), nextSlideId: state.nextSlideId + 1 };
     }
     case 'slideDeleted': {

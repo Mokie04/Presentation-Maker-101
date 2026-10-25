@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { fitSlide } from '@/lib/slide-fit';
+import { suggestSplitIndex } from '@/lib/slide-split';
+import { getSlideOverflow } from '@/lib/slide-fit';
 import { SlideFitNotice } from './SlideFitNotice';
 import { SlideView, type SlideViewProps } from '@/components/SlideView';
 import { EditableSlideView, type SlideEditingHandlers } from './EditableSlideView';
@@ -9,15 +10,16 @@ import { useMediaQuery } from './use-media-query';
 import { useSwipe } from './use-swipe';
 
 export type SlideStageProps = Omit<SlideViewProps, 'variant' | 'renderTitle' | 'renderPoint'> & Partial<SlideEditingHandlers> & {
+  onSplit?: () => void;
   onNext?: () => void;
   onPrevious?: () => void;
 };
 
-export function SlideStage({ onTitleChange, onPointChange, onPointInsert, onPointDelete, onPointAdd, onNext, onPrevious, ...props }: SlideStageProps) {
+export function SlideStage({ onTitleChange, onPointChange, onPointInsert, onPointDelete, onPointAdd, onSplit, onNext, onPrevious, ...props }: SlideStageProps) {
   const desktopEditing = useMediaQuery('(min-width: 768px)');
   const swipe = useSwipe({ onNext: () => onNext?.(), onPrevious: () => onPrevious?.(), disabled: !onNext || !onPrevious });
-  const fit = fitSlide(props.slide, props.index, props.originalWriters);
-  const overflow = !fit.title.fits || !fit.body.fits;
+  const overflow = getSlideOverflow(props.slide, props.index, props.originalWriters);
+  const split = overflow.body && onSplit && suggestSplitIndex(props.slide, props.index, props.originalWriters) !== null ? onSplit : undefined;
   return (
     <div className="grid min-h-0 min-w-0 grid-rows-[minmax(0,1fr)_auto]">
       <section aria-label="Slide stage" tabIndex={0} {...swipe} style={{ containerType: 'size', touchAction: 'pan-y pinch-zoom' }}
@@ -29,7 +31,7 @@ export function SlideStage({ onTitleChange, onPointChange, onPointInsert, onPoin
           ) : <SlideView {...props} variant="full" />}
         </div>
       </section>
-      {overflow && <SlideFitNotice />}
+      <SlideFitNotice overflow={overflow} onSplit={split} />
     </div>
   );
 }
