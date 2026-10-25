@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useId, useRef } from 'react';
-import { fitSlide } from '@/lib/slide-fit';
+import { suggestSplitIndex } from '@/lib/slide-split';
+import { getSlideOverflow } from '@/lib/slide-fit';
 import { SlideFitNotice } from './SlideFitNotice';
 import { Trash2, Plus, X } from 'lucide-react';
 import { normalizePart, PEDAGOGICAL_PARTS } from '@/lib/pedagogy';
@@ -28,6 +29,7 @@ export interface SlidePanelProps {
   onAddSlide: () => void;
   slideIndex?: number;
   originalWriters?: string;
+  onSplit?: () => void;
   totalSlides?: number;
   onMoveSlide?: (slideId: number, toIndex: number) => void;
   onDuplicateSlide?: (slideId: number) => void;
@@ -49,11 +51,13 @@ export function SlidePanel({
   onAddSlide,
   slideIndex,
   originalWriters,
+  onSplit,
   totalSlides,
   onMoveSlide,
   onDuplicateSlide,
 }: SlidePanelProps) {
-  const fit = fitSlide(slide, slideIndex ?? 0, originalWriters);
+  const overflow = getSlideOverflow(slide, slideIndex ?? 0, originalWriters);
+  const split = overflow.body && onSplit && suggestSplitIndex(slide, slideIndex ?? 0, originalWriters) !== null ? onSplit : undefined;
   const titleId = useId();
   const bulletsId = useId();
   const pointerDelete = useRef<{ slideId: number; index: number; points: string[] } | null>(null);
@@ -68,7 +72,7 @@ export function SlidePanel({
 
   return (
     <aside aria-label="Slide settings" className="min-w-0 min-h-0 overflow-y-auto overscroll-contain rounded-xl border border-sky-100 bg-white p-3 space-y-4">
-      {(!fit.title.fits || !fit.body.fits) && <SlideFitNotice />}
+      <SlideFitNotice overflow={overflow} onSplit={split} />
       <details ref={detailsSection} open>
         <summary className="cursor-pointer rounded text-sm font-bold text-slate-700">Slide details</summary>
         <div className="space-y-4 pt-3">

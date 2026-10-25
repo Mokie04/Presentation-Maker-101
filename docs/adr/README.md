@@ -20,3 +20,4 @@ Dates are recorded by month. Accepted describes the current design; Proposed and
 | [0014](0014-slideshow-on-slide-view.md) | Accepted | Shared slideshow renderer and clickable credit bar |
 | [0015](0015-retire-the-card-grid.md) | Accepted | Retire the card grid; Normal and Slide sorter are the two views |
 | [0016](0016-fit-slide-text.md) | Accepted | Shared glyph-based text fit, readability floors and reachable overflow |
+| [0017](0017-split-a-full-slide.md) | Accepted | Reducer-owned splitting with retained original image ownership and selection |

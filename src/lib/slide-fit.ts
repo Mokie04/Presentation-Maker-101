@@ -106,3 +106,10 @@ export function fitSlide(slide: SlideData, index: number, originalWriters?: stri
     // EditableSlideView reserves 2em beside each bullet, even before editing.
   }, undefined, size => 2 * size / 72) };
 }
+
+/** Shared overflow state for notices and both thumbnail lists. */
+export function getSlideOverflow(slide: SlideData, index: number, originalWriters?: string): { title: boolean; body: boolean; any: boolean } {
+  const fit = fitSlide(slide, index, originalWriters);
+  const title = !fit.title.fits, body = !fit.body.fits;
+  return { title, body, any: title || body };
+}

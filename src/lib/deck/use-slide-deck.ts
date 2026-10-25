@@ -5,17 +5,24 @@ import type { ImageMetadata } from '@/lib/image-metadata';
 import type { PresentationData } from '@/types/presentation';
 import { deckReducer, initialDeckState } from './deck-reducer';
 import { toGeneratingFlags, toPresentationData, toSlideImages } from './selectors';
+import { suggestSplitIndex } from '@/lib/slide-split';
+import type { SplitSelection } from './use-slide-selection';
 import type { DeckAction, ImageToken } from './types';
 
 export function useSlideDeck() {
   const [state, setState] = useState(initialDeckState);
   // Latest state, updated synchronously so async work captures tokens at request time.
   const stateRef = useRef(state);
+  const splitSelection = useRef<SplitSelection>();
 
   const dispatch = useCallback((action: DeckAction) => {
     const next = deckReducer(stateRef.current, action);
+    if (action.type === 'slideSplit' && next !== stateRef.current) {
+      splitSelection.current = { slideId: action.slideId, insertedId: stateRef.current.nextSlideId };
+    }
     stateRef.current = next;
     setState(next);
+    return next;
   }, []);
 
   const presentationData = useMemo(() => toPresentationData(state), [state]);
@@ -91,7 +98,23 @@ export function useSlideDeck() {
     }
   };
 
+  const splitSlide = (slideId: number, atBulletIndex: number): boolean => {
+    const previous = stateRef.current;
+    return dispatch({ type: 'slideSplit', slideId, atBulletIndex }) !== previous;
+  };
+  const splitSlideToFit = (slideId: number): boolean => {
+    const current = stateRef.current;
+    const index = current.slides.findIndex(slide => slide.id === slideId);
+    if (index === -1) return false;
+    const { content, image } = current.slides[index];
+    const atBulletIndex = suggestSplitIndex({ ...content, imageMetadata: image.metadata }, index, current.presentation?.originalWriters);
+    return atBulletIndex !== null && splitSlide(slideId, atBulletIndex);
+  };
+
   return {
+    splitSlide,
+    splitSlideToFit,
+    splitSelection: splitSelection.current,
     presentationData,
     slideImages,
     generatingImages,

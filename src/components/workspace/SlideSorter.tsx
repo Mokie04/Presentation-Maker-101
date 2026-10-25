@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { SlideData } from '@/types/presentation';
+import { getSlideOverflow } from '@/lib/slide-fit';
 import { partLabel } from '@/lib/pedagogy';
 import { SlideThumbnail } from './SlideThumbnail';
 import { SlideMoveButtons } from './SlideMoveButtons';
@@ -28,8 +29,9 @@ export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, on
         style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 200px), 1fr))' }}>
         {slides.map((slide, index) => {
           const id = slideIds[index];
+          const overflow = getSlideOverflow(slide, index, originalWriters).any;
           return <li key={id} {...reorder.itemProps(id, index)} tabIndex={0}
-            aria-label={`Slide ${index + 1}: ${slide.title}`} aria-current={selectedId === id ? 'true' : undefined}
+            aria-label={`Slide ${index + 1}: ${slide.title}${overflow ? ' (text does not fit)' : ''}`} aria-current={selectedId === id ? 'true' : undefined}
             onClick={() => onSelect(id)} onDoubleClick={() => onOpen(id)}
             onKeyDown={(event) => {
               if (event.target === event.currentTarget && event.key === 'Enter') {
@@ -45,6 +47,7 @@ export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, on
             </div>
             <div className="flex min-w-0 items-start gap-2 text-xs text-slate-600">
               <span className="font-bold tabular-nums text-sky-800">{index + 1}</span>
+              {overflow && <span aria-hidden="true" className="font-bold text-amber-700">!</span>}
               <span className="min-w-0 break-words">{partLabel(slide.part)}</span>
             </div>
             <div className="flex flex-wrap gap-1.5" onClick={(event) => event.stopPropagation()} onDoubleClick={(event) => event.stopPropagation()}>

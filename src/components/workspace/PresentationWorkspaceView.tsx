@@ -26,11 +26,11 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
   const workspace = useRef<HTMLDivElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
   const focusContent = useRef(false);
-  const selection = useSlideSelection(deck.slideIds);
+  const selection = useSlideSelection(deck.slideIds, deck.splitSelection);
   const {
     presentationData, slideImages, slideIds, generatingImages, imageErrors,
     updatePart, updateTitle, updateBullet, addBullet, insertBullet, deleteBullet, addSlide, deleteSlide,
-    regenerateImage, selectLibraryImage, moveSlide, duplicateSlide,
+    regenerateImage, selectLibraryImage, moveSlide, duplicateSlide, splitSlideToFit,
   } = deck;
   const { downloadPptx, downloadMarkdown, isDownloadingPptx, isDownloadingMarkdown } = downloads;
   const selectedIndex = selection.selectedId === null ? -1 : slideIds.indexOf(selection.selectedId);
@@ -43,6 +43,9 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
     (workspace.current?.querySelector<HTMLElement>(target) ?? workspace.current?.querySelector<HTMLElement>('button:not(:disabled)'))?.focus({ preventScroll: true });
   });
   const changeView = (mode: typeof view) => { focusContent.current = true; setView(mode); };
+  const splitSelected = () => {
+    if (selection.selectedId !== null && splitSlideToFit(selection.selectedId)) focusContent.current = true;
+  };
   if (!presentationData) return null;
 
   return (
@@ -126,7 +129,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   </div>
                   <div className="order-1 grid min-h-0 min-w-0 md:order-2 md:col-start-2 md:row-start-1">
                     <SlideStage key={slideIds[selectedIndex]} slide={selectedSlide} index={selectedIndex} total={presentationData.slides.length}
-                      onNext={selection.next} onPrevious={selection.previous}
+                      onNext={selection.next} onPrevious={selection.previous} onSplit={splitSelected}
                       image={slideImages[selectedIndex]} originalWriters={presentationData.originalWriters}
                       onTitleChange={title => updateTitle(slideIds[selectedIndex], title)}
                       onPointChange={(index, text) => updateBullet(slideIds[selectedIndex], index, text)}
@@ -142,7 +145,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                       onDeleteSlide={deleteSlide} onAddSlide={() => addSlide(slideIds[selectedIndex])}
                       onRegenerateImage={regenerateImage} onSelectImage={selectLibraryImage}
                       originalWriters={presentationData.originalWriters} slideIndex={selectedIndex} totalSlides={presentationData.slides.length}
-                      onMoveSlide={moveSlide} onDuplicateSlide={duplicateSlide} />
+                      onMoveSlide={moveSlide} onDuplicateSlide={duplicateSlide} onSplit={splitSelected} />
                   </div>
                 </div>
               ) : (

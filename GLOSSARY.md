@@ -1,5 +1,7 @@
 # Glossary
 
+**Slide split** — Moving the remaining whole bullets after a fitting prefix into a new continuation immediately after the original. The original retains its image, credit and selection; the continuation shares its part and has no visual or image. `src/lib/slide-split.ts` suggests the boundary; `src/lib/deck/slide-split.ts` increments continuation titles. The title slide and slides with fewer than two bullets cannot offer a split.
+
 **Text fit** — The shared size decision for a slide’s title and body, computed from its current text, layout and Poppins glyph widths by `src/lib/slide-fit.ts`. Text shrinks to readability floors; content still too large is flagged and scrollable on the big slide. The same decision supplies the PowerPoint export.
 
 **Slideshow** — `src/components/SlideshowModal.tsx`, a full-screen view using the same passive Slide view at 16:9. Previous/Next, jump, keyboard and swipe controls navigate independently of Normal selection. Portrait phones show a dismissible rotate hint; credited images retain clickable source and license links below the slide.
