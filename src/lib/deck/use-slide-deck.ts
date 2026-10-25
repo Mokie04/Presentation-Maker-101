@@ -45,7 +45,7 @@ export function useSlideDeck() {
       slideIndex: index,
       part: s.part,
       visualDescription: s.visualDescription,
-    }));
+    })).filter(slide => slide.visualDescription.trim().length > 0);
 
     fetch('/api/generate-images', {
       method: 'POST',
