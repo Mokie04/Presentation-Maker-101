@@ -11,6 +11,7 @@ import {
   SLIDE_WIDTH, SLIDE_WIDTH_PT, TEXT_HEADING, TEXT_MUTED, TEXT_SUBTLE, TITLE_LAYOUT,
   hasVisual, slideLayoutFor, type SlideBox, type SlideCoordinate,
 } from '@/lib/slide-theme';
+import { fitSlide, titleSlidePoints, titlePointSize } from '@/lib/slide-fit';
 import { FormattedFormula } from './FormattedFormula';
 
 const poppins = localFont({
@@ -68,15 +69,11 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
   const usableImage = isUsableImage(image);
   const showImage = usableImage && (titleLayout ? Boolean(slide.imageMetadata) : visual);
   const credit = slide.imageMetadata ? describeImageCredit(slide.imageMetadata) : undefined;
-  const points = [...(slide.contentPoints || [])];
-  if (titleLayout && originalWriters && !points.some((point) =>
-    point.toLowerCase().includes('writer') || point.toLowerCase().includes('author') ||
-    point.toLowerCase().includes(originalWriters.toLowerCase())
-  )) {
-    points.push(`Original Lesson Plan Writers: ${originalWriters}`);
-  }
-  const titleFontSize = !titleLayout && slide.title && slide.title.length > CONTENT_LAYOUT.longTitleThreshold
-    ? CONTENT_LAYOUT.longTitleFontSize : layout.title.fontSize;
+  const points = titleLayout ? titleSlidePoints(slide, originalWriters) : slide.contentPoints || [];
+  const fit = fitSlide(slide, index, originalWriters);
+  const overflowStyle = (fits: boolean): CSSProperties => fits ? {} : {
+    justifyContent: 'flex-start', overflowY: variant === 'full' ? 'auto' : 'hidden',
+  };
   const imageBox = titleLayout ? TITLE_LAYOUT.image
     : slide.imageMetadata ? CONTENT_LAYOUT.libraryImage : CONTENT_LAYOUT.image;
   const title = <FormattedFormula text={slide.title || (titleLayout ? 'Lesson Presentation' : '')} />;
@@ -101,20 +98,20 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
       <p style={{ ...textStyle(layout.part), color: `#${SHADE_SECONDARY}`, fontWeight: 700 }}>
         {(slide.part || (titleLayout ? 'TITLE PAGE' : '')).toUpperCase()}
       </p>
-      <h2 style={{ ...textStyle(layout.title), fontSize: typeSize(titleFontSize), color: `#${SHADE_PRIMARY}`, fontWeight: 700 }}>
+      <h2 data-overflow={!fit.title.fits ? "true" : undefined} style={{ ...textStyle(layout.title), ...overflowStyle(fit.title.fits), fontSize: typeSize(fit.title.fontSize), color: `#${SHADE_PRIMARY}`, fontWeight: 700 }}>
         {renderTitle ? renderTitle(title) : title}
       </h2>
 
       {titleLayout ? (
-        <div style={{
-          ...textStyle(TITLE_LAYOUT.points),
+        <div data-overflow={!fit.body.fits ? "true" : undefined} style={{
+          ...textStyle(TITLE_LAYOUT.points), ...overflowStyle(fit.body.fits),
           width: slide.imageMetadata ? TITLE_LAYOUT.pointsWithImageWidth : TITLE_LAYOUT.points.w,
-          lineHeight: typeSize(TITLE_LAYOUT.points.lineSpacing),
+          lineHeight: typeSize(fit.body.lineHeightPt),
         }}>
           {points.map((point, pointIndex) => (
             <p key={pointIndex} style={{
-              margin: 0,
-              fontSize: typeSize(pointIndex === 0 ? TITLE_LAYOUT.firstPointFontSize : TITLE_LAYOUT.pointFontSize),
+              margin: 0, ...(!fit.body.fits && { flexShrink: 0 }),
+              fontSize: typeSize(titlePointSize(pointIndex, fit.body.fontSize)),
               color: `#${pointIndex === 0 ? TEXT_HEADING : TEXT_MUTED}`,
               fontWeight: pointIndex === 0 || /writer|author/i.test(point) ? 700 : 400,
             }}>
@@ -123,13 +120,14 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
           ))}
         </div>
       ) : (
-        <ul style={{
-          ...textStyle(CONTENT_LAYOUT.bullets),
+        <ul data-overflow={!fit.body.fits ? "true" : undefined} style={{
+          ...textStyle(CONTENT_LAYOUT.bullets), ...overflowStyle(fit.body.fits),
+          fontSize: typeSize(fit.body.fontSize),
           width: visual ? CONTENT_LAYOUT.bulletsWithVisualWidth : CONTENT_LAYOUT.bullets.w,
-          lineHeight: typeSize(CONTENT_LAYOUT.bullets.lineSpacing),
+          lineHeight: typeSize(fit.body.lineHeightPt),
           padding: 0, listStylePosition: 'inside', listStyleType: 'disc',
         }}>
-          {points.map((point, pointIndex) => <li key={pointIndex}>{pointContent(point, pointIndex)}</li>)}
+          {points.map((point, pointIndex) => <li key={pointIndex} style={!fit.body.fits ? { flexShrink: 0 } : undefined}>{pointContent(point, pointIndex)}</li>)}
         </ul>
       )}
 

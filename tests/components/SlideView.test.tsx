@@ -93,7 +93,7 @@ describe('SlideView', () => {
     expect(screen.queryByText(/PHILIPPINES CLASSROOM/)).toBeNull();
   });
 
-  it.each([{ length: 35, size: 45 }, { length: 36, size: 40 }])('uses $size pt for a $length character content title', ({ length, size }) => {
+  it.each([{ length: 35, size: 33 }, { length: 36, size: 32 }])('fits an unbroken $length character content title at $size pt', ({ length, size }) => {
     show({ title: 'a'.repeat(length) });
     expect(screen.getByRole('heading').style.fontSize).toBe(`${size / 960 * 100}cqw`);
   });

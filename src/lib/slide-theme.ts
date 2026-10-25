@@ -61,3 +61,12 @@ export function slideLayoutFor(index: number): 'title' | 'content' {
 export function hasVisual(slide: Pick<SlideData, 'visualDescription'>): boolean {
   return Boolean(slide.visualDescription && slide.visualDescription.trim().length > 0);
 }
+
+// Readability floors for projected text; anything still too large is flagged.
+export const CONTENT_BULLET_FLOOR_PT = 24;
+export const CONTENT_TITLE_FLOOR_PT = 28;
+export const TITLE_SLIDE_TITLE_FLOOR_PT = 28;
+export const TITLE_SLIDE_POINT_FLOOR_PT = 16;
+// Conservative allowance for wrapping differences and substituted classroom fonts.
+export const TEXT_FIT_WIDTH_MARGIN = 0.06;
+export const TEXT_FIT_HEIGHT_MARGIN = 0.03;
