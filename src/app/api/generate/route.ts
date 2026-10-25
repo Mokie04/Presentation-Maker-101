@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { defineRoute, PublicError } from '@/lib/api';
-import { generateSlideContent } from '@/lib/providers/text-provider';
+import { autoFitDeck } from '@/lib/auto-fit-deck';
+import { generateSlideContent, TextOutputTruncatedError } from '@/lib/providers/text-provider';
 import { detectSubject } from '@/lib/utils/subject-detector';
 import { SESSION_OPTIONS } from '@/lib/utils/session-options';
 import { SUPPORTED_SUBJECTS } from '@/lib/utils/subject-options';
-import type { SubjectEvidence } from '@/types/presentation';
+import type { PresentationData, SubjectEvidence } from '@/types/presentation';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -45,7 +46,19 @@ export const POST = defineRoute({
       subject: resolvedSubject,
       source: hasSubjectSource ? 'teacher-supplied' : hasSubject ? 'unknown' : 'keyword-detected',
     };
-    const presentation = await generateSlideContent(text, session, resolvedSubject);
+    let generated: PresentationData;
+    try {
+      generated = await generateSlideContent(text, session, resolvedSubject);
+    } catch (err) {
+      if (err instanceof TextOutputTruncatedError) {
+        throw new PublicError(
+          'This lesson is too long to convert in one pass. Choose a shorter session or paste a smaller part of the lesson plan.',
+          422
+        );
+      }
+      throw err;
+    }
+    const presentation = autoFitDeck(generated);
 
     // Never accept provenance from model output or replace the recorded teacher value.
     return NextResponse.json({

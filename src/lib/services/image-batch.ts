@@ -28,7 +28,7 @@ export async function processBatchImages(
   const delayMs = options?.delayMs ?? 800;
 
   const eligibleSlides = slides.filter((slide) =>
-    shouldGenerateImageForPart(slide.part)
+    shouldGenerateImageForPart(slide.part) && slide.visualDescription.trim().length > 0
   );
 
   for (let i = 0; i < eligibleSlides.length; i++) {

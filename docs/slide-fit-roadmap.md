@@ -26,8 +26,11 @@ Generated slides often carry more text than the layout can hold. Body text is 35
 - A "Split into two slides" action (deck action `slideSplit`, panel and stage notices) keeps the largest fitting bullet prefix and moves the rest to a continuation directly after the original, with the same part and no visual, image or credit. The original retains its image and selection.
 - Implemented in ADR 0017; branch publication, CI and preview smoke remain shipping gates.
 
-### Phase C: prompt tuning
-- Ask the model for shorter bullets and fewer per slide, spreading long content across slides (needs the owner's input on the rules).
+### Phase C: prompt tuning — done (local implementation)
+- Prompt budget: titles up to 45 characters, up to 4 content bullets of 60 characters each; assessments may carry a question up to 100 characters plus options A to D. Content continues across slides without truncation; the 25-slide minimum remains.
+- Generation applies the shared body-fit estimator and whole-bullet split rules. Titles and single long bullets stay flagged; a capped original is retained unchanged to preserve idempotence.
+- Blank-visual slides request no batch image. Truncated model output stops without retry and receives a clear 422 message.
+- Implemented in ADR 0018; branch publication, CI and preview smoke remain shipping gates.
 
 ## Risks
 
