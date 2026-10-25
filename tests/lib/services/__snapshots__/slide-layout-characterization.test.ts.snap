@@ -273,7 +273,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 
 exports[`PPTX layout: long content title with formulas and AI… > preserves every slide XML byte through both export entry points > slide 2 1`] = `
 {
-  "sha256": "a388d773654584c00ffedc245729403d3f6c189e6d649fe9ee3ba8fb41c4b9ee",
+  "sha256": "7c88d764ba3907ac3be4e2b526901993b6e343acd495707b1974706c9ce78666",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -373,7 +373,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 <a:buNone/>
 </a:pPr>
 <a:r>
-<a:rPr lang="en-US" sz="4000" b="1" dirty="0">
+<a:rPr lang="en-US" sz="3600" b="1" dirty="0">
 <a:solidFill>
 <a:srgbClr val="0284C7"/>
 </a:solidFill>
@@ -387,7 +387,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 <a:buNone/>
 </a:pPr>
 <a:r>
-<a:rPr lang="en-US" sz="4000" b="1" baseline="-40000" dirty="0">
+<a:rPr lang="en-US" sz="3600" b="1" baseline="-40000" dirty="0">
 <a:solidFill>
 <a:srgbClr val="0284C7"/>
 </a:solidFill>
@@ -401,7 +401,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 <a:buNone/>
 </a:pPr>
 <a:r>
-<a:rPr lang="en-US" sz="4000" b="1" dirty="0">
+<a:rPr lang="en-US" sz="3600" b="1" dirty="0">
 <a:solidFill>
 <a:srgbClr val="0284C7"/>
 </a:solidFill>
@@ -415,7 +415,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 <a:buNone/>
 </a:pPr>
 <a:r>
-<a:rPr lang="en-US" sz="4000" b="1" baseline="30000" dirty="0">
+<a:rPr lang="en-US" sz="3600" b="1" baseline="30000" dirty="0">
 <a:solidFill>
 <a:srgbClr val="0284C7"/>
 </a:solidFill>
@@ -429,7 +429,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 <a:buNone/>
 </a:pPr>
 <a:r>
-<a:rPr lang="en-US" sz="4000" b="1" dirty="0">
+<a:rPr lang="en-US" sz="3600" b="1" dirty="0">
 <a:solidFill>
 <a:srgbClr val="0284C7"/>
 </a:solidFill>
@@ -439,7 +439,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 </a:rPr>
 <a:t> in the classroom</a:t>
 </a:r>
-<a:endParaRPr lang="en-US" sz="4000" dirty="0"/>
+<a:endParaRPr lang="en-US" sz="3600" dirty="0"/>
 </a:p>
 </p:txBody>
 </p:sp>

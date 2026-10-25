@@ -141,7 +141,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                       onUpdateBullet={updateBullet} onAddBullet={addBullet} onDeleteBullet={deleteBullet}
                       onDeleteSlide={deleteSlide} onAddSlide={() => addSlide(slideIds[selectedIndex])}
                       onRegenerateImage={regenerateImage} onSelectImage={selectLibraryImage}
-                      slideIndex={selectedIndex} totalSlides={presentationData.slides.length}
+                      originalWriters={presentationData.originalWriters} slideIndex={selectedIndex} totalSlides={presentationData.slides.length}
                       onMoveSlide={moveSlide} onDuplicateSlide={duplicateSlide} />
                   </div>
                 </div>

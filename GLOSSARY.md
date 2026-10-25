@@ -1,5 +1,7 @@
 # Glossary
 
+**Text fit** — The shared size decision for a slide’s title and body, computed from its current text, layout and Poppins glyph widths by `src/lib/slide-fit.ts`. Text shrinks to readability floors; content still too large is flagged and scrollable on the big slide. The same decision supplies the PowerPoint export.
+
 **Slideshow** — `src/components/SlideshowModal.tsx`, a full-screen view using the same passive Slide view at 16:9. Previous/Next, jump, keyboard and swipe controls navigate independently of Normal selection. Portrait phones show a dismissible rotate hint; credited images retain clickable source and license links below the slide.
 
 **Touch navigation** — Previous/Next controls in the workspace status bar and horizontal stage swipes over 60 px. `src/components/workspace/use-swipe.ts` shares gesture handling with the slideshow, ignoring vertical gestures, active text editing and panel starts. Phone controls have at least 44 px touch targets; the panel uses native Slide details and Image disclosures, with Slide details initially open on phones and both sections open from 768 px.

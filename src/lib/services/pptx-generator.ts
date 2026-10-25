@@ -1,3 +1,4 @@
+import { fitSlide, titlePointSize } from '@/lib/slide-fit';
 import PptxGenJS from 'pptxgenjs';
 import imageSize from 'image-size';
 import type { PresentationData } from '@/types/presentation';
@@ -66,6 +67,7 @@ export function createPresentationPptx(
 
   slides.forEach((slide, idx) => {
     const slideObj = pptx.addSlide();
+    const fit = fitSlide(slide, idx, presentationData.originalWriters);
 
     if (slide.imageMetadata) {
       const credit = describeImageCredit(slide.imageMetadata);
@@ -95,6 +97,7 @@ export function createPresentationPptx(
       const titleRuns = formulaToTextRuns(slide.title || 'Lesson Presentation');
       slideObj.addText(titleRuns, {
         ...TITLE_LAYOUT.title,
+        ...(fit.title.fontSize < TITLE_LAYOUT.title.fontSize && { fontSize: fit.title.fontSize }),
         color: SHADE_PRIMARY,
         bold: true,
         fontFace: DEFAULT_FONT_FACE,
@@ -119,7 +122,7 @@ export function createPresentationPptx(
       if (contentPoints.length > 0) {
         const textItems = contentPoints.flatMap((pt, pIdx) => {
           const pointOptions = {
-            fontSize: pIdx === 0 ? TITLE_LAYOUT.firstPointFontSize : TITLE_LAYOUT.pointFontSize,
+            fontSize: titlePointSize(pIdx, fit.body.fontSize),
             color: pIdx === 0 ? TEXT_HEADING : TEXT_MUTED,
             bold: pIdx === 0 || pt.toLowerCase().includes('writer') || pt.toLowerCase().includes('author'),
           };
@@ -130,6 +133,7 @@ export function createPresentationPptx(
 
         slideObj.addText(textItems, {
           ...TITLE_LAYOUT.points,
+          ...(fit.body.fontSize < TITLE_LAYOUT.firstPointFontSize && { lineSpacing: fit.body.lineHeightPt }),
           w: slide.imageMetadata ? TITLE_LAYOUT.pointsWithImageWidth : TITLE_LAYOUT.points.w,
           fontFace: DEFAULT_FONT_FACE,
           fit: 'shrink',
@@ -167,7 +171,7 @@ export function createPresentationPptx(
     const titleRuns = formulaToTextRuns(slide.title || '');
     slideObj.addText(titleRuns, {
       ...CONTENT_LAYOUT.title,
-      fontSize: titleFontSize,
+      fontSize: fit.title.fontSize < titleFontSize ? fit.title.fontSize : titleFontSize,
       color: SHADE_PRIMARY,
       bold: true,
       fontFace: DEFAULT_FONT_FACE,
@@ -188,6 +192,7 @@ export function createPresentationPptx(
     if (textItems.length > 0) {
       slideObj.addText(textItems, {
         ...CONTENT_LAYOUT.bullets,
+        ...(fit.body.fontSize < CONTENT_LAYOUT.bullets.fontSize && { fontSize: fit.body.fontSize, lineSpacing: fit.body.lineHeightPt }),
         w: contentWidth,
         fontFace: DEFAULT_FONT_FACE,
         color: SHADE_TEXT_DARK,
