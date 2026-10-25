@@ -50,8 +50,8 @@ describe('POST /api/upload', () => {
   });
 
   it('returns 400 if file exceeds MAX_FILE_SIZE_MB', async () => {
-    // 10MB limit in env config. Create a mock file larger than 10MB (11MB)
-    const largeBuffer = new Uint8Array(11 * 1024 * 1024);
+    // Default 4MB limit; a 5MB file is over it but under the 8MB body ceiling (twice the limit).
+    const largeBuffer = new Uint8Array(5 * 1024 * 1024);
     const file = new File([largeBuffer], 'large.txt', { type: 'text/plain' });
     const req = createMultipartRequest(file);
     const res = await POST(req);
@@ -59,5 +59,14 @@ describe('POST /api/upload', () => {
     expect(res.status).toBe(400);
     const json = await res.json();
     expect(json.error).toMatch(/File size exceeds/);
+  });
+
+  it('returns 413 if the request body exceeds twice MAX_FILE_SIZE_MB', async () => {
+    // An 11MB file is over the 8MB body ceiling, so defineRoute rejects it before the handler runs.
+    const file = new File([new Uint8Array(11 * 1024 * 1024)], 'huge.txt', { type: 'text/plain' });
+    const res = await POST(createMultipartRequest(file));
+
+    expect(res.status).toBe(413);
+    expect(await res.json()).toEqual({ error: 'Request body exceeds the size limit.' });
   });
 });
