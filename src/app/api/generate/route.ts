@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { defineRoute, PublicError } from '@/lib/api';
+import { autoFitDeck } from '@/lib/auto-fit-deck';
 import { generateSlideContent } from '@/lib/providers/text-provider';
 import { detectSubject } from '@/lib/utils/subject-detector';
 import { SESSION_OPTIONS } from '@/lib/utils/session-options';
@@ -45,7 +46,7 @@ export const POST = defineRoute({
       subject: resolvedSubject,
       source: hasSubjectSource ? 'teacher-supplied' : hasSubject ? 'unknown' : 'keyword-detected',
     };
-    const presentation = await generateSlideContent(text, session, resolvedSubject);
+    const presentation = autoFitDeck(await generateSlideContent(text, session, resolvedSubject));
 
     // Never accept provenance from model output or replace the recorded teacher value.
     return NextResponse.json({
