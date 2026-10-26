@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import { underscoreChemistryCases } from '../../helpers/underscore-chemistry-cases';
 import {
   parseFormulaToSegments,
   formatFormulaToUnicode,
@@ -6,6 +7,32 @@ import {
 
 describe('formula-parser', () => {
   describe('parseFormulaToSegments', () => {
+    it.each(underscoreChemistryCases)('preserves chemical or literal underscore notation: $input', ({ input, markdown, subscripts }) => {
+      const segments = parseFormulaToSegments(input);
+      expect(segments.filter(segment => segment.subscript).map(segment => segment.text)).toEqual(subscripts);
+      expect(segments.map(segment => segment.text).join('')).toBe(subscripts.length ? input.replace(/[_{}]/g, '') : input);
+      expect(formatFormulaToUnicode(input)).toBe(markdown);
+    });
+
+    it('preserves underscores between generated prose words of at least three letters', () => {
+      let seed = 0x51a7;
+      const word = () => {
+        seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+        const length = 3 + seed % 14;
+        let result = '';
+        for (let index = 0; index < length; index++) {
+          seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+          result += String.fromCharCode(97 + seed % 26);
+        }
+        return result;
+      };
+      for (let index = 0; index < 2000; index++) {
+        const input = `${word()}_${word()}_${word()}`;
+        expect(parseFormulaToSegments(input).map(segment => segment.text).join(''), input).toBe(input);
+        expect(formatFormulaToUnicode(input), input).toBe(input);
+      }
+    });
+
     it.each([
       ['3x^2-4x+1', [{ text: '3x' }, { text: '2', superscript: true }, { text: '-4x+1' }]],
       ['x^n+1', [{ text: 'x' }, { text: 'n', superscript: true }, { text: '+1' }]],

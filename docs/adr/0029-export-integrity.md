@@ -28,8 +28,13 @@ are unchanged.
 
 The shared parser in `src/lib/utils/formula-parser.ts` consumes an unbraced
 exponent as optional sign plus digits, or one letter. Subscripts require a
-single-letter variable, digit or closing bracket as their base; their unbraced
-payload is digits or one letter. Braces and parentheses retain grouped scripts.
+single-letter variable, digit, closing bracket or whitelisted chemical formula
+fragment as their base; their unbraced payload is digits or one letter. Chemical
+prefixes such as CO, Fe, NaCl, H2SO, NH and Ca validate with the existing
+whitelist. Preserve parsed counts within that fragment and consume chained
+underscore forms one run at a time (Fe_2O_3, H_2SO_4, Ca_3(PO_4)_2). Multi-letter
+word suffixes such as H2O_guide remain literal; email guards still apply. Braces
+and parentheses retain grouped scripts.
 Malformed/incomplete markup stays literal. Chemical recognition consumes the whole
 candidate token using the 118 known element symbols, counts and an optional ion
 charge. Hyphenated words, unknown symbols and stray lowercase letters stay literal.
@@ -87,3 +92,12 @@ comparisons, rendering, browser checks, assertion changes and final gates.
 No schema/security hardening, generation changes, new looks, layout/fit changes,
 or NASA preview/export crop changes are included. LibreOffice/Chromium evidence
 is local acceptance evidence; it does not establish native PowerPoint behavior.
+
+## Underscore chemistry follow-up
+
+Restore the original EditableSlideView CO_2 assertion. Parser and cross-render
+regressions verify chemical, identifier and email cases in preview, PPTX and
+Markdown, with a second 2,000-sample property check for underscores between prose
+words. See the follow-up table in `docs/export-integrity-formulas.md`. Plain-digit
+parenthesized chemical groups are deferred; explicit underscored group notation
+is supported.

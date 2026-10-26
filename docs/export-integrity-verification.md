@@ -146,7 +146,7 @@ Final checks use Node 22.23.4 and Node 26.3.0 with two Vitest workers. Commands:
 - Production build: next build.
 - Whitespace: git diff --check.
 
-Final results on the completed source:
+Initial export-integrity results at commit 23d1493:
 
 | Runtime | Typecheck | Lint | Full suite | Production build |
 |---|---|---|---|---|
@@ -178,8 +178,9 @@ Existing assertion changes, named explicitly:
   keeps O on the baseline, and updates the affected XML hash. Plain-title hash
   remains unchanged.
 - `tests/components/EditableSlideView.test.tsx`, “edits raw title text live and
-  restores formulas when finished”: CO_2 stays literal under the single-letter
-  variable rule. An additional CO2 edit verifies valid chemistry formatting.
+  restores formulas when finished”: the initial commit made CO_2 literal. The
+  underscore-chemistry follow-up restores the original CO_2 subscript assertion;
+  see `docs/export-integrity-formulas.md` for the correction and new evidence.
 
 Snapshot changes are limited to corrected H_2O runs, picture descr attributes,
 and their dependent hashes. All 13 changed entries are listed below; the full
@@ -229,3 +230,16 @@ machine-readable list is EVIDENCE/snapshot-scope.json.
 Independent review found two further ordinary-token/email formatting cases;
 both received failing-then-passing regressions and were fixed. Final review
 reports no remaining actionable findings.
+
+## Underscore chemistry follow-up verification
+
+One subsequent local commit restores the original CO_2 editing assertion and
+whitelisted underscore chemistry. Existing export behavior and snapshots remain
+unchanged. See `docs/export-integrity-formulas.md` for the actual 22-case
+preview/PPTX/Markdown comparison, unchanged PPTX hash, regression cycles and
+optional group-syntax deferral.
+
+Node 22.23.4 and Node 26.3.0 both pass standalone typecheck, lint, the full suite
+(166 files / 1,723 tests; 40.51 s and 44.53 s respectively) and production build.
+The two 2,000-sample properties pass; independent review is clean. Follow-up
+captures and logs are retained under EVIDENCE/underscore-chemistry/.

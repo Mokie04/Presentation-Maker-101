@@ -89,7 +89,7 @@ const ELEMENT_SYMBOLS = new Set((
   'Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og'
 ).split(' '));
 
-function parseChemicalFormula(formulaWord: string): FormulaSegment[] | null {
+function parseChemicalFormula(formulaWord: string, requireCountOrCharge = true): FormulaSegment[] | null {
   // Matches optional coefficient followed by chemical symbols and digits/charges
   const m = /^(\d+)?([A-Z][A-Za-z0-9^+-]*)$/.exec(formulaWord);
   if (!m) return null;
@@ -97,8 +97,8 @@ function parseChemicalFormula(formulaWord: string): FormulaSegment[] | null {
   const coeff = m[1] || '';
   const formula = m[2];
 
-  // Must contain at least one element followed by a number or charge
-  if (!/[A-Z][a-z]?\d|[A-Z][a-z]?\^?[0-9]*[+-]/.test(formula)) {
+  // Ordinary chemistry needs a count/charge; underscore bases can be bare elements.
+  if (requireCountOrCharge && !/[A-Z][a-z]?\d|[A-Z][a-z]?\^?[0-9]*[+-]/.test(formula)) {
     return null;
   }
 
@@ -156,10 +156,17 @@ export function parseFormulaToSegments(rawText: string): FormulaSegment[] {
   let i = 0;
   while (i < normalized.length) {
     const marker = normalized[i];
-    // A prose identifier is not a variable: teacher_name stays literal.
-    const subscriptBase = marker === '_' && /(?:^|[^A-Za-z0-9_])[A-Za-z]$|[0-9)\]}]$/.test(normalized.slice(0, i));
+    // Keep prose identifiers literal, but allow whitelisted chemistry such as CO_2.
+    // Inspect the unformatted buffer so chained scripts validate only the new fragment.
+    const prefix = marker === '_' ? normalized.slice(0, i) : '';
+    const chemicalBase = marker === '_' ? /(?:^|[^A-Za-z0-9.@-])([A-Za-z0-9]+)$/.exec(buffer)?.[1] : undefined;
+    const chemicalSegments = chemicalBase && !/^[A-Za-z]{2}/.test(normalized.slice(i + 1))
+      ? parseChemicalFormula(chemicalBase, false) : null;
+    const subscriptBase = marker === '_' && (
+      /(?:^|[^A-Za-z0-9_])[A-Za-z]$|[0-9)\]}]$/.test(prefix) || chemicalSegments !== null
+    );
     const inEmail = marker === '_' && (
-      /@\S*$/.test(normalized.slice(0, i)) || /^\S*@/.test(normalized.slice(i + 1))
+      /@\S*$/.test(prefix) || /^\S*@/.test(normalized.slice(i + 1))
     );
     if (marker === '^' || (marker === '_' && subscriptBase && !inEmail)) {
       const remainder = normalized.slice(i + 1);
@@ -167,7 +174,13 @@ export function parseFormulaToSegments(rawText: string): FormulaSegment[] {
       const unbraced = (marker === '^' ? /^[+-]?\d+|^[A-Za-z]/ : /^\d+|^[A-Za-z]/).exec(remainder);
       const scriptText = script ? script[1] ?? script[2] : unbraced?.[0];
       if (scriptText) {
-        flushBuffer();
+        if (chemicalBase && chemicalSegments) {
+          buffer = buffer.slice(0, -chemicalBase.length);
+          flushBuffer();
+          segments.push(...chemicalSegments);
+        } else {
+          flushBuffer();
+        }
         segments.push({ text: scriptText, ...(marker === '^' ? { superscript: true } : { subscript: true }) });
         i += 1 + (script?.[0].length ?? unbraced![0].length);
         continue;
