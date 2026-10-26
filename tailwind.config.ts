@@ -9,6 +9,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        notebook: {
+          navy: "#0b2540",
+          cream: "#fffdf6",
+          warmBorder: "#e9c98a",
+          line: "#b9cfe0",
+        },
         sun: {
           50: "#fff8eb",
           100: "#fde6b9",

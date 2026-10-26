@@ -37,10 +37,10 @@ describe('home setup', () => {
     expect((screen.getByRole('radio', { name: 'Session 4' }) as HTMLInputElement).checked).toBe(true);
   });
   it.each([
-    ['', '', true, 'Add your lesson and choose a session to continue.'],
-    ['lesson', '', true, 'Choose a session to continue.'],
-    ['', 'Session 2', true, 'Add your lesson to continue.'],
-    ['lesson', 'Session 2', false, 'Ready: Session 2, subject Automatic'],
+    ['', '', true, "Start by dropping your lesson plan."],
+    ['lesson', '', true, "Nice! Now pick the session to build."],
+    ['', 'Session 2', true, "Start by dropping your lesson plan."],
+    ['lesson', 'Session 2', false, "All set! I'll build Session 2."],
   ])('gates generation for text=%s session=%s', (extractedText, selectedSession, disabled, hint) => {
     render(<UploadSection {...props} extractedText={extractedText} selectedSession={selectedSession} />);
     expect((screen.getByRole('button', { name: 'Generate Slides' }) as HTMLButtonElement).disabled).toBe(disabled);
@@ -51,7 +51,7 @@ describe('home setup', () => {
     render(<UploadSection {...props} extractedText="original text" fileName="lesson.docx" selectedSession="Session 4" selectedSubject="Science" onSubjectChange={subjectChange} />);
     const subject = screen.getByRole('combobox', { name: 'Subject' });
     expect(within(subject).getByRole('option', { name: 'Automatic' })).toBeTruthy();
-    expect(screen.getByText('Ready: Session 4, subject Science')).toBeTruthy();
+    expect(screen.getByText("All set! I'll build Session 4.")).toBeTruthy();
     expect(screen.getByLabelText('Step 1 complete')).toBeTruthy();
     expect(screen.getByLabelText('Step 2 complete')).toBeTruthy();
     fireEvent.change(subject, { target: { value: 'Mathematics' } }); expect(subjectChange).toHaveBeenCalledWith('Mathematics');

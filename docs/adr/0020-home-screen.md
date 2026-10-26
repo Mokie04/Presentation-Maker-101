@@ -27,3 +27,11 @@ Sun colours live in `tailwind.config.ts` and are confined to headline highlighti
 Home styling is isolated from the deck, workspace controls, routes, prompts, exports and Another session dialog. Existing test assertions remain unchanged; upload-screen session selection is adapted through `chooseSession`. Native keyboard behavior, responsive target sizes, reduced motion and actual contrast are also checked in a browser because jsdom cannot establish them.
 
 Additional Mokie poses (thinking, oops and celebrate) and a workspace chrome redesign are deferred to `docs/home-screen-roadmap.md`.
+
+## Setup card polish
+
+The setup card uses warm paper, navy outlines and hard shadows to distinguish the working form from generic upload panels. A yellow top tab and the current-step ring identify the starting point; dotted connectors turn blue as steps complete. Session inputs remain native radios styled as notebook tiles, and Subject remains a native select. On phones, the Generate button uses a full row below Mokie and the bubble so the controls fit at 320 px.
+
+Mokie's bubble replaces the old grey hint with a short action cue derived from lesson/session/loading state. Generate references it with aria-describedby. It is plain descriptive text, not a live region: changing a session must not create extra screen-reader chatter. The existing loading-stage status remains the generation announcement. Current step advances through upload, session and generate; the existing step-3 completed check is retained while generating.
+
+The faint graph-paper texture and all tactile styles are scoped to the home-screen wrapper and setup card. Workspace, hero, generating-panel layout and persistence are unchanged. Colours use home-scoped tokens; trust-strip edges reuse the canonical lesson-part palette through getPartAccentClass. Text/background states change atomically, while only position and shadow animate. Reduced motion disables floating, hover lift and pressed translations; colour still communicates selection.
