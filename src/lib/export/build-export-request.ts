@@ -1,3 +1,4 @@
+import { DEFAULT_THEME_ID } from '@/lib/themes';
 import { isUsableImage } from '@/lib/slide-image';
 import type { PresentationData } from '@/types/presentation';
 import { CLIENT_EXPORT_BUDGET_CHARS } from './limits';
@@ -6,6 +7,7 @@ export interface PptxExportInput {
   presentationData: PresentationData;
   slideImages: Record<number, string>;
   session: string;
+  themeId?: string;
 }
 
 export interface PptxExportOptions {
@@ -29,7 +31,7 @@ function withoutCredits(presentationData: PresentationData, indexes: number[]): 
 
 /** The /api/download-pptx body: images compressed, then trimmed from the last slide down until it fits the budget. */
 export async function buildPptxExportRequest(
-  { presentationData, slideImages, session }: PptxExportInput,
+  { presentationData, slideImages, session, themeId }: PptxExportInput,
   { compress, budgetChars = CLIENT_EXPORT_BUDGET_CHARS }: PptxExportOptions
 ): Promise<{ body: string; droppedImageIndexes: number[] }> {
   const images: Record<number, string> = {};
@@ -45,6 +47,7 @@ export async function buildPptxExportRequest(
     presentationData: withoutCredits(presentationData, droppedImageIndexes),
     slideImages: images,
     session,
+    ...(themeId !== undefined && themeId !== DEFAULT_THEME_ID && { themeId }),
   });
 
   let body = serialize();

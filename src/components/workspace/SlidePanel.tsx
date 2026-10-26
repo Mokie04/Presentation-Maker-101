@@ -9,11 +9,13 @@ import { normalizePart, PEDAGOGICAL_PARTS } from '@/lib/pedagogy';
 import { SlideImageControls } from '../SlideImageControls';
 import { SlideMoveButtons } from './SlideMoveButtons';
 import { useMediaQuery } from './use-media-query';
+import { DEFAULT_THEME, type SlideTheme } from '@/lib/themes';
 import type { SlideData } from '@/types/presentation';
 import type { ImageMetadata } from '@/lib/image-metadata';
 
 export interface SlidePanelProps {
   slide: SlideData;
+  theme?: SlideTheme;
   slideId: number;
   slideImage?: string;
   isGeneratingImage?: boolean;
@@ -37,6 +39,7 @@ export interface SlidePanelProps {
 export function SlidePanel({
   slide,
   slideId,
+  theme = DEFAULT_THEME,
   slideImage,
   isGeneratingImage = false,
   imageError,
@@ -56,8 +59,8 @@ export function SlidePanel({
   onMoveSlide,
   onDuplicateSlide,
 }: SlidePanelProps) {
-  const overflow = getSlideOverflow(slide, slideIndex ?? 0, originalWriters);
-  const split = overflow.body && onSplit && suggestSplitIndex(slide, slideIndex ?? 0, originalWriters) !== null ? onSplit : undefined;
+  const overflow = getSlideOverflow(slide, slideIndex ?? 0, originalWriters, theme);
+  const split = overflow.body && onSplit && suggestSplitIndex(slide, slideIndex ?? 0, originalWriters, theme) !== null ? onSplit : undefined;
   const titleId = useId();
   const bulletsId = useId();
   const pointerDelete = useRef<{ slideId: number; index: number; points: string[] } | null>(null);

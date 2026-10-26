@@ -11,6 +11,7 @@ import { describeImageCredit } from '@/lib/image-credit';
 import type { PresentationData } from '@/types/presentation';
 import { getPartBadgeInfo } from './part-badge';
 import { isUsableImage } from '@/lib/slide-image';
+import { DEFAULT_THEME, type SlideTheme } from '@/lib/themes';
 import { SlideView } from './SlideView';
 import { useMediaQuery } from './workspace/use-media-query';
 import { useSwipe } from './workspace/use-swipe';
@@ -18,6 +19,7 @@ import { useDialogFocus } from './workspace/use-dialog-focus';
 
 interface SlideshowModalProps {
   isOpen: boolean;
+  theme?: SlideTheme;
   onClose: () => void;
   presentationData: PresentationData;
   session: string;
@@ -27,6 +29,7 @@ interface SlideshowModalProps {
 
 export function SlideshowModal({
   isOpen,
+  theme = DEFAULT_THEME,
   onClose,
   presentationData,
   session,
@@ -151,7 +154,7 @@ export function SlideshowModal({
           <figure className="m-0 w-full max-h-full min-h-0 flex flex-col items-center">
             <div className="w-full aspect-video min-h-0 shrink flex items-center justify-center" style={{ containerType: 'size' }}>
               <div className="shrink-0 shadow-2xl" style={{ width: 'min(100cqw, calc(100cqh * 16 / 9))' }}>
-                <SlideView slide={currentSlide} index={currentIndex} total={totalSlides}
+                <SlideView theme={theme} slide={currentSlide} index={currentIndex} total={totalSlides}
                   image={currentImage} originalWriters={presentationData.originalWriters} variant="full" />
               </div>
             </div>

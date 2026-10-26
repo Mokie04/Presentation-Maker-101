@@ -2,7 +2,7 @@
 
 Same loop as the earlier roadmaps: the planner writes one prompt per phase, a developer chat executes it on a branch, the planner verifies, and each phase ships through a PR, CI and the Vercel preview before the next prompt. Developers never push or merge on their own.
 
-Status: **Phase 1 implemented 2026-10-26; release pending planner review.** Phase 0 investigation and product decisions are accepted. See [ADR 0022](adr/0022-slide-themes.md) for the module, compatibility strategy and Classic contrast exceptions.
+Status: **Phase 1 merged (a594175); Phase 2 implemented 2026-10-26, release pending planner review.** Phase 0 investigation and product decisions are accepted. See [ADR 0022](adr/0022-slide-themes.md) for the module, compatibility strategy and Classic contrast exceptions.
 
 ## What the product owner asked for
 
@@ -109,13 +109,14 @@ Final list and count are a product decision (see below).
 ### Phase 0: investigation, audit and plan (planner) — done
 This document. Next: a clickable mock of the 4 or 5 looks on the real slide layout (same pattern as the workspace and home-screen mocks), approved before Phase 1.
 
-### Phase 1: a theme module, no visible change — done (release pending review)
+### Phase 1: a theme module, no visible change — merged
 - A `SlideTheme` object (palette, fonts with export face and browser stand-in, shape tokens), a registry (`getTheme(id)`), and the default theme equal to today's constants.
 - `SlideView`, `EditableSlideView`, `slide-fit`, `slide-split`, `autoFitDeck` and `pptx-generator` take the theme as a parameter. Constants re-exported so existing tests stay valid.
 - Fit metrics generalised per font; a computed WCAG contrast test over theme tokens.
 - Done = all existing tests pass unchanged; the six XML golden snapshots and the three sample PPTX archives are byte-identical for the default theme; `SlideView` DOM tests unchanged.
 
-### Phase 2: theme selection and export wiring
+### Phase 2: theme selection and export wiring — done (release pending review)
+- See [ADR 0023](adr/0023-look-selection.md): the picker stays hidden until at least two looks are registered; Classic-only production remains visually unchanged.
 - Lesson-level `themeId` in workspace state (outside `deckReducer`), a "Look" picker in the workspace header with live thumbnails (reusing `SlideView`), remembered per browser.
 - `exportRequestSchema` accepts an optional `themeId` validated against the registry (unknown ids are rejected with the sanitized 400); `download-pptx` passes it through. Markdown export unchanged. Slideshow follows the active look.
 - Reserve `themeId` in the saved-lesson snapshot design (coordinate with Phase 2 of multi-session).

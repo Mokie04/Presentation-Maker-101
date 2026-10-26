@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { DEFAULT_THEME, type SlideTheme } from '@/lib/themes';
 import type { SlideData } from '@/types/presentation';
 import { getSlideOverflow } from '@/lib/slide-fit';
 import { partLabel } from '@/lib/pedagogy';
@@ -10,6 +11,7 @@ import { useSlideReorder } from './use-slide-reorder';
 
 export interface SlideSorterProps {
   slides: readonly SlideData[];
+  theme?: SlideTheme;
   slideIds: readonly number[];
   selectedId: number | null;
   onSelect: (slideId: number) => void;
@@ -21,7 +23,7 @@ export interface SlideSorterProps {
   originalWriters?: string;
 }
 
-export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, onMove, onDuplicate, onDelete, slideImages, originalWriters }: SlideSorterProps) {
+export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, onMove, onDuplicate, onDelete, slideImages, originalWriters, theme = DEFAULT_THEME }: SlideSorterProps) {
   const reorder = useSlideReorder(onMove);
   return (
     <section aria-label="Slide sorter" className="min-w-0 space-y-3">
@@ -29,7 +31,7 @@ export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, on
         style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 200px), 1fr))' }}>
         {slides.map((slide, index) => {
           const id = slideIds[index];
-          const overflow = getSlideOverflow(slide, index, originalWriters).any;
+          const overflow = getSlideOverflow(slide, index, originalWriters, theme).any;
           return <li key={id} {...reorder.itemProps(id, index)} tabIndex={0}
             aria-label={`Slide ${index + 1}: ${slide.title}${overflow ? ' (text does not fit)' : ''}`} aria-current={selectedId === id ? 'true' : undefined}
             onClick={() => onSelect(id)} onDoubleClick={() => onOpen(id)}
@@ -43,7 +45,7 @@ export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, on
                 : selectedId === id ? 'border-sky-700 bg-sky-50' : 'border-slate-200 bg-white'
             }`}>
             <div className="overflow-hidden rounded border border-slate-200">
-              <SlideThumbnail slide={slide} index={index} total={slides.length} image={slideImages?.[index]} originalWriters={originalWriters} />
+              <SlideThumbnail theme={theme} slide={slide} index={index} total={slides.length} image={slideImages?.[index]} originalWriters={originalWriters} />
             </div>
             <div className="flex min-w-0 items-start gap-2 text-xs text-slate-600">
               <span className="font-bold tabular-nums text-sky-800">{index + 1}</span>

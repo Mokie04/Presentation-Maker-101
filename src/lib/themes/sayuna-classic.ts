@@ -5,7 +5,7 @@ import {
 } from '../slide-theme';
 import type { SlideTheme } from './types';
 
-export const SAYUNA_CLASSIC: SlideTheme = {
+export const SAYUNA_CLASSIC = {
   id: 'sayuna-classic',
   name: 'Sayuna Classic',
   palette: {
@@ -23,4 +23,4 @@ export const SAYUNA_CLASSIC: SlideTheme = {
     visualBorderWidth: CONTENT_LAYOUT.visualBorderWidth,
   },
   layout: { title: TITLE_LAYOUT, content: CONTENT_LAYOUT, credit: CREDIT_LAYOUT, counter: SLIDE_COUNTER },
-};
+} as const satisfies SlideTheme;

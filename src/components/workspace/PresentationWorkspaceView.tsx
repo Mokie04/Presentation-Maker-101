@@ -6,6 +6,7 @@ import { partLabel } from '@/lib/pedagogy';
 import type { useSlideDeck } from '@/lib/deck/use-slide-deck';
 import type { useDeckExport } from '@/lib/export/use-deck-export';
 import { sessionTabId } from './SessionTabs';
+import { LookPicker } from './LookPicker';
 import { SlideRail } from './SlideRail';
 import { SlideStage } from './SlideStage';
 import { SlidePanel } from './SlidePanel';
@@ -23,7 +24,7 @@ export interface PresentationWorkspaceViewProps {
 }
 
 export function PresentationWorkspaceView({ deck, downloads, session: selectedSession, sessionControls, onReset, onPreview }: PresentationWorkspaceViewProps) {
-  const { view, setView, selection } = deck;
+  const { view, setView, selection, theme, themeId, setThemeId } = deck;
   const workspace = useRef<HTMLDivElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
   const focusContent = useRef(false);
@@ -77,6 +78,8 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
 
               {/* Action Buttons */}
               <div className="flex max-w-full flex-wrap items-center gap-2">
+                <LookPicker themeId={themeId} onChange={setThemeId} slide={selectedSlide} index={Math.max(selectedIndex, 0)}
+                  total={presentationData.slides.length} image={slideImages[selectedIndex]} originalWriters={presentationData.originalWriters} />
                 <button
                   type="button"
                   disabled={isDownloadingPptx}
@@ -126,13 +129,13 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
               selectedSlide ? (
                 <div className="grid min-w-0 gap-2.5 motion-reduce:[&_*]:animate-none motion-reduce:[&_*]:transition-none md:h-[min(760px,calc(100dvh-260px))] md:min-h-[520px] md:grid-cols-[188px_minmax(0,1fr)] md:grid-rows-[minmax(0,1fr)_minmax(0,1fr)] lg:min-h-[400px] lg:grid-cols-[188px_minmax(0,1fr)_300px] lg:grid-rows-[minmax(0,1fr)]">
                   <div className="order-2 grid min-h-0 min-w-0 md:order-1 md:col-start-1 md:row-span-2 md:row-start-1 lg:row-span-1">
-                    <SlideRail slides={presentationData.slides} slideIds={slideIds} selectedId={selection.selectedId}
+                    <SlideRail theme={theme} slides={presentationData.slides} slideIds={slideIds} selectedId={selection.selectedId}
                       onSelect={selection.selectSlide} total={presentationData.slides.length} slideImages={slideImages}
                       onMove={moveSlide}
                       originalWriters={presentationData.originalWriters} />
                   </div>
                   <div className="order-1 grid min-h-0 min-w-0 md:order-2 md:col-start-2 md:row-start-1">
-                    <SlideStage key={slideIds[selectedIndex]} slide={selectedSlide} index={selectedIndex} total={presentationData.slides.length}
+                    <SlideStage theme={theme} key={slideIds[selectedIndex]} slide={selectedSlide} index={selectedIndex} total={presentationData.slides.length}
                       onNext={selection.next} onPrevious={selection.previous} onSplit={splitSelected}
                       image={slideImages[selectedIndex]} originalWriters={presentationData.originalWriters}
                       onTitleChange={title => updateTitle(slideIds[selectedIndex], title)}
@@ -142,7 +145,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                       onPointAdd={() => addBullet(slideIds[selectedIndex])} />
                   </div>
                   <div className="order-3 grid max-h-[520px] min-h-0 min-w-0 md:col-start-2 md:row-start-2 md:max-h-none lg:col-start-3 lg:row-start-1">
-                    <SlidePanel key={selection.selectedId} slide={selectedSlide} slideId={slideIds[selectedIndex]}
+                    <SlidePanel theme={theme} key={selection.selectedId} slide={selectedSlide} slideId={slideIds[selectedIndex]}
                       slideImage={slideImages[selectedIndex]} isGeneratingImage={Boolean(generatingImages[selectedIndex])}
                       imageError={imageErrors[selectedIndex]} onUpdatePart={updatePart} onUpdateTitle={updateTitle}
                       onUpdateBullet={updateBullet} onAddBullet={addBullet} onDeleteBullet={deleteBullet}
@@ -159,7 +162,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                 </div>
               )
             ) : (
-              <SlideSorter slides={presentationData.slides} slideIds={slideIds} selectedId={selection.selectedId}
+              <SlideSorter theme={theme} slides={presentationData.slides} slideIds={slideIds} selectedId={selection.selectedId}
                 onSelect={selection.selectSlide} onOpen={(id) => { selection.selectSlide(id); changeView('normal'); }}
                 onMove={moveSlide} onDuplicate={duplicateSlide} onDelete={deleteSlide}
                 slideImages={slideImages} originalWriters={presentationData.originalWriters} />
