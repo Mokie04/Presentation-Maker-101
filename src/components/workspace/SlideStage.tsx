@@ -18,8 +18,8 @@ export type SlideStageProps = Omit<SlideViewProps, 'variant' | 'renderTitle' | '
 export function SlideStage({ onTitleChange, onPointChange, onPointInsert, onPointDelete, onPointAdd, onSplit, onNext, onPrevious, ...props }: SlideStageProps) {
   const desktopEditing = useMediaQuery('(min-width: 768px)');
   const swipe = useSwipe({ onNext: () => onNext?.(), onPrevious: () => onPrevious?.(), disabled: !onNext || !onPrevious });
-  const overflow = getSlideOverflow(props.slide, props.index, props.originalWriters);
-  const split = overflow.body && onSplit && suggestSplitIndex(props.slide, props.index, props.originalWriters) !== null ? onSplit : undefined;
+  const overflow = getSlideOverflow(props.slide, props.index, props.originalWriters, props.theme);
+  const split = overflow.body && onSplit && suggestSplitIndex(props.slide, props.index, props.originalWriters, props.theme) !== null ? onSplit : undefined;
   return (
     <div className="grid min-h-0 min-w-0 grid-rows-[minmax(0,1fr)_auto]">
       <section aria-label="Slide stage" tabIndex={0} {...swipe} style={{ containerType: 'size', touchAction: 'pan-y pinch-zoom' }}

@@ -23,3 +23,4 @@ Dates are recorded by month. Accepted describes the current design; Proposed and
 | [0017](0017-split-a-full-slide.md) | Accepted | Reducer-owned splitting with retained original image ownership and selection |
 | [0018](0018-slide-text-budget.md) | Accepted | Prompt text budget, generation-time body fit and explicit truncation errors |
 | [0022](0022-slide-themes.md) | Accepted | Optional theme parameters, Classic compatibility, font metrics registry and pinned contrast exceptions |
+| [0023](0023-look-selection.md) | Accepted | Lesson-level look state, hidden picker, remembered preference and optional export themeId |

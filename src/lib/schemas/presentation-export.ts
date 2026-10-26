@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isThemeId } from '@/lib/themes';
 import { presentationDataSchema, slideDataSchema } from '@/lib/providers/text-provider';
 import { imageMetadataSchema } from '@/lib/image-metadata';
 /** Most slides an export accepts; generated decks have about 25. */
@@ -13,5 +14,6 @@ export const MAX_EXPORT_SESSION_LENGTH = 100;
 /** Request body shared by the Markdown and PowerPoint export routes. */
 export const exportRequestSchema = z.object({
   presentationData: exportPresentationDataSchema,
+  themeId: z.custom<string>(isThemeId, 'themeId must be a supported look').optional(),
   session: z.string().max(MAX_EXPORT_SESSION_LENGTH).optional(),
 });

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useId, useRef } from 'react';
+import { DEFAULT_THEME, type SlideTheme } from '@/lib/themes';
 import type { SlideData } from '@/types/presentation';
 import { getSlideOverflow } from '@/lib/slide-fit';
 import { SlideThumbnail } from './SlideThumbnail';
@@ -8,6 +9,7 @@ import { moveSlideWithKeyboard, useSlideReorder } from './use-slide-reorder';
 
 export interface SlideRailProps {
   slides: readonly SlideData[];
+  theme?: SlideTheme;
   slideIds: readonly number[];
   selectedId: number | null;
   onSelect: (slideId: number) => void;
@@ -17,7 +19,7 @@ export interface SlideRailProps {
   originalWriters?: string;
 }
 
-export function SlideRail({ slides, slideIds, selectedId, onSelect, onMove, total, slideImages, originalWriters }: SlideRailProps) {
+export function SlideRail({ slides, slideIds, selectedId, onSelect, onMove, total, slideImages, originalWriters, theme = DEFAULT_THEME }: SlideRailProps) {
   const prefix = useId();
   const rail = useRef<HTMLDivElement>(null);
   const optionId = (id: number) => `${prefix}-slide-${id}`;
@@ -42,7 +44,7 @@ export function SlideRail({ slides, slideIds, selectedId, onSelect, onMove, tota
       onKeyDown={event => moveSlideWithKeyboard(event, slideIds, selectedId, onMove)}
       className="flex min-h-0 min-w-0 gap-2 overflow-x-auto overscroll-contain rounded-xl border border-slate-200 bg-white p-2 outline-none focus-visible:ring-2 focus-visible:ring-sky-700 md:flex-col md:overflow-x-hidden md:overflow-y-auto">
       {slides.map((slide, index) => {
-        const overflow = getSlideOverflow(slide, index, originalWriters).any;
+        const overflow = getSlideOverflow(slide, index, originalWriters, theme).any;
         return (
           <button key={slideIds[index]} type="button" role="option" id={optionId(slideIds[index])}
             {...reorder.itemProps(slideIds[index], index)}
@@ -57,7 +59,7 @@ export function SlideRail({ slides, slideIds, selectedId, onSelect, onMove, tota
             }`}>
             <span className="pt-0.5 text-right text-[11px] font-semibold tabular-nums text-slate-600">{index + 1}{overflow && <span aria-hidden="true" className="block font-bold text-amber-700">!</span>}</span>
             <div className="min-w-0 overflow-hidden rounded border border-slate-200">
-              <SlideThumbnail slide={slide} index={index} total={total} image={slideImages?.[index]} originalWriters={originalWriters} />
+              <SlideThumbnail theme={theme} slide={slide} index={index} total={total} image={slideImages?.[index]} originalWriters={originalWriters} />
             </div>
           </button>
         );

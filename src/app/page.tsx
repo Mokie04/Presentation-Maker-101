@@ -32,7 +32,7 @@ function PresentationWorkspace() {
   const deck = useSlideDeck();
   const { presentationData, slideImages, loadPresentation, reset: resetDeck } = deck;
   const downloads = useDeckExport({
-    presentationData, slideImages, session: deck.activeSession || '', onError: (message) => alert(message),
+    presentationData, slideImages, themeId: deck.themeId, session: deck.activeSession || '', onError: (message) => alert(message),
   });
 
   const [isSlideShowActive, setIsSlideShowActive] = useState(false);
@@ -133,6 +133,7 @@ function PresentationWorkspace() {
         {/* Fullscreen Slideshow Modal */}
         {presentationData && (
           <SlideshowModal
+            theme={deck.theme}
             isOpen={isSlideShowActive}
             onClose={() => setIsSlideShowActive(false)}
             presentationData={presentationData}

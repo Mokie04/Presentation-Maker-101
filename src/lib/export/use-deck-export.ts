@@ -10,10 +10,11 @@ import { exportFilename } from './filename';
 const NETWORK_INTERRUPTED =
   'Network connection interrupted during download. Please try downloading again or use the Markdown outline.';
 
-export function useDeckExport({ presentationData, slideImages, session, onError }: {
+export function useDeckExport({ presentationData, slideImages, session, themeId, onError }: {
   presentationData: PresentationData | null;
   slideImages: Record<number, string>;
   session: string;
+  themeId?: string;
   onError: (message: string) => void;
 }) {
   const [isDownloadingPptx, setIsDownloadingPptx] = useState(false);
@@ -26,7 +27,7 @@ export function useDeckExport({ presentationData, slideImages, session, onError 
 
     try {
       const { body } = await buildPptxExportRequest(
-        { presentationData, slideImages, session },
+        { presentationData, slideImages, session, themeId },
         { compress: compressImageForExport }
       );
 

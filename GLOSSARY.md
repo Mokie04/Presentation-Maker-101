@@ -20,7 +20,7 @@
 
 **Theme** — A named palette, typography (export face, browser font-family and metricsId), visual card shape and layout. `src/lib/themes/` owns the registry and Classic default; render and fit functions accept it without changing deck data. See `docs/adr/0022-slide-themes.md`.
 
-**Look** — The lesson-level presentation choice combining a theme with a style treatment. Phase 1 only supplies Classic plumbing; the picker, persistence/wire fields and decoration are later phases.
+**Look** — The lesson-level presentation choice combining a theme with a style treatment. One choice is shared across all session decks in a lesson. The header picker is hidden until two looks exist; the browser remembers a preference, and non-default PPTX requests carry themeId. Saved-lesson persistence and decoration remain later work. See `docs/adr/0023-look-selection.md`.
 
 **Slide theme** — `src/lib/slide-theme.ts`, the pure shared PPTX palette, Poppins font face, point sizes and title/content geometry. Coordinates preserve the export's inches and percentages; the Slide view converts them to slide percentages and container-scaled type. Index zero uses the title layout.
 

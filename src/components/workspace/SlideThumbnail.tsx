@@ -15,5 +15,5 @@ export const SlideThumbnail = memo(function SlideThumbnail(props: SlideThumbnail
   return a.title === b.title && a.part === b.part && a.slideNumber === b.slideNumber &&
     a.contentPoints === b.contentPoints && a.visualDescription === b.visualDescription && a.imageMetadata === b.imageMetadata &&
     previous.index === next.index && previous.total === next.total && previous.image === next.image &&
-    previous.originalWriters === next.originalWriters;
+    previous.originalWriters === next.originalWriters && previous.theme === next.theme;
 });

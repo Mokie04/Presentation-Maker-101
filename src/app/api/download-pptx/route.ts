@@ -1,3 +1,4 @@
+import { getTheme } from '@/lib/themes';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { defineRoute } from '@/lib/api';
@@ -31,10 +32,13 @@ export const POST = defineRoute({
   input: inputSchema,
   maxBodyBytes: MAX_EXPORT_BODY_BYTES,
   handler: async ({ input }) => {
-    const { presentationData: validatedData, slideImages, session } = input;
+    const { presentationData: validatedData, slideImages, session, themeId } = input;
     const sanitizedFileName = exportFilename({ topic: validatedData.topic, session, suffix: 'SayunaAI.pptx' });
 
-    const pptxBuffer = await buildPresentationPptx(validatedData, slideImages);
+    // Retain the existing default invocation as well as its bytes.
+    const pptxBuffer = themeId === undefined
+      ? await buildPresentationPptx(validatedData, slideImages)
+      : await buildPresentationPptx(validatedData, slideImages, getTheme(themeId));
 
     return new NextResponse(new Uint8Array(pptxBuffer), {
       status: 200,

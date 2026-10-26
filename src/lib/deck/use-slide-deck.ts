@@ -9,11 +9,22 @@ import type { SessionDecksAction } from './session-decks-reducer';
 import { SESSION_OPTIONS, type SessionOption } from '@/lib/utils/session-options';
 import { firstSlideId, lastSlideId, nextSlideId, previousSlideId } from './use-slide-selection';
 import { toGeneratingFlags, toPresentationData, toSlideImages } from './selectors';
+import { getTheme, isThemeId } from '@/lib/themes';
+import { readThemePreference, rememberThemePreference } from '@/lib/themes/preference';
 import { suggestSplitIndex } from '@/lib/slide-split';
 import type { SplitSelection } from './use-slide-selection';
 import type { DeckAction, ImageToken } from './types';
 
 export function useSlideDeck() {
+  const [themeId, updateThemeId] = useState(readThemePreference);
+  const theme = getTheme(themeId);
+  const themeRef = useRef(theme);
+  const setThemeId = (id: string) => {
+    if (!isThemeId(id)) return;
+    themeRef.current = getTheme(id);
+    updateThemeId(id);
+    rememberThemePreference(id);
+  };
   const [sessionsState, setSessionsState] = useState(initialSessionDecksState);
   // Synchronous state is essential when several edits/load operations precede a render.
   const sessionsRef = useRef(sessionsState);
@@ -120,7 +131,7 @@ export function useSlideDeck() {
     const index = current.slides.findIndex(slide => slide.id === slideId);
     if (index === -1) return false;
     const { content, image } = current.slides[index];
-    const atBulletIndex = suggestSplitIndex({ ...content, imageMetadata: image.metadata }, index, current.presentation?.originalWriters);
+    const atBulletIndex = suggestSplitIndex({ ...content, imageMetadata: image.metadata }, index, current.presentation?.originalWriters, themeRef.current);
     return atBulletIndex !== null && splitSlide(slideId, atBulletIndex);
   };
 
@@ -133,6 +144,7 @@ export function useSlideDeck() {
   };
 
   return {
+    themeId, theme, setThemeId,
     activeSession: sessionsState.activeSession,
     sessions: SESSION_OPTIONS.filter(session => sessionsState.decks[session]),
     switchSession: (session: SessionOption) => dispatchSession({ type: 'sessionSwitched', session }),
@@ -155,7 +167,7 @@ export function useSlideDeck() {
     imageErrors,
     slideIds,
     loadPresentation,
-    reset: () => dispatchSession({ type: 'reset' }),
+    reset: () => { setThemeId(readThemePreference()); dispatchSession({ type: 'reset' }); },
     updatePart: (slideId: number, part: string) => dispatch({ type: 'partUpdated', slideId, part }),
     updateTitle: (slideId: number, title: string) => dispatch({ type: 'titleUpdated', slideId, title }),
     updateBullet: (slideId: number, bulletIndex: number, text: string) =>

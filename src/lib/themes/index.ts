@@ -1,18 +1,13 @@
 import { SAYUNA_CLASSIC } from './sayuna-classic';
-import type { SlideTheme } from './types';
+import { createThemeRegistry } from './registry';
 
 export type { SlideTheme } from './types';
 export const DEFAULT_THEME_ID = 'sayuna-classic';
-export const THEME_IDS = ['sayuna-classic'] as const;
+const registry = createThemeRegistry([SAYUNA_CLASSIC] as const, DEFAULT_THEME_ID);
+export const THEMES = registry.themes;
+export const THEME_IDS = registry.ids;
 export type ThemeId = typeof THEME_IDS[number];
-const themes: Record<ThemeId, SlideTheme> = { 'sayuna-classic': SAYUNA_CLASSIC };
-export const DEFAULT_THEME = themes[DEFAULT_THEME_ID];
-
-export function isThemeId(id: unknown): id is ThemeId {
-  return typeof id === 'string' && THEME_IDS.some(themeId => themeId === id);
-}
-
+export const DEFAULT_THEME = registry.defaultTheme;
+export const isThemeId = registry.isThemeId;
 /** Rendering fallback; callers validating user input should use isThemeId. */
-export function getTheme(id?: string): SlideTheme {
-  return isThemeId(id) ? themes[id] : DEFAULT_THEME;
-}
+export const getTheme = registry.getTheme;
