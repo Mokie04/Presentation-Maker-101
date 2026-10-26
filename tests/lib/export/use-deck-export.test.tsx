@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import { useDeckExport } from '@/lib/export/use-deck-export';
 import { downloadBlob } from '@/lib/export/client';
+import { compressImageForExport } from '@/lib/export/compress-image';
 import type { PresentationData } from '@/types/presentation';
 
 vi.mock('@/lib/export/compress-image', () => ({ compressImageForExport: vi.fn(async (value: string) => `${value}-small`) }));
@@ -23,11 +24,12 @@ beforeEach(() => {
   vi.stubGlobal('fetch', fetchMock);
   onError.mockClear();
   vi.mocked(downloadBlob).mockClear();
+  vi.mocked(compressImageForExport).mockReset().mockImplementation(async (value: string) => `${value}-small`);
 });
 afterEach(() => { vi.unstubAllGlobals(); });
 
-function setup(data: PresentationData | null = presentationData) {
-  return renderHook(() => useDeckExport({ presentationData: data, slideImages: { 0: '/9j/rain' }, session: 'Session 1', onError }));
+function setup(data: PresentationData | null = presentationData, slideImages: Record<number, string> = { 0: '/9j/rain' }) {
+  return renderHook(() => useDeckExport({ presentationData: data, slideImages, session: 'Session 1', onError }));
 }
 
 describe('downloadPptx', () => {
@@ -73,6 +75,38 @@ describe('downloadPptx', () => {
     const { result } = setup();
     await act(async () => { await result.current.downloadPptx(); });
     expect(onError).toHaveBeenCalledWith('Error generating PPTX file.');
+  });
+
+  it('reports omitted pictures with their slide numbers and supports dismissal', async () => {
+    const data = { ...presentationData, slides: Array.from({ length: 7 }, (_, index) => ({ ...presentationData.slides[0], slideNumber: index + 1 })) };
+    vi.mocked(compressImageForExport).mockResolvedValue('');
+    fetchMock.mockResolvedValueOnce(new Response('pptx'));
+    const { result } = setup(data, { 3: '/9j/four', 6: '/9j/seven' });
+    expect(result.current.pptxNotice).toBeNull();
+    await act(async () => { await result.current.downloadPptx(); });
+    expect(result.current.pptxNotice).toBe('2 pictures were left out of the PowerPoint (slides 4 and 7).');
+    expect(onError).not.toHaveBeenCalled();
+    act(() => { result.current.dismissPptxNotice(); });
+    expect(result.current.pptxNotice).toBeNull();
+  });
+
+  it('uses singular wording and clears an earlier notice when a new download starts', async () => {
+    vi.mocked(compressImageForExport).mockResolvedValueOnce('');
+    fetchMock.mockResolvedValueOnce(new Response('pptx')).mockResolvedValueOnce(new Response('pptx'));
+    const { result } = setup();
+    await act(async () => { await result.current.downloadPptx(); });
+    expect(result.current.pptxNotice).toBe('1 picture was left out of the PowerPoint (slide 1).');
+    await act(async () => { await result.current.downloadPptx(); });
+    expect(result.current.pptxNotice).toBeNull();
+  });
+
+  it('does not claim pictures were omitted from a file that failed to download', async () => {
+    vi.mocked(compressImageForExport).mockResolvedValueOnce('');
+    fetchMock.mockResolvedValueOnce(new Response('Export failed', { status: 500 }));
+    const { result } = setup();
+    await act(async () => { await result.current.downloadPptx(); });
+    expect(result.current.pptxNotice).toBeNull();
+    expect(onError).toHaveBeenCalledWith('Export failed');
   });
 });
 

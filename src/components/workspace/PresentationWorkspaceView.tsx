@@ -33,7 +33,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
     updatePart, updateTitle, updateBullet, addBullet, insertBullet, deleteBullet, addSlide, deleteSlide,
     regenerateImage, selectLibraryImage, moveSlide, duplicateSlide, splitSlideToFit,
   } = deck;
-  const { downloadPptx, downloadMarkdown, isDownloadingPptx, isDownloadingMarkdown } = downloads;
+  const { downloadPptx, downloadMarkdown, isDownloadingPptx, isDownloadingMarkdown, pptxNotice, dismissPptxNotice } = downloads;
   const selectedIndex = selection.selectedId === null ? -1 : slideIds.indexOf(selection.selectedId);
   const selectedSlide = presentationData?.slides[selectedIndex];
   useLayoutEffect(() => {
@@ -120,6 +120,13 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   <span>Start over with a new lesson</span>
                 </button>
               </div>
+              {pptxNotice && (
+                <div role="status" className="flex basis-full items-start justify-between gap-3 text-sm text-slate-700">
+                  <p>{pptxNotice}</p>
+                  <button type="button" onClick={dismissPptxNotice} aria-label="Dismiss export notice"
+                    className="shrink-0 rounded px-2 py-1 text-xs font-bold text-sky-800 hover:bg-sky-50">Dismiss</button>
+                </div>
+              )}
               {sessionControls}
             </div>
 

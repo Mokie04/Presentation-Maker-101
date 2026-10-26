@@ -13,7 +13,7 @@ export function fitWithin(width: number, height: number, maxDimension: number): 
   return { width: Math.round((width * maxDimension) / height), height: maxDimension };
 }
 
-/** Re-encodes a slide image as a small JPEG for export; returns raw base64. Browser only. */
+/** Re-encodes a slide image for export, retaining PNG when transparent; returns raw base64. Browser only. */
 export async function compressImageForExport(base64: string): Promise<string> {
   if (typeof window === 'undefined') return base64;
   if (!isUsableImage(base64)) return base64;
@@ -36,7 +36,22 @@ export async function compressImageForExport(base64: string): Promise<string> {
           return;
         }
         ctx.drawImage(img, 0, 0, width, height);
-        resolve(toRawBase64(canvas.toDataURL('image/jpeg', JPEG_QUALITY)));
+        let transparent = false;
+        try {
+          const pixels = ctx.getImageData(0, 0, width, height).data;
+          for (let alpha = 3; alpha < pixels.length; alpha += 4) {
+            if (pixels[alpha] < 255) {
+              transparent = true;
+              break;
+            }
+          }
+        } catch {
+          // Pixel access can be unavailable or blocked. JPEG needs an opaque background.
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+        }
+        resolve(toRawBase64(transparent ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg', JPEG_QUALITY)));
       } catch {
         resolve(fallback());
       }

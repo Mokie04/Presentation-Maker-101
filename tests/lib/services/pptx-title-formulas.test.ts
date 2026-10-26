@@ -21,18 +21,24 @@ it('characterizes title and content formula runs in the exported slide XML', asy
   const content = await zip.file('ppt/slides/slide2.xml')!.async('string');
   const runAttributes = (xml: string, text: string) => Array.from(xml.matchAll(
     /<a:r><a:rPr([^>]*)>[\s\S]*?<\/a:rPr><a:t>([\s\S]*?)<\/a:t><\/a:r>/g
-  )).find(([, , value]) => value === text)?.[1];
+  )).filter(([, , value]) => value === text).map(([, attributes]) => attributes);
 
   expect(title).not.toContain(formula);
-  expect(runAttributes(title, '2O')).toContain('baseline="-40000"');
-  expect(runAttributes(title, '2')).toContain('baseline="30000"');
+  expect(runAttributes(title, '2')).toEqual(expect.arrayContaining([
+    expect.stringContaining('baseline="-40000"'),
+    expect.stringContaining('baseline="30000"'),
+  ]));
+  expect(title).toContain('<a:t>O and x</a:t>');
   expect(title).toContain('Water H');
   expect(title).toContain('Plain subtitle\r\n');
   expect(title).toContain('Original Lesson Plan Writers: Teacher Maria');
-  expect(runAttributes(content, '2O')).toContain('baseline="-40000"');
-  expect(runAttributes(content, '2')).toContain('baseline="30000"');
-  // Exact pre-change content-slide XML: title-slide formatting must not affect it.
-  expect(createHash('sha256').update(content).digest('hex')).toBe('5a393f47f19095a94b4d684515f1b2c94c736882fa2e52325c7ffd7820f548c1');
+  expect(runAttributes(content, '2')).toEqual(expect.arrayContaining([
+    expect.stringContaining('baseline="-40000"'),
+    expect.stringContaining('baseline="30000"'),
+  ]));
+  expect(content).toContain('<a:t>O and x</a:t>');
+  // Bounded subscripts leave O on the baseline in H_2O.
+  expect(createHash('sha256').update(content).digest('hex')).toBe('06b51c7ce4a7bd02fef556d9ebc35b407d5bcd510cdffb9ae2cdcf136b602aa2');
 });
 
 it('characterizes a plain-text title slide including its writer attribution', async () => {

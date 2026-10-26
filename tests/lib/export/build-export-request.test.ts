@@ -88,6 +88,27 @@ describe('buildPptxExportRequest', () => {
       { presentationData: deck(2), slideImages: { 0: image(0), 1: image(1) }, session: 'S' },
       { compress: async (v) => (v === image(1) ? '' : v), budgetChars: 10 });
     expect(parse(body).slideImages[1]).toBe('');
-    expect(droppedImageIndexes).toEqual([0]);
+    expect(droppedImageIndexes).toEqual([1, 0]);
+  });
+
+  it.each(['', 'failed'])('strips credits and records the index when compression returns %j', async (compressed) => {
+    const presentationData = deck(2, [0, 1]);
+    const { body, droppedImageIndexes } = await buildPptxExportRequest(
+      { presentationData, slideImages: { 0: image(0), 1: image(1) }, session: 'S' },
+      { compress: async (value) => value === image(1) ? compressed : value });
+    expect(droppedImageIndexes).toEqual([1]);
+    expect(parse(body).presentationData.slides[0].imageMetadata).toEqual(credit);
+    expect(parse(body).presentationData.slides[1]).not.toHaveProperty('imageMetadata');
+    expect(presentationData.slides[1].imageMetadata).toEqual(credit);
+  });
+
+  it('drops a larger retained PNG from the last slide when it exceeds the budget', async () => {
+    const { body, droppedImageIndexes } = await buildPptxExportRequest(
+      { presentationData: deck(2, [1]), slideImages: { 0: image(0), 1: 'iVBORw0KGgoAAAA' }, session: 'S' },
+      { compress: async (value) => value.startsWith('iVB') ? `iVBORw0KGgo${'A'.repeat(2000)}` : value, budgetChars: 1000 });
+    expect(droppedImageIndexes).toEqual([1]);
+    expect(parse(body).slideImages).toEqual({ 0: image(0) });
+    expect(parse(body).presentationData.slides[1]).not.toHaveProperty('imageMetadata');
+    expect(body.length).toBeLessThanOrEqual(1000);
   });
 });

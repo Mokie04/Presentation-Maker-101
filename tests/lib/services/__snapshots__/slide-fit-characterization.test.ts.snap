@@ -821,7 +821,7 @@ exports[`pins fitting title, wide, visual and credited library slide XML 1`] = `
 </p:sld>",
   },
   {
-    "sha256": "baf6de9992f3f7ae47bf46711b6d2d8fb59d41010ec60ddbc66c2987818a0197",
+    "sha256": "99676880e133eb2cdd7f2c2df053134331a93beb9eed97b9c0949da8154aa295",
     "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 4">
@@ -1082,7 +1082,7 @@ exports[`pins fitting title, wide, visual and credited library slide XML 1`] = `
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="8" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="8" name="Image 0" descr="File:Diagram (v2).png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>

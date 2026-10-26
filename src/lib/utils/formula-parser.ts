@@ -57,9 +57,10 @@ const LATEX_REPLACEMENTS: [RegExp, string][] = [
 function normalizeMathSymbols(input: string): string {
   let text = input;
 
-  // 1. Remove LaTeX $ or $$ wrapping delimiters
-  text = text.replace(/\$\$([^\$]+)\$\$/g, '$1');
-  text = text.replace(/\$([^\$]+)\$/g, '$1');
+  // Currency is literal; only unwrap content with explicit math syntax or one variable.
+  text = text.replace(/(\${1,2})([^$]+)\1/g, (match, _delimiter: string, content: string) =>
+    /[\\^_{}=]/.test(content) || /^[A-Za-z]$/.test(content.trim()) ? content : match
+  );
 
   // 2. Normalize \text{...} -> ...
   text = text.replace(/\\text\{([^\}]+)\}/g, '$1');
@@ -81,7 +82,14 @@ function normalizeMathSymbols(input: string): string {
  * - Elements with numeric subscripts (H2O, CO2, C6H12O6, 2H2, 2H2O)
  * - Ionic charges (Ca2+, Cl-, Fe3+, SO4^2-)
  */
-function parseChemicalFormula(formulaWord: string): FormulaSegment[] | null {
+const ELEMENT_SYMBOLS = new Set((
+  'H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn ' +
+  'Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce ' +
+  'Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn ' +
+  'Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og'
+).split(' '));
+
+function parseChemicalFormula(formulaWord: string, requireCountOrCharge = true): FormulaSegment[] | null {
   // Matches optional coefficient followed by chemical symbols and digits/charges
   const m = /^(\d+)?([A-Z][A-Za-z0-9^+-]*)$/.exec(formulaWord);
   if (!m) return null;
@@ -89,8 +97,8 @@ function parseChemicalFormula(formulaWord: string): FormulaSegment[] | null {
   const coeff = m[1] || '';
   const formula = m[2];
 
-  // Must contain at least one element followed by a number or charge
-  if (!/[A-Z][a-z]?\d|[A-Z][a-z]?\^?[0-9]*[+-]/.test(formula)) {
+  // Ordinary chemistry needs a count/charge; underscore bases can be bare elements.
+  if (requireCountOrCharge && !/[A-Z][a-z]?\d|[A-Z][a-z]?\^?[0-9]*[+-]/.test(formula)) {
     return null;
   }
 
@@ -107,14 +115,13 @@ function parseChemicalFormula(formulaWord: string): FormulaSegment[] | null {
     rem = rem.slice(0, -charge.length);
   }
 
-  const elemNumRegex = /([A-Z][a-z]?)|(\d+)/g;
-  let em: RegExpExecArray | null;
-  while ((em = elemNumRegex.exec(rem)) !== null) {
-    if (em[1]) {
-      tokens.push({ text: em[1] });
-    } else if (em[2]) {
-      tokens.push({ text: em[2], subscript: true });
-    }
+  // Consume the entire token; never recover valid-looking pieces from ordinary words.
+  while (rem.length > 0) {
+    const element = /^([A-Z][a-z]?)(\d*)/.exec(rem);
+    if (!element || !ELEMENT_SYMBOLS.has(element[1])) return null;
+    tokens.push({ text: element[1] });
+    if (element[2]) tokens.push({ text: element[2], subscript: true });
+    rem = rem.slice(element[0].length);
   }
 
   if (charge) {
@@ -130,7 +137,7 @@ function parseChemicalFormula(formulaWord: string): FormulaSegment[] | null {
  * supporting exponents (x^2), subscripts (x_1, H2O), radicals (√), and symbols.
  */
 export function parseFormulaToSegments(rawText: string): FormulaSegment[] {
-  if (!rawText || rawText.trim().length === 0) {
+  if (!rawText) {
     return [];
   }
 
@@ -148,107 +155,53 @@ export function parseFormulaToSegments(rawText: string): FormulaSegment[] {
 
   let i = 0;
   while (i < normalized.length) {
-    // Check for caret superscript: ^2, ^(n+1), ^{n+1}
-    if (normalized[i] === '^') {
-      flushBuffer();
-      i++;
-      let expText = '';
-      if (normalized[i] === '(') {
-        i++;
-        const closeParen = normalized.indexOf(')', i);
-        if (closeParen !== -1) {
-          expText = normalized.slice(i, closeParen);
-          i = closeParen + 1;
+    const marker = normalized[i];
+    // Keep prose identifiers literal, but allow whitelisted chemistry such as CO_2.
+    // Inspect the unformatted buffer so chained scripts validate only the new fragment.
+    const prefix = marker === '_' ? normalized.slice(0, i) : '';
+    const chemicalBase = marker === '_' ? /(?:^|[^A-Za-z0-9.@-])([A-Za-z0-9]+)$/.exec(buffer)?.[1] : undefined;
+    const chemicalSegments = chemicalBase && !/^[A-Za-z]{2}/.test(normalized.slice(i + 1))
+      ? parseChemicalFormula(chemicalBase, false) : null;
+    const subscriptBase = marker === '_' && (
+      /(?:^|[^A-Za-z0-9_])[A-Za-z]$|[0-9)\]}]$/.test(prefix) || chemicalSegments !== null
+    );
+    const inEmail = marker === '_' && (
+      /@\S*$/.test(prefix) || /^\S*@/.test(normalized.slice(i + 1))
+    );
+    if (marker === '^' || (marker === '_' && subscriptBase && !inEmail)) {
+      const remainder = normalized.slice(i + 1);
+      const script = /^(?:\{([^{}]+)\}|\(([^()]+)\))/.exec(remainder);
+      const unbraced = (marker === '^' ? /^[+-]?\d+|^[A-Za-z]/ : /^\d+|^[A-Za-z]/).exec(remainder);
+      const scriptText = script ? script[1] ?? script[2] : unbraced?.[0];
+      if (scriptText) {
+        if (chemicalBase && chemicalSegments) {
+          buffer = buffer.slice(0, -chemicalBase.length);
+          flushBuffer();
+          segments.push(...chemicalSegments);
         } else {
-          expText = normalized.slice(i);
-          i = normalized.length;
+          flushBuffer();
         }
-      } else if (normalized[i] === '{') {
-        i++;
-        const closeBrace = normalized.indexOf('}', i);
-        if (closeBrace !== -1) {
-          expText = normalized.slice(i, closeBrace);
-          i = closeBrace + 1;
-        } else {
-          expText = normalized.slice(i);
-          i = normalized.length;
-        }
-      } else {
-        const match = /^[0-9a-zA-Z+-]+/.exec(normalized.slice(i));
-        if (match) {
-          expText = match[0];
-          i += match[0].length;
-        }
+        segments.push({ text: scriptText, ...(marker === '^' ? { superscript: true } : { subscript: true }) });
+        i += 1 + (script?.[0].length ?? unbraced![0].length);
+        continue;
       }
-
-      if (expText) {
-        segments.push({ text: expText, superscript: true });
-      }
-      continue;
-    }
-
-    // Check for underscore subscript: _1, _{10}, _(i)
-    if (normalized[i] === '_') {
-      flushBuffer();
-      i++;
-      let subText = '';
-      if (normalized[i] === '{') {
-        i++;
-        const closeBrace = normalized.indexOf('}', i);
-        if (closeBrace !== -1) {
-          subText = normalized.slice(i, closeBrace);
-          i = closeBrace + 1;
-        } else {
-          subText = normalized.slice(i);
-          i = normalized.length;
-        }
-      } else if (normalized[i] === '(') {
-        i++;
-        const closeParen = normalized.indexOf(')', i);
-        if (closeParen !== -1) {
-          subText = normalized.slice(i, closeParen);
-          i = closeParen + 1;
-        } else {
-          subText = normalized.slice(i);
-          i = normalized.length;
-        }
-      } else {
-        const match = /^[0-9a-zA-Z+-]+/.exec(normalized.slice(i));
-        if (match) {
-          subText = match[0];
-          i += match[0].length;
-        }
-      }
-
-      if (subText) {
-        segments.push({ text: subText, subscript: true });
-      }
-      continue;
     }
 
     // Check for word boundary to identify chemical formulas (e.g. H2O, 2H2, CO2, C6H12O6, Ca2+, Cl-)
-    const isWordStart = i === 0 || /[\s,.;:!?(\[\]\-+=→]/.test(normalized[i - 1]);
+    const isWordStart = i === 0 || /[\s,;:!?(\[\]+=→]/.test(normalized[i - 1]);
     if (isWordStart) {
       const remaining = normalized.slice(i);
       // Look for a chemical word token: optional coefficient + uppercase letter + symbols
-      const wordMatch = /^(\d+)?[A-Z][A-Za-z0-9^+-]*/.exec(remaining);
+      const wordMatch = /^(\d+)?[A-Z][A-Za-z0-9^+_.@-]*/.exec(remaining);
       if (wordMatch) {
-        let word = wordMatch[0];
-        let trailingPunct = '';
-        if (/[.,;:!?]$/.test(word)) {
-          trailingPunct = word.slice(-1);
-          word = word.slice(0, -1);
-        }
+        // A final period is sentence punctuation; internal dots/@/_ belong to the token.
+        const word = wordMatch[0].replace(/\.+$/, '');
 
         const chemSegments = parseChemicalFormula(word);
         if (chemSegments && chemSegments.length > 1) {
           flushBuffer();
           segments.push(...chemSegments);
           i += word.length;
-          if (trailingPunct) {
-            buffer += trailingPunct;
-            i += trailingPunct.length;
-          }
           continue;
         }
       }
@@ -292,18 +245,15 @@ export function formatFormulaToUnicode(rawText: string): string {
   let result = '';
 
   for (const seg of segments) {
-    if (seg.superscript) {
-      const converted = seg.text
-        .split('')
-        .map((ch) => SUPERSCRIPT_MAP[ch] || ch)
-        .join('');
-      result += converted;
-    } else if (seg.subscript) {
-      const converted = seg.text
-        .split('')
-        .map((ch) => SUBSCRIPT_MAP[ch] || ch)
-        .join('');
-      result += converted;
+    if (seg.superscript || seg.subscript) {
+      const map = seg.superscript ? SUPERSCRIPT_MAP : SUBSCRIPT_MAP;
+      const characters = Array.from(seg.text);
+      if (characters.every(character => map[character])) {
+        result += characters.map(character => map[character]).join('');
+      } else {
+        const marker = seg.superscript ? '^' : '_';
+        result += marker + (characters.length === 1 ? seg.text : `{${seg.text}}`);
+      }
     } else {
       // Clean up radical syntax like √(16) -> √16 for simple numbers
       const cleanText = seg.text.replace(/√\((\d+|[a-zA-Z])\)/g, '√$1');
