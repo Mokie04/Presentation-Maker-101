@@ -28,7 +28,7 @@
 
 **Inline editing** — Editing a title or stored bullet directly on the Normal stage at widths of 768 px and above. `src/components/workspace/EditableSlideView.tsx` supplies interactive wrappers to the passive Slide view; `src/components/workspace/InlineText.tsx` uses a plain textarea showing raw formula syntax. Changes update the deck and panel live, Escape restores the starting value, Enter inserts a bullet, and empty bullets are deleted on blur or Backspace. Derived writer text stays passive; phones use the panel.
 
-**Workspace view** — Normal is the default three-pane workspace and Slide sorter arranges the deck; the original card grid and its Edit Slides toggle were retired in Phase 6. `src/components/workspace/PresentationWorkspaceView.tsx` owns the view switch. `src/lib/deck/use-slide-selection.ts` keeps selection as UI state outside the deck reducer; a single workspace keyboard listener navigates without intercepting form-field keys.
+**Workspace view** — Normal is the default three-pane workspace and Slide sorter arranges the deck; the original card grid and its Edit Slides toggle were retired in Phase 6. `src/components/workspace/PresentationWorkspaceView.tsx` renders the view switch; the session layer remembers its value per session. `src/lib/deck/use-slide-selection.ts` supplies selection rules reused by the session layer outside the deck reducer; a single workspace keyboard listener navigates without intercepting form-field keys.
 
 **Slide image** — The picture shown on a Slide and exported to PPTX: raw base64 or a `data:` URL. The UI and PPTX route use index-keyed `slideImages`; `FAILED_IMAGE` (`'failed'`) means generation failed and nothing is shown. `src/lib/slide-image.ts` owns the wire rules: `isUsableImage`, `toRawBase64`, `sniffImageMime`, `toDataUrl` and export validation (`hasWireImageFormat`, `MAX_SLIDE_IMAGE_CHARS`).
 
@@ -53,3 +53,5 @@
 **Lesson session** — The teacher's selected `Session 1` through `Session 5`, listed in `src/lib/utils/session-options.ts` and validated for generation. It labels a lesson and its exports; it is unrelated to login.
 
 **Auth session** — The signed `presentation_maker_pro_session` cookie created after the App Store handoff by `src/app/api/session/route.ts`. `requireSession` in `src/lib/sessionAuth.ts` checks it for protected API routes.
+
+**Session deck** — One editable deck keyed by a canonical lesson session label. `src/lib/deck/session-decks-reducer.ts` stores its slides/images, selected slide ID and Normal/sorter view; `src/lib/deck/use-slide-deck.ts` exposes the active deck API. All session decks share one monotonic slide ID counter so late images find their owning deck or are dropped after replacement. Only successful generation stores a deck. Phase 1 keeps everything in memory; refresh loses the lesson and all decks. See `docs/adr/0019-session-decks.md` and `docs/multi-session-roadmap.md`.
