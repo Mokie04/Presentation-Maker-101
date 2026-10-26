@@ -136,7 +136,8 @@ box overflowing, a substituted Office face or an unreadable credit link.
    and register metrics. Compare Office delivery-face advances and fallback limits.
 4. Add real-registry preview/export/state coverage and XML goldens using the shared
    legacy characterization inputs and six render fixtures.
-5. Run the local render harness and actual Next picker at all three breakpoints;
+5. For decoration, add one shared list, run validateDecorations, and add source/SVG/native parity plus strict XML coverage. Respect protected boxes and contrast; see `docs/adr/0025-decoration-engine.md`.
+6. Run the local render harness and actual Next picker at all three breakpoints;
    verify fonts, fit, credits, payload IDs and Classic byte identity before release.
 
 No decorations, textures, new frames, slide masters, generation-time look field,
