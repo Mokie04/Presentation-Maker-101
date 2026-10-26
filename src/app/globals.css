@@ -59,3 +59,50 @@ body {
     transform: none !important;
   }
 }
+
+/* Home typography is scoped; workspace chrome retains its existing font. */
+.home-screen {
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+.home-screen :is(h1, h2, h3, .home-heading) {
+  font-family: var(--font-slide-poppins), Arial, Helvetica, sans-serif;
+}
+.home-highlight {
+  background: linear-gradient(transparent 65%, theme('colors.sun.100') 65%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.home-step {
+  @apply border-b border-dashed border-sky-100 px-3 py-5 last:border-b-0 sm:px-6 sm:py-6;
+}
+.mokie-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 -30px;
+  background: radial-gradient(ellipse at 50% 62%, theme('colors.sun.100'), transparent 70%);
+}
+.mokie-float { animation: mokie-float 4.5s ease-in-out infinite; }
+.mokie-bob { animation: mokie-bob 1.6s ease-in-out infinite; }
+.home-chip-pulse { animation: home-chip-pulse 2s ease-in-out infinite; }
+.home-indeterminate { animation: home-indeterminate 2.6s ease-in-out infinite; }
+@keyframes mokie-float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-10px) rotate(1.5deg); }
+}
+@keyframes mokie-bob {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-6px) rotate(3deg); }
+}
+@keyframes home-chip-pulse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+@keyframes home-indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mokie-float, .mokie-bob, .home-indeterminate, .home-chip-pulse {
+    animation: none;
+  }
+}

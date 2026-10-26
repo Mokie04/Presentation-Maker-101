@@ -1,7 +1,7 @@
 'use client';
 
 import React, { type CSSProperties, type ReactNode } from 'react';
-import localFont from 'next/font/local';
+import { poppins } from '@/lib/fonts';
 import type { SlideData } from '@/types/presentation';
 import { describeImageCredit } from '@/lib/image-credit';
 import { isUsableImage, toDataUrl } from '@/lib/slide-image';
@@ -13,17 +13,6 @@ import {
 } from '@/lib/slide-theme';
 import { fitSlide, titleSlidePoints, titlePointSize } from '@/lib/slide-fit';
 import { FormattedFormula } from './FormattedFormula';
-
-const poppins = localFont({
-  src: [
-    { path: '../app/fonts/Poppins-Regular.ttf', weight: '400', style: 'normal' },
-    { path: '../app/fonts/Poppins-Bold.ttf', weight: '700', style: 'normal' },
-    { path: '../app/fonts/Poppins-Italic.ttf', weight: '400', style: 'italic' },
-  ],
-  variable: '--font-slide-poppins',
-  display: 'swap',
-  preload: false,
-});
 
 export interface SlideViewProps {
   slide: SlideData;

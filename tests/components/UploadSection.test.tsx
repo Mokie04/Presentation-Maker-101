@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import React from 'react';
+import { chooseSession } from '../helpers/workspace';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { UploadSection } from '@/components/UploadSection';
@@ -54,8 +55,7 @@ describe('UploadSection component', () => {
     expect(handleUploadSuccess).toHaveBeenCalledWith('Sample Grade 4 Science Lesson Plan', 'Pasted Lesson Plan');
 
     // Select session
-    const select = screen.getByLabelText(/Select Session/i) || screen.getByRole('combobox');
-    fireEvent.change(select, { target: { value: 'Session 1' } });
+    chooseSession('Session 1');
     expect(handleSessionChange).toHaveBeenCalledWith('Session 1');
 
     // Rerender with active text and session

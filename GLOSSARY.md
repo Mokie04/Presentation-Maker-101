@@ -55,3 +55,5 @@
 **Auth session** — The signed `presentation_maker_pro_session` cookie created after the App Store handoff by `src/app/api/session/route.ts`. `requireSession` in `src/lib/sessionAuth.ts` checks it for protected API routes.
 
 **Session deck** — One editable deck keyed by a canonical lesson session label. `src/lib/deck/session-decks-reducer.ts` stores its slides/images, selected slide ID and Normal/sorter view; `src/lib/deck/use-slide-deck.ts` exposes the active deck API. All session decks share one monotonic slide ID counter so late images find their owning deck or are dropped after replacement. Only successful generation stores a deck. Phase 1 keeps everything in memory; refresh loses the lesson and all decks. See `docs/adr/0019-session-decks.md` and `docs/multi-session-roadmap.md`.
+
+**Mokie** — The decorative Sayuna mascot on the home hero and generating panel. `src/components/home/Mokie.tsx` uses the supplied size-specific assets in `public/mascot/`, with empty image alternatives and motion disabled for reduced-motion users. Its activity and lesson-part chips make no claims about generation completion or remaining time. See `docs/adr/0020-home-screen.md`.

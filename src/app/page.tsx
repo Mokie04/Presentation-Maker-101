@@ -3,6 +3,9 @@
 import type { SupportedSubject } from '@/lib/utils/subject-options';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { poppins } from '@/lib/fonts';
+import { HomeHero } from '@/components/home/HomeHero';
+import { HomeTrustStrip } from '@/components/home/HomeTrustStrip';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { UploadSection } from '@/components/UploadSection';
@@ -88,12 +91,14 @@ function PresentationWorkspace() {
   };
 
   return (
-    <div className="touch-workspace min-h-screen flex flex-col bg-slate-50 selection:bg-sky-200 selection:text-sky-950">
+    <div className={`touch-workspace min-h-screen flex flex-col bg-slate-50 selection:bg-sky-200 selection:text-sky-950 ${!presentationData ? `home-screen ${poppins.variable}` : ''}`}>
       <Header />
 
-      <main className={`flex-1 w-full mx-auto px-3 sm:px-4 lg:px-6 py-4 ${presentationData ? 'max-w-[1600px]' : 'max-w-7xl'}`}>
+      <main className={`flex-1 w-full mx-auto px-3 sm:px-4 lg:px-6 ${presentationData ? 'max-w-[1600px] py-4' : 'max-w-[1180px] pb-6'}`}>
         {/* Upload & Session Setup View */}
         {!presentationData ? (
+          <>
+          <HomeHero />
           <UploadSection
             extractedText={extractedText}
             fileName={fileName}
@@ -107,6 +112,8 @@ function PresentationWorkspace() {
             loadingStage={loadingStage}
             errorMsg={errorMsg}
           />
+          <HomeTrustStrip />
+          </>
         ) : (
           /* Presentation Workspace View */
           <PresentationWorkspaceView deck={deck} downloads={downloads} session={deck.activeSession!}
