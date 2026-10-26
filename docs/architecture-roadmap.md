@@ -15,6 +15,7 @@ Beyond this list, refactoring has diminishing returns; later changes should be d
 
 | Work | Result |
 |---|---|
+| Chalkboard treatments Phase 4b (`docs/theme-style-roadmap.md`) | Uniform credit-safe wood frame, chalk squiggles and conditional dashed picture outline from one validated list; SVG/native parity, responsive workspace and render evidence. ADR 0026. |
 | Decoration engine Phase 4a (`docs/theme-style-roadmap.md`) | Shared vector types, filtering, geometry/contrast validation, SVG layers and native PPTX mapper; test-only decorated look, strict package XML/parity tests and exact production compatibility. ADR 0025. |
 | Office-safe looks Phase 3 (`docs/theme-style-roadmap.md`) | Approved Chalkboard/Arial-Arimo and Paper Notebook/Georgia-Gelasio palettes, fonts and metrics; real picker enabled, non-default Office theme/link colours, shared XML goldens and local native/browser render tools. ADR 0024. |
 | Look selection Phase 2 (`docs/theme-style-roadmap.md`) | One lesson-level remembered look, hidden-until-needed header picker, active-theme previews/fit/split and validated optional PPTX themeId; default request and export bytes preserved. ADR 0023. |

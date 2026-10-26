@@ -2,7 +2,7 @@
 
 exports[`Chalkboard legacy characterization: long content title with formulas and AI… > preserves the same six legacy cases through both export entry points > slide 1 1`] = `
 {
-  "sha256": "14c1ff4c91879331d84bae3abfce5c022d889da22f857bd10775402ed4062b0c",
+  "sha256": "1a214d56a3802adea9516ac96c98f7645cad8962b42cc48c506a57f347062716",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -29,7 +29,146 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="41148" y="41148"/>
+<a:ext cx="12109399" cy="6775704"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="82296">
+<a:solidFill>
+<a:srgbClr val="8B5E3C"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="9144" y="9144"/>
+<a:ext cx="12173407" cy="6839712"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="18288">
+<a:solidFill>
+<a:srgbClr val="5E3F27"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="50292" y="50292"/>
+<a:ext cx="12091111" cy="6757416"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9144">
+<a:solidFill>
+<a:srgbClr val="A97B52"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="731520" y="2953512"/>
+<a:ext cx="4114800" cy="80467"/>
+</a:xfrm>
+<a:custGeom>
+<a:avLst />
+<a:gdLst>
+</a:gdLst>
+<a:ahLst />
+<a:cxnLst>
+</a:cxnLst>
+<a:rect l="l" t="t" r="r" b="b" />
+<a:pathLst>
+<a:path w="4114800" h="80467">
+<a:moveTo>
+<a:pt x="0" y="27432" />
+</a:moveTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="0" />
+									<a:pt x="1371600" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="54864" />
+									<a:pt x="2743200" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="0" />
+									<a:pt x="4114800" y="27432" />
+									</a:quadBezTo>
+<a:lnTo>
+<a:pt x="4114800" y="53035" />
+</a:lnTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="25603" />
+									<a:pt x="2743200" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="80467" />
+									<a:pt x="1371600" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="25603" />
+									<a:pt x="0" y="53035" />
+									</a:quadBezTo>
+<a:close />
+</a:path>
+</a:pathLst>
+</a:custGeom>
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="Text 4">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -73,7 +212,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="7" name="Text 5">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -118,7 +257,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="8" name="Text 6">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -220,7 +359,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 3">
+<p:cNvPr id="9" name="Text 7">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -273,7 +412,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 
 exports[`Chalkboard legacy characterization: long content title with formulas and AI… > preserves the same six legacy cases through both export entry points > slide 2 1`] = `
 {
-  "sha256": "f9321eefb97e16f8005f84853cb8c19ba0098e253f74994f9078132266f6b085",
+  "sha256": "6a8bc8f331da76e8d98ea19c05bc8f462d5616066c8f31ddc879b7521649f80e",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -300,7 +439,146 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="41148" y="41148"/>
+<a:ext cx="12109399" cy="6775704"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="82296">
+<a:solidFill>
+<a:srgbClr val="8B5E3C"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="9144" y="9144"/>
+<a:ext cx="12173407" cy="6839712"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="18288">
+<a:solidFill>
+<a:srgbClr val="5E3F27"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="50292" y="50292"/>
+<a:ext cx="12091111" cy="6757416"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9144">
+<a:solidFill>
+<a:srgbClr val="A97B52"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="731520" y="1834286"/>
+<a:ext cx="4114800" cy="80467"/>
+</a:xfrm>
+<a:custGeom>
+<a:avLst />
+<a:gdLst>
+</a:gdLst>
+<a:ahLst />
+<a:cxnLst>
+</a:cxnLst>
+<a:rect l="l" t="t" r="r" b="b" />
+<a:pathLst>
+<a:path w="4114800" h="80467">
+<a:moveTo>
+<a:pt x="0" y="27432" />
+</a:moveTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="0" />
+									<a:pt x="1371600" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="54864" />
+									<a:pt x="2743200" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="0" />
+									<a:pt x="4114800" y="27432" />
+									</a:quadBezTo>
+<a:lnTo>
+<a:pt x="4114800" y="53035" />
+</a:lnTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="25603" />
+									<a:pt x="2743200" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="80467" />
+									<a:pt x="1371600" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="25603" />
+									<a:pt x="0" y="53035" />
+									</a:quadBezTo>
+<a:close />
+</a:path>
+</a:pathLst>
+</a:custGeom>
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="Text 4">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -344,7 +622,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="7" name="Text 5">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -445,7 +723,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="8" name="Text 6">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -583,7 +861,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Shape 3">
+<p:cNvPr id="9" name="Shape 7">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -610,7 +888,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="6" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="10" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -627,7 +905,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </p:pic>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="7" name="Text 4">
+<p:cNvPr id="11" name="Text 8">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -669,6 +947,32 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </a:p>
 </p:txBody>
 </p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-front-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="7498080" y="1883664"/>
+<a:ext cx="4151376" cy="4187952"/>
+</a:xfrm>
+<a:prstGeom prst="roundRect">
+<a:avLst>
+<a:gd name="adj" fmla="val 3524"/>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="31750">
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:prstDash val="dash"/>
+</a:ln>
+</p:spPr>
+</p:sp>
 </p:spTree>
 </p:cSld>
 <p:clrMapOvr>
@@ -680,7 +984,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 
 exports[`Chalkboard legacy characterization: title with writers and library image > preserves the same six legacy cases through both export entry points > slide 1 1`] = `
 {
-  "sha256": "29f6b74af615121e0ce7d9378e3262d7b76d9ecf5f511ec9640d317c14e1752d",
+  "sha256": "414a5108d2079ceb5190ec5f1e0f7f2b1df345fe322eb2edc41dd6e60ef19a8a",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -707,7 +1011,146 @@ exports[`Chalkboard legacy characterization: title with writers and library imag
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="41148" y="41148"/>
+<a:ext cx="12109399" cy="6775704"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="82296">
+<a:solidFill>
+<a:srgbClr val="8B5E3C"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="9144" y="9144"/>
+<a:ext cx="12173407" cy="6839712"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="18288">
+<a:solidFill>
+<a:srgbClr val="5E3F27"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="50292" y="50292"/>
+<a:ext cx="12091111" cy="6757416"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9144">
+<a:solidFill>
+<a:srgbClr val="A97B52"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="731520" y="2953512"/>
+<a:ext cx="4114800" cy="80467"/>
+</a:xfrm>
+<a:custGeom>
+<a:avLst />
+<a:gdLst>
+</a:gdLst>
+<a:ahLst />
+<a:cxnLst>
+</a:cxnLst>
+<a:rect l="l" t="t" r="r" b="b" />
+<a:pathLst>
+<a:path w="4114800" h="80467">
+<a:moveTo>
+<a:pt x="0" y="27432" />
+</a:moveTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="0" />
+									<a:pt x="1371600" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="54864" />
+									<a:pt x="2743200" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="0" />
+									<a:pt x="4114800" y="27432" />
+									</a:quadBezTo>
+<a:lnTo>
+<a:pt x="4114800" y="53035" />
+</a:lnTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="25603" />
+									<a:pt x="2743200" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="80467" />
+									<a:pt x="1371600" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="25603" />
+									<a:pt x="0" y="53035" />
+									</a:quadBezTo>
+<a:close />
+</a:path>
+</a:pathLst>
+</a:custGeom>
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="Text 4">
 <a:hlinkClick r:id="rId1" tooltip=""/>
 </p:cNvPr>
 <p:cNvSpPr/>
@@ -755,7 +1198,7 @@ exports[`Chalkboard legacy characterization: title with writers and library imag
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 1">
+<p:cNvPr id="8" name="Text 5">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -799,7 +1242,7 @@ exports[`Chalkboard legacy characterization: title with writers and library imag
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 2">
+<p:cNvPr id="9" name="Text 6">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -844,7 +1287,7 @@ exports[`Chalkboard legacy characterization: title with writers and library imag
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="6" name="Text 3">
+<p:cNvPr id="10" name="Text 7">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -945,7 +1388,7 @@ exports[`Chalkboard legacy characterization: title with writers and library imag
 </p:txBody>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="7" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="11" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -962,7 +1405,7 @@ exports[`Chalkboard legacy characterization: title with writers and library imag
 </p:pic>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="8" name="Text 4">
+<p:cNvPr id="12" name="Text 8">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1015,7 +1458,7 @@ exports[`Chalkboard legacy characterization: title with writers and library imag
 
 exports[`Chalkboard legacy characterization: wide bullets and credit without image > preserves the same six legacy cases through both export entry points > slide 1 1`] = `
 {
-  "sha256": "03927979c430a1738c2e2a3907440e3e3fb4c49972a0cdae91bca7ebe9b0f641",
+  "sha256": "5f9e40b0073c4eb984edb462a343f4e884fa36fea5e15e8aa8f0160dee9b2222",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -1042,7 +1485,146 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="41148" y="41148"/>
+<a:ext cx="12109399" cy="6775704"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="82296">
+<a:solidFill>
+<a:srgbClr val="8B5E3C"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="9144" y="9144"/>
+<a:ext cx="12173407" cy="6839712"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="18288">
+<a:solidFill>
+<a:srgbClr val="5E3F27"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="50292" y="50292"/>
+<a:ext cx="12091111" cy="6757416"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9144">
+<a:solidFill>
+<a:srgbClr val="A97B52"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="731520" y="2953512"/>
+<a:ext cx="4114800" cy="80467"/>
+</a:xfrm>
+<a:custGeom>
+<a:avLst />
+<a:gdLst>
+</a:gdLst>
+<a:ahLst />
+<a:cxnLst>
+</a:cxnLst>
+<a:rect l="l" t="t" r="r" b="b" />
+<a:pathLst>
+<a:path w="4114800" h="80467">
+<a:moveTo>
+<a:pt x="0" y="27432" />
+</a:moveTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="0" />
+									<a:pt x="1371600" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="54864" />
+									<a:pt x="2743200" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="0" />
+									<a:pt x="4114800" y="27432" />
+									</a:quadBezTo>
+<a:lnTo>
+<a:pt x="4114800" y="53035" />
+</a:lnTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="25603" />
+									<a:pt x="2743200" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="80467" />
+									<a:pt x="1371600" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="25603" />
+									<a:pt x="0" y="53035" />
+									</a:quadBezTo>
+<a:close />
+</a:path>
+</a:pathLst>
+</a:custGeom>
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="Text 4">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1086,7 +1668,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="7" name="Text 5">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1131,7 +1713,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="8" name="Text 6">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1233,7 +1815,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 3">
+<p:cNvPr id="9" name="Text 7">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1286,7 +1868,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 
 exports[`Chalkboard legacy characterization: wide bullets and credit without image > preserves the same six legacy cases through both export entry points > slide 2 1`] = `
 {
-  "sha256": "b73a96ab7b88f904269a59a5c0a2d557d9e81b1850eb248b72432f486b1dac8e",
+  "sha256": "28925fcef5e418c06ab0466cd500164228919e532dc23c272edd5d62cfb5d84e",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -1313,7 +1895,146 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="41148" y="41148"/>
+<a:ext cx="12109399" cy="6775704"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="82296">
+<a:solidFill>
+<a:srgbClr val="8B5E3C"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="9144" y="9144"/>
+<a:ext cx="12173407" cy="6839712"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="18288">
+<a:solidFill>
+<a:srgbClr val="5E3F27"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="50292" y="50292"/>
+<a:ext cx="12091111" cy="6757416"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9144">
+<a:solidFill>
+<a:srgbClr val="A97B52"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="731520" y="1834286"/>
+<a:ext cx="4114800" cy="80467"/>
+</a:xfrm>
+<a:custGeom>
+<a:avLst />
+<a:gdLst>
+</a:gdLst>
+<a:ahLst />
+<a:cxnLst>
+</a:cxnLst>
+<a:rect l="l" t="t" r="r" b="b" />
+<a:pathLst>
+<a:path w="4114800" h="80467">
+<a:moveTo>
+<a:pt x="0" y="27432" />
+</a:moveTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="0" />
+									<a:pt x="1371600" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="54864" />
+									<a:pt x="2743200" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="0" />
+									<a:pt x="4114800" y="27432" />
+									</a:quadBezTo>
+<a:lnTo>
+<a:pt x="4114800" y="53035" />
+</a:lnTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="25603" />
+									<a:pt x="2743200" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="80467" />
+									<a:pt x="1371600" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="25603" />
+									<a:pt x="0" y="53035" />
+									</a:quadBezTo>
+<a:close />
+</a:path>
+</a:pathLst>
+</a:custGeom>
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="Text 4">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1357,7 +2078,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="7" name="Text 5">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1402,7 +2123,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="8" name="Text 6">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1472,7 +2193,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 3">
+<p:cNvPr id="9" name="Text 7">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1525,7 +2246,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 
 exports[`Chalkboard legacy characterization: wide bullets and credit without image > preserves the same six legacy cases through both export entry points > slide 3 1`] = `
 {
-  "sha256": "49459ca389f6480bce1a171ac700ef1cb2c3e0dbc75ee907a1c432dac1ebbfd8",
+  "sha256": "4137e61243ed8a50d240366fa5f4b252f8d95684b10ad81abb80b75eba5c5b18",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 3">
@@ -1552,7 +2273,146 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="41148" y="41148"/>
+<a:ext cx="12109399" cy="6775704"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="82296">
+<a:solidFill>
+<a:srgbClr val="8B5E3C"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="9144" y="9144"/>
+<a:ext cx="12173407" cy="6839712"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="18288">
+<a:solidFill>
+<a:srgbClr val="5E3F27"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="50292" y="50292"/>
+<a:ext cx="12091111" cy="6757416"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9144">
+<a:solidFill>
+<a:srgbClr val="A97B52"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="731520" y="1834286"/>
+<a:ext cx="4114800" cy="80467"/>
+</a:xfrm>
+<a:custGeom>
+<a:avLst />
+<a:gdLst>
+</a:gdLst>
+<a:ahLst />
+<a:cxnLst>
+</a:cxnLst>
+<a:rect l="l" t="t" r="r" b="b" />
+<a:pathLst>
+<a:path w="4114800" h="80467">
+<a:moveTo>
+<a:pt x="0" y="27432" />
+</a:moveTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="0" />
+									<a:pt x="1371600" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="54864" />
+									<a:pt x="2743200" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="0" />
+									<a:pt x="4114800" y="27432" />
+									</a:quadBezTo>
+<a:lnTo>
+<a:pt x="4114800" y="53035" />
+</a:lnTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="25603" />
+									<a:pt x="2743200" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="80467" />
+									<a:pt x="1371600" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="25603" />
+									<a:pt x="0" y="53035" />
+									</a:quadBezTo>
+<a:close />
+</a:path>
+</a:pathLst>
+</a:custGeom>
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="Text 4">
 <a:hlinkClick r:id="rId1" tooltip=""/>
 </p:cNvPr>
 <p:cNvSpPr/>
@@ -1600,7 +2460,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 1">
+<p:cNvPr id="8" name="Text 5">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1644,7 +2504,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 2">
+<p:cNvPr id="9" name="Text 6">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1689,7 +2549,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="6" name="Text 3">
+<p:cNvPr id="10" name="Text 7">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1738,7 +2598,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="7" name="Shape 4">
+<p:cNvPr id="11" name="Shape 8">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1766,7 +2626,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="8" name="Text 5">
+<p:cNvPr id="12" name="Text 9">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1834,7 +2694,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="9" name="Text 6">
+<p:cNvPr id="13" name="Text 10">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1876,6 +2736,32 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 </a:p>
 </p:txBody>
 </p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-front-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="7498080" y="1883664"/>
+<a:ext cx="4151376" cy="4187952"/>
+</a:xfrm>
+<a:prstGeom prst="roundRect">
+<a:avLst>
+<a:gd name="adj" fmla="val 3524"/>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="31750">
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:prstDash val="dash"/>
+</a:ln>
+</p:spPr>
+</p:sp>
 </p:spTree>
 </p:cSld>
 <p:clrMapOvr>
@@ -1887,7 +2773,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 
 exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 {
-  "sha256": "1d438e3382253b4fb7a24e2638e330eb378459bfef0406551f952cdec6bf96c3",
+  "sha256": "72954d33c5ff8401391c9bc709ff12182b7b4568302f7b392901d57e8707ee2f",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -1914,7 +2800,146 @@ exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="41148" y="41148"/>
+<a:ext cx="12109399" cy="6775704"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="82296">
+<a:solidFill>
+<a:srgbClr val="8B5E3C"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="9144" y="9144"/>
+<a:ext cx="12173407" cy="6839712"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="18288">
+<a:solidFill>
+<a:srgbClr val="5E3F27"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="50292" y="50292"/>
+<a:ext cx="12091111" cy="6757416"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9144">
+<a:solidFill>
+<a:srgbClr val="A97B52"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="731520" y="2953512"/>
+<a:ext cx="4114800" cy="80467"/>
+</a:xfrm>
+<a:custGeom>
+<a:avLst />
+<a:gdLst>
+</a:gdLst>
+<a:ahLst />
+<a:cxnLst>
+</a:cxnLst>
+<a:rect l="l" t="t" r="r" b="b" />
+<a:pathLst>
+<a:path w="4114800" h="80467">
+<a:moveTo>
+<a:pt x="0" y="27432" />
+</a:moveTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="0" />
+									<a:pt x="1371600" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="54864" />
+									<a:pt x="2743200" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="0" />
+									<a:pt x="4114800" y="27432" />
+									</a:quadBezTo>
+<a:lnTo>
+<a:pt x="4114800" y="53035" />
+</a:lnTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="25603" />
+									<a:pt x="2743200" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="80467" />
+									<a:pt x="1371600" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="25603" />
+									<a:pt x="0" y="53035" />
+									</a:quadBezTo>
+<a:close />
+</a:path>
+</a:pathLst>
+</a:custGeom>
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="Text 4">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1958,7 +2983,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="7" name="Text 5">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2003,7 +3028,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="8" name="Text 6">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2105,7 +3130,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 3">
+<p:cNvPr id="9" name="Text 7">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2158,7 +3183,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 
 exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 {
-  "sha256": "6be205a96042be3cc57220b8e9ee1c34b387a094566f3c678e8922c3d66361c3",
+  "sha256": "936288a426320faaf58920959570bfcd8e775db68894b9e7c2c429c3bcdccef2",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -2185,7 +3210,146 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="41148" y="41148"/>
+<a:ext cx="12109399" cy="6775704"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="82296">
+<a:solidFill>
+<a:srgbClr val="8B5E3C"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="9144" y="9144"/>
+<a:ext cx="12173407" cy="6839712"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="18288">
+<a:solidFill>
+<a:srgbClr val="5E3F27"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="50292" y="50292"/>
+<a:ext cx="12091111" cy="6757416"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9144">
+<a:solidFill>
+<a:srgbClr val="A97B52"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="731520" y="1834286"/>
+<a:ext cx="4114800" cy="80467"/>
+</a:xfrm>
+<a:custGeom>
+<a:avLst />
+<a:gdLst>
+</a:gdLst>
+<a:ahLst />
+<a:cxnLst>
+</a:cxnLst>
+<a:rect l="l" t="t" r="r" b="b" />
+<a:pathLst>
+<a:path w="4114800" h="80467">
+<a:moveTo>
+<a:pt x="0" y="27432" />
+</a:moveTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="0" />
+									<a:pt x="1371600" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="54864" />
+									<a:pt x="2743200" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="0" />
+									<a:pt x="4114800" y="27432" />
+									</a:quadBezTo>
+<a:lnTo>
+<a:pt x="4114800" y="53035" />
+</a:lnTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="25603" />
+									<a:pt x="2743200" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="80467" />
+									<a:pt x="1371600" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="25603" />
+									<a:pt x="0" y="53035" />
+									</a:quadBezTo>
+<a:close />
+</a:path>
+</a:pathLst>
+</a:custGeom>
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="Text 4">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2229,7 +3393,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="7" name="Text 5">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2316,7 +3480,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="8" name="Text 6">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2454,7 +3618,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Shape 3">
+<p:cNvPr id="9" name="Shape 7">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2481,7 +3645,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="6" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="10" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -2498,7 +3662,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </p:pic>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="7" name="Text 4">
+<p:cNvPr id="11" name="Text 8">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2540,6 +3704,32 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </a:p>
 </p:txBody>
 </p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-front-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="7498080" y="1883664"/>
+<a:ext cx="4151376" cy="4187952"/>
+</a:xfrm>
+<a:prstGeom prst="roundRect">
+<a:avLst>
+<a:gd name="adj" fmla="val 3524"/>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="31750">
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:prstDash val="dash"/>
+</a:ln>
+</p:spPr>
+</p:sp>
 </p:spTree>
 </p:cSld>
 <p:clrMapOvr>
@@ -2551,7 +3741,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 
 exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 {
-  "sha256": "d57c161f7554f86c2c0fd2b8086974c74b6a4618d239a7a088efffbec72bc825",
+  "sha256": "17252fc15429fb71cf76031b6b332e7963cb0ab894d70740acf811f53dcf61b5",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 3">
@@ -2578,7 +3768,146 @@ exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="41148" y="41148"/>
+<a:ext cx="12109399" cy="6775704"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="82296">
+<a:solidFill>
+<a:srgbClr val="8B5E3C"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="9144" y="9144"/>
+<a:ext cx="12173407" cy="6839712"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="18288">
+<a:solidFill>
+<a:srgbClr val="5E3F27"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="50292" y="50292"/>
+<a:ext cx="12091111" cy="6757416"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9144">
+<a:solidFill>
+<a:srgbClr val="A97B52"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="731520" y="1834286"/>
+<a:ext cx="4114800" cy="80467"/>
+</a:xfrm>
+<a:custGeom>
+<a:avLst />
+<a:gdLst>
+</a:gdLst>
+<a:ahLst />
+<a:cxnLst>
+</a:cxnLst>
+<a:rect l="l" t="t" r="r" b="b" />
+<a:pathLst>
+<a:path w="4114800" h="80467">
+<a:moveTo>
+<a:pt x="0" y="27432" />
+</a:moveTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="0" />
+									<a:pt x="1371600" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="54864" />
+									<a:pt x="2743200" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="0" />
+									<a:pt x="4114800" y="27432" />
+									</a:quadBezTo>
+<a:lnTo>
+<a:pt x="4114800" y="53035" />
+</a:lnTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="25603" />
+									<a:pt x="2743200" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="80467" />
+									<a:pt x="1371600" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="25603" />
+									<a:pt x="0" y="53035" />
+									</a:quadBezTo>
+<a:close />
+</a:path>
+</a:pathLst>
+</a:custGeom>
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="Text 4">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2622,7 +3951,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="7" name="Text 5">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2723,7 +4052,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="8" name="Text 6">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2793,7 +4122,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 3">
+<p:cNvPr id="9" name="Text 7">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2846,7 +4175,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 
 exports[`pins all six Chalkboard slide XML bytes > slide 4 1`] = `
 {
-  "sha256": "417baa49a517ec343869a534f34cc21f3407f34c9726bbdc5df3c8f3287353d8",
+  "sha256": "c776c9b8f72954f9d9a5e636877a3b9c3cf5ba1d65ac1f0240e83bdd114ce696",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 4">
@@ -2873,7 +4202,146 @@ exports[`pins all six Chalkboard slide XML bytes > slide 4 1`] = `
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="41148" y="41148"/>
+<a:ext cx="12109399" cy="6775704"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="82296">
+<a:solidFill>
+<a:srgbClr val="8B5E3C"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="9144" y="9144"/>
+<a:ext cx="12173407" cy="6839712"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="18288">
+<a:solidFill>
+<a:srgbClr val="5E3F27"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="50292" y="50292"/>
+<a:ext cx="12091111" cy="6757416"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9144">
+<a:solidFill>
+<a:srgbClr val="A97B52"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="731520" y="1834286"/>
+<a:ext cx="4114800" cy="80467"/>
+</a:xfrm>
+<a:custGeom>
+<a:avLst />
+<a:gdLst>
+</a:gdLst>
+<a:ahLst />
+<a:cxnLst>
+</a:cxnLst>
+<a:rect l="l" t="t" r="r" b="b" />
+<a:pathLst>
+<a:path w="4114800" h="80467">
+<a:moveTo>
+<a:pt x="0" y="27432" />
+</a:moveTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="0" />
+									<a:pt x="1371600" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="54864" />
+									<a:pt x="2743200" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="0" />
+									<a:pt x="4114800" y="27432" />
+									</a:quadBezTo>
+<a:lnTo>
+<a:pt x="4114800" y="53035" />
+</a:lnTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="25603" />
+									<a:pt x="2743200" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="80467" />
+									<a:pt x="1371600" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="25603" />
+									<a:pt x="0" y="53035" />
+									</a:quadBezTo>
+<a:close />
+</a:path>
+</a:pathLst>
+</a:custGeom>
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="Text 4">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2917,7 +4385,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 4 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="7" name="Text 5">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2962,7 +4430,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 4 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="8" name="Text 6">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3200,7 +4668,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 4 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 3">
+<p:cNvPr id="9" name="Text 7">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3253,7 +4721,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 4 1`] = `
 
 exports[`pins all six Chalkboard slide XML bytes > slide 5 1`] = `
 {
-  "sha256": "3e34e61e204d46905f36a700305274e027b5bd3be3fe98b87f33f29b1a9a9574",
+  "sha256": "74c4e4d1165200a750504e7a1947cbc4f02aadbb9bc4152769482aa198a19134",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 5">
@@ -3280,7 +4748,146 @@ exports[`pins all six Chalkboard slide XML bytes > slide 5 1`] = `
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="41148" y="41148"/>
+<a:ext cx="12109399" cy="6775704"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="82296">
+<a:solidFill>
+<a:srgbClr val="8B5E3C"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="9144" y="9144"/>
+<a:ext cx="12173407" cy="6839712"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="18288">
+<a:solidFill>
+<a:srgbClr val="5E3F27"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="50292" y="50292"/>
+<a:ext cx="12091111" cy="6757416"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9144">
+<a:solidFill>
+<a:srgbClr val="A97B52"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="731520" y="1834286"/>
+<a:ext cx="4114800" cy="80467"/>
+</a:xfrm>
+<a:custGeom>
+<a:avLst />
+<a:gdLst>
+</a:gdLst>
+<a:ahLst />
+<a:cxnLst>
+</a:cxnLst>
+<a:rect l="l" t="t" r="r" b="b" />
+<a:pathLst>
+<a:path w="4114800" h="80467">
+<a:moveTo>
+<a:pt x="0" y="27432" />
+</a:moveTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="0" />
+									<a:pt x="1371600" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="54864" />
+									<a:pt x="2743200" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="0" />
+									<a:pt x="4114800" y="27432" />
+									</a:quadBezTo>
+<a:lnTo>
+<a:pt x="4114800" y="53035" />
+</a:lnTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="25603" />
+									<a:pt x="2743200" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="80467" />
+									<a:pt x="1371600" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="25603" />
+									<a:pt x="0" y="53035" />
+									</a:quadBezTo>
+<a:close />
+</a:path>
+</a:pathLst>
+</a:custGeom>
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="Text 4">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3324,7 +4931,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 5 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="7" name="Text 5">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3369,7 +4976,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 5 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="8" name="Text 6">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3439,7 +5046,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 5 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Shape 3">
+<p:cNvPr id="9" name="Shape 7">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3467,7 +5074,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 5 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="6" name="Text 4">
+<p:cNvPr id="10" name="Text 8">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3535,7 +5142,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 5 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="7" name="Text 5">
+<p:cNvPr id="11" name="Text 9">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3577,6 +5184,32 @@ exports[`pins all six Chalkboard slide XML bytes > slide 5 1`] = `
 </a:p>
 </p:txBody>
 </p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-front-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="7498080" y="1883664"/>
+<a:ext cx="4151376" cy="4187952"/>
+</a:xfrm>
+<a:prstGeom prst="roundRect">
+<a:avLst>
+<a:gd name="adj" fmla="val 3524"/>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="31750">
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:prstDash val="dash"/>
+</a:ln>
+</p:spPr>
+</p:sp>
 </p:spTree>
 </p:cSld>
 <p:clrMapOvr>
@@ -3588,7 +5221,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 5 1`] = `
 
 exports[`pins all six Chalkboard slide XML bytes > slide 6 1`] = `
 {
-  "sha256": "6645786e44103a202fa534a95538a58a5753b2d164a2e1473054ce95b74a0266",
+  "sha256": "70a3cc2f834e9bf24a863159abe84d8286c5712b07938344b99d7d82545c88b2",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 6">
@@ -3615,7 +5248,146 @@ exports[`pins all six Chalkboard slide XML bytes > slide 6 1`] = `
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="41148" y="41148"/>
+<a:ext cx="12109399" cy="6775704"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="82296">
+<a:solidFill>
+<a:srgbClr val="8B5E3C"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="9144" y="9144"/>
+<a:ext cx="12173407" cy="6839712"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="18288">
+<a:solidFill>
+<a:srgbClr val="5E3F27"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="50292" y="50292"/>
+<a:ext cx="12091111" cy="6757416"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9144">
+<a:solidFill>
+<a:srgbClr val="A97B52"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="731520" y="1834286"/>
+<a:ext cx="4114800" cy="80467"/>
+</a:xfrm>
+<a:custGeom>
+<a:avLst />
+<a:gdLst>
+</a:gdLst>
+<a:ahLst />
+<a:cxnLst>
+</a:cxnLst>
+<a:rect l="l" t="t" r="r" b="b" />
+<a:pathLst>
+<a:path w="4114800" h="80467">
+<a:moveTo>
+<a:pt x="0" y="27432" />
+</a:moveTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="0" />
+									<a:pt x="1371600" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="54864" />
+									<a:pt x="2743200" y="27432" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="0" />
+									<a:pt x="4114800" y="27432" />
+									</a:quadBezTo>
+<a:lnTo>
+<a:pt x="4114800" y="53035" />
+</a:lnTo>
+<a:quadBezTo>
+									<a:pt x="3429000" y="25603" />
+									<a:pt x="2743200" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="2057400" y="80467" />
+									<a:pt x="1371600" y="53035" />
+									</a:quadBezTo>
+<a:quadBezTo>
+									<a:pt x="685800" y="25603" />
+									<a:pt x="0" y="53035" />
+									</a:quadBezTo>
+<a:close />
+</a:path>
+</a:pathLst>
+</a:custGeom>
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="Text 4">
 <a:hlinkClick r:id="rId1" tooltip=""/>
 </p:cNvPr>
 <p:cNvSpPr/>
@@ -3663,7 +5435,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 6 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 1">
+<p:cNvPr id="8" name="Text 5">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3707,7 +5479,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 6 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 2">
+<p:cNvPr id="9" name="Text 6">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3752,7 +5524,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 6 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="6" name="Text 3">
+<p:cNvPr id="10" name="Text 7">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3822,7 +5594,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 6 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="7" name="Shape 4">
+<p:cNvPr id="11" name="Shape 8">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3849,7 +5621,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 6 1`] = `
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="8" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="12" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -3866,7 +5638,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 6 1`] = `
 </p:pic>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="9" name="Text 5">
+<p:cNvPr id="13" name="Text 9">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3907,6 +5679,32 @@ exports[`pins all six Chalkboard slide XML bytes > slide 6 1`] = `
 <a:endParaRPr lang="en-US" sz="1100" dirty="0"/>
 </a:p>
 </p:txBody>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-front-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="7498080" y="1883664"/>
+<a:ext cx="4151376" cy="4187952"/>
+</a:xfrm>
+<a:prstGeom prst="roundRect">
+<a:avLst>
+<a:gd name="adj" fmla="val 3524"/>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="31750">
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:prstDash val="dash"/>
+</a:ln>
+</p:spPr>
 </p:sp>
 </p:spTree>
 </p:cSld>
