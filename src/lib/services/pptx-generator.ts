@@ -6,11 +6,8 @@ import { describeImageCredit } from '@/lib/image-credit';
 import { isUsableImage, sniffImageMime, toRawBase64 } from '@/lib/slide-image';
 import { parseFormulaToSegments } from '@/lib/utils/formula-parser';
 
-import {
-  SHADE_PRIMARY, SHADE_SECONDARY, SHADE_BACKGROUND, SHADE_TEXT_DARK,
-  FALLBACK_BG, FALLBACK_BORDER, DEFAULT_FONT_FACE, TEXT_HEADING, TEXT_MUTED, TEXT_SUBTLE,
-  CREDIT_LAYOUT, SLIDE_COUNTER, TITLE_LAYOUT, CONTENT_LAYOUT, slideLayoutFor, hasVisual,
-} from '@/lib/slide-theme';
+import { slideLayoutFor, hasVisual, CONTENT_LAYOUT, SLIDE_WIDTH } from '@/lib/slide-theme';
+import { DEFAULT_THEME, type SlideTheme } from '@/lib/themes';
 
 export {
   SHADE_PRIMARY, SHADE_SECONDARY, SHADE_BACKGROUND, SHADE_TEXT_DARK,
@@ -57,8 +54,12 @@ function addLibraryImage(slide: PptxGenJS.Slide, image: string, box: { x: number
 
 export function createPresentationPptx(
   presentationData: PresentationData,
-  slideImages?: Record<number, string>
+  slideImages?: Record<number, string>,
+  theme: SlideTheme = DEFAULT_THEME
 ): PptxGenJS {
+  const { title: TITLE_LAYOUT, content: contentLayout, credit: CREDIT_LAYOUT, counter: SLIDE_COUNTER } = theme.layout;
+  const palette = theme.palette;
+  const fontFace = theme.typography.exportFace;
   const pptx = new PptxGenJS();
   pptx.layout = 'LAYOUT_WIDE'; // Standard 16:9 modern widescreen: 13.333" x 7.5"
 
@@ -67,20 +68,20 @@ export function createPresentationPptx(
 
   slides.forEach((slide, idx) => {
     const slideObj = pptx.addSlide();
-    const fit = fitSlide(slide, idx, presentationData.originalWriters);
+    const fit = fitSlide(slide, idx, presentationData.originalWriters, theme);
 
     if (slide.imageMetadata) {
       const credit = describeImageCredit(slide.imageMetadata);
       slideObj.addText(`${credit.heading} — ${credit.creditLine}`, {
-        ...CREDIT_LAYOUT, color: TEXT_MUTED,
-        fontFace: DEFAULT_FONT_FACE, fit: 'shrink',
+        ...CREDIT_LAYOUT, color: palette.muted,
+        fontFace, fit: 'shrink',
         hyperlink: { url: credit.sourceLink },
       });
       slideObj.addNotes(credit.notes);
     }
 
     // 1. Background
-    slideObj.background = { fill: SHADE_BACKGROUND };
+    slideObj.background = { fill: palette.background };
 
     // Slide 1: Special Hero Title Slide Layout
     if (slideLayoutFor(idx) === 'title') {
@@ -88,9 +89,9 @@ export function createPresentationPptx(
       const partText = (slide.part || 'TITLE PAGE').toUpperCase();
       slideObj.addText(partText, {
         ...TITLE_LAYOUT.part,
-        color: SHADE_SECONDARY,
+        color: palette.secondary,
         bold: true,
-        fontFace: DEFAULT_FONT_FACE,
+        fontFace,
       });
 
       // Big Title (minimum 40pt, aim 45pt)
@@ -98,9 +99,9 @@ export function createPresentationPptx(
       slideObj.addText(titleRuns, {
         ...TITLE_LAYOUT.title,
         ...(fit.title.fontSize < TITLE_LAYOUT.title.fontSize && { fontSize: fit.title.fontSize }),
-        color: SHADE_PRIMARY,
+        color: palette.primary,
         bold: true,
-        fontFace: DEFAULT_FONT_FACE,
+        fontFace,
         fit: 'shrink',
       });
 
@@ -122,8 +123,8 @@ export function createPresentationPptx(
       if (contentPoints.length > 0) {
         const textItems = contentPoints.flatMap((pt, pIdx) => {
           const pointOptions = {
-            fontSize: titlePointSize(pIdx, fit.body.fontSize),
-            color: pIdx === 0 ? TEXT_HEADING : TEXT_MUTED,
+            fontSize: titlePointSize(pIdx, fit.body.fontSize, theme),
+            color: pIdx === 0 ? palette.heading : palette.muted,
             bold: pIdx === 0 || pt.toLowerCase().includes('writer') || pt.toLowerCase().includes('author'),
           };
           return formulaToTextRuns(pt + (pIdx < contentPoints.length - 1 ? '\n' : '')).map((run) => ({
@@ -135,7 +136,7 @@ export function createPresentationPptx(
           ...TITLE_LAYOUT.points,
           ...(fit.body.fontSize < TITLE_LAYOUT.firstPointFontSize && { lineSpacing: fit.body.lineHeightPt }),
           w: slide.imageMetadata ? TITLE_LAYOUT.pointsWithImageWidth : TITLE_LAYOUT.points.w,
-          fontFace: DEFAULT_FONT_FACE,
+          fontFace,
           fit: 'shrink',
         });
       }
@@ -148,9 +149,9 @@ export function createPresentationPptx(
       // Slide counter
       slideObj.addText(`Slide 1 of ${totalSlides}`, {
         ...SLIDE_COUNTER,
-        color: TEXT_SUBTLE,
+        color: palette.subtle,
         align: 'right',
-        fontFace: DEFAULT_FONT_FACE,
+        fontFace,
       });
       return;
     }
@@ -159,28 +160,28 @@ export function createPresentationPptx(
     // 2. Part header
     const partText = (slide.part || '').toUpperCase();
     slideObj.addText(partText, {
-      ...CONTENT_LAYOUT.part,
-      color: SHADE_SECONDARY,
+      ...contentLayout.part,
+      color: palette.secondary,
       bold: true,
-      fontFace: DEFAULT_FONT_FACE,
+      fontFace,
     });
 
     // 3. Title (minimum 40pt, aim 45pt)
-    const titleFontSize = slide.title && slide.title.length > CONTENT_LAYOUT.longTitleThreshold
-      ? CONTENT_LAYOUT.longTitleFontSize : CONTENT_LAYOUT.title.fontSize;
+    const titleFontSize = slide.title && slide.title.length > contentLayout.longTitleThreshold
+      ? contentLayout.longTitleFontSize : contentLayout.title.fontSize;
     const titleRuns = formulaToTextRuns(slide.title || '');
     slideObj.addText(titleRuns, {
-      ...CONTENT_LAYOUT.title,
+      ...contentLayout.title,
       fontSize: fit.title.fontSize < titleFontSize ? fit.title.fontSize : titleFontSize,
-      color: SHADE_PRIMARY,
+      color: palette.primary,
       bold: true,
-      fontFace: DEFAULT_FONT_FACE,
+      fontFace,
       fit: 'shrink',
     });
 
     // 4. Bullet content (minimum 35pt body text)
     const visual = hasVisual(slide);
-    const contentWidth = visual ? CONTENT_LAYOUT.bulletsWithVisualWidth : CONTENT_LAYOUT.bullets.w;
+    const contentWidth = visual ? contentLayout.bulletsWithVisualWidth : contentLayout.bullets.w;
     const contentPoints = slide.contentPoints || [];
     const textItems: PptxGenJS.TextProps[] = [];
     contentPoints.forEach((pt, pIdx) => {
@@ -191,11 +192,11 @@ export function createPresentationPptx(
 
     if (textItems.length > 0) {
       slideObj.addText(textItems, {
-        ...CONTENT_LAYOUT.bullets,
-        ...(fit.body.fontSize < CONTENT_LAYOUT.bullets.fontSize && { fontSize: fit.body.fontSize, lineSpacing: fit.body.lineHeightPt }),
+        ...contentLayout.bullets,
+        ...(fit.body.fontSize < contentLayout.bullets.fontSize && { fontSize: fit.body.fontSize, lineSpacing: fit.body.lineHeightPt }),
         w: contentWidth,
-        fontFace: DEFAULT_FONT_FACE,
-        color: SHADE_TEXT_DARK,
+        fontFace,
+        color: palette.textDark,
         fit: 'shrink',
       });
     }
@@ -205,21 +206,28 @@ export function createPresentationPptx(
       const imageData = slideImages ? slideImages[idx] : undefined;
 
       // Always draw a handsome rounded card background container (w: 33% <= 40% of slide space)
-      slideObj.addShape(pptx.ShapeType.roundRect, {
-        ...CONTENT_LAYOUT.visualCard,
-        fill: { color: FALLBACK_BG },
-        line: { color: FALLBACK_BORDER, width: CONTENT_LAYOUT.visualBorderWidth },
+      // Classic uses DrawingML's native roundRect radius: omit an override to
+      // preserve its exact XML. Other percentages map to inches of the shorter side.
+      const radius = parseFloat(theme.shape.visualCornerRadius) / 100;
+      const cardWidth = typeof contentLayout.visualCard.w === 'number' ? contentLayout.visualCard.w
+        : parseFloat(contentLayout.visualCard.w) * SLIDE_WIDTH / 100;
+      slideObj.addShape(radius === 0 ? pptx.ShapeType.rect : pptx.ShapeType.roundRect, {
+        ...contentLayout.visualCard,
+        ...(theme.shape.visualCornerRadius !== CONTENT_LAYOUT.visualCornerRadius && radius > 0
+          && { rectRadius: radius * Math.min(cardWidth, contentLayout.visualCard.h) }),
+        fill: { color: palette.cardBackground },
+        line: { color: palette.cardBorder, width: theme.shape.visualBorderWidth },
       });
 
       if (imageData && isUsableImage(imageData)) {
         if (slide.imageMetadata) {
-          addLibraryImage(slideObj, imageData, CONTENT_LAYOUT.libraryImage);
+          addLibraryImage(slideObj, imageData, contentLayout.libraryImage);
         } else {
           const rawBase64 = toRawBase64(imageData);
           slideObj.addImage({
             data: `${sniffImageMime(rawBase64)};base64,` + rawBase64,
-            ...CONTENT_LAYOUT.image,
-            sizing: { type: 'contain', ...CONTENT_LAYOUT.imageSizing },
+            ...contentLayout.image,
+            sizing: { type: 'contain', ...contentLayout.imageSizing },
           });
         }
       } else {
@@ -227,12 +235,12 @@ export function createPresentationPptx(
         const placeholderText =
           '[PHILIPPINES CLASSROOM VISUAL DESIGN]\n\n' + slide.visualDescription;
         slideObj.addText(placeholderText, {
-          ...CONTENT_LAYOUT.placeholder,
-          color: SHADE_PRIMARY,
+          ...contentLayout.placeholder,
+          color: palette.primary,
           italic: true,
           align: 'center',
           valign: 'middle',
-          fontFace: DEFAULT_FONT_FACE,
+          fontFace,
           fit: 'shrink',
         });
       }
@@ -241,9 +249,9 @@ export function createPresentationPptx(
     // 6. Slide counter
     slideObj.addText(`Slide ${idx + 1} of ${totalSlides}`, {
       ...SLIDE_COUNTER,
-      color: TEXT_SUBTLE,
+      color: palette.subtle,
       align: 'right',
-      fontFace: DEFAULT_FONT_FACE,
+      fontFace,
     });
   });
 
@@ -252,9 +260,10 @@ export function createPresentationPptx(
 
 export async function buildPresentationPptx(
   presentationData: PresentationData,
-  slideImages?: Record<number, string>
+  slideImages?: Record<number, string>,
+  theme: SlideTheme = DEFAULT_THEME
 ): Promise<Buffer> {
-  const pptx = createPresentationPptx(presentationData, slideImages);
+  const pptx = createPresentationPptx(presentationData, slideImages, theme);
   const output = await pptx.write({ outputType: 'nodebuffer' });
   return Buffer.isBuffer(output) ? output : Buffer.from(output as ArrayBuffer);
 }

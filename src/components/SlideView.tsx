@@ -6,16 +6,16 @@ import type { SlideData } from '@/types/presentation';
 import { describeImageCredit } from '@/lib/image-credit';
 import { isUsableImage, toDataUrl } from '@/lib/slide-image';
 import {
-  CONTENT_LAYOUT, CREDIT_LAYOUT, FALLBACK_BG, FALLBACK_BORDER, SHADE_BACKGROUND,
-  SHADE_PRIMARY, SHADE_SECONDARY, SHADE_TEXT_DARK, SLIDE_COUNTER, SLIDE_HEIGHT,
-  SLIDE_WIDTH, SLIDE_WIDTH_PT, TEXT_HEADING, TEXT_MUTED, TEXT_SUBTLE, TITLE_LAYOUT,
+  SLIDE_HEIGHT, SLIDE_WIDTH, SLIDE_WIDTH_PT,
   hasVisual, slideLayoutFor, type SlideBox, type SlideCoordinate,
 } from '@/lib/slide-theme';
+import { DEFAULT_THEME, type SlideTheme } from '@/lib/themes';
 import { fitSlide, titleSlidePoints, titlePointSize } from '@/lib/slide-fit';
 import { FormattedFormula } from './FormattedFormula';
 
 export interface SlideViewProps {
   slide: SlideData;
+  theme?: SlideTheme;
   index: number;
   total: number;
   image?: string;
@@ -51,7 +51,9 @@ function textStyle(box: SlideBox & { fontSize?: number }): CSSProperties {
 }
 
 /** A passive slide preview. Phase 1 deliberately leaves it unwired from the workspace. */
-export function SlideView({ slide, index, total, image, originalWriters, variant = 'full', renderTitle, renderPoint }: SlideViewProps) {
+export function SlideView({ slide, index, total, image, originalWriters, variant = 'full', renderTitle, renderPoint, theme = DEFAULT_THEME }: SlideViewProps) {
+  const { title: TITLE_LAYOUT, content: CONTENT_LAYOUT, credit: CREDIT_LAYOUT, counter: SLIDE_COUNTER } = theme.layout;
+  const palette = theme.palette;
   const titleLayout = slideLayoutFor(index) === 'title';
   const layout = titleLayout ? TITLE_LAYOUT : CONTENT_LAYOUT;
   const visual = !titleLayout && hasVisual(slide);
@@ -59,7 +61,7 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
   const showImage = usableImage && (titleLayout ? Boolean(slide.imageMetadata) : visual);
   const credit = slide.imageMetadata ? describeImageCredit(slide.imageMetadata) : undefined;
   const points = titleLayout ? titleSlidePoints(slide, originalWriters) : slide.contentPoints || [];
-  const fit = fitSlide(slide, index, originalWriters);
+  const fit = fitSlide(slide, index, originalWriters, theme);
   const overflowStyle = (fits: boolean): CSSProperties => fits ? {} : {
     justifyContent: 'flex-start', overflowY: variant === 'full' ? 'auto' : 'hidden',
   };
@@ -79,15 +81,15 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
       className={poppins.variable}
       style={{
         position: 'relative', width: '100%', aspectRatio: '16 / 9', containerType: 'inline-size',
-        overflow: 'hidden', backgroundColor: `#${SHADE_BACKGROUND}`, color: `#${SHADE_TEXT_DARK}`,
-        fontFamily: 'var(--font-slide-poppins), system-ui, sans-serif',
+        overflow: 'hidden', backgroundColor: `#${palette.background}`, color: `#${palette.textDark}`,
+        fontFamily: theme.typography.previewFont,
         ...(variant === 'thumbnail' && { pointerEvents: 'none' }),
       }}
     >
-      <p style={{ ...textStyle(layout.part), color: `#${SHADE_SECONDARY}`, fontWeight: 700 }}>
+      <p style={{ ...textStyle(layout.part), color: `#${palette.secondary}`, fontWeight: 700 }}>
         {(slide.part || (titleLayout ? 'TITLE PAGE' : '')).toUpperCase()}
       </p>
-      <h2 data-overflow={!fit.title.fits ? "true" : undefined} style={{ ...textStyle(layout.title), ...overflowStyle(fit.title.fits), fontSize: typeSize(fit.title.fontSize), color: `#${SHADE_PRIMARY}`, fontWeight: 700 }}>
+      <h2 data-overflow={!fit.title.fits ? "true" : undefined} style={{ ...textStyle(layout.title), ...overflowStyle(fit.title.fits), fontSize: typeSize(fit.title.fontSize), color: `#${palette.primary}`, fontWeight: 700 }}>
         {renderTitle ? renderTitle(title) : title}
       </h2>
 
@@ -100,8 +102,8 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
           {points.map((point, pointIndex) => (
             <p key={pointIndex} style={{
               margin: 0, ...(!fit.body.fits && { flexShrink: 0 }),
-              fontSize: typeSize(titlePointSize(pointIndex, fit.body.fontSize)),
-              color: `#${pointIndex === 0 ? TEXT_HEADING : TEXT_MUTED}`,
+              fontSize: typeSize(titlePointSize(pointIndex, fit.body.fontSize, theme)),
+              color: `#${pointIndex === 0 ? palette.heading : palette.muted}`,
               fontWeight: pointIndex === 0 || /writer|author/i.test(point) ? 700 : 400,
             }}>
               {pointContent(point, pointIndex)}
@@ -121,9 +123,9 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
       )}
 
       {visual && <div aria-hidden="true" style={{
-        ...boxStyle(CONTENT_LAYOUT.visualCard), backgroundColor: `#${FALLBACK_BG}`,
-        border: `${typeSize(CONTENT_LAYOUT.visualBorderWidth)} solid #${FALLBACK_BORDER}`,
-        borderRadius: CONTENT_LAYOUT.visualCornerRadius,
+        ...boxStyle(CONTENT_LAYOUT.visualCard), backgroundColor: `#${palette.cardBackground}`,
+        border: `${typeSize(theme.shape.visualBorderWidth)} solid #${palette.cardBorder}`,
+        borderRadius: theme.shape.visualCornerRadius,
       }} />}
       {showImage ? (
         // Inline base64 images mirror the SlideImageControls image contract.
@@ -132,14 +134,14 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
           className={slide.imageMetadata?.source === 'commons' ? 'object-contain' : 'object-cover'}
           style={boxStyle(imageBox)} />
       ) : visual && (
-        <p style={{ ...textStyle(CONTENT_LAYOUT.placeholder), color: `#${SHADE_PRIMARY}`, fontStyle: 'italic', textAlign: 'center' }}>
+        <p style={{ ...textStyle(CONTENT_LAYOUT.placeholder), color: `#${palette.primary}`, fontStyle: 'italic', textAlign: 'center' }}>
           {'[PHILIPPINES CLASSROOM VISUAL DESIGN]\n\n' + slide.visualDescription}
         </p>
       )}
-      {credit && <p style={{ ...textStyle(CREDIT_LAYOUT), color: `#${TEXT_MUTED}` }}>
+      {credit && <p style={{ ...textStyle(CREDIT_LAYOUT), color: `#${palette.muted}` }}>
         {credit.heading} — {credit.creditLine}
       </p>}
-      <p style={{ ...textStyle(SLIDE_COUNTER), color: `#${TEXT_SUBTLE}`, textAlign: 'right' }}>
+      <p style={{ ...textStyle(SLIDE_COUNTER), color: `#${palette.subtle}`, textAlign: 'right' }}>
         Slide {index + 1} of {total}
       </p>
     </div>

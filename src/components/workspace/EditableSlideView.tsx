@@ -2,7 +2,8 @@
 
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { SlideView, type SlideViewProps } from '@/components/SlideView';
-import { CONTENT_LAYOUT, SLIDE_HEIGHT, SLIDE_WIDTH, SLIDE_WIDTH_PT, hasVisual, slideLayoutFor } from '@/lib/slide-theme';
+import { SLIDE_HEIGHT, SLIDE_WIDTH, SLIDE_WIDTH_PT, hasVisual, slideLayoutFor } from '@/lib/slide-theme';
+import { DEFAULT_THEME } from '@/lib/themes';
 import { InlineText } from './InlineText';
 
 export interface SlideEditingHandlers {
@@ -17,6 +18,7 @@ export type EditableSlideViewProps = Omit<SlideViewProps, 'variant' | 'renderTit
 type Editing = { kind: 'title' } | { kind: 'point'; index: number } | null;
 
 export function EditableSlideView({ onTitleChange, onPointChange, onPointInsert, onPointDelete, onPointAdd, ...props }: EditableSlideViewProps) {
+  const CONTENT_LAYOUT = (props.theme ?? DEFAULT_THEME).layout.content;
   const [editing, setEditing] = useState<Editing>(null);
   const [session, setSession] = useState(0);
   const titleLayout = slideLayoutFor(props.index) === 'title';

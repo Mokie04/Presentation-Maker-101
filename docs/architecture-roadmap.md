@@ -15,6 +15,7 @@ Beyond this list, refactoring has diminishing returns; later changes should be d
 
 | Work | Result |
 |---|---|
+| Theme module Phase 1 (`docs/theme-style-roadmap.md`) | Classic theme registry, optional renderer/fit/export parameters, font metrics registry and computed contrast policy with exact Classic exceptions; no visible or wire change. ADR 0022. |
 | Home screen (`docs/home-screen-roadmap.md`) | Mokie hero, numbered setup with native session radios, honest indeterminate activity, scoped typography and shared header tagline; workspace redesign deferred |
 | Slide deck module (`docs/slide-deck-roadmap.md`) | Slide identity, images and race rules in one reducer; `page.tsx` 664 to 478 lines |
 | Credit module (`docs/image-credit-roadmap.md`) | Credit rules in one module; slideshow shows attribution |
