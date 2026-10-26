@@ -12,7 +12,7 @@ export async function openWorkspace(text = 'A lesson about plants.') {
 export async function generateDeck(text: string, session = 'Session 1') {
   fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: text } });
-  fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: session } });
+  chooseSession(session);
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
   await screen.findByRole('listbox', { name: 'Slides' });
 }
@@ -37,4 +37,9 @@ export function railTitles() {
 /** The selected slide's panel preview; it is named after the slide title. */
 export function panelImageSrc(title: string) {
   return within(panel()).getByRole('img', { name: title }).getAttribute('src');
+}
+
+/** Chooses an upload-screen session using its native radio. */
+export function chooseSession(session: string) {
+  fireEvent.click(screen.getByRole('radio', { name: session }));
 }

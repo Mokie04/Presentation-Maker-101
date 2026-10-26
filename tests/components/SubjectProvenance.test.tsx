@@ -3,7 +3,7 @@ import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import Home from '@/app/page';
-import { selectSlideTitled } from '../helpers/workspace';
+import { chooseSession, selectSlideTitled } from '../helpers/workspace';
 
 const presentation = { subject: 'Science', originalWriters: 'Teacher', topic: 'Plants',
   slides: ['Roots', 'Leaves'].map((title, index) => ({ slideNumber: index + 1,
@@ -43,7 +43,7 @@ async function prepare() {
   render(<Home />);
   fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Reading about a planet experiment.' } });
-  fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 1' } });
+  chooseSession('Session 1');
 }
 async function submit() {
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
@@ -103,7 +103,7 @@ describe('teacher subject selection and presentation history', () => {
     expect((screen.getByLabelText('Subject') as HTMLSelectElement).value).toBe('');
     fireEvent.click(screen.getByRole('button', { name: /paste/i }));
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Next lesson' } });
-    fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 2' } });
+    chooseSession('Session 2');
     generate.mockResolvedValueOnce(Response.json({ ...presentation, subjectEvidence: [
       { subject: 'General Study', source: 'keyword-detected' }, { subject: 'Science', source: 'model-generated' },
     ] }));

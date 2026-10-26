@@ -9,7 +9,9 @@ import {
   Sparkles,
   Clipboard,
   Layers,
+  Check,
 } from 'lucide-react';
+import { GeneratingPanel } from '@/components/home/GeneratingPanel';
 import { SESSION_OPTIONS } from '@/lib/utils/session-options';
 import { SUPPORTED_SUBJECTS, type SupportedSubject } from '@/lib/utils/subject-options';
 import { DEFAULT_MAX_UPLOAD_MB, uploadTooLargeMessage } from '@/lib/upload-limits';
@@ -127,227 +129,114 @@ export function UploadSection({
     !isLoading &&
     !isUploading;
 
-  return (
-    <section className="w-full max-w-4xl mx-auto my-8 px-4">
-      <div className="bg-white rounded-2xl shadow-xl border border-sky-100/80 overflow-hidden">
-        {/* Card Header */}
-        <div className="bg-gradient-to-r from-sky-50 via-cyan-50 to-sky-50/50 px-4 sm:px-6 py-4 border-b border-sky-100 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-2">
-            <span className="p-2 bg-sky-700 text-white rounded-xl shadow-sm">
-              <UploadCloud className="w-5 h-5" />
-            </span>
-            <div className="min-w-0">
-              <h2 className="text-lg font-bold text-slate-800">
-                Lesson Plan Document Processing
-              </h2>
-              <p className="text-xs text-slate-500 font-medium">
-                Supports Daily Lesson Logs (DLL) in .docx, .pdf, .txt, or .md
-              </p>
-            </div>
-          </div>
+  const hasText = Boolean(extractedText.trim());
+  const hint = !hasText && !selectedSession ? 'Add your lesson and choose a session to continue.'
+    : !hasText ? 'Add your lesson to continue.' : !selectedSession ? 'Choose a session to continue.'
+    : `Ready: ${selectedSession}, subject ${selectedSubject || 'Automatic'}`;
 
-          <button
-            type="button"
-            aria-expanded={showManual}
-            aria-controls={manualId}
-            onClick={() => setShowManual(!showManual)}
-            className="text-xs font-semibold text-sky-700 hover:text-sky-800 bg-sky-100/60 hover:bg-sky-200/60 px-3 py-1.5 rounded-lg border border-sky-300/60 transition-colors flex items-center gap-1.5"
-          >
-            <Clipboard className="w-3.5 h-3.5" />
+  return (
+    <section aria-label="Lesson setup" className="mt-6 rounded-2xl border border-sky-100 bg-white p-1.5 shadow-[0_24px_50px_-30px_rgba(15,23,42,0.25)]">
+      {isLoading && <GeneratingPanel loadingStage={loadingStage} />}
+      <div className="home-step">
+        <StepHeading number={1} done={hasText} title="Upload your lesson plan" hint={`Daily Lesson Logs in .docx, .pdf, .txt or .md, up to ${DEFAULT_MAX_UPLOAD_MB} MB.`} />
+        <div className="mt-3 space-y-3 sm:ml-12">
+          <button type="button" aria-expanded={showManual} aria-controls={manualId} onClick={() => setShowManual(!showManual)}
+            className="flex min-h-11 items-center gap-2 rounded-lg border border-sky-200 bg-white px-3 py-2 text-xs font-semibold text-sky-800 transition-colors hover:bg-sky-50">
+            <Clipboard className="h-4 w-4" />
             <span>{showManual ? 'Hide Manual Paste' : 'Paste Lesson Plan Text'}</span>
           </button>
-        </div>
-
-        {/* Card Body */}
-        <div className="p-6 space-y-6">
-          {/* Drag & Drop Area */}
           {!showManual ? (
-            <div
-              role="button" tabIndex={0} aria-label="Choose lesson plan document"
-              onKeyDown={event => {
-                if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); fileInputRef.current?.click(); }
-              }}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className={`relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-200 flex flex-col items-center justify-center gap-3 ${
-                isDragging
-                  ? 'border-sky-500 bg-sky-50/80 scale-[0.99]'
-                  : 'border-slate-500 hover:border-sky-400 bg-slate-50/50 hover:bg-sky-50/20'
-              }`}
-            >
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".docx,.pdf,.txt,.md"
-                onChange={handleFileChange}
-                onClick={event => event.stopPropagation()}
-                className="hidden"
-              />
-
+            <div onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}
+              className={`relative flex cursor-pointer flex-col items-center gap-4 rounded-xl border-2 border-dashed p-5 pb-20 text-center transition-colors sm:flex-row sm:p-6 sm:pr-60 sm:text-left ${isDragging ? 'border-sky-700 bg-sky-100' : 'border-sky-300 bg-gradient-to-b from-white to-sky-50/70 hover:border-sky-700 hover:bg-sky-50'}`}>
+              <input hidden ref={fileInputRef} type="file" accept=".docx,.pdf,.txt,.md" onChange={handleFileChange} onClick={event => event.stopPropagation()} className="hidden" />
               {isUploading ? (
-                <div className="flex flex-col items-center gap-2 py-4">
-                  <Loader2 className="w-10 h-10 text-sky-600 animate-spin" />
-                  <p className="text-sm font-semibold text-sky-800">
-                    Extracting Lesson Plan Content...
-                  </p>
-                </div>
+                <><Loader2 className="h-9 w-9 shrink-0 animate-spin text-sky-700 motion-reduce:animate-none" /><p className="text-sm font-semibold text-sky-800">Extracting Lesson Plan Content...</p></>
               ) : (
-                <>
-                  <div className="w-14 h-14 rounded-full bg-sky-100/80 text-sky-700 flex items-center justify-center shadow-inner">
-                    <UploadCloud className="w-7 h-7" />
-                  </div>
-                  <div>
-                    <p className="text-base font-bold text-slate-700">
-                      Drag & Drop Lesson Plan Document
-                    </p>
-                    <p className="text-xs text-slate-500 mt-1">
-                      or click to browse (.docx, .pdf, .txt, .md — up to {DEFAULT_MAX_UPLOAD_MB}MB)
-                    </p>
-                  </div>
-                </>
+                <><UploadCloud className="h-10 w-10 shrink-0 text-sky-700" /><div>
+                  <p className="home-heading text-sm font-bold text-slate-900 sm:text-base">Drag &amp; Drop Lesson Plan Document</p>
+                  <p className="mt-1 text-xs leading-relaxed text-slate-600">or click to browse (.docx, .pdf, .txt, .md — up to {DEFAULT_MAX_UPLOAD_MB}MB)</p>
+                </div></>
               )}
+              <button type="button" aria-label="Choose lesson plan document"
+                onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); fileInputRef.current?.click(); } }}
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute inset-0 flex items-end justify-center rounded-xl p-5 sm:items-center sm:justify-end sm:p-6">
+                <span className="flex min-h-11 items-center rounded-lg border border-sky-200 bg-white px-3 text-xs font-semibold text-sky-800">Choose lesson plan document</span>
+              </button>
             </div>
           ) : (
-            /* Monospace Textarea for Manual Paste */
             <div id={manualId} className="space-y-2">
-              <label
-                htmlFor="manual-lesson-text"
-                className="block text-xs font-bold uppercase tracking-wider text-slate-600"
-              >
-                Paste Lesson Plan Content
-              </label>
-              <textarea
-                id="manual-lesson-text"
-                value={manualInput}
-                onChange={handleManualChange}
-                placeholder="Paste raw lesson plan content here (objectives, parts, activities, questions)..."
-                rows={7}
-                className="w-full font-mono text-xs sm:text-sm p-3.5 border border-slate-500 rounded-xl focus:ring-2 focus:ring-sky-700 focus:border-sky-700 bg-slate-50/30 text-slate-800 placeholder-slate-500 transition-all outline-none resize-y"
-              />
+              <label htmlFor="manual-lesson-text" className="block text-xs font-bold uppercase tracking-wider text-slate-600">Paste Lesson Plan Content</label>
+              <textarea id="manual-lesson-text" value={manualInput} onChange={handleManualChange}
+                placeholder="Paste raw lesson plan content here (objectives, parts, activities, questions)..." rows={7}
+                className="w-full resize-y rounded-xl border border-slate-400 bg-slate-50/30 p-3.5 font-mono text-xs text-slate-800 placeholder-slate-600 focus:border-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-700 sm:text-sm" />
             </div>
           )}
-
-          {/* Feedback & File Pill */}
           {extractedText && fileName && (
-            <div className="p-3.5 bg-sky-50 border border-sky-200/80 rounded-xl flex items-center justify-between animate-fadeIn">
-              <div className="flex items-center gap-2.5 overflow-hidden">
-                <CheckCircle2 className="w-5 h-5 text-sky-600 flex-shrink-0" />
-                <div className="truncate">
-                  <p className="text-xs sm:text-sm font-bold text-sky-950 truncate">
-                    {fileName}
-                  </p>
-                  <p className="text-xs text-sky-700">
-                    {extractedText.length.toLocaleString()} characters extracted and ready
-                  </p>
-                </div>
+            <div className="flex items-center justify-between gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-700" />
+                <div className="min-w-0"><p className="truncate text-xs font-bold text-slate-900 sm:text-sm">{fileName}</p>
+                  <p className="text-xs text-emerald-800">{extractedText.length.toLocaleString()} characters extracted and ready</p></div>
               </div>
-              <span className="text-[11px] font-bold uppercase px-2.5 py-1 bg-sky-200/70 text-sky-800 rounded-full flex-shrink-0">
-                Ready
-              </span>
+              <span className="shrink-0 rounded-full bg-emerald-100 px-2.5 py-1 text-[11px] font-bold uppercase text-emerald-800">Ready</span>
             </div>
           )}
-
-          {/* Errors */}
           {(uploadError || errorMsg) && (
             <div role="alert" className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2.5 text-rose-800 text-xs sm:text-sm font-medium">
               <AlertTriangle className="w-5 h-5 text-rose-600 flex-shrink-0" />
               <span>{uploadError || errorMsg}</span>
             </div>
           )}
-
-          {/* Controls: Session, Optional Subject & Generate Action */}
-          <div className="pt-2 flex flex-col sm:flex-row items-center gap-4">
-            <div className="w-full sm:w-1/3">
-              <label
-                htmlFor="session-select"
-                className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5"
-              >
-                Select Session
-              </label>
-              <div className="relative">
-                <select
-                  id="session-select"
-                  aria-label="Select Session"
-                  value={selectedSession}
-                  onChange={(e) => onSessionChange(e.target.value)}
-                  className="w-full appearance-none bg-white border border-slate-500 font-medium text-slate-800 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-700 focus:border-sky-700 cursor-pointer shadow-sm transition-all"
-                >
-                  <option value="">-- Choose Curriculum Session --</option>
-                  {SESSION_OPTIONS.map((session) => (
-                    <option key={session} value={session}>{session}</option>
-                  ))}
-                </select>
-                <Layers className="w-4 h-4 text-slate-600 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
-            </div>
-
-            <div className="w-full sm:w-1/3">
-              <label
-                htmlFor="subject-select"
-                className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5"
-              >
-                Subject
-              </label>
-              <div className="relative">
-                <select
-                  id="subject-select"
-                  aria-label="Subject"
-                  value={selectedSubject}
-                  onChange={(e) => onSubjectChange?.(e.target.value as SupportedSubject | '')}
-                  className="w-full appearance-none bg-white border border-slate-500 font-medium text-slate-800 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-700 focus:border-sky-700 cursor-pointer shadow-sm transition-all"
-                >
-                  <option value="">Automatic</option>
-                  {SUPPORTED_SUBJECTS.map((subject) => (
-                    <option key={subject} value={subject}>{subject}</option>
-                  ))}
-                </select>
-                <Layers className="w-4 h-4 text-slate-600 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
-              </div>
-            </div>
-
-            <div className="w-full sm:w-1/3 flex items-end">
-              <button
-                type="button"
-                disabled={!canGenerate}
-                onClick={() => selectedSubject
-                  ? onGenerate(extractedText, selectedSession, selectedSubject)
-                  : onGenerate(extractedText, selectedSession)}
-                className={`w-full py-3 px-6 rounded-xl font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 shadow-md transition-all duration-200 ${
-                  canGenerate
-                    ? 'bg-gradient-to-r from-sky-700 via-sky-700 to-cyan-700 hover:from-sky-800 hover:to-cyan-800 text-white cursor-pointer hover:shadow-lg active:scale-[0.99]'
-                    : 'bg-slate-200 text-slate-600 cursor-not-allowed shadow-none'
-                }`}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Processing...</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 text-sky-200" />
-                    <span>Generate Slides</span>
-                  </>
-                )}
-              </button>
-            </div>
+        </div>
+      </div>
+      <div className="home-step">
+        <StepHeading number={2} done={Boolean(selectedSession)} title="Which session is this deck for?" hint="The deck covers only that session of your lesson plan. You can make the others afterwards." />
+        <div role="radiogroup" aria-label="Select Session" className="mt-3 grid grid-cols-5 gap-1.5 sm:ml-12 sm:gap-2">
+          {SESSION_OPTIONS.map((session, index) => (
+            <label key={session} className="relative min-w-0 cursor-pointer">
+              <input type="radio" name={`lesson-session-${manualId}`} value={session} aria-label={session} checked={selectedSession === session}
+                onChange={() => onSessionChange(session)} className="peer sr-only" />
+              <span aria-hidden="true" className="flex min-h-[60px] min-w-11 flex-col items-center justify-center rounded-xl border border-sky-100 bg-white px-1 py-2 text-sm font-bold text-slate-600 hover:border-sky-500 peer-checked:border-sky-700 peer-checked:bg-sky-700 peer-checked:text-white peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-sky-700">
+                <span>{index + 1}</span><span className="text-[11px] font-normal">Session</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <div className="home-step">
+        <StepHeading number={3} done={hasText && Boolean(selectedSession)} title="Subject and generate" hint="Leave on Automatic and we detect it from your lesson." />
+        <div className="mt-3 sm:ml-12">
+          <label htmlFor="subject-select" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">Subject</label>
+          <div className="relative max-w-sm">
+            <select id="subject-select" aria-label="Subject" value={selectedSubject} onChange={event => onSubjectChange?.(event.target.value as SupportedSubject | '')}
+              className="min-h-11 w-full cursor-pointer appearance-none rounded-xl border border-slate-400 bg-white px-4 py-3 pr-10 text-sm font-medium text-slate-800 focus:border-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-700">
+              <option value="">Automatic</option>
+              {SUPPORTED_SUBJECTS.map(subject => <option key={subject} value={subject}>{subject}</option>)}
+            </select>
+            <Layers className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600" />
           </div>
-
-          {/* Loading Stage Indicator */}
-          {isLoading && loadingStage && (
-            <div className="pt-2">
-              <div role="status" className="p-4 bg-sky-50/90 border border-sky-200 rounded-xl flex items-center gap-3 animate-pulse">
-                <Loader2 className="w-5 h-5 text-sky-700 animate-spin flex-shrink-0" />
-                <p className="text-xs sm:text-sm font-semibold text-sky-900">
-                  {loadingStage}
-                </p>
-              </div>
-            </div>
-          )}
+          <div className="mt-4 flex flex-wrap items-center gap-4">
+            <button type="button" disabled={!canGenerate}
+              onClick={() => selectedSubject ? onGenerate(extractedText, selectedSession, selectedSubject) : onGenerate(extractedText, selectedSession)}
+              className={`home-heading flex min-h-12 w-full items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-bold uppercase tracking-wider sm:w-auto ${canGenerate ? 'bg-gradient-to-r from-sky-700 to-cyan-700 text-white shadow-md hover:from-sky-800 hover:to-cyan-800' : 'cursor-not-allowed bg-slate-200 text-slate-600'}`}>
+              {isLoading ? <><Loader2 className="h-5 w-5 animate-spin motion-reduce:animate-none" /><span>Processing...</span></> : <><Sparkles className="h-4 w-4" /><span>Generate Slides</span></>}
+            </button>
+            <p className="text-xs leading-relaxed text-slate-600">{hint}</p>
+          </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function StepHeading({ number, done, title, hint }: { number: number; done: boolean; title: string; hint: string }) {
+  return (
+    <div className="flex items-start gap-3">
+      <span role="img" aria-label={`Step ${number}${done ? ' complete' : ''}`} className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold ${done ? 'bg-sky-700 text-white' : 'bg-sky-50 text-sky-800'}`}>
+        {done ? <Check aria-hidden="true" className="h-4 w-4" /> : number}
+      </span>
+      <div className="min-w-0"><h2 className="text-base font-bold leading-relaxed text-slate-900">{title}</h2><p className="mt-0.5 text-[13px] leading-relaxed text-slate-600">{hint}</p></div>
+    </div>
   );
 }

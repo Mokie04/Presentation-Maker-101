@@ -4,7 +4,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import axe from 'axe-core';
 import Home from '@/app/page';
-import { selectSlideTitled } from '../helpers/workspace';
+import { chooseSession, selectSlideTitled } from '../helpers/workspace';
 
 const lesson = 'A lesson about plants with several sessions.';
 const presentation = { subject: 'Science', originalWriters: 'Teacher', topic: 'Plants',
@@ -43,7 +43,7 @@ async function open(subject = 'Science') {
   render(<Home />);
   fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: lesson } });
-  fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 1' } });
+  chooseSession('Session 1');
   fireEvent.change(screen.getByLabelText('Subject'), { target: { value: subject } });
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
   await screen.findByRole('listbox', { name: 'Slides' });
@@ -77,11 +77,11 @@ it('captures submitted subject despite changing upload controls during generatio
   render(<Home />);
   fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: lesson } });
-  fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 1' } });
+  chooseSession('Session 1');
   fireEvent.change(screen.getByLabelText('Subject'), { target: { value: 'Science' } });
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
   fireEvent.change(screen.getByLabelText('Subject'), { target: { value: 'Mathematics' } });
-  fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 5' } });
+  chooseSession('Session 5');
   await act(async () => { pending.resolve(Response.json(presentation)); });
   another(); fireEvent.click(within(dialog()).getByRole('button', { name: 'Generate' }));
   await screen.findByRole('tab', { name: 'Session 2' });
@@ -165,7 +165,7 @@ it('resets one session immediately and confirms before clearing two', async () =
   expect(screen.queryByRole('dialog')).toBeNull(); expect(screen.getByLabelText('Select Session')).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: lesson } });
-  fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 1' } });
+  chooseSession('Session 1');
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' })); await screen.findByRole('listbox');
   await addSecond(); fireEvent.click(screen.getByRole('button', { name: 'Start over with a new lesson' }));
   let confirm = screen.getByRole('dialog', { name: 'Start over?' });
@@ -207,7 +207,7 @@ it.each(['before', 'after'])('pins the lesson when a concurrent upload completes
   render(<Home />);
   fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: lesson } });
-  fireEvent.change(screen.getByLabelText('Select Session'), { target: { value: 'Session 1' } });
+  chooseSession('Session 1');
   fireEvent.change(screen.getByLabelText('Subject'), { target: { value: 'Science' } });
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
   fireEvent.click(screen.getByRole('button', { name: 'Hide Manual Paste' }));
