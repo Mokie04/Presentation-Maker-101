@@ -1,3 +1,4 @@
+import type { Decoration } from './decoration';
 import type { CONTENT_LAYOUT, CREDIT_LAYOUT, SLIDE_COUNTER, TITLE_LAYOUT } from '../slide-theme';
 
 // Widen literal values while retaining each layout's numeric/percentage units.
@@ -7,6 +8,7 @@ type LayoutValues<T> = {
 };
 
 export interface SlideTheme {
+  readonly decorations?: readonly Decoration[];
   readonly id: string;
   readonly name: string;
   /** Six-digit sRGB hex values without #. */

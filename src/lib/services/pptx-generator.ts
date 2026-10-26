@@ -1,3 +1,5 @@
+import { addDecorations } from './decoration-pptx';
+import { assertValidDecorations, decorationsForSlide } from '@/lib/themes/decoration';
 import { fitSlide, titlePointSize } from '@/lib/slide-fit';
 import PptxGenJS from 'pptxgenjs';
 import JSZip from 'jszip';
@@ -61,6 +63,7 @@ export function createPresentationPptx(
   const { title: TITLE_LAYOUT, content: contentLayout, credit: CREDIT_LAYOUT, counter: SLIDE_COUNTER } = theme.layout;
   const palette = theme.palette;
   const fontFace = theme.typography.exportFace;
+  assertValidDecorations(theme);
   const pptx = new PptxGenJS();
   if (theme.id !== DEFAULT_THEME_ID) {
     pptx.theme = { headFontFace: fontFace, bodyFontFace: fontFace };
@@ -72,6 +75,7 @@ export function createPresentationPptx(
 
   slides.forEach((slide, idx) => {
     const slideObj = pptx.addSlide();
+    addDecorations(slideObj, decorationsForSlide(theme, slide, idx, 'behind'));
     const fit = fitSlide(slide, idx, presentationData.originalWriters, theme);
 
     if (slide.imageMetadata) {
@@ -157,6 +161,7 @@ export function createPresentationPptx(
         align: 'right',
         fontFace,
       });
+      addDecorations(slideObj, decorationsForSlide(theme, slide, idx, 'front'));
       return;
     }
 
@@ -257,6 +262,7 @@ export function createPresentationPptx(
       align: 'right',
       fontFace,
     });
+    addDecorations(slideObj, decorationsForSlide(theme, slide, idx, 'front'));
   });
 
   return pptx;

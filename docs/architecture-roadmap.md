@@ -15,6 +15,7 @@ Beyond this list, refactoring has diminishing returns; later changes should be d
 
 | Work | Result |
 |---|---|
+| Decoration engine Phase 4a (`docs/theme-style-roadmap.md`) | Shared vector types, filtering, geometry/contrast validation, SVG layers and native PPTX mapper; test-only decorated look, strict package XML/parity tests and exact production compatibility. ADR 0025. |
 | Office-safe looks Phase 3 (`docs/theme-style-roadmap.md`) | Approved Chalkboard/Arial-Arimo and Paper Notebook/Georgia-Gelasio palettes, fonts and metrics; real picker enabled, non-default Office theme/link colours, shared XML goldens and local native/browser render tools. ADR 0024. |
 | Look selection Phase 2 (`docs/theme-style-roadmap.md`) | One lesson-level remembered look, hidden-until-needed header picker, active-theme previews/fit/split and validated optional PPTX themeId; default request and export bytes preserved. ADR 0023. |
 | Theme module Phase 1 (`docs/theme-style-roadmap.md`) | Classic theme registry, optional renderer/fit/export parameters, font metrics registry and computed contrast policy with exact Classic exceptions; no visible or wire change. ADR 0022. |

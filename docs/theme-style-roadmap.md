@@ -2,7 +2,7 @@
 
 Same loop as the earlier roadmaps: the planner writes one prompt per phase, a developer chat executes it on a branch, the planner verifies, and each phase ships through a PR, CI and the Vercel preview before the next prompt. Developers never push or merge on their own.
 
-Status: **Phases 1 and 2 merged (a594175, 00fcddc); Phase 3 implemented 2026-10-26, release pending planner review.** Phase 0 investigation and product decisions are accepted. See [ADR 0022](adr/0022-slide-themes.md) for the module, compatibility strategy and Classic contrast exceptions.
+Status: **Phases 1–3 merged (a594175, 00fcddc, 7d58689); Phase 4a implemented 2026-10-26, release pending planner review.** Phase 0 investigation and product decisions are accepted. See [ADR 0022](adr/0022-slide-themes.md) for the module, compatibility strategy and Classic contrast exceptions.
 
 ## What the product owner asked for
 
@@ -127,9 +127,53 @@ This document. Next: a clickable mock of the 4 or 5 looks on the real slide layo
 - Per-theme XML golden snapshots, contrast and fit tests, credit and counter colours, placeholder and image-card tokens.
 - Render harness: LibreOffice headless PPTX to PNG compared against the browser render per look; documented tolerance; spot check in PowerPoint.
 
-### Phase 4: style treatments
-- Decoration drawn by both renderers: rounded or layered image frames, title banners, background treatments, title-slide variants, soft shadows (paper-cut).
-- Parity tests per treatment; texture images only if tiny and inside the export budget; vector first.
+### Phase 4: style treatments (4a implemented; 4b/4c planned; approved mock)
+
+#### What PowerPoint can draw (investigated, not assumed)
+
+Installed `pptxgenjs` is 4.0.1. A throwaway prototype of every proposed treatment was built with it and rendered through LibreOffice (PowerPoint rendering is still unproven, see ADR 0024).
+
+| Capability | pptxgenjs 4.0.1 | Result in the prototype |
+|---|---|---|
+| Rectangle, rounded rectangle (`rectRadius`), ellipse, lines | yes | renders |
+| Thick outline with no fill (board frame), dashed outline (`dashType`) | yes | renders |
+| Rotation (`rotate`), flips | yes | renders |
+| Fill transparency (tape, highlights) | yes | renders |
+| Outer shadow with blur, offset, angle, colour, opacity | yes | renders (soft paper shadow, hard offset shadow) |
+| Custom curved path (`CUSTOM_GEOMETRY` with quadratic, cubic and arc points) | yes | renders (chalk squiggle, waves) |
+| About 180 preset shapes (cloud, wave, doubleWave, ellipseRibbon, bevel, donut, and so on) | yes | renders |
+| Image rounding and rotation | yes | available |
+| Gradient fills, pattern fills, glow, text outline, texture fills | **no** | not available |
+| **Inner shadow** | declared, **broken** | emits `<a:innerShdw> ... </a:outerShdw>`, a mismatched tag. The slide XML is not well-formed and LibreOffice stopped drawing after it. PowerPoint would likely report the file as damaged. |
+
+Rules that follow:
+1. **Never use `shadow.type: 'inner'`.** Fake a recessed look with a darker ring or a second shape.
+2. Add a test that every part of every exported PPTX, for every look, is well-formed XML, so this class of bug cannot ship.
+3. Native shapes only (no texture images): the file stays small and inside the 3.5 MB export budget. No gradients; use flat fills and shadows.
+4. Text boxes never move, so fit, split and editing are untouched. Decorations stay in margins or behind text. Faint decoration behind text (ruled lines) must be faint enough to keep the text at AA, checked by a test that compares each behind-text decoration colour to the text colours.
+5. Anything near the credit line (y 7.15 in) or the slide counter (y 6.85 in) is off limits. A chalk ledge at the bottom collided with the credit line in the prototype, so it is dropped. Layered waves along the bottom edge would collide the same way, so they are deferred (they need per-look credit and counter positions).
+
+#### Architecture
+
+One shared **decoration list** per look: primitives (`rect`, `roundRect`, `ellipse`, `line`, `path`) in slide inches and points, with fill, transparency, line, dash, rotation, shadow, a `layer` (`behind` text or `front`), and `appliesTo` (title slide, content slide, slide with a picture). The browser draws the list as an SVG overlay in `SlideView`; the exporter draws the same list as native shapes. One source of truth means the preview and PowerPoint cannot drift; a parity test checks primitive count, geometry and z-order in both outputs for every look.
+
+Sayuna Classic has an empty decoration list, so its bytes cannot change.
+
+#### Treatments proposed (all verified drawable)
+
+| Look | Treatments |
+|---|---|
+| Chalkboard | wooden board frame (thick outline plus a dark inner line); chalk squiggle under the title (custom path); dashed chalk outline around the picture |
+| Paper Notebook | ruled lines (faint, behind text); red margin line; three binder holes; the picture in a taped polaroid (rotated white frame, soft shadow, translucent tape) or in a stack of layered paper sheets (two or three rotated sheets with soft shadows) |
+| Sayuna Classic | none |
+
+Frame variant (polaroid or layered paper) is a per-look setting chosen by the product owner, not a teacher control in v1.
+
+#### Sub-phases (one prompt and one PR each)
+- **4a: decoration engine, no visible change — DONE locally, pending review.** Primitive types, SVG renderer in `SlideView`, native-shape mapper in the exporter, empty lists for all looks, the well-formed XML test over every look, the parity test harness, the contrast rule for behind-text decoration. Classic and the two new looks stay byte-identical.
+- **4b: Chalkboard treatments.** Decoration list, new XML goldens, render harness sheets, preview and export parity, preview smoke.
+- **4c: Paper Notebook treatments.** Ruled paper, margin, holes, and the chosen picture frame, with the picture rotated to match the frame (image `rotate`), goldens, render sheets, smoke.
+- **4d (optional): more looks.** For example Paper Cut (layered waves, sun and clouds) and Bright Classroom. Needs per-look credit and counter positions. Only after 4a to 4c ship.
 
 ### Phase 5: polish and decisions that need data
 - Pair image style hints with looks only if it measurably helps (Pexels query changes are risky).
@@ -175,3 +219,5 @@ The proposed Chalkboard and Paper Notebook palettes pass every text pair (lowest
 ## Shipping rule
 
 Same as the other roadmaps: green CI, preview smoke test, PR merge after approval.
+
+Phase 4a evidence: [ADR 0025](adr/0025-decoration-engine.md) and [verification](theme-phase4a-verification.md). All production decoration lists remain absent; nine exports, 438 ZIP entries, 15 preview cases and export request bodies match main exactly.

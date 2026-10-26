@@ -11,6 +11,8 @@ import {
 } from '@/lib/slide-theme';
 import { DEFAULT_THEME, DEFAULT_THEME_ID, type SlideTheme } from '@/lib/themes';
 import { fitSlide, titleSlidePoints, titlePointSize } from '@/lib/slide-fit';
+import { DecorationLayer } from './DecorationLayer';
+import { assertValidDecorations, decorationsForSlide } from '@/lib/themes/decoration';
 import { FormattedFormula } from './FormattedFormula';
 
 export interface SlideViewProps {
@@ -53,6 +55,9 @@ function textStyle(box: SlideBox & { fontSize?: number }): CSSProperties {
 /** A passive slide preview. Phase 1 deliberately leaves it unwired from the workspace. */
 export function SlideView({ slide, index, total, image, originalWriters, variant = 'full', renderTitle, renderPoint, theme = DEFAULT_THEME }: SlideViewProps) {
   const { title: TITLE_LAYOUT, content: CONTENT_LAYOUT, credit: CREDIT_LAYOUT, counter: SLIDE_COUNTER } = theme.layout;
+  if (theme.decorations?.length) assertValidDecorations(theme);
+  const behind = decorationsForSlide(theme, slide, index, 'behind');
+  const front = decorationsForSlide(theme, slide, index, 'front');
   const palette = theme.palette;
   const titleLayout = slideLayoutFor(index) === 'title';
   const layout = titleLayout ? TITLE_LAYOUT : CONTENT_LAYOUT;
@@ -86,6 +91,7 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
         ...(variant === 'thumbnail' && { pointerEvents: 'none' }),
       }}
     >
+      {behind.length > 0 && <DecorationLayer decorations={behind} layer="behind" />}
       <p style={{ ...textStyle(layout.part), color: `#${palette.secondary}`, fontWeight: 700 }}>
         {(slide.part || (titleLayout ? 'TITLE PAGE' : '')).toUpperCase()}
       </p>
@@ -144,6 +150,7 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
       <p style={{ ...textStyle(SLIDE_COUNTER), color: `#${palette.subtle}`, textAlign: 'right' }}>
         Slide {index + 1} of {total}
       </p>
+      {front.length > 0 && <DecorationLayer decorations={front} layer="front" />}
     </div>
   );
 }
