@@ -7,7 +7,7 @@ import { POPPINS_METRICS } from '@/lib/slide-fit-metrics';
 describe('theme registry', () => {
   it('resolves the default and validates exact IDs', () => {
     expect(DEFAULT_THEME_ID).toBe('sayuna-classic');
-    expect(THEME_IDS).toEqual(['sayuna-classic']);
+    expect(THEME_IDS).toEqual(['sayuna-classic', 'chalkboard', 'paper-notebook']);
     expect(getTheme()).toBe(DEFAULT_THEME);
     expect(getTheme('sayuna-classic')).toBe(DEFAULT_THEME);
     expect(getTheme('unknown')).toBe(DEFAULT_THEME);

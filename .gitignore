@@ -38,3 +38,6 @@ next-env.d.ts
 
 # claude code local config
 /.claude/
+
+# Local, provider-free slide render evidence
+/output/theme-render/
