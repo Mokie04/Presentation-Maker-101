@@ -62,6 +62,8 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
   const titleLayout = slideLayoutFor(index) === 'title';
   const layout = titleLayout ? TITLE_LAYOUT : CONTENT_LAYOUT;
   const visual = !titleLayout && hasVisual(slide);
+  const rotation = visual ? theme.shape.pictureRotation ?? 0 : 0;
+  const pictureTransform: CSSProperties = rotation ? { transform: `rotate(${rotation}deg)`, transformOrigin: '50% 50%' } : {};
   const usableImage = isUsableImage(image);
   const showImage = usableImage && (titleLayout ? Boolean(slide.imageMetadata) : visual);
   const credit = slide.imageMetadata ? describeImageCredit(slide.imageMetadata) : undefined;
@@ -131,16 +133,16 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
       {visual && <div aria-hidden="true" style={{
         ...boxStyle(CONTENT_LAYOUT.visualCard), backgroundColor: `#${palette.cardBackground}`,
         border: `${typeSize(theme.shape.visualBorderWidth)} solid #${palette.cardBorder}`,
-        borderRadius: theme.shape.visualCornerRadius,
+        borderRadius: theme.shape.visualCornerRadius, ...pictureTransform,
       }} />}
       {showImage ? (
         // Inline base64 images mirror the SlideImageControls image contract.
         // eslint-disable-next-line @next/next/no-img-element
         <img src={toDataUrl(image!)} alt={slide.visualDescription || slide.title}
           className={slide.imageMetadata?.source === 'commons' ? 'object-contain' : 'object-cover'}
-          style={boxStyle(imageBox)} />
+          style={{ ...boxStyle(imageBox), ...pictureTransform }} />
       ) : visual && (
-        <p style={{ ...textStyle(CONTENT_LAYOUT.placeholder), color: `#${palette.primary}`, fontStyle: 'italic', textAlign: 'center' }}>
+        <p style={{ ...textStyle(CONTENT_LAYOUT.placeholder), ...pictureTransform, color: `#${palette.primary}`, fontStyle: 'italic', textAlign: 'center' }}>
           {'[PHILIPPINES CLASSROOM VISUAL DESIGN]\n\n' + slide.visualDescription}
         </p>
       )}

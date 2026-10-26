@@ -30,6 +30,8 @@ export interface SlideTheme {
     readonly metricsId: string;
   };
   readonly shape: {
+    /** Clockwise degrees for content pictures/cards only; absent or zero emits no rotation. */
+    readonly pictureRotation?: number;
     /** Percentage of the visual card's shorter side. */
     readonly visualCornerRadius: `${number}%`;
     readonly visualBorderWidth: number;

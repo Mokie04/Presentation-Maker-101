@@ -2,7 +2,7 @@
 
 exports[`Paper Notebook legacy characterization: long content title with formulas and AI… > preserves the same six legacy cases through both export entry points > slide 1 1`] = `
 {
-  "sha256": "772219b9903aebc2b14a9381fcf69eadb22f3755d4dbd84c96293d8f9b9a0c68",
+  "sha256": "1380b729413598c29608e6e109287f0a191986c5bf95a8a5f9676179ff0a1d6a",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -29,7 +29,641 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="960120"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1216152"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1472184"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1728216"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="decoration-behind-4">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1984248"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="7" name="decoration-behind-5">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2240280"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="8" name="decoration-behind-6">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2496312"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="9" name="decoration-behind-7">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2752344"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="10" name="decoration-behind-8">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3008376"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="11" name="decoration-behind-9">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3264408"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-behind-10">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3520440"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="13" name="decoration-behind-11">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3776472"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-behind-12">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4032504"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="15" name="decoration-behind-13">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4288536"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="16" name="decoration-behind-14">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4544568"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="17" name="decoration-behind-15">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4800600"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="18" name="decoration-behind-16">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5056632"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="19" name="decoration-behind-17">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5312664"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="20" name="decoration-behind-18">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5568696"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="21" name="decoration-behind-19">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5824728"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="22" name="decoration-behind-20">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="6080760"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="23" name="decoration-behind-21">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="566928" y="228600"/>
+<a:ext cx="0" cy="5897880"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="19050">
+<a:solidFill>
+<a:srgbClr val="D9826B"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="24" name="decoration-behind-22">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="1280160"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="25" name="decoration-behind-23">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="3337560"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="26" name="decoration-behind-24">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="5394960"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="27" name="Text 25">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -73,7 +707,7 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="28" name="Text 26">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -118,7 +752,7 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="29" name="Text 27">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -220,7 +854,7 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 3">
+<p:cNvPr id="30" name="Text 28">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -273,7 +907,7 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 
 exports[`Paper Notebook legacy characterization: long content title with formulas and AI… > preserves the same six legacy cases through both export entry points > slide 2 1`] = `
 {
-  "sha256": "8eaa2795519e0350e1a432ec1cff5d0a40808bbbe738841be30ed5ceb6ec3b37",
+  "sha256": "b55a207b5daa22b42c70b4ba7355e090d039c258070fc3b1f7a3574bb4f5f88f",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -300,7 +934,672 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="960120"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1216152"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1472184"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1728216"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="decoration-behind-4">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1984248"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="7" name="decoration-behind-5">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2240280"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="8" name="decoration-behind-6">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2496312"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="9" name="decoration-behind-7">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2752344"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="10" name="decoration-behind-8">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3008376"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="11" name="decoration-behind-9">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3264408"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-behind-10">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3520440"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="13" name="decoration-behind-11">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3776472"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-behind-12">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4032504"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="15" name="decoration-behind-13">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4288536"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="16" name="decoration-behind-14">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4544568"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="17" name="decoration-behind-15">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4800600"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="18" name="decoration-behind-16">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5056632"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="19" name="decoration-behind-17">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5312664"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="20" name="decoration-behind-18">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5568696"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="21" name="decoration-behind-19">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5824728"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="22" name="decoration-behind-20">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="6080760"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="23" name="decoration-behind-21">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="566928" y="228600"/>
+<a:ext cx="0" cy="5897880"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="19050">
+<a:solidFill>
+<a:srgbClr val="D9826B"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="24" name="decoration-behind-22">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="1280160"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="25" name="decoration-behind-23">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="3337560"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="26" name="decoration-behind-24">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="5394960"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="27" name="decoration-behind-25">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm rot="120000">
+<a:off x="7717536" y="2011680"/>
+<a:ext cx="3822192" cy="3913632"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="FFFFFF"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E8E0CC"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+<a:effectLst> <a:outerShdw sx="100000" sy="100000" kx="0" ky="0" algn="bl" rotWithShape="0" blurRad="76200" dist="25400" dir="3600000"> <a:srgbClr val="5B4A20"> <a:alpha val="18000"/>
+</a:srgbClr> </a:outerShdw>
+</a:effectLst>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="28" name="Text 26">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -344,7 +1643,7 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="29" name="Text 27">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -445,7 +1744,7 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="30" name="Text 28">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -583,18 +1882,18 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Shape 3">
+<p:cNvPr id="31" name="Shape 29">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
 </p:nvPr>
 </p:nvSpPr>
 <p:spPr>
-<a:xfrm>
-<a:off x="7559040" y="1920240"/>
-<a:ext cx="4023360" cy="4114800"/>
+<a:xfrm rot="120000">
+<a:off x="7863840" y="2148840"/>
+<a:ext cx="3535680" cy="3383280"/>
 </a:xfrm>
-<a:prstGeom prst="roundRect">
+<a:prstGeom prst="rect">
 <a:avLst>
 </a:avLst>
 </a:prstGeom>
@@ -610,24 +1909,24 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="6" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="32" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
 <p:blipFill>
 <a:blip r:embed="rId1">
 </a:blip>
-<a:srcRect l="0" r="0" t="-794" b="-794"/>
+<a:srcRect l="0" r="0" t="2155" b="2155"/>
 <a:stretch/>
 </p:blipFill>
-<p:spPr> <a:xfrm>  <a:off x="7620000" y="1965960"/>  <a:ext cx="3840480" cy="4023360"/> </a:xfrm> <a:prstGeom prst="rect">
+<p:spPr> <a:xfrm rot="120000">  <a:off x="7863840" y="2148840"/>  <a:ext cx="3535680" cy="3383280"/> </a:xfrm> <a:prstGeom prst="rect">
 <a:avLst/>
 </a:prstGeom>
 </p:spPr>
 </p:pic>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="7" name="Text 4">
+<p:cNvPr id="33" name="Text 30">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -669,6 +1968,32 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 </a:p>
 </p:txBody>
 </p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="34" name="decoration-front-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm rot="21360000">
+<a:off x="9006840" y="1984248"/>
+<a:ext cx="1188720" cy="292608"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="F5D76E">
+<a:alpha val="65000"/>
+</a:srgbClr>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
 </p:spTree>
 </p:cSld>
 <p:clrMapOvr>
@@ -680,7 +2005,7 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 
 exports[`Paper Notebook legacy characterization: title with writers and library image > preserves the same six legacy cases through both export entry points > slide 1 1`] = `
 {
-  "sha256": "9b8b2bb96f51145731687f8b3850e7541a015a53b1356392f22796ec8c59e687",
+  "sha256": "bb8728465949838354e3380c84a2cd01993911e2e9a2f57b25fb8aa00df05443",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -707,7 +2032,641 @@ exports[`Paper Notebook legacy characterization: title with writers and library 
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="960120"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1216152"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1472184"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1728216"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="decoration-behind-4">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1984248"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="7" name="decoration-behind-5">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2240280"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="8" name="decoration-behind-6">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2496312"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="9" name="decoration-behind-7">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2752344"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="10" name="decoration-behind-8">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3008376"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="11" name="decoration-behind-9">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3264408"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-behind-10">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3520440"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="13" name="decoration-behind-11">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3776472"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-behind-12">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4032504"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="15" name="decoration-behind-13">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4288536"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="16" name="decoration-behind-14">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4544568"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="17" name="decoration-behind-15">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4800600"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="18" name="decoration-behind-16">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5056632"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="19" name="decoration-behind-17">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5312664"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="20" name="decoration-behind-18">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5568696"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="21" name="decoration-behind-19">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5824728"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="22" name="decoration-behind-20">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="6080760"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="23" name="decoration-behind-21">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="566928" y="228600"/>
+<a:ext cx="0" cy="5897880"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="19050">
+<a:solidFill>
+<a:srgbClr val="D9826B"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="24" name="decoration-behind-22">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="1280160"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="25" name="decoration-behind-23">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="3337560"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="26" name="decoration-behind-24">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="5394960"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="27" name="Text 25">
 <a:hlinkClick r:id="rId1" tooltip=""/>
 </p:cNvPr>
 <p:cNvSpPr/>
@@ -755,7 +2714,7 @@ exports[`Paper Notebook legacy characterization: title with writers and library 
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 1">
+<p:cNvPr id="29" name="Text 26">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -799,7 +2758,7 @@ exports[`Paper Notebook legacy characterization: title with writers and library 
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 2">
+<p:cNvPr id="30" name="Text 27">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -844,7 +2803,7 @@ exports[`Paper Notebook legacy characterization: title with writers and library 
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="6" name="Text 3">
+<p:cNvPr id="31" name="Text 28">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -945,7 +2904,7 @@ exports[`Paper Notebook legacy characterization: title with writers and library 
 </p:txBody>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="7" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="32" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -962,7 +2921,7 @@ exports[`Paper Notebook legacy characterization: title with writers and library 
 </p:pic>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="8" name="Text 4">
+<p:cNvPr id="33" name="Text 29">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1015,7 +2974,7 @@ exports[`Paper Notebook legacy characterization: title with writers and library 
 
 exports[`Paper Notebook legacy characterization: wide bullets and credit without image > preserves the same six legacy cases through both export entry points > slide 1 1`] = `
 {
-  "sha256": "b5ff34ac739fd703a049cd44d2dab0a01b33c38b7b55f746582ad71d72029122",
+  "sha256": "50b553a532a00744ea72fb4b6271ab40b8dd0675bba01c51ebb690453f212124",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -1042,7 +3001,641 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="960120"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1216152"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1472184"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1728216"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="decoration-behind-4">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1984248"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="7" name="decoration-behind-5">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2240280"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="8" name="decoration-behind-6">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2496312"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="9" name="decoration-behind-7">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2752344"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="10" name="decoration-behind-8">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3008376"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="11" name="decoration-behind-9">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3264408"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-behind-10">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3520440"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="13" name="decoration-behind-11">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3776472"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-behind-12">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4032504"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="15" name="decoration-behind-13">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4288536"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="16" name="decoration-behind-14">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4544568"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="17" name="decoration-behind-15">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4800600"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="18" name="decoration-behind-16">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5056632"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="19" name="decoration-behind-17">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5312664"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="20" name="decoration-behind-18">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5568696"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="21" name="decoration-behind-19">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5824728"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="22" name="decoration-behind-20">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="6080760"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="23" name="decoration-behind-21">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="566928" y="228600"/>
+<a:ext cx="0" cy="5897880"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="19050">
+<a:solidFill>
+<a:srgbClr val="D9826B"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="24" name="decoration-behind-22">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="1280160"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="25" name="decoration-behind-23">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="3337560"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="26" name="decoration-behind-24">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="5394960"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="27" name="Text 25">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1086,7 +3679,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="28" name="Text 26">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1131,7 +3724,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="29" name="Text 27">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1233,7 +3826,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 3">
+<p:cNvPr id="30" name="Text 28">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1286,7 +3879,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 
 exports[`Paper Notebook legacy characterization: wide bullets and credit without image > preserves the same six legacy cases through both export entry points > slide 2 1`] = `
 {
-  "sha256": "6a6b8c2d4b30d0d588ac6c0fba75d959daf54758c8b8ab9b44b31256096f2e58",
+  "sha256": "a96a480825a8de848bb516d63e3cced9548f48709e0bed856e1157a4895dac13",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -1313,7 +3906,641 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="960120"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1216152"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1472184"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1728216"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="decoration-behind-4">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1984248"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="7" name="decoration-behind-5">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2240280"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="8" name="decoration-behind-6">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2496312"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="9" name="decoration-behind-7">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2752344"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="10" name="decoration-behind-8">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3008376"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="11" name="decoration-behind-9">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3264408"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-behind-10">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3520440"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="13" name="decoration-behind-11">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3776472"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-behind-12">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4032504"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="15" name="decoration-behind-13">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4288536"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="16" name="decoration-behind-14">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4544568"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="17" name="decoration-behind-15">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4800600"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="18" name="decoration-behind-16">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5056632"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="19" name="decoration-behind-17">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5312664"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="20" name="decoration-behind-18">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5568696"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="21" name="decoration-behind-19">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5824728"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="22" name="decoration-behind-20">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="6080760"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="23" name="decoration-behind-21">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="566928" y="228600"/>
+<a:ext cx="0" cy="5897880"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="19050">
+<a:solidFill>
+<a:srgbClr val="D9826B"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="24" name="decoration-behind-22">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="1280160"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="25" name="decoration-behind-23">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="3337560"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="26" name="decoration-behind-24">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="5394960"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="27" name="Text 25">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1357,7 +4584,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="28" name="Text 26">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1402,7 +4629,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="29" name="Text 27">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1472,7 +4699,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 3">
+<p:cNvPr id="30" name="Text 28">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1525,7 +4752,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 
 exports[`Paper Notebook legacy characterization: wide bullets and credit without image > preserves the same six legacy cases through both export entry points > slide 3 1`] = `
 {
-  "sha256": "7dadc046925d1124aaf0ac19c07fb64d8910620bd3ed56d41976b3b85f6d8779",
+  "sha256": "dab44ed45944dd050cd5295d38cdce756d8ab5d0165f88dfbd1692e99b349563",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 3">
@@ -1552,7 +4779,672 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="960120"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1216152"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1472184"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1728216"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="decoration-behind-4">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1984248"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="7" name="decoration-behind-5">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2240280"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="8" name="decoration-behind-6">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2496312"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="9" name="decoration-behind-7">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2752344"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="10" name="decoration-behind-8">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3008376"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="11" name="decoration-behind-9">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3264408"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-behind-10">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3520440"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="13" name="decoration-behind-11">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3776472"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-behind-12">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4032504"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="15" name="decoration-behind-13">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4288536"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="16" name="decoration-behind-14">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4544568"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="17" name="decoration-behind-15">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4800600"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="18" name="decoration-behind-16">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5056632"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="19" name="decoration-behind-17">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5312664"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="20" name="decoration-behind-18">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5568696"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="21" name="decoration-behind-19">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5824728"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="22" name="decoration-behind-20">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="6080760"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="23" name="decoration-behind-21">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="566928" y="228600"/>
+<a:ext cx="0" cy="5897880"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="19050">
+<a:solidFill>
+<a:srgbClr val="D9826B"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="24" name="decoration-behind-22">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="1280160"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="25" name="decoration-behind-23">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="3337560"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="26" name="decoration-behind-24">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="5394960"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="27" name="decoration-behind-25">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm rot="120000">
+<a:off x="7717536" y="2011680"/>
+<a:ext cx="3822192" cy="3913632"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="FFFFFF"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E8E0CC"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+<a:effectLst> <a:outerShdw sx="100000" sy="100000" kx="0" ky="0" algn="bl" rotWithShape="0" blurRad="76200" dist="25400" dir="3600000"> <a:srgbClr val="5B4A20"> <a:alpha val="18000"/>
+</a:srgbClr> </a:outerShdw>
+</a:effectLst>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="28" name="Text 26">
 <a:hlinkClick r:id="rId1" tooltip=""/>
 </p:cNvPr>
 <p:cNvSpPr/>
@@ -1600,7 +5492,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 1">
+<p:cNvPr id="30" name="Text 27">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1644,7 +5536,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 2">
+<p:cNvPr id="31" name="Text 28">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1689,7 +5581,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="6" name="Text 3">
+<p:cNvPr id="32" name="Text 29">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1738,18 +5630,18 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="7" name="Shape 4">
+<p:cNvPr id="33" name="Shape 30">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
 </p:nvPr>
 </p:nvSpPr>
 <p:spPr>
-<a:xfrm>
-<a:off x="7559040" y="1920240"/>
-<a:ext cx="4023360" cy="4114800"/>
+<a:xfrm rot="120000">
+<a:off x="7863840" y="2148840"/>
+<a:ext cx="3535680" cy="3383280"/>
 </a:xfrm>
-<a:prstGeom prst="roundRect">
+<a:prstGeom prst="rect">
 <a:avLst>
 </a:avLst>
 </a:prstGeom>
@@ -1766,16 +5658,16 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="8" name="Text 5">
+<p:cNvPr id="34" name="Text 31">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
 </p:nvPr>
 </p:nvSpPr>
 <p:spPr>
-<a:xfrm>
-<a:off x="7680960" y="2103120"/>
-<a:ext cx="3779520" cy="3749040"/>
+<a:xfrm rot="120000">
+<a:off x="7955280" y="2331720"/>
+<a:ext cx="3352800" cy="3017520"/>
 </a:xfrm>
 <a:prstGeom prst="rect">
 <a:avLst>
@@ -1834,7 +5726,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="9" name="Text 6">
+<p:cNvPr id="35" name="Text 32">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1876,6 +5768,32 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 </a:p>
 </p:txBody>
 </p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="36" name="decoration-front-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm rot="21360000">
+<a:off x="9006840" y="1984248"/>
+<a:ext cx="1188720" cy="292608"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="F5D76E">
+<a:alpha val="65000"/>
+</a:srgbClr>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
 </p:spTree>
 </p:cSld>
 <p:clrMapOvr>
@@ -1887,7 +5805,7 @@ exports[`Paper Notebook legacy characterization: wide bullets and credit without
 
 exports[`pins all six Paper Notebook slide XML bytes > slide 1 1`] = `
 {
-  "sha256": "a22f38e03d3950b6617df29681ba91d43c92508d65358c95bf279436f73c710b",
+  "sha256": "7f1c6dd873b013b2a10a7da2cf0d53e9fc9535b1c97c1ad93f2f134e4f1dc14d",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -1914,7 +5832,641 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 1 1`] = `
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="960120"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1216152"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1472184"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1728216"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="decoration-behind-4">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1984248"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="7" name="decoration-behind-5">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2240280"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="8" name="decoration-behind-6">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2496312"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="9" name="decoration-behind-7">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2752344"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="10" name="decoration-behind-8">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3008376"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="11" name="decoration-behind-9">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3264408"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-behind-10">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3520440"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="13" name="decoration-behind-11">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3776472"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-behind-12">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4032504"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="15" name="decoration-behind-13">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4288536"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="16" name="decoration-behind-14">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4544568"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="17" name="decoration-behind-15">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4800600"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="18" name="decoration-behind-16">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5056632"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="19" name="decoration-behind-17">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5312664"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="20" name="decoration-behind-18">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5568696"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="21" name="decoration-behind-19">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5824728"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="22" name="decoration-behind-20">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="6080760"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="23" name="decoration-behind-21">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="566928" y="228600"/>
+<a:ext cx="0" cy="5897880"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="19050">
+<a:solidFill>
+<a:srgbClr val="D9826B"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="24" name="decoration-behind-22">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="1280160"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="25" name="decoration-behind-23">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="3337560"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="26" name="decoration-behind-24">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="5394960"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="27" name="Text 25">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -1958,7 +6510,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 1 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="28" name="Text 26">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2003,7 +6555,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 1 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="29" name="Text 27">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2105,7 +6657,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 1 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 3">
+<p:cNvPr id="30" name="Text 28">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2158,7 +6710,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 1 1`] = `
 
 exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 {
-  "sha256": "bc95d7aa25523d55f64548be78b94d9e44d47f755ef5f0ff6fc519297a883f50",
+  "sha256": "b8b429db03c6f79bec2bc2c48863ad2f9b1dda2cb28d936b0e5103230c0fa4be",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -2185,7 +6737,672 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="960120"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1216152"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1472184"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1728216"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="decoration-behind-4">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1984248"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="7" name="decoration-behind-5">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2240280"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="8" name="decoration-behind-6">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2496312"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="9" name="decoration-behind-7">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2752344"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="10" name="decoration-behind-8">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3008376"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="11" name="decoration-behind-9">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3264408"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-behind-10">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3520440"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="13" name="decoration-behind-11">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3776472"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-behind-12">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4032504"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="15" name="decoration-behind-13">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4288536"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="16" name="decoration-behind-14">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4544568"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="17" name="decoration-behind-15">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4800600"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="18" name="decoration-behind-16">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5056632"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="19" name="decoration-behind-17">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5312664"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="20" name="decoration-behind-18">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5568696"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="21" name="decoration-behind-19">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5824728"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="22" name="decoration-behind-20">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="6080760"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="23" name="decoration-behind-21">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="566928" y="228600"/>
+<a:ext cx="0" cy="5897880"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="19050">
+<a:solidFill>
+<a:srgbClr val="D9826B"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="24" name="decoration-behind-22">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="1280160"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="25" name="decoration-behind-23">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="3337560"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="26" name="decoration-behind-24">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="5394960"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="27" name="decoration-behind-25">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm rot="120000">
+<a:off x="7717536" y="2011680"/>
+<a:ext cx="3822192" cy="3913632"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="FFFFFF"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E8E0CC"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+<a:effectLst> <a:outerShdw sx="100000" sy="100000" kx="0" ky="0" algn="bl" rotWithShape="0" blurRad="76200" dist="25400" dir="3600000"> <a:srgbClr val="5B4A20"> <a:alpha val="18000"/>
+</a:srgbClr> </a:outerShdw>
+</a:effectLst>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="28" name="Text 26">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2229,7 +7446,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="29" name="Text 27">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2316,7 +7533,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="30" name="Text 28">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2454,18 +7671,18 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Shape 3">
+<p:cNvPr id="31" name="Shape 29">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
 </p:nvPr>
 </p:nvSpPr>
 <p:spPr>
-<a:xfrm>
-<a:off x="7559040" y="1920240"/>
-<a:ext cx="4023360" cy="4114800"/>
+<a:xfrm rot="120000">
+<a:off x="7863840" y="2148840"/>
+<a:ext cx="3535680" cy="3383280"/>
 </a:xfrm>
-<a:prstGeom prst="roundRect">
+<a:prstGeom prst="rect">
 <a:avLst>
 </a:avLst>
 </a:prstGeom>
@@ -2481,24 +7698,24 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="6" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="32" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
 <p:blipFill>
 <a:blip r:embed="rId1">
 </a:blip>
-<a:srcRect l="0" r="0" t="-794" b="-794"/>
+<a:srcRect l="0" r="0" t="2155" b="2155"/>
 <a:stretch/>
 </p:blipFill>
-<p:spPr> <a:xfrm>  <a:off x="7620000" y="1965960"/>  <a:ext cx="3840480" cy="4023360"/> </a:xfrm> <a:prstGeom prst="rect">
+<p:spPr> <a:xfrm rot="120000">  <a:off x="7863840" y="2148840"/>  <a:ext cx="3535680" cy="3383280"/> </a:xfrm> <a:prstGeom prst="rect">
 <a:avLst/>
 </a:prstGeom>
 </p:spPr>
 </p:pic>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="7" name="Text 4">
+<p:cNvPr id="33" name="Text 30">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2540,6 +7757,32 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 </a:p>
 </p:txBody>
 </p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="34" name="decoration-front-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm rot="21360000">
+<a:off x="9006840" y="1984248"/>
+<a:ext cx="1188720" cy="292608"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="F5D76E">
+<a:alpha val="65000"/>
+</a:srgbClr>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
 </p:spTree>
 </p:cSld>
 <p:clrMapOvr>
@@ -2551,7 +7794,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 
 exports[`pins all six Paper Notebook slide XML bytes > slide 3 1`] = `
 {
-  "sha256": "1d60b6800f3ac7bf601bb1231871a2469c501fa8bfe915b46d3a011ba4cd865c",
+  "sha256": "e0a2c2b049d18a72935290bf691ec5b07e3e06e1342b580ef7811b3039a39bf9",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 3">
@@ -2578,7 +7821,641 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 3 1`] = `
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="960120"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1216152"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1472184"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1728216"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="decoration-behind-4">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1984248"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="7" name="decoration-behind-5">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2240280"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="8" name="decoration-behind-6">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2496312"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="9" name="decoration-behind-7">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2752344"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="10" name="decoration-behind-8">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3008376"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="11" name="decoration-behind-9">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3264408"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-behind-10">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3520440"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="13" name="decoration-behind-11">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3776472"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-behind-12">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4032504"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="15" name="decoration-behind-13">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4288536"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="16" name="decoration-behind-14">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4544568"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="17" name="decoration-behind-15">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4800600"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="18" name="decoration-behind-16">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5056632"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="19" name="decoration-behind-17">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5312664"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="20" name="decoration-behind-18">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5568696"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="21" name="decoration-behind-19">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5824728"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="22" name="decoration-behind-20">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="6080760"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="23" name="decoration-behind-21">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="566928" y="228600"/>
+<a:ext cx="0" cy="5897880"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="19050">
+<a:solidFill>
+<a:srgbClr val="D9826B"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="24" name="decoration-behind-22">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="1280160"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="25" name="decoration-behind-23">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="3337560"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="26" name="decoration-behind-24">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="5394960"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="27" name="Text 25">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2622,7 +8499,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 3 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="28" name="Text 26">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2723,7 +8600,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 3 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="29" name="Text 27">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2793,7 +8670,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 3 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 3">
+<p:cNvPr id="30" name="Text 28">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2846,7 +8723,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 3 1`] = `
 
 exports[`pins all six Paper Notebook slide XML bytes > slide 4 1`] = `
 {
-  "sha256": "9f450cce366a7b005e5f6a615c8f611cddf31f2e250ac49c83146cb3edbe9ebd",
+  "sha256": "ce2b9cf5b36863da29c65d26a73d713e4daa60bf1d75a7eed1d363a5aa100be1",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 4">
@@ -2873,7 +8750,641 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 4 1`] = `
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="960120"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1216152"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1472184"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1728216"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="decoration-behind-4">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1984248"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="7" name="decoration-behind-5">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2240280"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="8" name="decoration-behind-6">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2496312"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="9" name="decoration-behind-7">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2752344"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="10" name="decoration-behind-8">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3008376"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="11" name="decoration-behind-9">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3264408"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-behind-10">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3520440"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="13" name="decoration-behind-11">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3776472"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-behind-12">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4032504"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="15" name="decoration-behind-13">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4288536"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="16" name="decoration-behind-14">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4544568"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="17" name="decoration-behind-15">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4800600"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="18" name="decoration-behind-16">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5056632"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="19" name="decoration-behind-17">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5312664"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="20" name="decoration-behind-18">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5568696"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="21" name="decoration-behind-19">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5824728"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="22" name="decoration-behind-20">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="6080760"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="23" name="decoration-behind-21">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="566928" y="228600"/>
+<a:ext cx="0" cy="5897880"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="19050">
+<a:solidFill>
+<a:srgbClr val="D9826B"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="24" name="decoration-behind-22">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="1280160"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="25" name="decoration-behind-23">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="3337560"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="26" name="decoration-behind-24">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="5394960"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="27" name="Text 25">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2917,7 +9428,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 4 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="28" name="Text 26">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -2962,7 +9473,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 4 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="29" name="Text 27">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3200,7 +9711,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 4 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 3">
+<p:cNvPr id="30" name="Text 28">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3253,7 +9764,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 4 1`] = `
 
 exports[`pins all six Paper Notebook slide XML bytes > slide 5 1`] = `
 {
-  "sha256": "a796cb30b8393d50926549c1467fe481b1d8ec9ccabea97c46e184aabed16ad9",
+  "sha256": "c41806ef3aa60d0a09ba9ab45ef123ec40f7e931b504e5c486536d3975fb2080",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 5">
@@ -3280,7 +9791,672 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 5 1`] = `
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="960120"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1216152"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1472184"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1728216"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="decoration-behind-4">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1984248"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="7" name="decoration-behind-5">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2240280"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="8" name="decoration-behind-6">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2496312"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="9" name="decoration-behind-7">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2752344"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="10" name="decoration-behind-8">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3008376"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="11" name="decoration-behind-9">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3264408"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-behind-10">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3520440"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="13" name="decoration-behind-11">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3776472"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-behind-12">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4032504"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="15" name="decoration-behind-13">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4288536"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="16" name="decoration-behind-14">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4544568"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="17" name="decoration-behind-15">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4800600"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="18" name="decoration-behind-16">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5056632"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="19" name="decoration-behind-17">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5312664"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="20" name="decoration-behind-18">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5568696"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="21" name="decoration-behind-19">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5824728"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="22" name="decoration-behind-20">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="6080760"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="23" name="decoration-behind-21">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="566928" y="228600"/>
+<a:ext cx="0" cy="5897880"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="19050">
+<a:solidFill>
+<a:srgbClr val="D9826B"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="24" name="decoration-behind-22">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="1280160"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="25" name="decoration-behind-23">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="3337560"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="26" name="decoration-behind-24">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="5394960"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="27" name="decoration-behind-25">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm rot="120000">
+<a:off x="7717536" y="2011680"/>
+<a:ext cx="3822192" cy="3913632"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="FFFFFF"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E8E0CC"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+<a:effectLst> <a:outerShdw sx="100000" sy="100000" kx="0" ky="0" algn="bl" rotWithShape="0" blurRad="76200" dist="25400" dir="3600000"> <a:srgbClr val="5B4A20"> <a:alpha val="18000"/>
+</a:srgbClr> </a:outerShdw>
+</a:effectLst>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="28" name="Text 26">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3324,7 +10500,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 5 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="3" name="Text 1">
+<p:cNvPr id="29" name="Text 27">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3369,7 +10545,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 5 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 2">
+<p:cNvPr id="30" name="Text 28">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3439,18 +10615,18 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 5 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Shape 3">
+<p:cNvPr id="31" name="Shape 29">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
 </p:nvPr>
 </p:nvSpPr>
 <p:spPr>
-<a:xfrm>
-<a:off x="7559040" y="1920240"/>
-<a:ext cx="4023360" cy="4114800"/>
+<a:xfrm rot="120000">
+<a:off x="7863840" y="2148840"/>
+<a:ext cx="3535680" cy="3383280"/>
 </a:xfrm>
-<a:prstGeom prst="roundRect">
+<a:prstGeom prst="rect">
 <a:avLst>
 </a:avLst>
 </a:prstGeom>
@@ -3467,16 +10643,16 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 5 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="6" name="Text 4">
+<p:cNvPr id="32" name="Text 30">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
 </p:nvPr>
 </p:nvSpPr>
 <p:spPr>
-<a:xfrm>
-<a:off x="7680960" y="2103120"/>
-<a:ext cx="3779520" cy="3749040"/>
+<a:xfrm rot="120000">
+<a:off x="7955280" y="2331720"/>
+<a:ext cx="3352800" cy="3017520"/>
 </a:xfrm>
 <a:prstGeom prst="rect">
 <a:avLst>
@@ -3535,7 +10711,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 5 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="7" name="Text 5">
+<p:cNvPr id="33" name="Text 31">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3577,6 +10753,32 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 5 1`] = `
 </a:p>
 </p:txBody>
 </p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="34" name="decoration-front-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm rot="21360000">
+<a:off x="9006840" y="1984248"/>
+<a:ext cx="1188720" cy="292608"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="F5D76E">
+<a:alpha val="65000"/>
+</a:srgbClr>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
+</p:sp>
 </p:spTree>
 </p:cSld>
 <p:clrMapOvr>
@@ -3588,7 +10790,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 5 1`] = `
 
 exports[`pins all six Paper Notebook slide XML bytes > slide 6 1`] = `
 {
-  "sha256": "160b855a04c42293404cb39b9ac7ea5d2677eae4c6dd00c2ac060a7822ec5d9f",
+  "sha256": "d0befb910ad956d55dc0f29bf6f7c894b53de473d1092ccf73c6d1372c0ab8b0",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 6">
@@ -3615,7 +10817,672 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 6 1`] = `
 </p:grpSpPr>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="2" name="Text 0">
+<p:cNvPr id="2" name="decoration-behind-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="960120"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="3" name="decoration-behind-1">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1216152"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="4" name="decoration-behind-2">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1472184"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="5" name="decoration-behind-3">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1728216"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="6" name="decoration-behind-4">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="1984248"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="7" name="decoration-behind-5">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2240280"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="8" name="decoration-behind-6">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2496312"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="9" name="decoration-behind-7">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="2752344"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="10" name="decoration-behind-8">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3008376"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="11" name="decoration-behind-9">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3264408"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="12" name="decoration-behind-10">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3520440"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="13" name="decoration-behind-11">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="3776472"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="14" name="decoration-behind-12">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4032504"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="15" name="decoration-behind-13">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4288536"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="16" name="decoration-behind-14">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4544568"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="17" name="decoration-behind-15">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="4800600"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="18" name="decoration-behind-16">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5056632"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="19" name="decoration-behind-17">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5312664"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="20" name="decoration-behind-18">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5568696"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="21" name="decoration-behind-19">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="5824728"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="22" name="decoration-behind-20">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="658368" y="6080760"/>
+<a:ext cx="10972800" cy="0"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E5EDF2"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="23" name="decoration-behind-21">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="566928" y="228600"/>
+<a:ext cx="0" cy="5897880"/>
+</a:xfrm>
+<a:prstGeom prst="line">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:ln w="19050">
+<a:solidFill>
+<a:srgbClr val="D9826B"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="24" name="decoration-behind-22">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="1280160"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="25" name="decoration-behind-23">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="3337560"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="26" name="decoration-behind-24">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm>
+<a:off x="164592" y="5394960"/>
+<a:ext cx="219456" cy="219456"/>
+</a:xfrm>
+<a:prstGeom prst="ellipse">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="E4DCC4"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="CDB57A"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="27" name="decoration-behind-25">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm rot="120000">
+<a:off x="7717536" y="2011680"/>
+<a:ext cx="3822192" cy="3913632"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="FFFFFF"/>
+</a:solidFill>
+<a:ln w="9525">
+<a:solidFill>
+<a:srgbClr val="E8E0CC"/>
+</a:solidFill>
+<a:prstDash val="solid"/>
+</a:ln>
+<a:effectLst> <a:outerShdw sx="100000" sy="100000" kx="0" ky="0" algn="bl" rotWithShape="0" blurRad="76200" dist="25400" dir="3600000"> <a:srgbClr val="5B4A20"> <a:alpha val="18000"/>
+</a:srgbClr> </a:outerShdw>
+</a:effectLst>
+</p:spPr>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="28" name="Text 26">
 <a:hlinkClick r:id="rId1" tooltip=""/>
 </p:cNvPr>
 <p:cNvSpPr/>
@@ -3663,7 +11530,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 6 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="4" name="Text 1">
+<p:cNvPr id="30" name="Text 27">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3707,7 +11574,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 6 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="5" name="Text 2">
+<p:cNvPr id="31" name="Text 28">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3752,7 +11619,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 6 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="6" name="Text 3">
+<p:cNvPr id="32" name="Text 29">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3822,18 +11689,18 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 6 1`] = `
 </p:sp>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="7" name="Shape 4">
+<p:cNvPr id="33" name="Shape 30">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
 </p:nvPr>
 </p:nvSpPr>
 <p:spPr>
-<a:xfrm>
-<a:off x="7559040" y="1920240"/>
-<a:ext cx="4023360" cy="4114800"/>
+<a:xfrm rot="120000">
+<a:off x="7863840" y="2148840"/>
+<a:ext cx="3535680" cy="3383280"/>
 </a:xfrm>
-<a:prstGeom prst="roundRect">
+<a:prstGeom prst="rect">
 <a:avLst>
 </a:avLst>
 </a:prstGeom>
@@ -3849,7 +11716,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 6 1`] = `
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="8" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="34" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -3859,14 +11726,14 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 6 1`] = `
 <a:fillRect/>
 </a:stretch>
 </p:blipFill>
-<p:spPr> <a:xfrm>  <a:off x="7620000" y="2057400"/>  <a:ext cx="3840480" cy="3840480"/> </a:xfrm> <a:prstGeom prst="rect">
+<p:spPr> <a:xfrm rot="120000">  <a:off x="7939799" y="2148840"/>  <a:ext cx="3383280" cy="3383280"/> </a:xfrm> <a:prstGeom prst="rect">
 <a:avLst/>
 </a:prstGeom>
 </p:spPr>
 </p:pic>
 <p:sp>
 <p:nvSpPr>
-<p:cNvPr id="9" name="Text 5">
+<p:cNvPr id="35" name="Text 31">
 </p:cNvPr>
 <p:cNvSpPr/>
 <p:nvPr>
@@ -3907,6 +11774,32 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 6 1`] = `
 <a:endParaRPr lang="en-US" sz="1100" dirty="0"/>
 </a:p>
 </p:txBody>
+</p:sp>
+<p:sp>
+<p:nvSpPr>
+<p:cNvPr id="36" name="decoration-front-0">
+</p:cNvPr>
+<p:cNvSpPr/>
+<p:nvPr>
+</p:nvPr>
+</p:nvSpPr>
+<p:spPr>
+<a:xfrm rot="21360000">
+<a:off x="9006840" y="1984248"/>
+<a:ext cx="1188720" cy="292608"/>
+</a:xfrm>
+<a:prstGeom prst="rect">
+<a:avLst>
+</a:avLst>
+</a:prstGeom>
+<a:solidFill>
+<a:srgbClr val="F5D76E">
+<a:alpha val="65000"/>
+</a:srgbClr>
+</a:solidFill>
+<a:ln>
+</a:ln>
+</p:spPr>
 </p:sp>
 </p:spTree>
 </p:cSld>

@@ -42,7 +42,7 @@ function formulaToTextRuns(
 }
 
 /** Fit selected library images using decoded dimensions; legacy sizing uses box dimensions. */
-function addLibraryImage(slide: PptxGenJS.Slide, image: string, box: { x: number; y: number; w: number; h: number }): void {
+function addLibraryImage(slide: PptxGenJS.Slide, image: string, box: { x: number; y: number; w: number; h: number }, rotate = 0): void {
   const raw = toRawBase64(image);
   const dimensions = imageSize(Buffer.from(raw, 'base64'));
   if (!dimensions.width || !dimensions.height) throw new Error('Library export image dimensions are unavailable.');
@@ -52,6 +52,20 @@ function addLibraryImage(slide: PptxGenJS.Slide, image: string, box: { x: number
   slide.addImage({
     data: `${sniffImageMime(raw)};base64,${raw}`,
     x: box.x + (box.w - w) / 2, y: box.y + (box.h - h) / 2, w, h,
+    ...(rotate && { rotate }),
+  });
+}
+
+/** Match object-cover for the new rotated content-picture path using real image dimensions. */
+function addRotatedImage(slide: PptxGenJS.Slide, image: string, box: SlideTheme['layout']['content']['image'], rotate: number): void {
+  const raw = toRawBase64(image);
+  const dimensions = imageSize(Buffer.from(raw, 'base64'));
+  if (!dimensions.width || !dimensions.height) throw new Error('Rotated export image dimensions are unavailable.');
+  slide.addImage({
+    data: `${sniffImageMime(raw)};base64,${raw}`, x: box.x, y: box.y,
+    // The legacy sizing API uses the supplied dimensions as its source aspect ratio.
+    w: dimensions.width / 72, h: dimensions.height / 72,
+    sizing: { type: 'cover', w: box.w, h: box.h }, rotate,
   });
 }
 
@@ -213,6 +227,7 @@ export function createPresentationPptx(
     // 5. Visual element (occupies <= 40% of slide space)
     if (visual) {
       const imageData = slideImages ? slideImages[idx] : undefined;
+      const rotate = theme.shape.pictureRotation ?? 0;
 
       // Always draw a handsome rounded card background container (w: 33% <= 40% of slide space)
       // Classic uses DrawingML's native roundRect radius: omit an override to
@@ -222,6 +237,7 @@ export function createPresentationPptx(
         : parseFloat(contentLayout.visualCard.w) * SLIDE_WIDTH / 100;
       slideObj.addShape(radius === 0 ? pptx.ShapeType.rect : pptx.ShapeType.roundRect, {
         ...contentLayout.visualCard,
+        ...(rotate && { rotate }),
         ...(theme.shape.visualCornerRadius !== CONTENT_LAYOUT.visualCornerRadius && radius > 0
           && { rectRadius: radius * Math.min(cardWidth, contentLayout.visualCard.h) }),
         fill: { color: palette.cardBackground },
@@ -230,7 +246,9 @@ export function createPresentationPptx(
 
       if (imageData && isUsableImage(imageData)) {
         if (slide.imageMetadata) {
-          addLibraryImage(slideObj, imageData, contentLayout.libraryImage);
+          addLibraryImage(slideObj, imageData, contentLayout.libraryImage, rotate);
+        } else if (rotate) {
+          addRotatedImage(slideObj, imageData, contentLayout.image, rotate);
         } else {
           const rawBase64 = toRawBase64(imageData);
           slideObj.addImage({
@@ -245,6 +263,7 @@ export function createPresentationPptx(
           '[PHILIPPINES CLASSROOM VISUAL DESIGN]\n\n' + slide.visualDescription;
         slideObj.addText(placeholderText, {
           ...contentLayout.placeholder,
+          ...(rotate && { rotate }),
           color: palette.primary,
           italic: true,
           align: 'center',

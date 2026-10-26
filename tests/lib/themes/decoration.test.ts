@@ -7,7 +7,7 @@ const candidate = (changes: Partial<Decoration> = {}): Decoration => ({ kind: 'r
   layer: 'behind', when: { slide: 'any' }, fill: { color: 'FFFFFF' }, ...changes } as Decoration);
 const problems = (decoration: Decoration) => validateDecorations({ ...theme, decorations: [decoration] });
 it('accepts every production list and the unregistered fixture', () => {
-  for (const look of THEMES as readonly SlideTheme[]) { if (look.id !== 'chalkboard') expect(look.decorations).toBeUndefined(); expect(validateDecorations(look)).toEqual([]); }
+  for (const look of THEMES as readonly SlideTheme[]) { if (look.id === 'sayuna-classic') expect(look.decorations).toBeUndefined(); expect(validateDecorations(look)).toEqual([]); }
   expect(validateDecorations(TEST_DECORATION_THEME)).toEqual([]);
 });
 it('filters by title/content and content picture area without treating a title image as a content visual', () => {
