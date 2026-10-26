@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
 import { EditableSlideView } from '@/components/workspace/EditableSlideView';
+import { PAPER_NOTEBOOK } from '@/lib/themes/paper-notebook';
 import { CHALKBOARD } from '@/lib/themes/chalkboard';
 import type { SlideTheme } from '@/lib/themes';
 import { TEST_DECORATION_THEME, decorationSlides } from '../helpers/test-decorations';
@@ -14,7 +15,7 @@ function Harness({ theme = TEST_DECORATION_THEME }: { theme?: SlideTheme }) {
     onPointChange={(index, text) => setSlide(s => ({ ...s, contentPoints: s.contentPoints.map((p, i) => i === index ? text : p) }))}
     onPointInsert={() => {}} onPointDelete={() => {}} onPointAdd={() => {}} />;
 }
-it.each([TEST_DECORATION_THEME, CHALKBOARD])('keeps $name title and bullet editing interactive and both SVG layers passive', theme => {
+it.each([TEST_DECORATION_THEME, CHALKBOARD, PAPER_NOTEBOOK])('keeps $name title and bullet editing interactive and both SVG layers passive', theme => {
   const { container } = render(<Harness theme={theme} />);
   expect(container.querySelectorAll('[data-decoration-layer]')).toHaveLength(2);
   for (const svg of Array.from(container.querySelectorAll<SVGElement>('svg'))) expect(svg.style.pointerEvents).toBe('none');

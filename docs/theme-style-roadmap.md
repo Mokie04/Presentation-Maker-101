@@ -2,7 +2,7 @@
 
 Same loop as the earlier roadmaps: the planner writes one prompt per phase, a developer chat executes it on a branch, the planner verifies, and each phase ships through a PR, CI and the Vercel preview before the next prompt. Developers never push or merge on their own.
 
-Status: **Phases 1–4a merged (a594175, 00fcddc, 7d58689, dd80861); Phase 4b implemented 2026-10-26, release pending planner review.** Phase 0 investigation and product decisions are accepted. See [ADR 0022](adr/0022-slide-themes.md) for the module, compatibility strategy and Classic contrast exceptions.
+Status: **Phases 1–4b merged (a594175, 00fcddc, 7d58689, dd80861, f92875d); Phase 4c implemented 2026-10-26, release pending planner review.** Phase 0 investigation and product decisions are accepted. See [ADR 0022](adr/0022-slide-themes.md) for the module, compatibility strategy and Classic contrast exceptions.
 
 ## What the product owner asked for
 
@@ -127,7 +127,7 @@ This document. Next: a clickable mock of the 4 or 5 looks on the real slide layo
 - Per-theme XML golden snapshots, contrast and fit tests, credit and counter colours, placeholder and image-card tokens.
 - Render harness: LibreOffice headless PPTX to PNG compared against the browser render per look; documented tolerance; spot check in PowerPoint.
 
-### Phase 4: style treatments (4a merged, 4b implemented, 4c planned; approved mock)
+### Phase 4: style treatments (4a/4b merged, 4c implemented; approved mock)
 
 #### What PowerPoint can draw (investigated, not assumed)
 
@@ -171,8 +171,8 @@ Frame variant (polaroid or layered paper) is a per-look setting chosen by the pr
 
 #### Sub-phases (one prompt and one PR each)
 - **4a: decoration engine, no visible change — MERGED dd80861.** Primitive types, SVG renderer in `SlideView`, native-shape mapper in the exporter, empty lists for all looks, the well-formed XML test over every look, the parity test harness, the contrast rule for behind-text decoration. Classic and the two new looks stay byte-identical.
-- **4b: Chalkboard treatments — DONE locally, pending review.** Decoration list, new XML goldens, render harness sheets, preview and export parity, preview smoke.
-- **4c: Paper Notebook treatments.** Ruled paper, margin, holes, and the chosen picture frame, with the picture rotated to match the frame (image `rotate`), goldens, render sheets, smoke.
+- **4b: Chalkboard treatments — MERGED f92875d.** Decoration list, new XML goldens, render harness sheets, preview and export parity, preview smoke.
+- **4c: Paper Notebook treatments — DONE locally, pending review.** Ruled paper, margin, holes, and the chosen picture frame, with the picture rotated to match the frame (image `rotate`), goldens, render sheets, smoke.
 - **4d (optional): more looks.** For example Paper Cut (layered waves, sun and clouds) and Bright Classroom. Needs per-look credit and counter positions. Only after 4a to 4c ship.
 
 ### Phase 5: polish and decisions that need data
@@ -223,3 +223,5 @@ Same as the other roadmaps: green CI, preview smoke test, PR merge after approva
 Phase 4a evidence: [ADR 0025](adr/0025-decoration-engine.md) and [verification](theme-phase4a-verification.md). All production decoration lists remain absent; nine exports, 438 ZIP entries, 15 preview cases and export request bodies match main exactly.
 
 Phase 4b evidence: [ADR 0026](adr/0026-chalkboard-treatments.md) and [verification](theme-phase4b-verification.md). Chalkboard adds a 6.48 pt uniform wood frame, a thin filled chalk ribbon in each title gap, and a conditional front dashed picture outline. The engine, layout, Classic and Paper Notebook are unchanged.
+
+Phase 4c evidence: [ADR 0027](adr/0027-paper-notebook-treatments.md) and [verification](theme-phase4c-verification.md). Paper Notebook adds contrast-safe rules, red margin, binder holes and the approved taped polaroid. Content-only picture geometry and optional rotation leave fit/split and Classic/Chalkboard output unchanged.

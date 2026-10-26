@@ -29,16 +29,18 @@ remain unchanged. Check fit equality before/after picture overrides.
 
 ## Commit 2: polaroid and rotation
 
-- [ ] Add failing picture override/rotation/native-SVG parity and fit-equality tests.
-- [ ] Add optional shape.pictureRotation, Paper-only picture geometry, white frame
+- [x] Add failing picture override/rotation/native-SVG parity and fit-equality tests.
+- [x] Add optional shape.pictureRotation, Paper-only picture geometry, white frame
   and outer shadow, front translucent tape. Rotate content image/card/placeholder
   in both renderers, emitting nothing for zero/absent rotation. Preserve defaults.
-- [ ] Verify rotated bounds, title exclusion, editing and all-look strict XML;
+- [x] Verify rotated bounds, title exclusion, editing and all-look strict XML;
   update only Paper snapshots. No engine changes unless a proven bug is recorded.
-- [ ] Render eight cases browser/native; inspect ruled text, frame/tape alignment,
+- [x] Render eight cases browser/native; inspect ruled text, frame/tape alignment,
   dense24pt, assessment5bullets, two-line title, credited and missing images.
-- [ ] Real Next browser at1440/768/390 with stubbed responses: registry, every
+- [x] Real Next browser at1440/768/390 with stubbed responses: registry, every
   workspace surface, switching, editing, split/overflow and export themeId.
-- [ ] Compare Classic/Chalkboard main bytes/entries/HTML and all request bodies;
+- [x] Compare Classic/Chalkboard main bytes/entries/HTML and all request bodies;
   update ADR/architecture/glossary/roadmaps/evidence, restore dev harness.
-- [ ] Independent review; Node22 typecheck/lint/full tests/build; second commit.
+- [x] Independent review; Node22 typecheck/lint/full tests/build; second commit.
+
+Ruling: Existing picture geometry was already theme-scoped, so no redundant routing edits were made. A wide local render proved legacy export stretching versus browser cover; the new rotated-only path now uses decoded source dimensions. The regression fails on the old path and passes on the correction. Legacy nonrotating paths remain byte-identical.

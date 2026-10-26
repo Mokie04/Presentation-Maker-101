@@ -27,10 +27,11 @@ it('registers exactly the approved looks with unique IDs, real metrics and avail
     expect(fonts).toContain(variable);
   }
 });
-it.each([['chalkboard', 'Arial', 'arimo', '22302C'], ['paper-notebook', 'Georgia', 'gelasio', 'FBF6E9']])('renders %s with its palette, font stack and unchanged Classic geometry', (id, face, metrics, background) => {
+it.each([['chalkboard', 'Arial', 'arimo', '22302C'], ['paper-notebook', 'Georgia', 'gelasio', 'FBF6E9']])('renders %s with its palette, font stack and preserved text geometry', (id, face, metrics, background) => {
   const theme = getTheme(id);
   expect(theme.id).toBe(id); expect(theme.typography.exportFace).toBe(face); expect(theme.typography.metricsId).toBe(metrics);
-  expect(theme.shape).toBe(DEFAULT_THEME.shape); expect(theme.layout).toBe(DEFAULT_THEME.layout);
+  if (id === 'chalkboard') { expect(theme.shape).toBe(DEFAULT_THEME.shape); expect(theme.layout).toBe(DEFAULT_THEME.layout); }
+  else { expect(theme.layout.title).toBe(DEFAULT_THEME.layout.title); expect(theme.layout.content.bullets).toBe(DEFAULT_THEME.layout.content.bullets); }
   const html = renderToStaticMarkup(<SlideView slide={slide} index={1} total={2} theme={theme} />);
   expect(html).toContain(`background-color:#${background}`);
   expect(html).toContain(theme.typography.previewFont.replaceAll("'", '&#x27;'));
