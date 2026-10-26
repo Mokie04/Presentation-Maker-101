@@ -20,7 +20,7 @@
 
 **Theme** — A named palette, typography (export face, browser font-family and metricsId), visual card shape and layout. `src/lib/themes/` owns the registry and Classic default; render and fit functions accept it without changing deck data. See `docs/adr/0022-slide-themes.md`.
 
-**Look** — The lesson-level presentation choice combining a theme with a style treatment. One choice is shared across all session decks in a lesson. The header picker is hidden until two looks exist; the browser remembers a preference, and non-default PPTX requests carry themeId. Saved-lesson persistence and decoration remain later work. See `docs/adr/0023-look-selection.md`.
+**Look** — The lesson-level presentation choice combining a theme with a style treatment. One choice is shared across all session decks in a lesson. The header picker offers Sayuna Classic, Chalkboard and Paper Notebook; the browser remembers a preference, and non-default PPTX requests carry themeId. Saved-lesson persistence and decoration remain later work. See `docs/adr/0023-look-selection.md`.
 
 **Slide theme** — `src/lib/slide-theme.ts`, the pure shared PPTX palette, Poppins font face, point sizes and title/content geometry. Coordinates preserve the export's inches and percentages; the Slide view converts them to slide percentages and container-scaled type. Index zero uses the title layout.
 
@@ -61,3 +61,5 @@
 **Session deck** — One editable deck keyed by a canonical lesson session label. `src/lib/deck/session-decks-reducer.ts` stores its slides/images, selected slide ID and Normal/sorter view; `src/lib/deck/use-slide-deck.ts` exposes the active deck API. All session decks share one monotonic slide ID counter so late images find their owning deck or are dropped after replacement. Only successful generation stores a deck. Phase 1 keeps everything in memory; refresh loses the lesson and all decks. See `docs/adr/0019-session-decks.md` and `docs/multi-session-roadmap.md`.
 
 **Mokie** — The decorative Sayuna mascot on the home hero and generating panel. `src/components/home/Mokie.tsx` uses the supplied size-specific assets in `public/mascot/`, with empty image alternatives and motion disabled for reduced-motion users. Its activity and lesson-part chips make no claims about generation completion or remaining time. See `docs/adr/0020-home-screen.md`.
+
+**Office-safe export face** — A PowerPoint font expected on the Office delivery machine: Arial for Chalkboard, Georgia for Paper Notebook. Browser/fit stand-ins are Arimo and Gelasio; measured glyph/fallback limits are recorded in `docs/adr/0024-office-safe-look-fonts.md`.

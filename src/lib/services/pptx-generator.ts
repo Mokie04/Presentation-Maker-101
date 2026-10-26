@@ -1,5 +1,6 @@
 import { fitSlide, titlePointSize } from '@/lib/slide-fit';
 import PptxGenJS from 'pptxgenjs';
+import JSZip from 'jszip';
 import imageSize from 'image-size';
 import type { PresentationData } from '@/types/presentation';
 import { describeImageCredit } from '@/lib/image-credit';
@@ -7,7 +8,7 @@ import { isUsableImage, sniffImageMime, toRawBase64 } from '@/lib/slide-image';
 import { parseFormulaToSegments } from '@/lib/utils/formula-parser';
 
 import { slideLayoutFor, hasVisual, CONTENT_LAYOUT, SLIDE_WIDTH } from '@/lib/slide-theme';
-import { DEFAULT_THEME, type SlideTheme } from '@/lib/themes';
+import { DEFAULT_THEME, DEFAULT_THEME_ID, type SlideTheme } from '@/lib/themes';
 
 export {
   SHADE_PRIMARY, SHADE_SECONDARY, SHADE_BACKGROUND, SHADE_TEXT_DARK,
@@ -61,6 +62,9 @@ export function createPresentationPptx(
   const palette = theme.palette;
   const fontFace = theme.typography.exportFace;
   const pptx = new PptxGenJS();
+  if (theme.id !== DEFAULT_THEME_ID) {
+    pptx.theme = { headFontFace: fontFace, bodyFontFace: fontFace };
+  }
   pptx.layout = 'LAYOUT_WIDE'; // Standard 16:9 modern widescreen: 13.333" x 7.5"
 
   const slides = presentationData.slides || [];
@@ -265,5 +269,16 @@ export async function buildPresentationPptx(
 ): Promise<Buffer> {
   const pptx = createPresentationPptx(presentationData, slideImages, theme);
   const output = await pptx.write({ outputType: 'nodebuffer' });
-  return Buffer.isBuffer(output) ? output : Buffer.from(output as ArrayBuffer);
+  const buffer = Buffer.isBuffer(output) ? output : Buffer.from(output as ArrayBuffer);
+  if (theme.id === DEFAULT_THEME_ID) return buffer;
+
+  // Older renderers may ignore the run's explicit hyperlink-text colour extension.
+  // Normalize both link states at the completed-package boundary for new looks.
+  const zip = await JSZip.loadAsync(buffer);
+  for (const path of Object.keys(zip.files).filter(path => /^ppt\/theme\/theme\d+\.xml$/.test(path))) {
+    const xml = await zip.file(path)!.async('string');
+    zip.file(path, xml.replace(/<a:(hlink|folHlink)>[\s\S]*?<\/a:\1>/g,
+      (_, tag: string) => `<a:${tag}><a:srgbClr val="${theme.palette.muted}"/></a:${tag}>`));
+  }
+  return zip.generateAsync({ type: 'nodebuffer' });
 }

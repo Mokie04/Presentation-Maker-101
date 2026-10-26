@@ -2,7 +2,7 @@
 
 Same loop as the earlier roadmaps: the planner writes one prompt per phase, a developer chat executes it on a branch, the planner verifies, and each phase ships through a PR, CI and the Vercel preview before the next prompt. Developers never push or merge on their own.
 
-Status: **Phase 1 merged (a594175); Phase 2 implemented 2026-10-26, release pending planner review.** Phase 0 investigation and product decisions are accepted. See [ADR 0022](adr/0022-slide-themes.md) for the module, compatibility strategy and Classic contrast exceptions.
+Status: **Phases 1 and 2 merged (a594175, 00fcddc); Phase 3 implemented 2026-10-26, release pending planner review.** Phase 0 investigation and product decisions are accepted. See [ADR 0022](adr/0022-slide-themes.md) for the module, compatibility strategy and Classic contrast exceptions.
 
 ## What the product owner asked for
 
@@ -115,15 +115,15 @@ This document. Next: a clickable mock of the 4 or 5 looks on the real slide layo
 - Fit metrics generalised per font; a computed WCAG contrast test over theme tokens.
 - Done = all existing tests pass unchanged; the six XML golden snapshots and the three sample PPTX archives are byte-identical for the default theme; `SlideView` DOM tests unchanged.
 
-### Phase 2: theme selection and export wiring — done (release pending review)
+### Phase 2: theme selection and export wiring — merged
 - See [ADR 0023](adr/0023-look-selection.md): the picker stays hidden until at least two looks are registered; Classic-only production remains visually unchanged.
 - Lesson-level `themeId` in workspace state (outside `deckReducer`), a "Look" picker in the workspace header with live thumbnails (reusing `SlideView`), remembered per browser.
 - `exportRequestSchema` accepts an optional `themeId` validated against the registry (unknown ids are rejected with the sanitized 400); `download-pptx` passes it through. Markdown export unchanged. Slideshow follows the active look.
 - Reserve `themeId` in the saved-lesson snapshot design (coordinate with Phase 2 of multi-session).
 - Done = switching looks restyles rail, stage, sorter and slideshow instantly; export matches the chosen look; default export bytes unchanged.
 
-### Phase 3: the first new looks (colour and typography)
-- Chalkboard and Paper Notebook (and any others approved), using Office-safe export fonts with metric-compatible stand-ins.
+### Phase 3: the first new looks (colour and typography) — done (release pending review)
+- Chalkboard (Arial/Arimo) and Paper Notebook (Georgia/Gelasio) are registered with the approved palettes. See [ADR 0024](adr/0024-office-safe-look-fonts.md) for sources, hashes, licenses, metrics, native link/font handling and rendering limits. Classic remains byte-identical; its additional root font classes were explicitly approved.
 - Per-theme XML golden snapshots, contrast and fit tests, credit and counter colours, placeholder and image-card tokens.
 - Render harness: LibreOffice headless PPTX to PNG compared against the browser render per look; documented tolerance; spot check in PowerPoint.
 

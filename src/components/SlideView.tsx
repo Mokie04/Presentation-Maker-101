@@ -1,7 +1,7 @@
 'use client';
 
 import React, { type CSSProperties, type ReactNode } from 'react';
-import { poppins } from '@/lib/fonts';
+import { poppins, arimo, gelasio } from '@/lib/fonts';
 import type { SlideData } from '@/types/presentation';
 import { describeImageCredit } from '@/lib/image-credit';
 import { isUsableImage, toDataUrl } from '@/lib/slide-image';
@@ -9,7 +9,7 @@ import {
   SLIDE_HEIGHT, SLIDE_WIDTH, SLIDE_WIDTH_PT,
   hasVisual, slideLayoutFor, type SlideBox, type SlideCoordinate,
 } from '@/lib/slide-theme';
-import { DEFAULT_THEME, type SlideTheme } from '@/lib/themes';
+import { DEFAULT_THEME, DEFAULT_THEME_ID, type SlideTheme } from '@/lib/themes';
 import { fitSlide, titleSlidePoints, titlePointSize } from '@/lib/slide-fit';
 import { FormattedFormula } from './FormattedFormula';
 
@@ -78,7 +78,7 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
       role="group"
       aria-label={`Slide ${index + 1} of ${total}`}
       aria-hidden={variant === 'thumbnail' ? true : undefined}
-      className={poppins.variable}
+      className={`${poppins.variable} ${arimo.variable} ${gelasio.variable}`}
       style={{
         position: 'relative', width: '100%', aspectRatio: '16 / 9', containerType: 'inline-size',
         overflow: 'hidden', backgroundColor: `#${palette.background}`, color: `#${palette.textDark}`,
@@ -89,7 +89,7 @@ export function SlideView({ slide, index, total, image, originalWriters, variant
       <p style={{ ...textStyle(layout.part), color: `#${palette.secondary}`, fontWeight: 700 }}>
         {(slide.part || (titleLayout ? 'TITLE PAGE' : '')).toUpperCase()}
       </p>
-      <h2 data-overflow={!fit.title.fits ? "true" : undefined} style={{ ...textStyle(layout.title), ...overflowStyle(fit.title.fits), fontSize: typeSize(fit.title.fontSize), color: `#${palette.primary}`, fontWeight: 700 }}>
+      <h2 data-overflow={!fit.title.fits ? "true" : undefined} style={{ ...textStyle(layout.title), ...overflowStyle(fit.title.fits), fontSize: typeSize(fit.title.fontSize), ...(theme.id !== DEFAULT_THEME_ID && { lineHeight: typeSize(fit.title.lineHeightPt) }), color: `#${palette.primary}`, fontWeight: 700 }}>
         {renderTitle ? renderTitle(title) : title}
       </h2>
 
