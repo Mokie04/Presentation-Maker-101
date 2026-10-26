@@ -10,6 +10,11 @@ const PART_COLORS: Record<PedagogicalPart, string> = {
   Assessment: 'bg-rose-600',
 };
 
+/** Background class for a decorative part-coloured edge, using the same palette as badges. */
+export function getPartAccentClass(part: PedagogicalPart): string {
+  return PART_COLORS[part];
+}
+
 export function getPartBadgeInfo(part?: string): { bg: string; label: string } {
   if (!part) return { bg: 'bg-slate-600', label: partLabel(part) };
   const canonical = normalizePart(part);

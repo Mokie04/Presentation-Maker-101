@@ -12,6 +12,8 @@
 
 Decision: `docs/adr/0020-home-screen.md`.
 
+- Setup card polish: home-only graph paper, warm paper drop zone, connected current-step markers, notebook radios, Mokie descriptive bubble, tactile Generate button and shared lesson-part trust accents.
+
 ## Later
 
 - Extra Mokie poses: thinking, oops and celebrate.
