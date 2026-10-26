@@ -2,7 +2,7 @@
 
 import type { SupportedSubject } from '@/lib/utils/subject-options';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { UploadSection } from '@/components/UploadSection';
@@ -11,17 +11,25 @@ import { SlideshowModal } from '@/components/SlideshowModal';
 import { SessionGate } from '@/components/SessionGate';
 import { useSlideDeck } from '@/lib/deck/use-slide-deck';
 import { useDeckExport } from '@/lib/export/use-deck-export';
-import type { PresentationData } from '@/types/presentation';
+import { generatePresentation } from '@/lib/generate-client';
+import { SessionTabs } from '@/components/workspace/SessionTabs';
+import { AnotherSessionDialog, ResetSessionsDialog } from '@/components/workspace/SessionDialogs';
+import type { SessionOption } from '@/lib/utils/session-options';
 
 function PresentationWorkspace() {
   const [extractedText, setExtractedText] = useState('');
   const [fileName, setFileName] = useState('');
   const [selectedSession, setSelectedSession] = useState('');
   const [selectedSubject, setSelectedSubject] = useState<SupportedSubject | ''>('');
+  const [lesson, setLesson] = useState<{ text: string; name: string; subject: SupportedSubject | '' } | null>(null);
+  const [anotherSessionOpen, setAnotherSessionOpen] = useState(false);
+  const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
+  const generation = useRef<AbortController | null>(null);
+  useEffect(() => () => { generation.current?.abort(); }, []);
   const deck = useSlideDeck();
   const { presentationData, slideImages, loadPresentation, reset: resetDeck } = deck;
   const downloads = useDeckExport({
-    presentationData, slideImages, session: selectedSession, onError: (message) => alert(message),
+    presentationData, slideImages, session: deck.activeSession || '', onError: (message) => alert(message),
   });
 
   const [isSlideShowActive, setIsSlideShowActive] = useState(false);
@@ -42,57 +50,35 @@ function PresentationWorkspace() {
   const handleGenerate = async (text: string, session: string, subject?: SupportedSubject) => {
     setIsLoading(true);
     setErrorMsg('');
-    setLoadingStage('Analyzing curriculum & instructional structure...');
-
+    const controller = new AbortController();
+    generation.current?.abort();
+    generation.current = controller;
     try {
-      const stageTimer1 = setTimeout(() => {
-        setLoadingStage('Architecting 25+ comprehensive slides (Review, Motivation, Lesson, Discussion, Activities, Assessment)...');
-      }, 1200);
-
-      const stageTimer2 = setTimeout(() => {
-        setLoadingStage('Synthesizing Philippine pedagogical diagrams and questions...');
-      }, 3500);
-
-      const res = await fetch('/api/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, session,
-          ...(subject ? { subject, subjectSource: 'teacher-supplied' } : {}),
-        }),
-      });
-
-      clearTimeout(stageTimer1);
-      clearTimeout(stageTimer2);
-
-      const resText = await res.text();
-      let data: (PresentationData & { error?: string }) | null = null;
-      try {
-        data = JSON.parse(resText) as PresentationData & { error?: string };
-      } catch {
-        if (res.status === 504 || resText.includes('FUNCTION_INVOCATION_TIMEOUT') || resText.toLowerCase().includes('timeout')) {
-          throw new Error(
-            'The presentation generation timed out. Generating 25+ comprehensive slides can take longer than the server limit. Please try again with a focused section or retry shortly.'
-          );
-        }
-        throw new Error(resText.slice(0, 150) || `Server error (${res.status})`);
-      }
-
-      if (!res.ok) {
-        throw new Error(data?.error || 'Failed to generate presentation slides.');
-      }
-
-      // Loads the deck and auto-triggers background batch image generation
-      loadPresentation(data);
+      const data = await generatePresentation({ text, session, subject }, controller.signal, setLoadingStage);
+      if (generation.current !== controller || controller.signal.aborted) return;
+      // Capture submitted inputs, not controls that may have changed while awaiting the response.
+      setExtractedText(text);
+      setLesson({ text, name: fileName, subject: subject || '' });
+      loadPresentation(data, session as SessionOption);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'An error occurred during generation.';
-      setErrorMsg(msg);
+      if (generation.current === controller && !controller.signal.aborted) {
+        setErrorMsg(err instanceof Error ? err.message : 'An error occurred during generation.');
+      }
     } finally {
-      setIsLoading(false);
-      setLoadingStage('');
+      if (generation.current === controller) {
+        generation.current = null;
+        setIsLoading(false); setLoadingStage('');
+      }
     }
   };
 
   const handleReset = () => {
+    generation.current?.abort();
+    generation.current = null;
+    setAnotherSessionOpen(false);
+    setResetConfirmOpen(false);
+    setIsSlideShowActive(false);
+    setLesson(null);
     resetDeck();
     setExtractedText('');
     setFileName('');
@@ -123,9 +109,19 @@ function PresentationWorkspace() {
           />
         ) : (
           /* Presentation Workspace View */
-          <PresentationWorkspaceView deck={deck} downloads={downloads} session={selectedSession}
-            onReset={handleReset} onPreview={(slideIndex) => { setCurrentSlideIndex(slideIndex); setIsSlideShowActive(true); }} />
+          <PresentationWorkspaceView deck={deck} downloads={downloads} session={deck.activeSession!}
+            sessionControls={<SessionTabs sessions={deck.sessions} activeSession={deck.activeSession!}
+              onSwitch={deck.switchSession} onAnother={() => setAnotherSessionOpen(true)} />}
+            onReset={() => { if (deck.sessions.length > 1) setResetConfirmOpen(true); else handleReset(); }} onPreview={(slideIndex) => { setCurrentSlideIndex(slideIndex); setIsSlideShowActive(true); }} />
         )}
+
+        {anotherSessionOpen && deck.activeSession && lesson && (
+          <AnotherSessionDialog text={lesson.text} lessonName={lesson.name || 'Lesson'} subject={lesson.subject}
+            sessions={deck.sessions} activeSession={deck.activeSession} onClose={() => setAnotherSessionOpen(false)}
+            onSuccess={(data, session) => { loadPresentation(data, session); setAnotherSessionOpen(false); }} />
+        )}
+        {resetConfirmOpen && <ResetSessionsDialog count={deck.sessions.length}
+          onClose={() => setResetConfirmOpen(false)} onConfirm={handleReset} />}
 
         {/* Fullscreen Slideshow Modal */}
         {presentationData && (
@@ -133,7 +129,7 @@ function PresentationWorkspace() {
             isOpen={isSlideShowActive}
             onClose={() => setIsSlideShowActive(false)}
             presentationData={presentationData}
-            session={selectedSession}
+            session={deck.activeSession!}
             slideImages={slideImages}
             initialIndex={currentSlideIndex}
           />

@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { FileDown, FileText, Play, RotateCcw, UserCheck } from 'lucide-react';
 import { partLabel } from '@/lib/pedagogy';
 import type { useSlideDeck } from '@/lib/deck/use-slide-deck';
 import type { useDeckExport } from '@/lib/export/use-deck-export';
-import { useSlideSelection } from '@/lib/deck/use-slide-selection';
+import { sessionTabId } from './SessionTabs';
 import { SlideRail } from './SlideRail';
 import { SlideStage } from './SlideStage';
 import { SlidePanel } from './SlidePanel';
@@ -16,17 +16,17 @@ export interface PresentationWorkspaceViewProps {
   deck: ReturnType<typeof useSlideDeck>;
   downloads: ReturnType<typeof useDeckExport>;
   session: string;
+  sessionControls?: React.ReactNode;
   onReset: () => void;
   /** Opens the slideshow at a 0-based slide index. */
   onPreview: (slideIndex: number) => void;
 }
 
-export function PresentationWorkspaceView({ deck, downloads, session: selectedSession, onReset, onPreview }: PresentationWorkspaceViewProps) {
-  const [view, setView] = useState<'normal' | 'sorter'>('normal');
+export function PresentationWorkspaceView({ deck, downloads, session: selectedSession, sessionControls, onReset, onPreview }: PresentationWorkspaceViewProps) {
+  const { view, setView, selection } = deck;
   const workspace = useRef<HTMLDivElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
   const focusContent = useRef(false);
-  const selection = useSlideSelection(deck.slideIds, deck.splitSelection);
   const {
     presentationData, slideImages, slideIds, generatingImages, imageErrors,
     updatePart, updateTitle, updateBullet, addBullet, insertBullet, deleteBullet, addSlide, deleteSlide,
@@ -109,15 +109,19 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                 <button
                   type="button"
                   onClick={onReset}
-                  className="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold text-xs transition-colors"
+                  className="flex items-center gap-2 p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-bold text-xs transition-colors"
                   title="Reset to New Upload"
+                  aria-label="Start over with a new lesson"
                 >
                   <RotateCcw className="w-4 h-4" />
+                  <span>Start over with a new lesson</span>
                 </button>
               </div>
+              {sessionControls}
             </div>
 
-
+            <div id="session-workspace-panel" role={sessionControls ? 'tabpanel' : undefined}
+              aria-labelledby={sessionControls ? sessionTabId(selectedSession) : undefined} className="space-y-3">
             {view === 'normal' ? (
               selectedSlide ? (
                 <div className="grid min-w-0 gap-2.5 motion-reduce:[&_*]:animate-none motion-reduce:[&_*]:transition-none md:h-[min(760px,calc(100dvh-260px))] md:min-h-[520px] md:grid-cols-[188px_minmax(0,1fr)] md:grid-rows-[minmax(0,1fr)_minmax(0,1fr)] lg:min-h-[400px] lg:grid-cols-[188px_minmax(0,1fr)_300px] lg:grid-rows-[minmax(0,1fr)]">
@@ -178,6 +182,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   </button>
                 ))}
               </div>
+            </div>
             </div>
           </div>
   );

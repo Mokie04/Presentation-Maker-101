@@ -3,27 +3,40 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import type { ImageMetadata } from '@/lib/image-metadata';
 import type { PresentationData } from '@/types/presentation';
-import { deckReducer, initialDeckState } from './deck-reducer';
+import { initialDeckState } from './deck-reducer';
+import { initialSessionDecksState, sessionDecksReducer } from './session-decks-reducer';
+import type { SessionDecksAction } from './session-decks-reducer';
+import { SESSION_OPTIONS, type SessionOption } from '@/lib/utils/session-options';
+import { firstSlideId, lastSlideId, nextSlideId, previousSlideId } from './use-slide-selection';
 import { toGeneratingFlags, toPresentationData, toSlideImages } from './selectors';
 import { suggestSplitIndex } from '@/lib/slide-split';
 import type { SplitSelection } from './use-slide-selection';
 import type { DeckAction, ImageToken } from './types';
 
 export function useSlideDeck() {
-  const [state, setState] = useState(initialDeckState);
-  // Latest state, updated synchronously so async work captures tokens at request time.
-  const stateRef = useRef(state);
+  const [sessionsState, setSessionsState] = useState(initialSessionDecksState);
+  // Synchronous state is essential when several edits/load operations precede a render.
+  const sessionsRef = useRef(sessionsState);
   const splitSelection = useRef<SplitSelection>();
+  const state = sessionsState.activeSession ? sessionsState.decks[sessionsState.activeSession]!.deck : initialDeckState;
+  const stateRef = useRef(state);
+
+  const dispatchSession = useCallback((action: SessionDecksAction) => {
+    const next = sessionDecksReducer(sessionsRef.current, action);
+    sessionsRef.current = next;
+    stateRef.current = next.activeSession ? next.decks[next.activeSession]!.deck : initialDeckState;
+    setSessionsState(next);
+    return stateRef.current;
+  }, []);
 
   const dispatch = useCallback((action: DeckAction) => {
-    const next = deckReducer(stateRef.current, action);
-    if (action.type === 'slideSplit' && next !== stateRef.current) {
-      splitSelection.current = { slideId: action.slideId, insertedId: stateRef.current.nextSlideId };
+    const previous = stateRef.current;
+    const next = dispatchSession({ type: 'deckAction', action });
+    if (action.type === 'slideSplit' && next !== previous) {
+      splitSelection.current = { slideId: action.slideId, insertedId: sessionsRef.current.nextSlideId - 1 };
     }
-    stateRef.current = next;
-    setState(next);
     return next;
-  }, []);
+  }, [dispatchSession]);
 
   const presentationData = useMemo(() => toPresentationData(state), [state]);
   const slideImages = useMemo(() => toSlideImages(state), [state]);
@@ -38,8 +51,8 @@ export function useSlideDeck() {
   }, [state]);
 
   // Background batch image generation for eligible slides
-  const loadPresentation = (data: PresentationData) => {
-    dispatch({ type: 'presentationLoaded', presentation: data });
+  const loadPresentation = (data: PresentationData, session: SessionOption = 'Session 1') => {
+    dispatchSession({ type: 'sessionLoaded', session, presentation: data });
     const tokens: ImageToken[] = stateRef.current.slides.map((s) => ({ slideId: s.id, version: s.image.version }));
     const slidesForBatch = data.slides.map((s, index) => ({
       slideIndex: index,
@@ -111,7 +124,28 @@ export function useSlideDeck() {
     return atBulletIndex !== null && splitSlide(slideId, atBulletIndex);
   };
 
+  const active = sessionsState.activeSession ? sessionsState.decks[sessionsState.activeSession]! : null;
+  const selectSlide = (selectedId: number | null) => dispatchSession({ type: 'selectionChanged', selectedId });
+  const navigate = (find: typeof nextSlideId) => {
+    const current = stateRef.current;
+    const session = sessionsRef.current.activeSession;
+    selectSlide(find(current.slides.map(s => s.id), session ? sessionsRef.current.decks[session]!.selectedId : null));
+  };
+
   return {
+    activeSession: sessionsState.activeSession,
+    sessions: SESSION_OPTIONS.filter(session => sessionsState.decks[session]),
+    switchSession: (session: SessionOption) => dispatchSession({ type: 'sessionSwitched', session }),
+    view: active?.view ?? 'normal',
+    setView: (view: 'normal' | 'sorter') => dispatchSession({ type: 'viewChanged', view }),
+    selection: {
+      selectedId: active?.selectedId ?? null,
+      selectSlide,
+      next: () => navigate(nextSlideId),
+      previous: () => navigate(previousSlideId),
+      first: () => navigate(firstSlideId),
+      last: () => navigate(lastSlideId),
+    },
     splitSlide,
     splitSlideToFit,
     splitSelection: splitSelection.current,
@@ -121,7 +155,7 @@ export function useSlideDeck() {
     imageErrors,
     slideIds,
     loadPresentation,
-    reset: () => dispatch({ type: 'reset' }),
+    reset: () => dispatchSession({ type: 'reset' }),
     updatePart: (slideId: number, part: string) => dispatch({ type: 'partUpdated', slideId, part }),
     updateTitle: (slideId: number, title: string) => dispatch({ type: 'titleUpdated', slideId, title }),
     updateBullet: (slideId: number, bulletIndex: number, text: string) =>
