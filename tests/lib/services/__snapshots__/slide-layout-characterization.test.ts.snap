@@ -273,7 +273,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 
 exports[`PPTX layout: long content title with formulas and AI… > preserves every slide XML byte through both export entry points > slide 2 1`] = `
 {
-  "sha256": "7c88d764ba3907ac3be4e2b526901993b6e343acd495707b1974706c9ce78666",
+  "sha256": "d0e60b98a8f49a0efc89797cc93044331246dc9628e3a6fd1e5f3db0025e3c91",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -617,10 +617,10 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 <p:blipFill>
 <a:blip r:embed="rId1">
 </a:blip>
-<a:srcRect l="0" r="0" t="-794" b="-794"/>
+<a:srcRect l="1515" r="1515" t="0" b="0"/>
 <a:stretch/>
 </p:blipFill>
-<p:spPr> <a:xfrm>  <a:off x="7620000" y="1965960"/>  <a:ext cx="3840480" cy="4023360"/> </a:xfrm> <a:prstGeom prst="rect">
+<p:spPr> <a:xfrm>  <a:off x="7620000" y="1965960"/>  <a:ext cx="3901440" cy="4023360"/> </a:xfrm> <a:prstGeom prst="rect">
 <a:avLst/>
 </a:prstGeom>
 </p:spPr>

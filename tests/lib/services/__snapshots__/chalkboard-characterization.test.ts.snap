@@ -412,7 +412,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 
 exports[`Chalkboard legacy characterization: long content title with formulas and AI… > preserves the same six legacy cases through both export entry points > slide 2 1`] = `
 {
-  "sha256": "6a8bc8f331da76e8d98ea19c05bc8f462d5616066c8f31ddc879b7521649f80e",
+  "sha256": "7fe9bdcaea7acfb884899da7bc613281924e20ca92ec6b977b0f68d4a2b152a6",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -895,10 +895,10 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 <p:blipFill>
 <a:blip r:embed="rId1">
 </a:blip>
-<a:srcRect l="0" r="0" t="-794" b="-794"/>
+<a:srcRect l="1515" r="1515" t="0" b="0"/>
 <a:stretch/>
 </p:blipFill>
-<p:spPr> <a:xfrm>  <a:off x="7620000" y="1965960"/>  <a:ext cx="3840480" cy="4023360"/> </a:xfrm> <a:prstGeom prst="rect">
+<p:spPr> <a:xfrm>  <a:off x="7620000" y="1965960"/>  <a:ext cx="3901440" cy="4023360"/> </a:xfrm> <a:prstGeom prst="rect">
 <a:avLst/>
 </a:prstGeom>
 </p:spPr>
@@ -3183,7 +3183,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 
 exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 {
-  "sha256": "936288a426320faaf58920959570bfcd8e775db68894b9e7c2c429c3bcdccef2",
+  "sha256": "9911f8787280a6327dfa77b9945c2d70bdb3b1e5d05f4bb464f3ebe632791521",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -3652,10 +3652,10 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 <p:blipFill>
 <a:blip r:embed="rId1">
 </a:blip>
-<a:srcRect l="0" r="0" t="-794" b="-794"/>
+<a:srcRect l="1515" r="1515" t="0" b="0"/>
 <a:stretch/>
 </p:blipFill>
-<p:spPr> <a:xfrm>  <a:off x="7620000" y="1965960"/>  <a:ext cx="3840480" cy="4023360"/> </a:xfrm> <a:prstGeom prst="rect">
+<p:spPr> <a:xfrm>  <a:off x="7620000" y="1965960"/>  <a:ext cx="3901440" cy="4023360"/> </a:xfrm> <a:prstGeom prst="rect">
 <a:avLst/>
 </a:prstGeom>
 </p:spPr>

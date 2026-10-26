@@ -225,3 +225,5 @@ Phase 4a evidence: [ADR 0025](adr/0025-decoration-engine.md) and [verification](
 Phase 4b evidence: [ADR 0026](adr/0026-chalkboard-treatments.md) and [verification](theme-phase4b-verification.md). Chalkboard adds a 6.48 pt uniform wood frame, a thin filled chalk ribbon in each title gap, and a conditional front dashed picture outline. The engine, layout, Classic and Paper Notebook are unchanged.
 
 Phase 4c evidence: [ADR 0027](adr/0027-paper-notebook-treatments.md) and [verification](theme-phase4c-verification.md). Paper Notebook adds contrast-safe rules, red margin, binder holes and the approved taped polaroid. Content-only picture geometry and optional rotation leave fit/split and Classic/Chalkboard output unchanged.
+
+Export picture follow-up: [ADR 0028](adr/0028-export-picture-cover.md) generalizes Phase 4c’s corrected cover sizing to Classic and Chalkboard ordinary pictures. Only picture extent/crop bytes change; Paper and library outputs remain identical.

@@ -56,17 +56,19 @@ function addLibraryImage(slide: PptxGenJS.Slide, image: string, box: { x: number
   });
 }
 
-/** Match object-cover for the new rotated content-picture path using real image dimensions. */
-function addRotatedImage(slide: PptxGenJS.Slide, image: string, box: SlideTheme['layout']['content']['image'], rotate: number): void {
+/** Match object-cover using source dimensions; false preserves legacy fallback sizing. */
+function addCoverImage(slide: PptxGenJS.Slide, image: string, box: SlideTheme['layout']['content']['image'], rotate = 0): boolean {
   const raw = toRawBase64(image);
-  const dimensions = imageSize(Buffer.from(raw, 'base64'));
-  if (!dimensions.width || !dimensions.height) throw new Error('Rotated export image dimensions are unavailable.');
+  let dimensions;
+  try { dimensions = imageSize(Buffer.from(raw, 'base64')); } catch { return false; }
+  if (!dimensions.width || !dimensions.height) return false;
   slide.addImage({
     data: `${sniffImageMime(raw)};base64,${raw}`, x: box.x, y: box.y,
     // The legacy sizing API uses the supplied dimensions as its source aspect ratio.
     w: dimensions.width / 72, h: dimensions.height / 72,
-    sizing: { type: 'cover', w: box.w, h: box.h }, rotate,
+    sizing: { type: 'cover', w: box.w, h: box.h }, ...(rotate && { rotate }),
   });
+  return true;
 }
 
 export function createPresentationPptx(
@@ -247,13 +249,12 @@ export function createPresentationPptx(
       if (imageData && isUsableImage(imageData)) {
         if (slide.imageMetadata) {
           addLibraryImage(slideObj, imageData, contentLayout.libraryImage, rotate);
-        } else if (rotate) {
-          addRotatedImage(slideObj, imageData, contentLayout.image, rotate);
-        } else {
+        } else if (!addCoverImage(slideObj, imageData, contentLayout.image, rotate)) {
           const rawBase64 = toRawBase64(imageData);
           slideObj.addImage({
             data: `${sniffImageMime(rawBase64)};base64,` + rawBase64,
             ...contentLayout.image,
+            ...(rotate && { rotate }),
             sizing: { type: 'contain', ...contentLayout.imageSizing },
           });
         }
