@@ -2,11 +2,12 @@ import type { PresentationData, SlideData } from '@/types/presentation';
 import { continuationTitle } from './deck/slide-split';
 import { fitSlide } from './slide-fit';
 import { suggestSplitIndex } from './slide-split';
+import { DEFAULT_THEME, type SlideTheme } from './themes';
 
 const MAX_SPLITS_PER_SLIDE = 20;
 
 /** Fit whole bullets without changing their text; roll back an unresolved capped original. */
-export function autoFitDeck(presentation: PresentationData): PresentationData {
+export function autoFitDeck(presentation: PresentationData, theme: SlideTheme = DEFAULT_THEME): PresentationData {
   const slides: SlideData[] = [];
   let changed = false;
 
@@ -15,13 +16,13 @@ export function autoFitDeck(presentation: PresentationData): PresentationData {
     const parts: SlideData[] = [];
     let remaining = original;
     while (remaining.contentPoints.length >= 2 &&
-      !fitSlide(remaining, slides.length + parts.length, presentation.originalWriters).body.fits) {
+      !fitSlide(remaining, slides.length + parts.length, presentation.originalWriters, theme).body.fits) {
       // Discard this original's tentative splits so the cap remains idempotent.
       if (parts.length === MAX_SPLITS_PER_SLIDE) {
         slides.push(original);
         return;
       }
-      const at = suggestSplitIndex(remaining, slides.length + parts.length, presentation.originalWriters)!;
+      const at = suggestSplitIndex(remaining, slides.length + parts.length, presentation.originalWriters, theme)!;
       parts.push({ ...remaining, contentPoints: remaining.contentPoints.slice(0, at) });
       const continuation: SlideData = {
         ...remaining, title: continuationTitle(remaining.title),
