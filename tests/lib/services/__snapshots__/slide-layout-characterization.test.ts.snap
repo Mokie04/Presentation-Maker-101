@@ -273,7 +273,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 
 exports[`PPTX layout: long content title with formulas and AI… > preserves every slide XML byte through both export entry points > slide 2 1`] = `
 {
-  "sha256": "d0e60b98a8f49a0efc89797cc93044331246dc9628e3a6fd1e5f3db0025e3c91",
+  "sha256": "54e6691b406302ff214c22c9ef4d2b6f53a671bcad6be8855234ded5690a4c58",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -395,7 +395,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 <a:ea typeface="Poppins" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Poppins" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t>2O</a:t>
+<a:t>2</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -409,7 +409,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 <a:ea typeface="Poppins" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Poppins" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t> and x</a:t>
+<a:t>O and x</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -503,7 +503,24 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 <a:ea typeface="Poppins" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Poppins" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t>2O</a:t>
+<a:t>2</a:t>
+</a:r>
+<a:pPr indent="0" marL="0">
+<a:lnSpc>
+<a:spcPts val="4600"/>
+</a:lnSpc>
+<a:buNone/>
+</a:pPr>
+<a:r>
+<a:rPr lang="en-US" sz="3500" dirty="0">
+<a:solidFill>
+<a:srgbClr val="0F172A"/>
+</a:solidFill>
+<a:latin typeface="Poppins" pitchFamily="34" charset="0"/>
+<a:ea typeface="Poppins" pitchFamily="34" charset="-122"/>
+<a:cs typeface="Poppins" pitchFamily="34" charset="-120"/>
+</a:rPr>
+<a:t>O</a:t>
 </a:r>
 <a:endParaRPr lang="en-US" sz="3500" dirty="0"/>
 </a:p>
@@ -610,7 +627,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="6" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="6" name="Image 0" descr="Water molecules and a graph">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -680,7 +697,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 
 exports[`PPTX layout: title with writers and library image > preserves every slide XML byte through both export entry points > slide 1 1`] = `
 {
-  "sha256": "16516738368cea2ebeea52892ddafdb85744e02a3395032b332d1c3b85c579ae",
+  "sha256": "f9b3e6f4cc4b4aadb0229d3618e098f15157f81f6248ee3b582ae3d1235c5cca",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -945,7 +962,7 @@ exports[`PPTX layout: title with writers and library image > preserves every sli
 </p:txBody>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="7" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="7" name="Image 0" descr="File:Diagram (v2).png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>

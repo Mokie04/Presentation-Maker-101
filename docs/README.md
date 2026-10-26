@@ -13,3 +13,5 @@ The following documents preserve the decisions and evidence from earlier work. T
 | [NASA provider](nasa-provider.md) | Historical manual-picker design and constraints. |
 | [NASA provider evaluation](nasa-provider-evaluation.md) | Historical bounded evaluation and follow-up. |
 | [Commons provider](commons-provider.md) | Historical picker, URL and export evidence. |
+
+- [ADR 0029: Export integrity](adr/0029-export-integrity.md) — text, pictures, credits and package integrity.

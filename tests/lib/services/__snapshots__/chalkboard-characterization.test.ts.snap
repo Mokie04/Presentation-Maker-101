@@ -412,7 +412,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 
 exports[`Chalkboard legacy characterization: long content title with formulas and AI… > preserves the same six legacy cases through both export entry points > slide 2 1`] = `
 {
-  "sha256": "7fe9bdcaea7acfb884899da7bc613281924e20ca92ec6b977b0f68d4a2b152a6",
+  "sha256": "45ae82cbe726095feb8b5d900e574e504ac2d9a781d11f40c69466636df2a4bd",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -673,7 +673,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 <a:ea typeface="Arial" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Arial" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t>2O</a:t>
+<a:t>2</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -687,7 +687,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 <a:ea typeface="Arial" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Arial" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t> and x</a:t>
+<a:t>O and x</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -781,7 +781,24 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 <a:ea typeface="Arial" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Arial" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t>2O</a:t>
+<a:t>2</a:t>
+</a:r>
+<a:pPr indent="0" marL="0">
+<a:lnSpc>
+<a:spcPts val="4600"/>
+</a:lnSpc>
+<a:buNone/>
+</a:pPr>
+<a:r>
+<a:rPr lang="en-US" sz="3500" dirty="0">
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:latin typeface="Arial" pitchFamily="34" charset="0"/>
+<a:ea typeface="Arial" pitchFamily="34" charset="-122"/>
+<a:cs typeface="Arial" pitchFamily="34" charset="-120"/>
+</a:rPr>
+<a:t>O</a:t>
 </a:r>
 <a:endParaRPr lang="en-US" sz="3500" dirty="0"/>
 </a:p>
@@ -888,7 +905,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="10" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="10" name="Image 0" descr="Water molecules and a graph">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -984,7 +1001,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 
 exports[`Chalkboard legacy characterization: title with writers and library image > preserves the same six legacy cases through both export entry points > slide 1 1`] = `
 {
-  "sha256": "414a5108d2079ceb5190ec5f1e0f7f2b1df345fe322eb2edc41dd6e60ef19a8a",
+  "sha256": "ca57eef90ca06281c363a494cdc545b2dab0aa22e042388db49c7b9b136adc71",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -1388,7 +1405,7 @@ exports[`Chalkboard legacy characterization: title with writers and library imag
 </p:txBody>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="11" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="11" name="Image 0" descr="File:Diagram (v2).png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -3183,7 +3200,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 
 exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 {
-  "sha256": "9911f8787280a6327dfa77b9945c2d70bdb3b1e5d05f4bb464f3ebe632791521",
+  "sha256": "eccacaf7afde7af8f2c55fb2c72ebc043a2abf4a547c8d1450bade3d932ff14f",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -3444,7 +3461,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 <a:ea typeface="Arial" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Arial" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t>2O</a:t>
+<a:t>2</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -3458,7 +3475,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 <a:ea typeface="Arial" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Arial" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t> and x</a:t>
+<a:t>O and x</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -3538,7 +3555,24 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 <a:ea typeface="Arial" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Arial" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t>2O</a:t>
+<a:t>2</a:t>
+</a:r>
+<a:pPr indent="0" marL="0">
+<a:lnSpc>
+<a:spcPts val="4600"/>
+</a:lnSpc>
+<a:buNone/>
+</a:pPr>
+<a:r>
+<a:rPr lang="en-US" sz="3500" dirty="0">
+<a:solidFill>
+<a:srgbClr val="F4F1E8"/>
+</a:solidFill>
+<a:latin typeface="Arial" pitchFamily="34" charset="0"/>
+<a:ea typeface="Arial" pitchFamily="34" charset="-122"/>
+<a:cs typeface="Arial" pitchFamily="34" charset="-120"/>
+</a:rPr>
+<a:t>O</a:t>
 </a:r>
 <a:endParaRPr lang="en-US" sz="3500" dirty="0"/>
 </a:p>
@@ -3645,7 +3679,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="10" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="10" name="Image 0" descr="Water molecules and a graph">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -3741,7 +3775,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 
 exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 {
-  "sha256": "17252fc15429fb71cf76031b6b332e7963cb0ab894d70740acf811f53dcf61b5",
+  "sha256": "0493dc2ca43b60e69415e98b3858840b1e79fa985c30fbcefbebf15d45dbbdef",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 3">
@@ -4002,7 +4036,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 <a:ea typeface="Arial" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Arial" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t>2O</a:t>
+<a:t>2</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -4016,7 +4050,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 <a:ea typeface="Arial" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Arial" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t> and x</a:t>
+<a:t>O and x</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -5221,7 +5255,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 5 1`] = `
 
 exports[`pins all six Chalkboard slide XML bytes > slide 6 1`] = `
 {
-  "sha256": "70a3cc2f834e9bf24a863159abe84d8286c5712b07938344b99d7d82545c88b2",
+  "sha256": "d0341dd8831d074f3c8a9816c2d48d669a012b49d552da4956e683451d02a656",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 6">
@@ -5621,7 +5655,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 6 1`] = `
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="12" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="12" name="Image 0" descr="File:Diagram (v2).png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>

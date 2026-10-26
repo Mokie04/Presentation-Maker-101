@@ -29,6 +29,13 @@ describe('EditableSlideView', () => {
     fireEvent.change(title, { target: { value: 'CO_2' } });
     fireEvent.keyDown(title, { key: 'Enter' });
     expect(screen.queryByRole('textbox')).toBeNull();
+    // Multi-letter identifiers are literal; chemical formulas use CO2.
+    expect(container.querySelector('h2')?.textContent).toBe('CO_2');
+    expect(container.querySelector('h2 sub')).toBeNull();
+    expect(screen.getByRole('heading').textContent).toBe('CO_2');
+    fireEvent.click(screen.getByRole('button', { name: 'Edit slide title' }));
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'CO2' } });
+    fireEvent.keyDown(screen.getByRole('textbox'), { key: 'Enter' });
     expect(container.querySelector('h2 sub')?.textContent).toBe('2');
     expect(screen.getByRole('heading').textContent).toBe('CO2');
   });

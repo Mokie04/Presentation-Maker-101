@@ -13,6 +13,9 @@ export function downloadBlob(blob: Blob, filename: string): void {
 /** The export routes' `error` field, else the first 150 characters of a non-JSON body, else the fallback. */
 export async function readErrorMessage(res: Response, fallback: string): Promise<string> {
   const errText = await res.text().catch(() => '');
+  if (res.status === 413 || errText.includes('FUNCTION_PAYLOAD_TOO_LARGE')) {
+    return 'This presentation is too large to download. Try fewer pictures or download the Markdown outline.';
+  }
   try {
     return JSON.parse(errText).error || fallback;
   } catch {

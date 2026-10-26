@@ -42,7 +42,8 @@ export async function buildPptxExportRequest(
   const candidates = Object.keys(images).map(Number)
     .filter((index) => isUsableImage(images[index]))
     .sort((a, b) => b - a);
-  const droppedImageIndexes: number[] = [];
+  const droppedImageIndexes = Object.keys(images).map(Number)
+    .filter((index) => isUsableImage(slideImages[index]) && !isUsableImage(images[index]));
   const serialize = () => JSON.stringify({
     presentationData: withoutCredits(presentationData, droppedImageIndexes),
     slideImages: images,

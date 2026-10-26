@@ -907,7 +907,7 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 
 exports[`Paper Notebook legacy characterization: long content title with formulas and AI… > preserves the same six legacy cases through both export entry points > slide 2 1`] = `
 {
-  "sha256": "b55a207b5daa22b42c70b4ba7355e090d039c258070fc3b1f7a3574bb4f5f88f",
+  "sha256": "d3960d43c8bd6d9ac33fb4317e1acb0bcedb1d36f26817cc3fde302ba028d103",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -1694,7 +1694,7 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 <a:ea typeface="Georgia" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Georgia" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t>2O</a:t>
+<a:t>2</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -1708,7 +1708,7 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 <a:ea typeface="Georgia" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Georgia" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t> and x</a:t>
+<a:t>O and x</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -1802,7 +1802,24 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 <a:ea typeface="Georgia" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Georgia" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t>2O</a:t>
+<a:t>2</a:t>
+</a:r>
+<a:pPr indent="0" marL="0">
+<a:lnSpc>
+<a:spcPts val="4600"/>
+</a:lnSpc>
+<a:buNone/>
+</a:pPr>
+<a:r>
+<a:rPr lang="en-US" sz="3500" dirty="0">
+<a:solidFill>
+<a:srgbClr val="2B2A33"/>
+</a:solidFill>
+<a:latin typeface="Georgia" pitchFamily="34" charset="0"/>
+<a:ea typeface="Georgia" pitchFamily="34" charset="-122"/>
+<a:cs typeface="Georgia" pitchFamily="34" charset="-120"/>
+</a:rPr>
+<a:t>O</a:t>
 </a:r>
 <a:endParaRPr lang="en-US" sz="3500" dirty="0"/>
 </a:p>
@@ -1909,7 +1926,7 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="32" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="32" name="Image 0" descr="Water molecules and a graph">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -2005,7 +2022,7 @@ exports[`Paper Notebook legacy characterization: long content title with formula
 
 exports[`Paper Notebook legacy characterization: title with writers and library image > preserves the same six legacy cases through both export entry points > slide 1 1`] = `
 {
-  "sha256": "bb8728465949838354e3380c84a2cd01993911e2e9a2f57b25fb8aa00df05443",
+  "sha256": "534d6816c3fe98c27bab9d4561fbc867a5e67cc6bf5e602067e597265e5a5715",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -2904,7 +2921,7 @@ exports[`Paper Notebook legacy characterization: title with writers and library 
 </p:txBody>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="32" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="32" name="Image 0" descr="File:Diagram (v2).png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -6710,7 +6727,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 1 1`] = `
 
 exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 {
-  "sha256": "b8b429db03c6f79bec2bc2c48863ad2f9b1dda2cb28d936b0e5103230c0fa4be",
+  "sha256": "5ce1f204d35dc976081f85c53c3f8ec5952c35d0415078b8b48e0741319d4f96",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -7497,7 +7514,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 <a:ea typeface="Georgia" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Georgia" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t>2O</a:t>
+<a:t>2</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -7511,7 +7528,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 <a:ea typeface="Georgia" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Georgia" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t> and x</a:t>
+<a:t>O and x</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -7591,7 +7608,24 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 <a:ea typeface="Georgia" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Georgia" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t>2O</a:t>
+<a:t>2</a:t>
+</a:r>
+<a:pPr indent="0" marL="0">
+<a:lnSpc>
+<a:spcPts val="4600"/>
+</a:lnSpc>
+<a:buNone/>
+</a:pPr>
+<a:r>
+<a:rPr lang="en-US" sz="3500" dirty="0">
+<a:solidFill>
+<a:srgbClr val="2B2A33"/>
+</a:solidFill>
+<a:latin typeface="Georgia" pitchFamily="34" charset="0"/>
+<a:ea typeface="Georgia" pitchFamily="34" charset="-122"/>
+<a:cs typeface="Georgia" pitchFamily="34" charset="-120"/>
+</a:rPr>
+<a:t>O</a:t>
 </a:r>
 <a:endParaRPr lang="en-US" sz="3500" dirty="0"/>
 </a:p>
@@ -7698,7 +7732,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="32" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="32" name="Image 0" descr="Water molecules and a graph">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>
@@ -7794,7 +7828,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 2 1`] = `
 
 exports[`pins all six Paper Notebook slide XML bytes > slide 3 1`] = `
 {
-  "sha256": "e0a2c2b049d18a72935290bf691ec5b07e3e06e1342b580ef7811b3039a39bf9",
+  "sha256": "c24872c859a5f30c1f0abd5ceb40ef86db4bf37c2517c6648e77f5eb3a6588d5",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 3">
@@ -8550,7 +8584,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 3 1`] = `
 <a:ea typeface="Georgia" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Georgia" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t>2O</a:t>
+<a:t>2</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -8564,7 +8598,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 3 1`] = `
 <a:ea typeface="Georgia" pitchFamily="34" charset="-122"/>
 <a:cs typeface="Georgia" pitchFamily="34" charset="-120"/>
 </a:rPr>
-<a:t> and x</a:t>
+<a:t>O and x</a:t>
 </a:r>
 <a:pPr indent="0" marL="0">
 <a:buNone/>
@@ -10790,7 +10824,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 5 1`] = `
 
 exports[`pins all six Paper Notebook slide XML bytes > slide 6 1`] = `
 {
-  "sha256": "d0befb910ad956d55dc0f29bf6f7c894b53de473d1092ccf73c6d1372c0ab8b0",
+  "sha256": "bab0a47edadc8cbe8ae87e07fb63e87cebd2ec8f0500e736b74624b2df5ea2f5",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 6">
@@ -11716,7 +11750,7 @@ exports[`pins all six Paper Notebook slide XML bytes > slide 6 1`] = `
 </p:spPr>
 </p:sp>
 <p:pic>  <p:nvPicPr>
-<p:cNvPr id="34" name="Image 0" descr="preencoded.png">    </p:cNvPr>    <p:cNvPicPr>
+<p:cNvPr id="34" name="Image 0" descr="File:Diagram (v2).png">    </p:cNvPr>    <p:cNvPicPr>
 <a:picLocks noChangeAspect="1"/>
 </p:cNvPicPr>    <p:nvPr>
 </p:nvPr>  </p:nvPicPr>

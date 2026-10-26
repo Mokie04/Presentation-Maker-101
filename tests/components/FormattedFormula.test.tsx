@@ -5,6 +5,13 @@ import { render } from '@testing-library/react';
 import { FormattedFormula } from '@/components/FormattedFormula';
 
 describe('FormattedFormula component', () => {
+  it('keeps ordinary names and currency intact while bounding exponent and subscript runs', () => {
+    const { container } = render(<FormattedFormula text="Wi-Fi: 3x^2-4x+1; x_1+x_2; teacher_name@school.edu; $5 and $10." />);
+    expect(container.textContent).toBe('Wi-Fi: 3x2-4x+1; x1+x2; teacher_name@school.edu; $5 and $10.');
+    expect(Array.from(container.querySelectorAll('sup')).map(node => node.textContent)).toEqual(['2']);
+    expect(Array.from(container.querySelectorAll('sub')).map(node => node.textContent)).toEqual(['1', '2']);
+  });
+
   it('renders plain text without tags', () => {
     const { container } = render(<FormattedFormula text="Just a regular sentence." />);
     expect(container.textContent).toBe('Just a regular sentence.');

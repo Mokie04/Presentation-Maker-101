@@ -19,14 +19,17 @@ export function useDeckExport({ presentationData, slideImages, session, themeId,
 }) {
   const [isDownloadingPptx, setIsDownloadingPptx] = useState(false);
   const [isDownloadingMarkdown, setIsDownloadingMarkdown] = useState(false);
+  const [notice, setNotice] = useState<{ data: PresentationData; session: string; message: string } | null>(null);
+  const pptxNotice = notice?.data === presentationData && notice?.session === session ? notice.message : null;
 
   const downloadPptx = async () => {
     if (!presentationData) return;
+    setNotice(null);
     setIsDownloadingPptx(true);
     const filename = exportFilename({ topic: presentationData.topic, session, suffix: 'SayunaAI.pptx' });
 
     try {
-      const { body } = await buildPptxExportRequest(
+      const { body, droppedImageIndexes } = await buildPptxExportRequest(
         { presentationData, slideImages, session, themeId },
         { compress: compressImageForExport }
       );
@@ -42,6 +45,12 @@ export function useDeckExport({ presentationData, slideImages, session, themeId,
       }
 
       downloadBlob(await res.blob(), filename);
+      if (droppedImageIndexes.length) {
+        const slides = droppedImageIndexes.map((index) => index + 1).sort((a, b) => a - b);
+        const slideList = slides.length === 1 ? String(slides[0]) : `${slides.slice(0, -1).join(', ')} and ${slides.at(-1)}`;
+        const count = slides.length;
+        setNotice({ data: presentationData, session, message: `${count} ${count === 1 ? 'picture was' : 'pictures were'} left out of the PowerPoint (${count === 1 ? 'slide' : 'slides'} ${slideList}).` });
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : '';
       if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
@@ -89,5 +98,5 @@ export function useDeckExport({ presentationData, slideImages, session, themeId,
     }
   };
 
-  return { downloadPptx, downloadMarkdown, isDownloadingPptx, isDownloadingMarkdown };
+  return { downloadPptx, downloadMarkdown, isDownloadingPptx, isDownloadingMarkdown, pptxNotice, dismissPptxNotice: () => setNotice(null) };
 }

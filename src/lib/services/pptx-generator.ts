@@ -8,6 +8,7 @@ import type { PresentationData } from '@/types/presentation';
 import { describeImageCredit } from '@/lib/image-credit';
 import { isUsableImage, sniffImageMime, toRawBase64 } from '@/lib/slide-image';
 import { parseFormulaToSegments } from '@/lib/utils/formula-parser';
+import { stripIllegalXmlCharacters } from '@/lib/utils/xml-text';
 
 import { slideLayoutFor, hasVisual, CONTENT_LAYOUT, SLIDE_WIDTH } from '@/lib/slide-theme';
 import { DEFAULT_THEME, DEFAULT_THEME_ID, type SlideTheme } from '@/lib/themes';
@@ -25,6 +26,7 @@ function formulaToTextRuns(
   text: string,
   extraOptions?: Record<string, unknown>
 ): PptxGenJS.TextProps[] {
+  text = stripIllegalXmlCharacters(text);
   const segments = parseFormulaToSegments(text);
   if (segments.length === 0) {
     return [{ text: text || '', options: { ...extraOptions } }];
@@ -42,7 +44,7 @@ function formulaToTextRuns(
 }
 
 /** Fit selected library images using decoded dimensions; legacy sizing uses box dimensions. */
-function addLibraryImage(slide: PptxGenJS.Slide, image: string, box: { x: number; y: number; w: number; h: number }, rotate = 0): void {
+function addLibraryImage(slide: PptxGenJS.Slide, image: string, box: { x: number; y: number; w: number; h: number }, rotate = 0, altText = ''): void {
   const raw = toRawBase64(image);
   const dimensions = imageSize(Buffer.from(raw, 'base64'));
   if (!dimensions.width || !dimensions.height) throw new Error('Library export image dimensions are unavailable.');
@@ -50,6 +52,7 @@ function addLibraryImage(slide: PptxGenJS.Slide, image: string, box: { x: number
   const w = dimensions.width * scale;
   const h = dimensions.height * scale;
   slide.addImage({
+    altText: stripIllegalXmlCharacters(altText),
     data: `${sniffImageMime(raw)};base64,${raw}`,
     x: box.x + (box.w - w) / 2, y: box.y + (box.h - h) / 2, w, h,
     ...(rotate && { rotate }),
@@ -57,12 +60,13 @@ function addLibraryImage(slide: PptxGenJS.Slide, image: string, box: { x: number
 }
 
 /** Match object-cover using source dimensions; false preserves legacy fallback sizing. */
-function addCoverImage(slide: PptxGenJS.Slide, image: string, box: SlideTheme['layout']['content']['image'], rotate = 0): boolean {
+function addCoverImage(slide: PptxGenJS.Slide, image: string, box: SlideTheme['layout']['content']['image'], rotate = 0, altText = ''): boolean {
   const raw = toRawBase64(image);
   let dimensions;
   try { dimensions = imageSize(Buffer.from(raw, 'base64')); } catch { return false; }
   if (!dimensions.width || !dimensions.height) return false;
   slide.addImage({
+    altText: stripIllegalXmlCharacters(altText),
     data: `${sniffImageMime(raw)};base64,${raw}`, x: box.x, y: box.y,
     // The legacy sizing API uses the supplied dimensions as its source aspect ratio.
     w: dimensions.width / 72, h: dimensions.height / 72,
@@ -84,6 +88,11 @@ export function createPresentationPptx(
   if (theme.id !== DEFAULT_THEME_ID) {
     pptx.theme = { headFontFace: fontFace, bodyFontFace: fontFace };
   }
+  // Keep presentation-property strings under the same XML rule as slide text.
+  pptx.author = stripIllegalXmlCharacters(pptx.author);
+  pptx.company = stripIllegalXmlCharacters(pptx.company);
+  pptx.subject = stripIllegalXmlCharacters(pptx.subject);
+  pptx.title = stripIllegalXmlCharacters(pptx.title);
   pptx.layout = 'LAYOUT_WIDE'; // Standard 16:9 modern widescreen: 13.333" x 7.5"
 
   const slides = presentationData.slides || [];
@@ -96,12 +105,14 @@ export function createPresentationPptx(
 
     if (slide.imageMetadata) {
       const credit = describeImageCredit(slide.imageMetadata);
-      slideObj.addText(`${credit.heading} — ${credit.creditLine}`, {
+      const creditText = Array.from(stripIllegalXmlCharacters(`${credit.heading} — ${credit.creditLine}`));
+      const visibleCredit = creditText.length > 160 ? creditText.slice(0, 159).join('') + '…' : creditText.join('');
+      slideObj.addText(visibleCredit, {
         ...CREDIT_LAYOUT, color: palette.muted,
         fontFace, fit: 'shrink',
-        hyperlink: { url: credit.sourceLink },
+        hyperlink: { url: stripIllegalXmlCharacters(credit.sourceLink) },
       });
-      slideObj.addNotes(credit.notes);
+      slideObj.addNotes(stripIllegalXmlCharacters(credit.notes));
     }
 
     // 1. Background
@@ -110,7 +121,7 @@ export function createPresentationPptx(
     // Slide 1: Special Hero Title Slide Layout
     if (slideLayoutFor(idx) === 'title') {
       // Session Badge
-      const partText = (slide.part || 'TITLE PAGE').toUpperCase();
+      const partText = stripIllegalXmlCharacters(slide.part || 'TITLE PAGE').toUpperCase();
       slideObj.addText(partText, {
         ...TITLE_LAYOUT.part,
         color: palette.secondary,
@@ -167,7 +178,8 @@ export function createPresentationPptx(
 
       const titleImage = slideImages?.[idx];
       if (slide.imageMetadata && titleImage && isUsableImage(titleImage)) {
-        addLibraryImage(slideObj, titleImage, TITLE_LAYOUT.image);
+        addLibraryImage(slideObj, titleImage, TITLE_LAYOUT.image, 0,
+          stripIllegalXmlCharacters(slide.imageMetadata.title || '') || stripIllegalXmlCharacters(slide.title));
       }
 
       // Slide counter
@@ -183,7 +195,7 @@ export function createPresentationPptx(
 
     // Slides 2+: Content Slides
     // 2. Part header
-    const partText = (slide.part || '').toUpperCase();
+    const partText = stripIllegalXmlCharacters(slide.part || '').toUpperCase();
     slideObj.addText(partText, {
       ...contentLayout.part,
       color: palette.secondary,
@@ -246,12 +258,16 @@ export function createPresentationPptx(
         line: { color: palette.cardBorder, width: theme.shape.visualBorderWidth },
       });
 
+      const altText = stripIllegalXmlCharacters(
+        (slide.imageMetadata ? slide.imageMetadata.title : slide.visualDescription) || ''
+      ) || stripIllegalXmlCharacters(slide.title);
       if (imageData && isUsableImage(imageData)) {
         if (slide.imageMetadata) {
-          addLibraryImage(slideObj, imageData, contentLayout.libraryImage, rotate);
-        } else if (!addCoverImage(slideObj, imageData, contentLayout.image, rotate)) {
+          addLibraryImage(slideObj, imageData, contentLayout.libraryImage, rotate, altText);
+        } else if (!addCoverImage(slideObj, imageData, contentLayout.image, rotate, altText)) {
           const rawBase64 = toRawBase64(imageData);
           slideObj.addImage({
+            altText,
             data: `${sniffImageMime(rawBase64)};base64,` + rawBase64,
             ...contentLayout.image,
             ...(rotate && { rotate }),
@@ -261,7 +277,7 @@ export function createPresentationPptx(
       } else {
         // Fallback placeholder text inside container
         const placeholderText =
-          '[PHILIPPINES CLASSROOM VISUAL DESIGN]\n\n' + slide.visualDescription;
+          '[PHILIPPINES CLASSROOM VISUAL DESIGN]\n\n' + stripIllegalXmlCharacters(slide.visualDescription);
         slideObj.addText(placeholderText, {
           ...contentLayout.placeholder,
           ...(rotate && { rotate }),
@@ -294,17 +310,19 @@ export async function buildPresentationPptx(
   theme: SlideTheme = DEFAULT_THEME
 ): Promise<Buffer> {
   const pptx = createPresentationPptx(presentationData, slideImages, theme);
-  const output = await pptx.write({ outputType: 'nodebuffer' });
+  const output = await pptx.write({ outputType: 'nodebuffer', compression: true });
   const buffer = Buffer.isBuffer(output) ? output : Buffer.from(output as ArrayBuffer);
-  if (theme.id === DEFAULT_THEME_ID) return buffer;
 
   // Older renderers may ignore the run's explicit hyperlink-text colour extension.
   // Normalize both link states at the completed-package boundary for new looks.
+  // PptxGenJS 4.0.1 ignores compression for an explicit nodebuffer output type.
+  // Apply DEFLATE here for every look until its write path honors that option.
   const zip = await JSZip.loadAsync(buffer);
   for (const path of Object.keys(zip.files).filter(path => /^ppt\/theme\/theme\d+\.xml$/.test(path))) {
+    if (theme.id === DEFAULT_THEME_ID) continue;
     const xml = await zip.file(path)!.async('string');
     zip.file(path, xml.replace(/<a:(hlink|folHlink)>[\s\S]*?<\/a:\1>/g,
       (_, tag: string) => `<a:${tag}><a:srgbClr val="${theme.palette.muted}"/></a:${tag}>`));
   }
-  return zip.generateAsync({ type: 'nodebuffer' });
+  return zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
 }

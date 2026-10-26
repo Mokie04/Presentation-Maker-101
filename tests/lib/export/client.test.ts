@@ -24,6 +24,18 @@ describe('readErrorMessage', () => {
     vi.spyOn(res, 'text').mockRejectedValueOnce(new Error('stream broke'));
     expect(await readErrorMessage(res, fallback)).toBe(fallback);
   });
+
+  it.each([
+    [413, '<html>Request Entity Too Large</html>'],
+    [500, 'Request failed: FUNCTION_PAYLOAD_TOO_LARGE'],
+    [500, JSON.stringify({ error: { code: 'FUNCTION_PAYLOAD_TOO_LARGE' } })],
+  ])('explains a platform payload error (%s) without exposing its body', async (status, body) => {
+    const message = await readErrorMessage(new Response(body, { status }), fallback);
+    expect(message).toMatch(/too large/i);
+    expect(message).toMatch(/fewer pictures|remove.*pictures/i);
+    expect(message).toMatch(/Markdown outline/);
+    expect(message).not.toMatch(/FUNCTION_PAYLOAD_TOO_LARGE|<html>/);
+  });
 });
 
 describe('downloadBlob', () => {
