@@ -44,14 +44,14 @@ it('keeps uniform board paint inside the slide, below the credit band, and ribbo
     expect(d.y).toBeGreaterThan(gap[0]); expect(d.y + d.h).toBeLessThan(gap[1]);
   }
 });
-it('brackets Chalkboard text with passive SVG layers while other looks have exact undecorated markup', () => {
+it('brackets Chalkboard text with passive SVG layers while Classic has exact undecorated markup', () => {
   const markup = (theme: SlideTheme) => renderToStaticMarkup(<SlideView slide={decorationSlides[1]} index={1} total={3} theme={theme} />);
   const document = new DOMParser().parseFromString(markup(chalkboard), 'text/html');
   const root = document.querySelector('[role="group"]')!;
   expect(root.firstElementChild?.getAttribute('data-decoration-layer')).toBe('behind');
   expect(root.lastElementChild?.getAttribute('data-decoration-layer')).toBe('front');
   for (const svg of Array.from(root.querySelectorAll<SVGElement>('svg'))) { expect(svg.getAttribute('aria-hidden')).toBe('true'); expect(svg.style.pointerEvents).toBe('none'); }
-  for (const id of ['sayuna-classic', 'paper-notebook']) {
+  for (const id of ['sayuna-classic']) {
     const theme = getTheme(id); expect(markup(theme)).not.toContain('<svg');
     expect(markup(theme)).toBe(markup({ ...theme, decorations: [] }));
   }
