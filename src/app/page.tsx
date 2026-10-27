@@ -90,6 +90,8 @@ function PresentationWorkspace() {
     focusHomeAfterReset.current = true;
     generation.current?.abort();
     generation.current = null;
+    setIsLoading(false);
+    setLoadingStage('');
     setAnotherSessionOpen(false);
     setResetConfirmOpen(false);
     setIsSlideShowActive(false);

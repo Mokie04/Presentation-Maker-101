@@ -15,6 +15,7 @@ Teachers need to arrange a deck without detaching images or credits from their s
 
 ## Consequences
 
+- A duplicate created before its automatic picture arrives does not inherit that pending result: the request is bound to the original slide ID. It copies only image data already present when duplicated. Sharing a pending result is deferred until request lineage can preserve deletion, session/reset boundaries and newer image intents without extra provider calls.
 - Selection remains keyed by stable ID: moves retain it, while a single insertion selects the new slide.
 - `src/components/workspace/SlideThumbnail.tsx` memoizes passive slide renderings in both views.
 - The first slide's title layout remains an export rule; any slide can occupy that position. The sorter explains this below its grid.

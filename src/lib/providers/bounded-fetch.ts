@@ -1,3 +1,4 @@
+import { throwIfAborted } from '@/lib/abort';
 import { Buffer } from 'node:buffer';
 
 export interface BoundedFetchOptions {
@@ -44,11 +45,11 @@ export async function boundedFetch<T>(
         headers: options.headers, signal: controller.signal, redirect: 'error',
       });
       // An injected fetch may resolve even after the deadline has aborted it.
-      controller.signal.throwIfAborted();
+      throwIfAborted(controller.signal);
       if (!response.ok) throw await options.errors.http(response);
       const bodyResponse = response;
       return await consume(response, async () => {
-        controller.signal.throwIfAborted();
+        throwIfAborted(controller.signal);
         // Defer size validation until read(), preserving callers' header-validation order.
         if (Number(bodyResponse.headers.get('content-length')) > options.limitBytes) throw options.errors.tooLarge();
         if (!bodyResponse.body) return Buffer.alloc(0);
@@ -58,7 +59,7 @@ export async function boundedFetch<T>(
         try {
           while (true) {
             const { done, value } = await reader.read();
-            controller.signal.throwIfAborted();
+            throwIfAborted(controller.signal);
             if (done) break;
             size += value.byteLength;
             if (size > options.limitBytes) {

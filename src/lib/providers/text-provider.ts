@@ -1,3 +1,4 @@
+import { throwIfAborted } from '@/lib/abort';
 import OpenAI from 'openai';
 import { z } from 'zod';
 import { getTextProviderConfig } from '@/lib/env';
@@ -84,7 +85,7 @@ function retryAfterMs(error: unknown): number | undefined {
 }
 
 function sleep(ms: number, signal?: AbortSignal): Promise<void> {
-  signal?.throwIfAborted();
+  throwIfAborted(signal);
   return new Promise((resolve, reject) => {
     const onAbort = () => { clearTimeout(timer); reject(signal?.reason); };
     const timer = setTimeout(() => {
@@ -102,7 +103,7 @@ async function boundedAttempt<T>(
   timeout: number,
   signal?: AbortSignal
 ): Promise<T> {
-  signal?.throwIfAborted();
+  throwIfAborted(signal);
   const controller = new AbortController();
   let timer: ReturnType<typeof setTimeout> | undefined;
   let onAbort: (() => void) | undefined;
@@ -130,7 +131,7 @@ export async function generateSlideContent(
   options?: GenerateSlideOptions
 ): Promise<PresentationData> {
   const signal = options?.signal;
-  signal?.throwIfAborted();
+  throwIfAborted(signal);
   const deadline = Date.now() + GENERATION_DEADLINE_MS;
   const client = options?.client ?? getTextProviderClient();
   const maxRetries = options?.maxRetries ?? 2;
@@ -140,7 +141,7 @@ export async function generateSlideContent(
 
   // 1 initial attempt + maxRetries
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    signal?.throwIfAborted();
+    throwIfAborted(signal);
     const timeout = Math.min(ATTEMPT_TIMEOUT_MS, deadline - Date.now() - RESPONSE_RESERVE_MS);
     if (timeout < MIN_ATTEMPT_MS) throw new Error('Text generation deadline exceeded.');
     try {
@@ -178,7 +179,7 @@ export async function generateSlideContent(
 
       return validated.data as PresentationData;
     } catch (err) {
-      signal?.throwIfAborted();
+      throwIfAborted(signal);
       if (err instanceof TextOutputTruncatedError || !isRetryable(err)) throw err;
       lastError = err;
       if (attempt < maxRetries) {

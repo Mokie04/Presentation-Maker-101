@@ -2,6 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import OpenAI from 'openai';
 import { createTextProviderClient, generateSlideContent } from '@/lib/providers/text-provider';
 
+const nativeAbortCheck = Object.getOwnPropertyDescriptor(AbortSignal.prototype, 'throwIfAborted')!;
+beforeEach(() => { Object.defineProperty(AbortSignal.prototype, 'throwIfAborted', { configurable: true, value: undefined }); });
+afterEach(() => { Object.defineProperty(AbortSignal.prototype, 'throwIfAborted', nativeAbortCheck); });
+
 const presentation = { subject: 'Science', originalWriters: 'Teacher', topic: 'Water', slides: [] };
 const completion = { choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(presentation) } }] };
 function clientFor(create: ReturnType<typeof vi.fn>): OpenAI {

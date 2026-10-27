@@ -3,6 +3,7 @@ import { isUsableImage, toDataUrl, toRawBase64 } from '@/lib/slide-image';
 /** 480px is optimal for the ~4" slide visual container at standard presentation DPI. */
 const MAX_DIMENSION = 480;
 const JPEG_QUALITY = 0.65;
+const IMAGE_LOAD_TIMEOUT_MS = 15_000;
 /** When an image cannot be re-encoded, send it as is only if it is small. */
 const FALLBACK_MAX_CHARS = 150000;
 
@@ -20,11 +21,22 @@ export async function compressImageForExport(base64: string): Promise<string> {
   const fallback = () => (base64.length > FALLBACK_MAX_CHARS ? '' : base64);
   return new Promise((resolve) => {
     const img = new Image();
+    let settled = false;
+    const finish = (result: string) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      img.onload = null;
+      img.onerror = null;
+      resolve(result);
+    };
+    const timer = setTimeout(() => finish(fallback()), IMAGE_LOAD_TIMEOUT_MS);
     // Only set crossOrigin for remote http(s) URLs; setting on data: URIs taints canvas in WebKit
     if (base64.startsWith('http://') || base64.startsWith('https://')) {
       img.crossOrigin = 'anonymous';
     }
     img.onload = () => {
+      if (settled) return;
       try {
         const { width, height } = fitWithin(img.width, img.height, MAX_DIMENSION);
         const canvas = document.createElement('canvas');
@@ -32,7 +44,7 @@ export async function compressImageForExport(base64: string): Promise<string> {
         canvas.height = height;
         const ctx = canvas.getContext('2d');
         if (!ctx) {
-          resolve(fallback());
+          finish(fallback());
           return;
         }
         ctx.drawImage(img, 0, 0, width, height);
@@ -51,12 +63,12 @@ export async function compressImageForExport(base64: string): Promise<string> {
           ctx.fillRect(0, 0, width, height);
           ctx.drawImage(img, 0, 0, width, height);
         }
-        resolve(toRawBase64(transparent ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg', JPEG_QUALITY)));
+        finish(toRawBase64(transparent ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg', JPEG_QUALITY)));
       } catch {
-        resolve(fallback());
+        finish(fallback());
       }
     };
-    img.onerror = () => resolve(fallback());
-    img.src = toDataUrl(base64);
+    img.onerror = () => finish(fallback());
+    try { img.src = toDataUrl(base64); } catch { finish(fallback()); }
   });
 }

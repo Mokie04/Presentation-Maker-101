@@ -40,12 +40,15 @@ export function SlideshowModal({
   const [hintDismissed, setHintDismissed] = useState(false);
   const portraitPhone = useMediaQuery('(max-width: 767px) and (orientation: portrait)', false);
 
-  useEffect(() => {
+  const [opening, setOpening] = useState({ isOpen, initialIndex });
+  // React restarts this render before committing, so opening never paints the old slide.
+  if (opening.isOpen !== isOpen || opening.initialIndex !== initialIndex) {
+    setOpening({ isOpen, initialIndex });
     if (isOpen) {
       setCurrentIndex(initialIndex);
       setHintDismissed(false);
     }
-  }, [isOpen, initialIndex]);
+  }
 
   const slides = presentationData?.slides || [];
   const totalSlides = slides.length;
