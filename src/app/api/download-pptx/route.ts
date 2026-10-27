@@ -28,6 +28,7 @@ const inputSchema = exportRequestSchema.extend({
 
 export const POST = defineRoute({
   name: 'download-pptx',
+  noStore: true,
   failureMessage: 'Failed to compile the PowerPoint file. Please try again.',
   input: inputSchema,
   maxBodyBytes: MAX_EXPORT_BODY_BYTES,

@@ -6,6 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export const GET = defineRoute({
   name: 'health',
+  noStore: true,
   failureMessage: 'Health check failed.',
   parse: 'none',
   handler: async () => {

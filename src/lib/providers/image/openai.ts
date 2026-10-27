@@ -1,6 +1,7 @@
 import OpenAI from 'openai';
 import { getImageProviderConfig } from '@/lib/env';
 import { IMAGE_PROMPT_PREFIX } from '@/lib/prompts/slide-generation';
+import { downloadProviderImage, openAiImageDownloadHosts } from '../download-provider-image';
 import type { ImageProvider } from './types';
 
 export function createImageProviderClient(options?: {
@@ -71,12 +72,9 @@ export function createOpenAiImageProvider(options?: {
 
           if (firstImage.url) {
             // Fallback for providers that only return a hosted URL
-            const imageRes = await fetch(firstImage.url);
-            if (!imageRes.ok) {
-              throw new Error(`Failed to download image from URL: ${imageRes.statusText}`);
-            }
-            const arrayBuffer = await imageRes.arrayBuffer();
-            return Buffer.from(arrayBuffer).toString('base64');
+            return await downloadProviderImage(firstImage.url, {
+              allowedHosts: openAiImageDownloadHosts(getImageProviderConfig().baseUrl),
+            });
           }
 
           throw new Error('Image response contained neither b64_json nor url.');

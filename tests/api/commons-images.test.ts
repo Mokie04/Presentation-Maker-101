@@ -12,7 +12,7 @@ const metadata = { source: 'commons' as const, fileId: 42, title: 'File:Roots.pn
 const candidate = { ...metadata, selectable: true, previewUrl: metadata.assetUrl };
 const selected = { base64: 'image', metadata };
 const req = (body: unknown, cookie?: string) => new NextRequest('http://localhost/api/commons', { method: 'POST',
-  body: JSON.stringify(body), headers: cookie ? { cookie } : {} });
+  body: JSON.stringify(body), headers: { 'Content-Type': 'application/json', ...(cookie ? { cookie } : {}) } });
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 describe('protected manual Commons endpoints', () => {
   it('requires session before any provider calls and accepts a valid session', async () => {
@@ -103,7 +103,7 @@ describe.each(routeCases)('Commons $name response policy', ({ name, endpoint, bo
 
   it('normalizes invalid JSON errors', async () => {
     const provider = prepare();
-    const response = await endpoint(new NextRequest('http://localhost/api/commons-images', { method: 'POST', body: 'not JSON' }));
+    const response = await endpoint(new NextRequest('http://localhost/api/commons-images', { method: 'POST', body: 'not JSON', headers: { 'Content-Type': 'application/json' } }));
     expect(response.status).toBe(400);
     expect(await response.json()).toEqual({ error: 'Invalid JSON request body.' });
     expect(response.headers.get('Cache-Control')).toBe('no-store');

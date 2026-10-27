@@ -6,7 +6,7 @@ import * as detector from '@/lib/utils/subject-detector';
 
 const modelPresentation = { subject: 'Science', topic: 'Planets', originalWriters: 'Teacher', slides: [] };
 function request(fields: Record<string, unknown> = {}) {
-  return new NextRequest('http://localhost/api/generate', { method: 'POST',
+  return new NextRequest('http://localhost/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text: 'English reading about a planet', session: 'Session 1', ...fields }),
   });
 }

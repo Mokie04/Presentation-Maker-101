@@ -10,7 +10,7 @@ const candidate = { nasaId: 'root', title: '<b>Roots</b>', photographer: 'Teache
 const asset = { nasaId: 'root', sourceUrl: 'https://images-assets.nasa.gov/image/root/root~large.jpg',
   base64: '/9j/2Q==', mimeType: 'image/jpeg', rendition: 'large' as const };
 function req(body: unknown, cookie?: string) { return new NextRequest('http://localhost/api/nasa-images', {
-  method: 'POST', body: JSON.stringify(body), headers: cookie ? { cookie } : {},
+  method: 'POST', body: JSON.stringify(body), headers: { 'Content-Type': 'application/json', ...(cookie ? { cookie } : {}) },
 }); }
 afterEach(() => { vi.restoreAllMocks(); vi.unstubAllEnvs(); });
 describe('manual NASA endpoints', () => {
@@ -111,7 +111,7 @@ describe.each(routeCases)('NASA $name response policy', ({ name, endpoint, body,
 
   it('normalizes invalid JSON errors', async () => {
     const provider = prepare();
-    const response = await endpoint(new NextRequest('http://localhost/api/nasa-images', { method: 'POST', body: 'not JSON' }));
+    const response = await endpoint(new NextRequest('http://localhost/api/nasa-images', { method: 'POST', body: 'not JSON', headers: { 'Content-Type': 'application/json' } }));
     expect(response.status).toBe(400);
     expect(await response.json()).toEqual({ error: 'Invalid JSON request body.' });
     expect(response.headers.get('Cache-Control')).toBe('no-store');

@@ -9,7 +9,7 @@ const base: PresentationData = { subject: 'Science', originalWriters: 'Teacher',
   { slideNumber: 1, part: 'Title Page', title: 'Water', contentPoints: ['Science'], visualDescription: '' },
   { slideNumber: 2, part: 'Discussion', title: 'Evidence', contentPoints: ['Observe'], visualDescription: 'Water' },
 ] };
-function request() { return new NextRequest('http://localhost/api/generate', { method: 'POST', body: JSON.stringify({ text: 'Science lesson', session: 'Session 1', subject: 'Science', subjectSource: 'teacher-supplied' }) }); }
+function request() { return new NextRequest('http://localhost/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: 'Science lesson', session: 'Session 1', subject: 'Science', subjectSource: 'teacher-supplied' }) }); }
 it('fits a mocked dense model response before returning server-recorded provenance', async () => {
   const dense = { ...base, subjectEvidence: [{ subject: 'Forged', source: 'unknown' as const }], slides: [base.slides[0], { ...base.slides[1], contentPoints: Array.from({ length: 12 }, () => 'Observe the small bodies in the Solar System and describe their motion using evidence from the diagram.') }] };
   vi.spyOn(provider, 'generateSlideContent').mockResolvedValueOnce(dense);

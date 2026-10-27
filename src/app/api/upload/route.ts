@@ -10,6 +10,7 @@ const ALLOWED_EXTENSIONS = ['.docx', '.pdf', '.txt', '.md'];
 
 export const POST = defineRoute({
   name: 'upload',
+  noStore: true,
   parse: 'form',
   failureMessage: 'Failed to process the upload. Please try again.',
   maxBodyBytes: () => getAppConfig().maxFileSizeMb * 1024 * 1024 * 2,

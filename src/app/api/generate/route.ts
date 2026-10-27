@@ -23,6 +23,7 @@ const inputSchema = z.looseObject({
 
 export const POST = defineRoute({
   name: 'generate',
+  noStore: true,
   failureMessage: 'Failed to generate the presentation. Please try again.',
   input: inputSchema,
   maxBodyBytes: MAX_BODY_BYTES,
@@ -41,8 +42,12 @@ export const POST = defineRoute({
       );
     }
 
-    const hasSubject = typeof subject === 'string' && subject.trim().length > 0;
-    const resolvedSubject = hasSubject ? subject.trim() : detectSubject(text);
+    // Legacy callers have no provenance marker; keep their free text bounded and prompt-safe.
+    const safeSubject = typeof subject === 'string'
+      ? (hasSubjectSource ? subject : subject.replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029"'`]/g, '').slice(0, 100)).trim()
+      : '';
+    const hasSubject = safeSubject.length > 0;
+    const resolvedSubject = hasSubject ? safeSubject : detectSubject(text);
     const inputEvidence: SubjectEvidence = {
       subject: resolvedSubject,
       source: hasSubjectSource ? 'teacher-supplied' : hasSubject ? 'unknown' : 'keyword-detected',

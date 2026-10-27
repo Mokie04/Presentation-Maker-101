@@ -16,7 +16,7 @@ describe('selecting a CC BY-SA Commons image', () => {
       .mockResolvedValueOnce(Response.json({ batchcomplete: true, query: { pages: [page] } }))
       .mockResolvedValueOnce(new Response(png, { headers: { 'content-type': 'image/png' } }));
     vi.stubGlobal('fetch', fetchMock);
-    const response = await select(new NextRequest('http://localhost/api/commons-images/select', { method: 'POST', body: JSON.stringify({ fileId: 42 }) }));
+    const response = await select(new NextRequest('http://localhost/api/commons-images/select', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fileId: 42 }) }));
     expect(response.status).toBe(200);
     const { metadata } = await response.json();
     expect(imageMetadataSchema.parse(metadata)).toMatchObject({ source: 'commons', fileId: 42, licenseKind: 'cc-by-sa',

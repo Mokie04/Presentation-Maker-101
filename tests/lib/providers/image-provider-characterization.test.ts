@@ -116,16 +116,16 @@ describe('generateSlideImage characterization before extracting adapters', () =>
 
   it('downloads and base64-encodes URL-only responses', async () => {
     const ai = client(vi.fn().mockResolvedValue({ data: [{ url: 'https://example.test/image' }] }));
-    vi.mocked(fetch).mockResolvedValue(new Response(new Uint8Array([0, 255, 3])));
+    vi.mocked(fetch).mockResolvedValue(new Response(new Uint8Array([0, 255, 3]), { headers: { 'Content-Type': 'image/png' } }));
     expect(await generateSlideImage(description, { client: ai.client, source: 'ai' })).toBe('AP8D');
-    expect(fetch).toHaveBeenCalledExactlyOnceWith('https://example.test/image');
+    expect(fetch).toHaveBeenCalledExactlyOnceWith('https://example.test/image', expect.objectContaining({ redirect: 'error', signal: expect.any(AbortSignal) }));
   });
 
   it.each([
     { response: { data: [] }, message: 'No image returned from image provider.' },
     { response: {}, message: 'No image returned from image provider.' },
     { response: { data: [{}] }, message: 'Image response contained neither b64_json nor url.' },
-    { response: { data: [{ url: 'https://example.test/image' }] }, message: 'Failed to download image from URL: Bad Gateway' },
+    { response: { data: [{ url: 'https://example.test/image' }] }, message: 'Image download failed (502).' },
   ])('preserves response error: $message', async ({ response, message }) => {
     const ai = client(vi.fn().mockResolvedValue(response));
     vi.mocked(fetch).mockResolvedValue(new Response(null, { status: 502, statusText: 'Bad Gateway' }));

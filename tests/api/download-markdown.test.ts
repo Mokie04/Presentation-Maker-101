@@ -44,7 +44,7 @@ describe('POST /api/download-markdown', () => {
 
   it('exports the same outline with optional subject history as with legacy data', async () => {
     const exportRequest = (presentationData: PresentationData) => new NextRequest('http://localhost/api/download-markdown', {
-      method: 'POST', body: JSON.stringify({ presentationData, session: 'Session 2' }),
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ presentationData, session: 'Session 2' }),
     });
     const legacy = await POST(exportRequest(validPresentation));
     const withHistory = await POST(exportRequest({ ...validPresentation, subjectEvidence: [

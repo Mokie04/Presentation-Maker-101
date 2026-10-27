@@ -10,6 +10,7 @@ export const dynamic = 'force-dynamic';
 
 export const POST = defineRoute({
   name: 'download-markdown',
+  noStore: true,
   failureMessage: 'Failed to generate the Markdown outline. Please try again.',
   input: exportRequestSchema,
   maxBodyBytes: MAX_EXPORT_BODY_BYTES,

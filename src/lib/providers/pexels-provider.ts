@@ -1,4 +1,5 @@
 import { getPexelsConfig } from '@/lib/env';
+import { downloadProviderImage } from './download-provider-image';
 
 export interface PexelsPhoto {
   id: number;
@@ -152,13 +153,7 @@ export async function fetchPexelsImageBase64(
     throw new Error(`No Pexels photos found for query: "${query}"`);
   }
 
-  const customFetch = options?.fetchFn ?? fetch;
-  const imageRes = await customFetch(imageUrl);
-
-  if (!imageRes.ok) {
-    throw new Error(`Failed to download image from Pexels: ${imageRes.statusText}`);
-  }
-
-  const buffer = await imageRes.arrayBuffer();
-  return Buffer.from(buffer).toString('base64');
+  return downloadProviderImage(imageUrl, {
+    allowedHosts: ['images.pexels.com'], fetchFn: options?.fetchFn,
+  });
 }
