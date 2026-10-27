@@ -9,7 +9,7 @@ Architecture changes need review, repeatable checks and a chance to inspect user
 
 ## Decision
 
-Work on one branch per change, open a PR, require the `verify` job in `.github/workflows/ci.yml` to pass, smoke-test the Vercel preview, and merge only after approval. Do not commit straight to `main`. The workflow runs typecheck, lint and `npm test` for PRs and pushes to `main`.
+Work on one branch per change, open a PR, require the `verify` job in `.github/workflows/ci.yml` to pass, smoke-test the Vercel preview, and merge only after approval. Do not commit straight to `main`. The workflow runs typecheck, lint, `npm test` and a production build for PRs and pushes to `main`; an advisory audit job is non-blocking (ADR 0030).
 
 ## Consequences
 

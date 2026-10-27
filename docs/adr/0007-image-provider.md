@@ -13,7 +13,7 @@ Automatic image generation can use an OpenAI-compatible service or Pexels; their
 
 ## Consequences
 
-`auto` adds Pexels fallback only when a Pexels key exists. The OpenAI adapter currently fixes size at `1024x576`; another provider must not inherit that setting by accident. `tests/lib/providers/image/contract.test.ts` and `tests/lib/providers/image/compose.test.ts` cover the seam.
+`auto` adds Pexels fallback only when a Pexels key exists. ADR 0030 supersedes the original fixed `1024x576` policy with configurable, model-aware sizes; another provider must not inherit an unsupported size by accident. `tests/lib/providers/image/contract.test.ts` and `tests/lib/providers/image/compose.test.ts` cover the seam.
 
 ## Alternatives considered
 
