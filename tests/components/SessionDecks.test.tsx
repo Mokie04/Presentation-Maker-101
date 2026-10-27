@@ -223,7 +223,7 @@ it.each(['before', 'after'])('pins the lesson when a concurrent upload completes
   await act(async () => { pending.resolve(Response.json(presentation)); });
   if (order === 'after') await completeUpload();
   another();
-  expect(within(dialog()).getByText('Pasted Lesson Plan')).toBeTruthy();
+  expect(within(dialog()).getByText('Lesson', { exact: true })).toBeTruthy();
   expect(within(dialog()).queryByText('B.txt')).toBeNull();
   fireEvent.click(within(dialog()).getByRole('button', { name: 'Generate' }));
   await screen.findByRole('tab', { name: 'Session 2' });
@@ -267,4 +267,38 @@ it('does not steal focus on the initial home mount', async () => {
   render(<Home />);
   await screen.findByRole('heading', { level: 1, name: /Turn your lesson plan/ });
   expect(document.activeElement).toBe(document.body);
+});
+
+
+it.each(['fetch', 'body'] as const)('keeps Start over empty when a previous upload %s completes late', async stage => {
+  const pending = deferred(); const incoming = deferred();
+  let finishBody!: (text: string) => void;
+  const body = new Promise<string>(done => { finishBody = done; });
+  const response = new Response();
+  vi.spyOn(response, 'text').mockImplementation(() => body);
+  generate.mockImplementationOnce(() => pending.promise);
+  upload.mockImplementationOnce(() => stage === 'fetch' ? incoming.promise : Promise.resolve(response));
+  render(<Home />);
+  fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: lesson } });
+  chooseSession('Session 1');
+  fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Hide Manual Paste' }));
+  await act(async () => {
+    fireEvent.change(document.querySelector('input[type="file"]')!, { target: { files: [new File(['late lesson'], 'late.txt')] } });
+  });
+  const signal = upload.mock.calls[0][1]?.signal;
+  await act(async () => { pending.resolve(Response.json(presentation)); });
+  fireEvent.click(screen.getByRole('button', { name: 'Start over with a new lesson' }));
+  await act(async () => {
+    if (stage === 'fetch') incoming.resolve(Response.json({ text: 'Late lesson', fileName: 'late.txt' }));
+    else finishBody(JSON.stringify({ text: 'Late lesson', fileName: 'late.txt' }));
+  });
+  expect(signal?.aborted).toBe(true);
+  expect(screen.queryByText('late.txt')).toBeNull();
+  expect(screen.queryByRole('alert')).toBeNull();
+  expect((screen.getByRole('button', { name: 'Generate Slides' }) as HTMLButtonElement).disabled).toBe(true);
+  expect(screen.getByRole('button', { name: 'Choose lesson plan document' }).parentElement!.getAttribute('aria-busy')).toBe('false');
+  fireEvent.click(screen.getByRole('button', { name: 'Paste Lesson Plan Text' }));
+  expect((screen.getByRole('textbox') as HTMLTextAreaElement).value).toBe('');
 });
