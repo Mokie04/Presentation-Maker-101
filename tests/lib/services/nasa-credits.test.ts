@@ -10,14 +10,14 @@ const presentationData = { subject: 'English/Reading', topic: 'Roots', originalW
   { slideNumber: 1, part: 'Discussion', title: 'Roots', contentPoints: ['Root observation'], visualDescription: 'roots', imageMetadata: metadata },
 ] };
 const image = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
-function req() { return new NextRequest('http://localhost/export', { method: 'POST', body: JSON.stringify({ presentationData, slideImages: { 0: image } }) }); }
+function req() { return new NextRequest('http://localhost/export', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ presentationData, slideImages: { 0: image } }) }); }
 describe('NASA export credits', () => {
   it.each([0, 1])('preserves a 2:1 NASA image aspect ratio on exported slide %i', async (index) => {
     const widePng = 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAICAIAAAB/FOjAAAAAE0lEQVR4nGNQaPhPEmIY1UALDQB5Ss+BakG97wAAAABJRU5ErkJggg==';
     const data = { ...presentationData, slides: Array.from({ length: index + 1 }, (_, i) => ({
       ...presentationData.slides[0], slideNumber: i + 1, imageMetadata: i === index ? metadata : undefined,
     })) };
-    const response = await powerpoint(new NextRequest('http://localhost/export', { method: 'POST',
+    const response = await powerpoint(new NextRequest('http://localhost/export', { method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ presentationData: data, slideImages: { [index]: widePng } }),
     }));
     expect(response.status).toBe(200);

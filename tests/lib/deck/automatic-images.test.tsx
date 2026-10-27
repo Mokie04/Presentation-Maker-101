@@ -119,3 +119,27 @@ it('keeps occupied slots until aborted requests settle even if fetch ignores abo
   expect(pending).toHaveLength(5);
   expect(result.current.slideImages).toEqual({});
 });
+it('preserves the original description-only Pexels fallback when a slide also has a subject title', async () => {
+  const { extractSearchKeywords } = await import('@/lib/providers/pexels-provider');
+  const { result } = renderHook(() => useSlideDeck());
+  const presentation = deck(1);
+  presentation.slides[0].title = 'Photosynthesis';
+  presentation.slides[0].visualDescription = 'Educational classroom illustration';
+  act(() => result.current.loadPresentation(presentation));
+  const request = JSON.parse(String(pending[0].init.body));
+  expect(extractSearchKeywords(request.prompt, request.title)).toBe('education science classroom');
+  expect(request).toEqual({ prompt: 'Educational classroom illustration', slideIndex: 0, variation: 0 });
+});
+it('stops tracking skipped queued pictures when their part later becomes eligible again', async () => {
+  const { result } = renderHook(() => useSlideDeck());
+  act(() => result.current.loadPresentation(deck(4)));
+  const queued = result.current.slideIds[3];
+  act(() => result.current.updatePart(queued, 'Assessment'));
+  await act(async () => { pending[0].resolve(Response.json({ base64: 'first' })); });
+  expect(pending).toHaveLength(3);
+  act(() => result.current.updatePart(queued, 'Discussion'));
+  await act(async () => { pending.slice(1).forEach(request => request.resolve(Response.json({ base64: 'image' }))); });
+  expect(result.current.imageProgress).toEqual({ loading: 0, done: 3, failed: 0 });
+  expect(result.current.slideImages).toEqual({ 0: 'first', 1: 'image', 2: 'image' });
+  expect(pending).toHaveLength(3);
+});

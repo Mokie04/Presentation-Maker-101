@@ -9,8 +9,8 @@ Branch: fix/input-hardening. No push or merge. One commit per section A–H.
 - [x] D — per-slide automatic images, concurrency 3, lifecycle cancellation, counts/status and model-aware image settings.
 - [x] E — bounded trusted image downloads, legacy subject/filename bounds, cache/security headers and CSRF checks.
 - [x] F — include config in typecheck, build CI, advisory audit job, Node floor and route-owned durations.
-- [ ] G — ADR, architecture/README/review bookkeeping and explicit remaining limitations.
-- [ ] H — final Node 22 gates, clean-environment production build/header checks, browser fixtures and report.
+- [x] G — ADR, architecture/README/review bookkeeping and explicit remaining limitations.
+- [x] H — final Node 22 gates, clean-environment production build/header checks, browser fixtures and report.
 
 ## Decisions and evidence
 
@@ -26,3 +26,5 @@ Branch: fix/input-hardening. No push or merge. One commit per section A–H.
 - Final review exposed parser disagreement over ZIP end records and phantom progress after skipping/re-enabling queued images. RED regressions now protect both. Final corrections are kept in H with the final verification record, preserving one commit per requested section and existing history.
 - The review's claimed lost-title regression was rejected after checking main: the old browser batch also omitted titles. Preserve description-only requests and query behavior.
 - SDK wraps transport errors as APIConnectionError; bare programming TypeError fails immediately instead of spending three paid attempts.
+
+- G committed2fd4bce. FinalNode22 typecheck/lint/full177files1854tests/cleanenvbuild pass; curl provesnosniff/referrerpolicy +protectedAPIno-store. Final47-file existing-test inventory and all deviations recorded in verification doc.

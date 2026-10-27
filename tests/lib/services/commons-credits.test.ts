@@ -10,7 +10,7 @@ const metadata = { source: 'commons', fileId: 42, title: 'File:Diagram.png', cre
   sourceUrl: 'https://commons.wikimedia.org/wiki/File:Diagram.png',
   assetUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Diagram.png/1200px-Diagram.png',
   mimeType: 'image/png', rendition: 'thumbnail' };
-function req() { return new NextRequest('http://localhost/export', { method: 'POST', body: JSON.stringify({
+function req() { return new NextRequest('http://localhost/export', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
   presentationData: { subject: 'English/Reading', topic: 'Observation', originalWriters: 'Teacher', slides: [
     { slideNumber: 1, title: 'Observation', contentPoints: ['Observe the diagram'], part: 'Discussion', visualDescription: 'Diagram', imageMetadata: metadata },
   ] }, slideImages: { 0: image },

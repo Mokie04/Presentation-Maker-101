@@ -1,10 +1,12 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import JSZip from 'jszip';
 import { parseDocument } from '@/lib/parsers/document-parser';
 import { LESSON_TOO_LONG_MESSAGE, MAX_LESSON_TEXT_LENGTH } from '@/lib/lesson-limits';
 import { docxBuffer, falsifyDocxSizes, pdfBuffer } from '../../helpers/document-fixtures';
 
 const MIB = 1024 * 1024;
+
+afterEach(() => vi.restoreAllMocks());
 
 describe('document resource limits (real parsers, in-memory fixtures)', () => {
   it.each([null, 1, 0])('rejects a highly compressed DOCX above the entry cap (falsified size: %s)', async (falsifiedSize) => {
@@ -21,6 +23,31 @@ describe('document resource limits (real parsers, in-memory fixtures)', () => {
     console.info(JSON.stringify({ case: falsifiedSize === null ? 'docx-bomb' : `docx-lying-header-${falsifiedSize}`, bytes: buffer.length, elapsedMs, heapGrowth }));
     expect(elapsedMs).toBeLessThan(2_000);
     expect(heapGrowth).toBeLessThan(32 * MIB);
+  });
+
+  it('rejects ambiguous ZIP directories before JSZip can inflate an unverified archive', async () => {
+    const safe = new JSZip();
+    safe.file('safe.txt', 'safe');
+    const outer = await safe.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
+    const hidden = await docxBuffer('x'.repeat(11 * MIB));
+    const hiddenEnd = hidden.length - 22;
+    const directory = hidden.readUInt32LE(hiddenEnd + 16);
+    // Point the hidden directory at its own local entries in the combined buffer.
+    for (let offset = directory; offset < hiddenEnd;
+      offset += 46 + hidden.readUInt16LE(offset + 28) + hidden.readUInt16LE(offset + 30) + hidden.readUInt16LE(offset + 32)) {
+      hidden.writeUInt32LE(hidden.readUInt32LE(offset + 42) + outer.length, offset + 42);
+    }
+    hidden.writeUInt32LE(directory + outer.length, hiddenEnd + 16);
+    // The outer EOCD owns the hidden ZIP as a valid comment. Its final EOCD leaves
+    // one trailing byte: JSZip selects it even though its comment extent is invalid.
+    outer.writeUInt16LE(hidden.length + 1, outer.length - 2);
+    const buffer = Buffer.concat([outer, hidden, Buffer.from([0])]);
+    expect(buffer.length).toBeLessThan(20_000);
+    const load = vi.spyOn(JSZip, 'loadAsync');
+    const started = performance.now();
+    await expect(parseDocument(buffer, 'ambiguous.docx')).rejects.toThrow('Invalid ZIP directory');
+    expect(load).not.toHaveBeenCalled();
+    expect(performance.now() - started).toBeLessThan(500);
   });
 
   it('rejects summed declared uncompressed bytes above 20 MiB', async () => {

@@ -92,13 +92,18 @@ export function useSlideDeck() {
       partWantsAutoImage(slide.content.part) && slide.content.visualDescription.trim()
         ? [{ token: { slideId: slide.id, version: slide.image.version }, slideIndex, prompt: slide.content.visualDescription }]
         : []);
-    imageLoads.current.set(session, { controller, slideIds: new Set(requests.map(({ token }) => token.slideId)) });
+    const load = { controller, slideIds: new Set(requests.map(({ token }) => token.slideId)) };
+    imageLoads.current.set(session, load);
     for (const { token, slideIndex, prompt } of requests) {
       imageQueue.current.push({ signal: controller.signal, run: async () => {
         const current = sessionsRef.current.decks[session]?.deck.slides.find(slide => slide.id === token.slideId);
         // A deleted slide or a newer image intent needs no queued automatic request.
         if (controller.signal.aborted || !current || current.image.version !== token.version ||
-          !partWantsAutoImage(current.content.part) || !current.content.visualDescription.trim()) return;
+          !partWantsAutoImage(current.content.part) || !current.content.visualDescription.trim()) {
+          // A skipped request stays finished if the teacher later restores eligibility.
+          load.slideIds.delete(token.slideId);
+          return;
+        }
         let image = FAILED_IMAGE;
         try {
           const response = await fetch('/api/generate-image', {

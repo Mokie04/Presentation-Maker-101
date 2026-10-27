@@ -25,13 +25,15 @@ it('defaults to Classic and ignores unsupported IDs without writing preferences'
 it('shares the look across session loading/switching and does not request generation on change', () => {
   const { result } = renderHook(() => useSlideDeck());
   act(() => { result.current.loadPresentation(deck, 'Session 1'); });
+  expect(fetch).not.toHaveBeenCalled();
   act(() => result.current.setThemeId(TEST_THEME.id));
   expect(result.current.theme).toBe(TEST_THEME);
   expect(localStorage.getItem(THEME_PREFERENCE_KEY)).toBe(TEST_THEME.id);
-  expect(fetch).toHaveBeenCalledTimes(1);
+  expect(fetch).not.toHaveBeenCalled();
   act(() => result.current.loadPresentation(deck, 'Session 2'));
   act(() => result.current.switchSession('Session 1'));
   expect(result.current.themeId).toBe(TEST_THEME.id);
+  expect(fetch).not.toHaveBeenCalled();
 });
 it('seeds new workspaces from the preference and resets a lesson to the current remembered preference', () => {
   localStorage.setItem(THEME_PREFERENCE_KEY, TEST_THEME.id);

@@ -64,7 +64,7 @@ describe('bounded text generation', () => {
     expect(Date.now()).toBe(elapsed);
   });
 
-  it.each([new OpenAI.APIConnectionError({ message: 'network' }), new OpenAI.APIConnectionTimeoutError(), new TypeError('fetch failed')])
+  it.each([new OpenAI.APIConnectionError({ message: 'network' }), new OpenAI.APIConnectionTimeoutError(), new OpenAI.APIConnectionError({ cause: new TypeError('fetch failed') })])
     ('retries network and timeout errors: %s', async error => {
       const create = vi.fn().mockRejectedValueOnce(error).mockResolvedValueOnce(completion);
       const result = generate(create);
@@ -73,8 +73,8 @@ describe('bounded text generation', () => {
       expect(create).toHaveBeenCalledTimes(2);
     });
 
-  it('does not retry an unknown programming error', async () => {
-    const error = new Error('unexpected local failure');
+  it.each([new Error('unexpected local failure'), new TypeError('Cannot read properties of undefined')])
+    ('does not retry an unknown programming error: %s', async error => {
     const create = vi.fn().mockRejectedValue(error);
     const result = generate(create).catch(value => value);
     await vi.runAllTimersAsync();

@@ -71,8 +71,7 @@ function isRetryable(error: unknown): boolean {
   if (error instanceof OpenAI.APIError && error.status !== undefined) {
     return [408, 409, 429].includes(error.status) || (error.status >= 500 && error.status < 600);
   }
-  return error instanceof OpenAI.APIConnectionError || error instanceof TypeError ||
-    error instanceof RetryableResponseError;
+  return error instanceof OpenAI.APIConnectionError || error instanceof RetryableResponseError;
 }
 
 function retryAfterMs(error: unknown): number | undefined {

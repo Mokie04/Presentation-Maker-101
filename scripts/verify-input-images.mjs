@@ -56,7 +56,8 @@ try {
     if (url.pathname === '/api/session') return route.fulfill({ json: { authenticated: true } });
     if (url.pathname === '/api/generate') {
       generationRequests.push(route.request().postDataJSON());
-      return route.fulfill({ json: mode === 'empty' ? { ...presentation, slides: [{ ...presentation.slides[0], title: 'Fresh deck' }] } : presentation });
+      return route.fulfill({ json: mode === 'empty' ? { ...presentation, slides: [{ ...presentation.slides[0], title: 'Fresh deck' }] }
+        : mode === 'skipped' ? { ...presentation, slides: presentation.slides.slice(1, 5).map((slide, index) => ({ ...slide, slideNumber: index + 1 })) } : presentation });
     }
     assert.equal(url.pathname, '/api/generate-image', 'client must use the individual image route');
     const body = route.request().postDataJSON();
@@ -78,6 +79,7 @@ try {
   await page.waitForFunction(() => document.querySelector('[aria-label="Pictures"]')?.textContent === 'Adding pictures... 0 of 5');
   assert.equal(requests.length, 3);
   assert.deepEqual(requests.map(({ slideIndex, variation }) => [slideIndex, variation]), [[1, 0], [2, 0], [3, 0]]);
+  assert(requests.every(request => !Object.hasOwn(request, 'title')), 'preserve the original description-only image request');
   await page.screenshot({ path: path.join(out, 'loading.png'), fullPage: true });
   held[0]('success'); held[1]('failure'); held[2]('success');
   await page.waitForFunction(() => document.querySelector('[aria-label="Pictures"]')?.textContent === 'Adding pictures... 3 of 5');
@@ -116,11 +118,26 @@ try {
   assert.equal(await page.getByLabel('Slide Title', { exact: true }).inputValue(), 'Fresh deck');
   await page.getByRole('option', { name: 'Slide 1: Fresh deck', exact: true }).waitFor();
   await page.screenshot({ path: path.join(out, 'fresh-deck.png'), fullPage: true });
+  // Skipped queued work must not reappear as loading after a teacher changes the part back.
+  await page.getByTitle('Reset to New Upload').click();
+  mode = 'skipped'; await generate();
+  await page.waitForFunction(() => document.querySelector('[aria-label="Pictures"]')?.textContent === 'Adding pictures... 0 of 4');
+  assert.equal(requests.length, 11);
+  await page.getByRole('option', { name: 'Slide 4: Plant 4', exact: true }).click();
+  await page.getByLabel('Pedagogical Part', { exact: true }).selectOption('Assessment');
+  held[8]('success');
+  await page.waitForFunction(() => document.querySelector('[aria-label="Pictures"]')?.textContent === 'Adding pictures... 1 of 3');
+  await page.getByLabel('Pedagogical Part', { exact: true }).selectOption('Discussion');
+  held[9]('success'); held[10]('success');
+  await page.getByRole('status', { name: 'Pictures' }).waitFor({ state: 'hidden' });
+  assert.equal(requests.length, 11, 'a skipped request stays completed when its part changes back');
+  await page.screenshot({ path: path.join(out, 'skipped-queue-finished.png'), fullPage: true });
   assert.deepEqual(browserErrors, []);
   const report = { evidence: 'Real Chromium with production Home/hooks/workspace source; API responses and Next font/image wrappers stubbed. No live provider or deployment proof.',
     loading: { requested: 3, eligible: 5, maxConcurrency: 3, status: 'Adding pictures... 0 of 5' },
     partialFailure: { requested: 5, done: 4, failed: 1, message: failure }, reset: { abortedInFlight: 3, queuedRequestsAfterReset: 0, lateImages: 0 },
-    normalGeneration: { slides: 6, subject: 'Science', contentPreserved: true, submittedLessonPreserved: true },
+    normalGeneration: { slides: 6, subject: 'Science', contentPreserved: true, submittedLessonPreserved: true, descriptionOnlyImageRequests: true },
+    skippedQueuedPicture: { requested: 3, skipped: 1, partRestored: 'Discussion', statusVisible: false },
     noEligiblePictures: { newRequests: 0, statusVisible: false }, requests, generationRequests, browserErrors };
   await writeFile(path.join(out, 'report.json'), JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));

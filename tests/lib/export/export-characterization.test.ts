@@ -22,7 +22,7 @@ describe.each([
   ['   ', '   ', '____session'],
 ])('export filename for topic %j and session %j', (topic, session, stem) => {
   const request = () => new NextRequest('http://localhost/api/export', {
-    method: 'POST', body: JSON.stringify({ presentationData: deck(topic), ...(session === undefined ? {} : { session }) }),
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ presentationData: deck(topic), ...(session === undefined ? {} : { session }) }),
   });
 
   it('names the Markdown outline', async () => {

@@ -27,16 +27,20 @@ function docxLimitError(): DocumentParseError {
 // Count central records before JSZip deduplicates names. Reject ZIP64/multidisk
 // archives: a DOCX within these product limits never needs either representation.
 function inspectCentralDirectory(buffer: Buffer): Array<{ content: Buffer; deflated: boolean; size: number }> {
-  let end = buffer.length - 22;
-  while (end >= Math.max(0, buffer.length - 65_557) &&
-      (buffer.readUInt32LE(end) !== 0x06054b50 || end + 22 + buffer.readUInt16LE(end + 20) !== buffer.length)) end--;
-  if (end < Math.max(0, buffer.length - 65_557)) throw new Error('Invalid ZIP directory');
+  // JSZip selects the last EOCD signature, even if it occurs inside a comment.
+  // Inspect that exact record or reject; searching backwards for another valid
+  // extent could verify one archive while JSZip later inflates a different one.
+  const end = buffer.lastIndexOf(Buffer.from('PK\x05\x06'));
+  if (end < Math.max(0, buffer.length - 65_557) || end + 22 > buffer.length ||
+      end + 22 + buffer.readUInt16LE(end + 20) !== buffer.length) {
+    throw new Error('Invalid ZIP directory');
+  }
   const count = buffer.readUInt16LE(end + 10);
   const size = buffer.readUInt32LE(end + 12);
   const start = buffer.readUInt32LE(end + 16);
   if (count > MAX_DOCX_ENTRIES || size === 0xffffffff || start === 0xffffffff) throw docxLimitError();
   if (buffer.readUInt16LE(end + 4) || buffer.readUInt16LE(end + 6) ||
-      start + size !== end) throw new Error('Unsupported ZIP directory');
+      buffer.readUInt16LE(end + 8) !== count || start + size !== end) throw new Error('Unsupported ZIP directory');
   const records: Array<{ content: Buffer; deflated: boolean; size: number }> = [];
   let entries = 0;
   let declaredTotal = 0;
