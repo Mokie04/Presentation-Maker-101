@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FileDown, FileText, Play, RotateCcw, UserCheck } from 'lucide-react';
 import { partLabel } from '@/lib/pedagogy';
 import type { useSlideDeck } from '@/lib/deck/use-slide-deck';
@@ -12,6 +12,7 @@ import { SlideStage } from './SlideStage';
 import { SlidePanel } from './SlidePanel';
 import { SlideSorter } from './SlideSorter';
 import { navigateSlides } from './slide-navigation';
+import { useMediaQuery } from './use-media-query';
 
 export interface PresentationWorkspaceViewProps {
   deck: ReturnType<typeof useSlideDeck>;
@@ -25,6 +26,12 @@ export interface PresentationWorkspaceViewProps {
 
 export function PresentationWorkspaceView({ deck, downloads, session: selectedSession, sessionControls, onReset, onPreview }: PresentationWorkspaceViewProps) {
   const { view, setView, selection, theme, themeId, setThemeId } = deck;
+  const wide = useMediaQuery('(min-width: 768px)');
+  const [imageSectionOpen, setImageSectionOpen] = useState(wide);
+  useEffect(() => {
+    // Keep the teacher's choice across keyed panels; reset only at the breakpoint.
+    setImageSectionOpen(wide);
+  }, [wide]);
   const workspace = useRef<HTMLDivElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
   const focusContent = useRef(false);
@@ -168,6 +175,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   </div>
                   <div className="order-3 grid max-h-[520px] min-h-0 min-w-0 md:col-start-2 md:row-start-2 md:max-h-none lg:col-start-3 lg:row-start-1">
                     <SlidePanel theme={theme} key={selection.selectedId} slide={selectedSlide} slideId={slideIds[selectedIndex]}
+                      imageSectionOpen={imageSectionOpen} onImageSectionToggle={setImageSectionOpen}
                       slideImage={slideImages[selectedIndex]} isGeneratingImage={Boolean(generatingImages[selectedIndex])}
                       imageError={imageErrors[selectedIndex]} onUpdatePart={updatePart} onUpdateTitle={updateTitle}
                       onUpdateBullet={updateBullet} onAddBullet={addBullet} onDeleteBullet={deleteBullet}

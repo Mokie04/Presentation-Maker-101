@@ -20,6 +20,8 @@ export interface SlidePanelProps {
   slideImage?: string;
   isGeneratingImage?: boolean;
   imageError?: string;
+  imageSectionOpen?: boolean;
+  onImageSectionToggle?: (open: boolean) => void;
   onUpdatePart?: (slideId: number, part: string) => void;
   onUpdateTitle: (slideId: number, title: string) => void;
   onUpdateBullet: (slideId: number, bulletIndex: number, text: string) => void;
@@ -43,6 +45,8 @@ export function SlidePanel({
   slideImage,
   isGeneratingImage = false,
   imageError,
+  imageSectionOpen,
+  onImageSectionToggle,
   onUpdatePart,
   onUpdateTitle,
   onUpdateBullet,
@@ -68,10 +72,12 @@ export function SlidePanel({
   const detailsSection = useRef<HTMLDetailsElement>(null);
   const imageSection = useRef<HTMLDetailsElement>(null);
   useEffect(() => {
-    // Native disclosures retain the teacher's choice until the breakpoint changes.
     if (detailsSection.current) detailsSection.current.open = true;
-    if (imageSection.current) imageSection.current.open = wide;
   }, [wide]);
+  useEffect(() => {
+    // The workspace retains the native disclosure choice across keyed panel mounts.
+    if (imageSection.current) imageSection.current.open = imageSectionOpen ?? wide;
+  }, [wide, imageSectionOpen]);
 
   return (
     <aside aria-label="Slide settings" className="min-w-0 min-h-0 overflow-y-auto overscroll-contain rounded-xl border border-sky-100 bg-white p-3 space-y-4">
@@ -156,7 +162,8 @@ export function SlidePanel({
 
         </div>
       </details>
-      <details ref={imageSection} open>
+      <details ref={imageSection} open={imageSectionOpen ?? true}
+        onToggle={event => onImageSectionToggle?.(event.currentTarget.open)}>
         <summary className="cursor-pointer rounded text-sm font-bold text-slate-700">Image</summary>
         <SlideImageControls
         key={slideId}

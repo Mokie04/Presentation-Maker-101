@@ -3,7 +3,7 @@ import { automaticImageResponse } from '../helpers/image-responses';
 import React from 'react';
 import { chooseSession } from '../helpers/workspace';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen, within, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, within, waitFor } from '@testing-library/react';
 import Home from '@/app/page';
 
 const presentation = { subject: 'Science', originalWriters: 'Teacher', topic: 'Plants', slides: ['Plants', 'Leaves', 'Flowers'].map((title, i) => ({ slideNumber: i + 1,
@@ -56,4 +56,53 @@ it.each([true, false])('uses breakpoint-appropriate disclosure defaults (md=%s)'
   await waitFor(() => expect(within(panel).getByText('Image', { exact: true }).closest('details')?.open).toBe(matches));
   expect(within(panel).getByRole('button', { name: 'Duplicate slide' })).toBeTruthy();
   expect(within(panel).getByRole('button', { name: '+ Add Slide' })).toBeTruthy();
+});
+
+function imageDisclosure() {
+  return within(screen.getByRole('complementary', { name: 'Slide settings' }))
+    .getByText('Image', { exact: true }).closest('details')!;
+}
+
+it.each([false, true])('retains the teacher Image disclosure choice across Next (md=%s)', async matches => {
+  vi.stubGlobal('matchMedia', vi.fn(() => ({ matches, addEventListener: vi.fn(), removeEventListener: vi.fn() })));
+  await open();
+  await waitFor(() => expect(imageDisclosure().open).toBe(matches));
+  fireEvent.click(within(imageDisclosure()).getByText('Image', { exact: true }));
+  await waitFor(() => expect(imageDisclosure().open).toBe(!matches));
+  // Native toggle is asynchronous; allow the disclosure choice to reach its owner.
+  await act(async () => { await new Promise(resolve => setTimeout(resolve, 0)); });
+  fireEvent.click(screen.getByRole('button', { name: 'Next slide' }));
+  expect(screen.getByRole('status', { name: '' }).textContent).toContain('Slide 2 of 3');
+  await waitFor(() => expect(imageDisclosure().open).toBe(!matches));
+});
+
+it('resets the Image disclosure only when crossing the panel breakpoint', async () => {
+  const listeners = new Set<(event: MediaQueryListEvent) => void>();
+  const resize = (matches: boolean) => act(() => {
+    listeners.forEach(listener => listener({ matches } as MediaQueryListEvent));
+  });
+  vi.stubGlobal('matchMedia', vi.fn((query: string) => ({ matches: false,
+    addEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => {
+      if (query === '(min-width: 768px)') listeners.add(listener);
+    }, removeEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => {
+      listeners.delete(listener);
+    },
+  })));
+  await open();
+  await waitFor(() => expect(imageDisclosure().open).toBe(false));
+  fireEvent.click(within(imageDisclosure()).getByText('Image', { exact: true }));
+  await act(async () => { await new Promise(resolve => setTimeout(resolve, 0)); });
+  resize(true);
+  expect(imageDisclosure().open).toBe(true);
+  fireEvent.click(within(imageDisclosure()).getByText('Image', { exact: true }));
+  await act(async () => { await new Promise(resolve => setTimeout(resolve, 0)); });
+  expect(imageDisclosure().open).toBe(false);
+  resize(true);
+  expect(imageDisclosure().open).toBe(false);
+  resize(false);
+  expect(imageDisclosure().open).toBe(false);
+  resize(true);
+  expect(imageDisclosure().open).toBe(true);
+  resize(false);
+  expect(imageDisclosure().open).toBe(false);
 });
