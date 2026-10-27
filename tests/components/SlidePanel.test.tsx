@@ -40,6 +40,18 @@ describe('SlidePanel', () => {
     expect(handlers.onAddSlide).toHaveBeenCalledWith();
   });
 
+  it('keeps the only slide and explains why deletion is unavailable', () => {
+    const handlers = props();
+    render(<SlidePanel {...handlers} totalSlides={1} />);
+    const remove = screen.getByRole('button', { name: 'Delete Slide' });
+    expect(remove.hasAttribute('disabled')).toBe(true);
+    expect(remove.getAttribute('title')).toBe('Keep at least one slide');
+    fireEvent.click(remove);
+    expect(handlers.onDeleteSlide).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
+    expect(handlers.onAddSlide).toHaveBeenCalledWith();
+  });
+
   it.each(['Activity', 'Teacher reflection'])('keeps the noncanonical part %s selectable', (part) => {
     const handlers = props();
     render(<SlidePanel {...handlers} slide={{ ...handlers.slide, part }} />);

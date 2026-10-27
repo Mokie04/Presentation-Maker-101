@@ -30,7 +30,7 @@ it.each([{ index: 0, contentPoints: slide.contentPoints }, { index: 1, contentPo
 });
 it('adds a visible and accessible sorter marker and removes it when text fits', () => {
   const show = (current: SlideData) => <SlideSorter slides={[{ ...slide, contentPoints: ['Science'] }, current]} slideIds={[0, 1]} selectedId={1}
-    onSelect={vi.fn()} onOpen={vi.fn()} onMove={vi.fn()} onDuplicate={vi.fn()} onDelete={vi.fn()} />;
+    onSelect={vi.fn()} onOpen={vi.fn()} onMove={vi.fn()} onDuplicate={vi.fn()} onDelete={vi.fn()} onAdd={vi.fn()} />;
   const view = render(show(slide));
   const card = screen.getByRole('listitem', { name: 'Slide 2: Water (text does not fit)' });
   expect(within(card).getByText('!')).toBeTruthy();

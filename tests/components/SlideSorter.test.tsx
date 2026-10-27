@@ -16,7 +16,7 @@ const slides: SlideData[] = ['Plants', 'Leaves', 'Flowers'].map((title, i) => ({
 }));
 function props(): SlideSorterProps {
   return { slides, slideIds: [10, 20, 30], selectedId: 20, onSelect: vi.fn(), onOpen: vi.fn(),
-    onMove: vi.fn(), onDuplicate: vi.fn(), onDelete: vi.fn(), originalWriters: 'Teacher' };
+    onMove: vi.fn(), onDuplicate: vi.fn(), onDelete: vi.fn(), onAdd: vi.fn(), originalWriters: 'Teacher' };
 }
 function cards() { return within(screen.getByRole('list', { name: 'Slides in sorter' })).getAllByRole('listitem'); }
 
@@ -59,6 +59,11 @@ describe('SlideSorter', () => {
     rerender(<SlideSorter {...handlers} slides={[slides[0]]} slideIds={[10]} selectedId={10} />);
     expect(screen.getByRole('button', { name: 'Delete slide 1' }).hasAttribute('disabled')).toBe(true);
     expect(screen.getByRole('button', { name: 'Move slide 1 later' }).hasAttribute('disabled')).toBe(true);
+  });
+
+  it('explains why the only slide cannot be deleted', () => {
+    render(<SlideSorter {...props()} slides={[slides[0]]} slideIds={[10]} selectedId={10} />);
+    expect(screen.getByRole('button', { name: 'Delete slide 1' }).getAttribute('title')).toBe('Keep at least one slide');
   });
 
   it('reorders on drag and highlights the drop target, but ignores dropping onto itself', () => {

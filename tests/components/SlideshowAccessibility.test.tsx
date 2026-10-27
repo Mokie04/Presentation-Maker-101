@@ -130,6 +130,25 @@ describe('slideshow accessibility', () => {
     expect(within(dialog).getByRole('group', { name: 'Slide 1 of 3' })).toBeTruthy();
   });
 
+  it.each(['initially empty', 'emptied while open', 'missing current slide'])('leaves page keys alone when %s', (state) => {
+    const onClose = vi.fn();
+    const data = state === 'initially empty' ? { ...presentation, slides: [] } : presentation;
+    const initialIndex = state === 'missing current slide' ? presentation.slides.length : 0;
+    const { rerender } = render(<SlideshowModal isOpen onClose={onClose} presentationData={data}
+      initialIndex={initialIndex} session="Session 1" slideImages={{}} />);
+    if (state === 'emptied while open') {
+      expect(screen.getByRole('dialog')).toBeTruthy();
+      rerender(<SlideshowModal isOpen onClose={onClose} presentationData={{ ...presentation, slides: [] }}
+        session="Session 1" slideImages={{}} />);
+    }
+    expect(screen.queryByRole('dialog')).toBeNull();
+    for (const key of ['ArrowRight', 'ArrowLeft', ' ', 'Escape']) {
+      expect(fireEvent.keyDown(window, { key })).toBe(true);
+    }
+    expect(onClose).not.toHaveBeenCalled();
+    expect(document.body.style.overflow).toBe('');
+  });
+
   it('announces only the current slide counter politely', () => {
     const { dialog } = openPreview();
     const counter = within(dialog).getByRole('status');

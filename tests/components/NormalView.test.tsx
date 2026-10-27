@@ -75,12 +75,14 @@ describe('Normal workspace', () => {
     expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 3 of 3 · 4. DISCUSSION');
   });
 
-  it('recovers from deleting all slides by selecting the next added slide', async () => {
+  it('preserves the last slide and selects a new slide added after it', async () => {
     await openWorkspace();
     for (let index = 0; index < 3; index++) fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
-    expect(screen.queryByRole('region', { name: 'Slide stage' })).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
+    expect(screen.getByRole('region', { name: 'Slide stage' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Delete Slide' }).hasAttribute('disabled')).toBe(true);
     expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 1 of 1 · 4. DISCUSSION');
+    fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 2 of 2 · 4. DISCUSSION');
   });
 
   it('shows regeneration state and the resolved selected image on stage', async () => {

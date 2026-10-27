@@ -37,6 +37,10 @@ function PresentationWorkspace() {
 
   const [isSlideShowActive, setIsSlideShowActive] = useState(false);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const slideCount = presentationData?.slides.length ?? 0;
+  useEffect(() => {
+    if (slideCount === 0) setIsSlideShowActive(false);
+  }, [slideCount]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadingStage, setLoadingStage] = useState('');

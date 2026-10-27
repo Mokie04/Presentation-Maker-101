@@ -50,7 +50,8 @@ export function SlideshowModal({
   const slides = presentationData?.slides || [];
   const totalSlides = slides.length;
   const currentSlide = slides[currentIndex];
-  const dialogRef = useDialogFocus(isOpen && Boolean(currentSlide));
+  const canShowSlide = isOpen && Boolean(currentSlide);
+  const dialogRef = useDialogFocus(canShowSlide);
 
   const handleNext = React.useCallback(() => {
     setCurrentIndex((prev) => (prev < totalSlides - 1 ? prev + 1 : prev));
@@ -62,7 +63,7 @@ export function SlideshowModal({
 
   // Keyboard navigation
   useEffect(() => {
-    if (!isOpen) return;
+    if (!canShowSlide) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -85,9 +86,9 @@ export function SlideshowModal({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, handleNext, handlePrev, onClose]);
+  }, [canShowSlide, handleNext, handlePrev, onClose]);
 
-  const swipe = useSwipe({ onNext: handleNext, onPrevious: handlePrev, disabled: !isOpen });
+  const swipe = useSwipe({ onNext: handleNext, onPrevious: handlePrev, disabled: !canShowSlide });
 
   if (!isOpen || !currentSlide) {
     return null;

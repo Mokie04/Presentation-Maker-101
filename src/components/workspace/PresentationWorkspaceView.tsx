@@ -48,6 +48,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
     if (selection.selectedId !== null && splitSlideToFit(selection.selectedId)) focusContent.current = true;
   };
   if (!presentationData) return null;
+  const hasSlides = presentationData.slides.length > 0;
 
   return (
           <div ref={workspace} className="min-w-0 space-y-3" onFocusCapture={event => { lastFocus.current = event.target as HTMLElement; }} onKeyDown={(event) => { if (view === 'normal') navigateSlides(event, selection); }}>
@@ -90,7 +91,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   total={presentationData.slides.length} image={slideImages[selectedIndex]} originalWriters={presentationData.originalWriters} />
                 <button
                   type="button"
-                  disabled={isDownloadingPptx}
+                  disabled={!hasSlides || isDownloadingPptx}
                   onClick={downloadPptx}
                   className="px-3 py-2 bg-sky-700 hover:bg-sky-800 active:bg-sky-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-colors motion-reduce:transition-none"
                 >
@@ -100,7 +101,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
 
                 <button
                   type="button"
-                  disabled={isDownloadingMarkdown}
+                  disabled={!hasSlides || isDownloadingMarkdown}
                   onClick={downloadMarkdown}
                   className="px-3 py-2 bg-slate-800 hover:bg-slate-900 active:bg-slate-950 text-white rounded-lg font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-colors motion-reduce:transition-none"
                 >
@@ -110,6 +111,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
 
                 <button
                   type="button"
+                  disabled={!hasSlides}
                   onClick={() => onPreview(Math.max(selectedIndex, 0))}
                   className="px-3 py-2 bg-cyan-700 hover:bg-cyan-800 active:bg-cyan-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-colors motion-reduce:transition-none"
                 >
@@ -179,7 +181,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
             ) : (
               <SlideSorter theme={theme} slides={presentationData.slides} slideIds={slideIds} selectedId={selection.selectedId}
                 onSelect={selection.selectSlide} onOpen={(id) => { selection.selectSlide(id); changeView('normal'); }}
-                onMove={moveSlide} onDuplicate={duplicateSlide} onDelete={deleteSlide}
+                onMove={moveSlide} onDuplicate={duplicateSlide} onDelete={deleteSlide} onAdd={() => addSlide()}
                 slideImages={slideImages} originalWriters={presentationData.originalWriters} />
             )}
             <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-600">

@@ -177,9 +177,10 @@ export function SlidePanel({
         <button
           type="button"
           aria-label="Delete Slide"
-          title="Delete Slide"
+          title={totalSlides === 1 ? 'Keep at least one slide' : 'Delete Slide'}
+          disabled={totalSlides === 1}
           onClick={() => onDeleteSlide(slideId)}
-          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50 transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50 transition-colors disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Trash2 className="w-3.5 h-3.5" />
           Delete Slide
