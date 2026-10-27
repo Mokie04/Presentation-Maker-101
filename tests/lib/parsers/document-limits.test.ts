@@ -3,8 +3,10 @@ import JSZip from 'jszip';
 import { parseDocument } from '@/lib/parsers/document-parser';
 import { LESSON_TOO_LONG_MESSAGE, MAX_LESSON_TEXT_LENGTH } from '@/lib/lesson-limits';
 import { docxBuffer, falsifyDocxSizes, pdfBuffer } from '../../helpers/document-fixtures';
+import { shouldSkipRealPdfTest } from '../../helpers/pdf-runtime';
 
 const MIB = 1024 * 1024;
+const skipRealPdf = shouldSkipRealPdfTest(process.versions.node);
 
 afterEach(() => vi.restoreAllMocks());
 
@@ -100,9 +102,13 @@ describe('document resource limits (real parsers, in-memory fixtures)', () => {
     expect(await parseDocument(buffer, 'lesson.docx')).toBe('Normal lesson text.\n\n');
   });
 
-  it('parses a real PDF under the page cap', async () => {
-    expect(await parseDocument(pdfBuffer(), 'lesson.pdf')).toContain('Hello lesson');
-  });
+  it.skipIf(skipRealPdf)(
+    'parses a real PDF under the page cap' + (skipRealPdf
+      ? ' [skipped: pdf-parse 1.1.4 / pdf.js 1.10.100 does not support Node 25+]' : ''),
+    async () => {
+      expect(await parseDocument(pdfBuffer(), 'lesson.pdf')).toContain('Hello lesson');
+    },
+  );
 
   it.each(['txt', 'md', 'docx'])('accepts a legitimate large %s lesson under the product cap', async (extension) => {
     const text = 'Read the lesson and explain the evidence.\n'.repeat(5_000);

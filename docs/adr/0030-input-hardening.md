@@ -125,7 +125,9 @@ Typecheck .mts config files and remove the unsupported environmentMatchGlobs
 option. Component tests already declare their own jsdom environment. The existing
 Node 22 verify job adds a production build after tests without provider secrets.
 A separate continue-on-error audit job reports production advisories. Declare
-Node >=22.12 and .nvmrc 22; some test dependencies require a newer Node 22 patch.
+Node `>=22.12 <25`, supporting majors 22 and 24, and .nvmrc 22; some test
+dependencies require a newer Node 22 patch. The upper bound prevents selecting
+unsupported newer majors while the legacy PDF parser remains in use.
 
 Route files own literal maxDuration values. Give session 10 seconds, health 30,
 upload 60 and Markdown download 30; retain existing values elsewhere. Remove the
@@ -138,7 +140,17 @@ No rate limiting/quotas or shared handoff-token replay store (S4/S6) are added.
 Next/React/image-size upgrades remain separate. No X-Frame-Options or
 frame-ancestors is introduced: the product owner must decide permitted embedding
 origins before restricting the App Store's iframe. PDF hard CPU cancellation is
-still open as described above. No export/PPTX implementation, look, fitting,
+still open as described above. N1 records another remaining PDF limitation:
+pdf-parse 1.1.4 bundles pdf.js 1.10.100, which fails on Node 26 for real PDFs
+(including 'bad XRef entry'); the reported LibreOffice PDF works on Node 22 and
+24. The integration fixture's existing Buffer-pool workaround needs more than
+32 KiB on Node 24. That padded fixture also parses on Node 26, so the failure
+is not universal. This does not resolve legacy Buffer handling. PDF parsing is
+not supported on Node 25 and later; the engine upper bound is a mitigation, not
+a parser fix. Replace pdf-parse with a maintained parser in a separate task.
+The real-PDF integration test skips only on Node 25+, with a named reason; a
+separate guard regression keeps it active on supported versions.
+No export/PPTX implementation, look, fitting,
 image-generation prompt or broader UI sweep is included.
 
 ## Evidence

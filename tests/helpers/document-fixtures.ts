@@ -23,8 +23,9 @@ export function pdfBuffer(pages = 1, text = 'Hello lesson'): Buffer {
     objects.push(`<< /Length ${Buffer.byteLength(content)} >>\nstream\n${content}\nendstream`);
     objects.push('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
   }
-  // pdf.js 1.10 mishandles pooled tiny Buffers; keep this realistic fixture above 4 KiB.
-  let pdf = '%PDF-1.4\n%' + 'fixture padding '.repeat(400) + '\n';
+  // pdf.js 1.10 mishandles pooled Buffers; exceed the 32 KiB pooling threshold
+  // on Node 24 as well as the smaller threshold on Node 22.
+  let pdf = '%PDF-1.4\n%' + 'fixture padding '.repeat(2200) + '\n';
   const offsets: number[] = [];
   let length = Buffer.byteLength(pdf);
   for (let i = 0; i < objects.length; i++) {

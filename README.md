@@ -39,7 +39,7 @@ The text client validates structured `PresentationData`, allows two explicit ret
 
 ### Prerequisites
 
-- **Node.js**: 22.22.2 or newer for the test suite (`.github/workflows/ci.yml` uses Node 22; this checkout was also tested on Node 26).
+- **Node.js**: supported majors are **22 and 24**; CI and `.nvmrc` use 22. The package range is `>=22.12 <25` (the Node 22 test suite needs 22.22.2 or newer). PDF parsing is unsupported on Node 25 and later because `pdf-parse` bundles legacy pdf.js 1.10.100. Replace that parser in a separate task before widening the runtime range.
 - **npm**: install from the committed lockfile with `npm ci`.
 
 ### Installation

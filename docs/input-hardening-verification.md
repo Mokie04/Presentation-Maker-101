@@ -262,3 +262,35 @@ assertions changed.
 Detailed per-section RED/GREEN commands, test names and measurement notes are retained under EVIDENCE/logs/input-hardening-B.md, C.md, D.md and E.md.
 
 Local artifacts: [array comparison](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/array-after.json), [browser report](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/browser/report.json), [loading screenshot](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/browser/loading.png), [partial failure screenshot](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/browser/partial-failure.png), [API headers](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/headers-api.txt), [clean build log](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/clean-build22.log).
+
+
+## Node runtime follow-up — 2026-10-27
+
+Engines now declare `>=22.12 <25`; `.nvmrc` remains 22. Only the real-PDF
+integration test skips on Node 25+, with the parser/version reason in its name.
+The new guard regression asserts false for Node 22/24 and true for 25/26/30;
+it was observed failing before implementing the boundary.
+
+| Runtime | Typecheck | Lint | Full suite (178 files) | `next build` |
+|---|---|---|---|---|
+| Node 22.23.4 | Pass | Pass | 1,855 passed, no skips | Pass |
+| Node 24.22.1 | Pass | Pass | 1,855 passed, no skips | Pass |
+| Node 26.3.0 | Pass | Pass | 1,854 passed, one real-PDF skip | Pass |
+
+Commands used each selected Node executable with `node_modules/typescript/bin/tsc
+--noEmit`, `node_modules/next/dist/bin/next lint --dir src --dir tests`,
+`node_modules/vitest/vitest.mjs run --maxWorkers=2`, and
+`node_modules/next/dist/bin/next build`. No production parser code changed.
+
+The original 6,989-byte PDF fixture also failed on Node 24 with
+`Illegal character: 41`. Node 24 has a 65,536-byte Buffer pool, so the fixture's
+existing workaround needed to exceed 32 KiB rather than 4 KiB. Increasing only
+PDF comment padding produces a 35,790-byte fixture; the original extraction
+assertion passes on Node 22/24. A standalone parse of that larger fixture also
+passes on Node 26: the reported Node 26 failure is not universal. N1 records
+this qualification. Padding the fixture does not repair legacy parser Buffer
+handling; parser replacement remains a separate task, and Node 25+ stays
+unsupported despite the otherwise passing development checks.
+
+Logs, including the initial failures and final runs, are retained under
+`/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/pdf-runtime/`.
