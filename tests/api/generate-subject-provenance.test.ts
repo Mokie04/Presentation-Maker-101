@@ -21,7 +21,7 @@ describe('generation subject provenance', () => {
     expect(await response.json()).toEqual({ ...modelPresentation, subjectEvidence: [
       { subject: 'Science', source: 'keyword-detected' }, { subject: 'Science', source: 'model-generated' },
     ] });
-    expect(generate).toHaveBeenCalledWith('English reading about a planet', 'Session 1', 'Science');
+    expect(generate).toHaveBeenCalledWith('English reading about a planet', 'Session 1', 'Science', expect.objectContaining({ signal: expect.any(AbortSignal) }));
     expect(detect).toHaveBeenCalledTimes(1);
   });
 
@@ -34,7 +34,7 @@ describe('generation subject provenance', () => {
       expect(await response.json()).toEqual({ ...modelPresentation, subjectEvidence: [
         { subject, source: 'teacher-supplied' }, { subject: 'Science', source: 'model-generated' },
       ] });
-      expect(generate).toHaveBeenCalledWith('English reading about a planet', 'Session 1', subject);
+      expect(generate).toHaveBeenCalledWith('English reading about a planet', 'Session 1', subject, expect.objectContaining({ signal: expect.any(AbortSignal) }));
       expect(detect).not.toHaveBeenCalled();
     });
 

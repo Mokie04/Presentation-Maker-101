@@ -107,7 +107,7 @@ describe('generate input', () => {
     const spy = vi.spyOn(textProvider, 'generateSlideContent').mockResolvedValueOnce(deck(1));
     const res = await call(generate, { text: '  Lesson about roots  \n', session: 'Session 2' });
     expect(res.status).toBe(200);
-    expect(spy).toHaveBeenCalledWith('  Lesson about roots  \n', 'Session 2', expect.any(String));
+    expect(spy).toHaveBeenCalledWith('  Lesson about roots  \n', 'Session 2', expect.any(String), expect.objectContaining({ signal: expect.any(AbortSignal) }));
   });
 });
 

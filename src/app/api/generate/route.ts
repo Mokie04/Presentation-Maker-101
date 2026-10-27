@@ -26,7 +26,7 @@ export const POST = defineRoute({
   failureMessage: 'Failed to generate the presentation. Please try again.',
   input: inputSchema,
   maxBodyBytes: MAX_BODY_BYTES,
-  handler: async ({ input, body }) => {
+  handler: async ({ input, body, request }) => {
     const { text, session } = input;
     const { subject, subjectSource } = body;
 
@@ -49,7 +49,7 @@ export const POST = defineRoute({
     };
     let generated: PresentationData;
     try {
-      generated = await generateSlideContent(text, session, resolvedSubject);
+      generated = await generateSlideContent(text, session, resolvedSubject, { signal: request.signal });
     } catch (err) {
       if (err instanceof TextOutputTruncatedError) {
         throw new PublicError(
