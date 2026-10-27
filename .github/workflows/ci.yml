@@ -43,10 +43,11 @@ jobs:
       - name: Production build
         run: npm run build
 
+  # Advisory only. Job-level continue-on-error still shows a red check on every PR,
+  # so the step below is advisory instead and the job reports a warning when it finds something.
   audit:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    continue-on-error: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -61,4 +62,17 @@ jobs:
         run: npm ci
 
       - name: Production dependency audit (advisory)
+        id: audit
+        continue-on-error: true
         run: npm audit --omit=dev --audit-level=high
+
+      - name: Report advisory findings
+        if: steps.audit.outcome == 'failure'
+        run: |
+          echo "::warning title=Dependency advisories::npm audit found high or critical advisories in production dependencies. Advisory only: see the 'Production dependency audit' step log."
+          {
+            echo "### Production dependency audit"
+            echo
+            echo "Advisories at or above high severity were found. This job is advisory and does not block merging."
+            echo "Known deferred items (Next 14 upgrade, image-size) are listed in docs/adr/0030-input-hardening.md."
+          } >> "$GITHUB_STEP_SUMMARY"

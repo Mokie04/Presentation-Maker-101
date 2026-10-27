@@ -124,7 +124,7 @@ Ignore all .env* files except the example.
 Typecheck .mts config files and remove the unsupported environmentMatchGlobs
 option. Component tests already declare their own jsdom environment. The existing
 Node 22 verify job adds a production build after tests without provider secrets.
-A separate continue-on-error audit job reports production advisories. Declare
+A separate audit job reports production advisories; its audit step is advisory (step-level continue-on-error plus a warning annotation), so the job stays green instead of showing a red check on every pull request. Declare
 Node `>=22.12 <25`, supporting majors 22 and 24, and .nvmrc 22; some test
 dependencies require a newer Node 22 patch. The upper bound prevents selecting
 unsupported newer majors while the legacy PDF parser remains in use.

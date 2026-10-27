@@ -171,7 +171,7 @@ Production dependency audit is advisory and currently exits nonzero: three high
 and one critical finding across Next, postcss, image-size and pptxgenjs. Requested
 Zod/Undici fixes are applied. The user explicitly excluded the major framework and
 image-size upgrades; the PNG/JPEG signature guard remains intact. No audit fix
---force or unrelated upgrade was run. CI's separate continue-on-error audit job
+--force or unrelated upgrade was run. CI's separate advisory audit job (step-level continue-on-error with a warning annotation)
 prints that summary without blocking verify.
 
 ## Deliberate choices and remaining limits
