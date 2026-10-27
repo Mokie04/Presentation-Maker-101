@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST } from '@/app/api/upload/route';
 import * as parser from '@/lib/parsers/document-parser';
+import { LESSON_TOO_LONG_MESSAGE, MAX_LESSON_TEXT_LENGTH } from '@/lib/lesson-limits';
 
 const unreadable = 'The document could not be read. Check that it is a valid .docx, .pdf, .txt or .md file.';
 async function uploadRequest(content: BlobPart = 'Lesson', name = 'lesson.txt') {
@@ -54,6 +55,12 @@ describe('upload body and parser error policy', () => {
     const response = await POST(await uploadRequest());
     expect(response.status).toBe(422);
     expect(await response.json()).toEqual({ error: message });
+  });
+
+  it('returns the shared product limit message at 400 for oversized lesson text', async () => {
+    const response = await POST(await uploadRequest('x'.repeat(MAX_LESSON_TEXT_LENGTH + 1)));
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ error: LESSON_TOO_LONG_MESSAGE });
   });
 
   it('logs internal parser errors and returns the fixed unreadable-file response', async () => {

@@ -52,7 +52,7 @@ export const POST = defineRoute({
     try {
       parsedText = await parseDocument(buffer, fileName);
     } catch (parseError) {
-      if (parseError instanceof DocumentParseError) throw new PublicError(parseError.message, 422);
+      if (parseError instanceof DocumentParseError) throw new PublicError(parseError.message, parseError.status);
       console.error('[upload]', parseError);
       throw new PublicError('The document could not be read. Check that it is a valid .docx, .pdf, .txt or .md file.', 422);
     }
