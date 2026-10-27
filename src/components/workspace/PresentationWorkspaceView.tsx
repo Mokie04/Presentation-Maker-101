@@ -29,7 +29,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
   const lastFocus = useRef<HTMLElement | null>(null);
   const focusContent = useRef(false);
   const {
-    presentationData, slideImages, slideIds, generatingImages, imageErrors,
+    presentationData, slideImages, slideIds, generatingImages, imageErrors, imageProgress,
     updatePart, updateTitle, updateBullet, addBullet, insertBullet, deleteBullet, addSlide, deleteSlide,
     regenerateImage, selectLibraryImage, moveSlide, duplicateSlide, splitSlideToFit,
   } = deck;
@@ -69,6 +69,14 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                 <h2 className="break-words text-lg sm:text-xl font-black text-slate-900 tracking-tight">
                   {presentationData.topic}
                 </h2>
+
+                {(imageProgress.loading > 0 || imageProgress.failed > 0) && (
+                  <p role="status" aria-label="Pictures" className="text-xs text-slate-500">
+                    {imageProgress.loading > 0
+                      ? `Adding pictures... ${imageProgress.done + imageProgress.failed} of ${imageProgress.loading + imageProgress.done + imageProgress.failed}`
+                      : `Pictures could not be added for ${imageProgress.failed} ${imageProgress.failed === 1 ? 'slide' : 'slides'}. Use Regenerate on a slide.`}
+                  </p>
+                )}
 
                 <div className="flex items-start gap-2 break-words text-xs text-slate-500">
                   <UserCheck className="w-4 h-4 text-sky-600" />

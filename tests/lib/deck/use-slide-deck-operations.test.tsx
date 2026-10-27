@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../../helpers/image-responses';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import { useSlideDeck } from '@/lib/deck/use-slide-deck';
@@ -23,8 +24,8 @@ let single: ReturnType<typeof deferred>;
 beforeEach(() => {
   batch = deferred();
   single = deferred();
-  vi.stubGlobal('fetch', vi.fn((url: string) => {
-    if (url === '/api/generate-images') return batch.promise;
+  vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => {
+    if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(batch.promise, init);
     if (url === '/api/generate-image') return single.promise;
     throw new Error(`Unexpected request: ${url}`);
   }));

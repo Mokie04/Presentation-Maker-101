@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../helpers/image-responses';
 import React from 'react';
 import { chooseSession } from '../helpers/workspace';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -11,10 +12,10 @@ const presentation = { subject: 'Science', originalWriters: 'Teacher', topic: 'P
     contentPoints: [index === 1 ? 'x^2' : title, 'Observe closely'], visualDescription: `${title} diagram` })),
 };
 beforeEach(() => {
-  vi.stubGlobal('fetch', vi.fn((url: string) => {
+  vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => {
     if (url === '/api/session') return Promise.resolve(Response.json({ authenticated: true }));
     if (url === '/api/generate') return Promise.resolve(Response.json(presentation));
-    if (url === '/api/generate-images') return new Promise(() => {});
+    if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(new Promise(() => {}), init);
     throw new Error(`Unexpected request: ${url}`);
   }));
 });
@@ -79,7 +80,7 @@ describe('On-slide editing in the Normal workspace', () => {
     await open(); select(2);
     const field = start('Edit slide title');
     for (const key of ['ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown']) fireEvent.keyDown(field, { key });
-    expect(screen.getByRole('status').textContent).toContain('Slide 2 of 3');
+    expect(screen.getByRole('status', { name: '' }).textContent).toContain('Slide 2 of 3');
     fireEvent.keyDown(field, { key: 'Enter' });
     const rail = screen.getByRole('listbox');
     fireEvent.keyDown(rail, { key: 'ArrowDown' });

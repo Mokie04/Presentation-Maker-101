@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../helpers/image-responses';
 import React from 'react';
 import { chooseSession } from '../helpers/workspace';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -7,10 +8,10 @@ import Home from '@/app/page';
 
 const presentation = { subject: 'Science', originalWriters: 'Teacher', topic: 'Plants', slides: ['Plants', 'Leaves', 'Flowers'].map((title, i) => ({ slideNumber: i + 1,
   part: i === 0 ? 'Title Page' : 'Discussion', title, contentPoints: [title], visualDescription: `${title} diagram` })) };
-beforeEach(() => { vi.stubGlobal('fetch', vi.fn((url: string) => {
+beforeEach(() => { vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => {
   if (url === '/api/session') return Promise.resolve(Response.json({ authenticated: true }));
   if (url === '/api/generate') return Promise.resolve(Response.json(presentation));
-  if (url === '/api/generate-images') return new Promise(() => {});
+  if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(new Promise(() => {}), init);
   throw new Error(`Unexpected request: ${url}`);
 })); });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
@@ -29,24 +30,24 @@ it('offers bounded status-bar Previous and Next controls', async () => {
   const previous = screen.getByRole('button', { name: 'Previous slide' }) as HTMLButtonElement;
   const next = screen.getByRole('button', { name: 'Next slide' }) as HTMLButtonElement;
   expect(previous.disabled).toBe(true);
-  fireEvent.click(next); expect(screen.getByRole('status').textContent).toBe('Slide 2 of 3 · 4. DISCUSSION');
+  fireEvent.click(next); expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 2 of 3 · 4. DISCUSSION');
   fireEvent.click(next); expect(next.disabled).toBe(true);
-  fireEvent.click(previous); expect(screen.getByRole('status').textContent).toContain('Slide 2 of 3');
+  fireEvent.click(previous); expect(screen.getByRole('status', { name: '' }).textContent).toContain('Slide 2 of 3');
 });
 it('swipes the stage horizontally, preserves vertical scrolling, and ignores panel gestures', async () => {
   await open(); const stage = screen.getByRole('region', { name: 'Slide stage' });
-  swipe(stage, -100, 5); expect(screen.getByRole('status').textContent).toContain('Slide 2 of 3');
+  swipe(stage, -100, 5); expect(screen.getByRole('status', { name: '' }).textContent).toContain('Slide 2 of 3');
   swipe(screen.getByRole('region', { name: 'Slide stage' }), -90, 130);
   swipe(screen.getByRole('complementary', { name: 'Slide settings' }), -150, 0);
-  expect(screen.getByRole('status').textContent).toContain('Slide 2 of 3');
+  expect(screen.getByRole('status', { name: '' }).textContent).toContain('Slide 2 of 3');
   swipe(screen.getByRole('region', { name: 'Slide stage' }), 100, 5);
-  expect(screen.getByRole('status').textContent).toContain('Slide 1 of 3');
+  expect(screen.getByRole('status', { name: '' }).textContent).toContain('Slide 1 of 3');
 });
 it('does not swipe away while an inline field is being edited', async () => {
   await open(); const stage = screen.getByRole('region', { name: 'Slide stage' });
   fireEvent.click(within(stage).getByRole('button', { name: 'Edit slide title' }));
   expect(document.activeElement).toBe(within(stage).getByRole('textbox'));
-  swipe(stage, -150, 0); expect(screen.getByRole('status').textContent).toContain('Slide 1 of 3');
+  swipe(stage, -150, 0); expect(screen.getByRole('status', { name: '' }).textContent).toContain('Slide 1 of 3');
 });
 it.each([true, false])('uses breakpoint-appropriate disclosure defaults (md=%s)', async matches => {
   vi.stubGlobal('matchMedia', vi.fn(() => ({ matches, addEventListener: vi.fn(), removeEventListener: vi.fn() })));

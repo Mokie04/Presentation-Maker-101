@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../../helpers/image-responses';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import { useSlideDeck } from '@/lib/deck/use-slide-deck';
@@ -62,8 +63,8 @@ describe('useSlideDeck insertBullet', () => {
   it('preserves images and the version of an in-flight regeneration', async () => {
     let resolveSingle!: (response: Response) => void;
     const single = new Promise<Response>((resolve) => { resolveSingle = resolve; });
-    vi.stubGlobal('fetch', vi.fn((url: string) => {
-      if (url === '/api/generate-images') return Promise.resolve(Response.json({ images: { 0: 'roots-image', 1: 'leaves-image' } }));
+    vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => {
+      if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(Promise.resolve(Response.json({ images: { 0: 'roots-image', 1: 'leaves-image' } })), init);
       if (url === '/api/generate-image') return single;
       throw new Error(`Unexpected request: ${url}`);
     }));

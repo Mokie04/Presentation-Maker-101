@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../helpers/image-responses';
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
@@ -23,7 +24,7 @@ beforeEach(() => {
       requests.push(JSON.parse(String(init?.body)));
       return generate(url, init);
     }
-    if (url === '/api/generate-images') return Response.json({ images: {} });
+    if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(Response.json({ images: {} }), init);
     if (url === '/api/download-markdown') {
       exported.push(JSON.parse(String(init?.body)).presentationData);
       return new Response('outline');

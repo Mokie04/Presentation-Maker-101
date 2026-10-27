@@ -27,7 +27,7 @@ describe('image-provider', () => {
     expect(mockGenerate).toHaveBeenCalledWith(
       expect.objectContaining({
         prompt: `${IMAGE_PROMPT_PREFIX}${visualDesc}`,
-        size: '1024x576',
+        size: '1792x1024',
         quality: 'standard',
         response_format: 'b64_json',
       })

@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../helpers/image-responses';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, screen, within } from '@testing-library/react';
 import { openWorkspace, selectSlide, stage } from '../helpers/workspace';
@@ -21,10 +22,10 @@ let single: ReturnType<typeof deferredResponse>;
 
 beforeEach(() => {
   batch = deferredResponse(); single = deferredResponse();
-  vi.stubGlobal('fetch', vi.fn((url: string) => {
+  vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => {
     if (url === '/api/session') return Promise.resolve(Response.json({ authenticated: true }));
     if (url === '/api/generate') return Promise.resolve(Response.json(presentation));
-    if (url === '/api/generate-images') return batch.promise;
+    if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(batch.promise, init);
     if (url === '/api/generate-image') return single.promise;
     if (url === '/api/commons-images/search') return Promise.resolve(Response.json({ candidates: [{ ...samples.commonsFull, selectable: true }] }));
     if (url === '/api/commons-images/select') return Promise.resolve(Response.json({ base64: 'selected-library-image', metadata: samples.commonsFull }));
@@ -40,8 +41,8 @@ describe('Normal workspace', () => {
     expect(screen.getByRole('button', { name: 'Normal' }).getAttribute('aria-pressed')).toBe('true');
     expect(screen.getByRole('complementary', { name: 'Slide settings' })).toBeTruthy();
     expect(within(stage()).getByRole('heading', { name: 'Plants' })).toBeTruthy();
-    expect(screen.getByRole('status').textContent).toBe('Slide 1 of 3 · TITLE PAGE');
-    expect(screen.getByRole('status').getAttribute('aria-live')).toBe('polite');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 1 of 3 · TITLE PAGE');
+    expect(screen.getByRole('status', { name: '' }).getAttribute('aria-live')).toBe('polite');
     expect(screen.queryByRole('button', { name: 'Edit Slides' })).toBeNull();
     expect(screen.getByRole('button', { name: 'Download PowerPoint' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Download Outline' })).toBeTruthy();
@@ -53,7 +54,7 @@ describe('Normal workspace', () => {
     await openWorkspace(); selectSlide(2);
     expect(within(stage()).getByRole('heading', { name: 'Leaves' })).toBeTruthy();
     expect((screen.getByLabelText('Slide Title') as HTMLInputElement).value).toBe('Leaves');
-    expect(screen.getByRole('status').textContent).toBe('Slide 2 of 3 · 4. DISCUSSION');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 2 of 3 · 4. DISCUSSION');
   });
 
   it('updates the stage and thumbnail when the selected title is edited', async () => {
@@ -68,10 +69,10 @@ describe('Normal workspace', () => {
     await openWorkspace(); selectSlide(2);
     fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
     expect((screen.getByLabelText('Slide Title') as HTMLInputElement).value).toBe('Flowers');
-    expect(screen.getByRole('status').textContent).toBe('Slide 2 of 2 · 4. DISCUSSION');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 2 of 2 · 4. DISCUSSION');
     fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
     expect((screen.getByLabelText('Slide Title') as HTMLInputElement).value).toBe('New Slide Topic');
-    expect(screen.getByRole('status').textContent).toBe('Slide 3 of 3 · 4. DISCUSSION');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 3 of 3 · 4. DISCUSSION');
   });
 
   it('recovers from deleting all slides by selecting the next added slide', async () => {
@@ -79,7 +80,7 @@ describe('Normal workspace', () => {
     for (let index = 0; index < 3; index++) fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
     expect(screen.queryByRole('region', { name: 'Slide stage' })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
-    expect(screen.getByRole('status').textContent).toBe('Slide 1 of 1 · 4. DISCUSSION');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 1 of 1 · 4. DISCUSSION');
   });
 
   it('shows regeneration state and the resolved selected image on stage', async () => {
@@ -142,9 +143,9 @@ describe('Normal workspace', () => {
     fireEvent.keyDown(screen.getByLabelText('Slide Title'), { key: 'Home' });
     fireEvent.keyDown(screen.getByLabelText('Pedagogical Part'), { key: 'Home' });
     fireEvent.keyDown(screen.getByLabelText('Bullet 1'), { key: 'Home' });
-    expect(screen.getByRole('status').textContent).toBe('Slide 3 of 3 · 4. DISCUSSION');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 3 of 3 · 4. DISCUSSION');
     fireEvent.keyDown(stage(), { key: 'PageUp' });
-    expect(screen.getByRole('status').textContent).toBe('Slide 2 of 3 · 4. DISCUSSION');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 2 of 3 · 4. DISCUSSION');
   });
 
   it('opens the slideshow on the selected slide and keeps the selection after closing', async () => {
@@ -156,7 +157,7 @@ describe('Normal workspace', () => {
     expect(within(dialog).getByRole('group', { name: 'Slide 2 of 3' })).toBeTruthy();
     fireEvent.keyDown(window, { key: 'Escape' });
     expect(screen.queryByRole('dialog')).toBeNull();
-    expect(screen.getByRole('status').textContent).toBe('Slide 3 of 3 · 4. DISCUSSION');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 3 of 3 · 4. DISCUSSION');
   });
 
   it('keeps normal selection independent of fullscreen slideshow navigation', async () => {
@@ -165,6 +166,6 @@ describe('Normal workspace', () => {
     const dialog = screen.getByRole('dialog');
     expect(within(dialog).getAllByText('Slide 2 of 3').length).toBeGreaterThan(0);
     fireEvent.click(within(dialog).getByRole('button', { name: /exit slideshow/i }));
-    expect(screen.getByRole('status').textContent).toBe('Slide 2 of 3 · 4. DISCUSSION');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 2 of 3 · 4. DISCUSSION');
   });
 });

@@ -10,6 +10,7 @@ export function createImageProviderClient(options?: {
   return new OpenAI({
     baseURL: options?.baseURL ?? getImageProviderConfig().baseUrl,
     apiKey: options?.apiKey ?? getImageProviderConfig().apiKey,
+    maxRetries: 0,
   });
 }
 
@@ -53,7 +54,7 @@ export function createOpenAiImageProvider(options?: {
           const response = await client.images.generate({
             model: getImageProviderConfig().model,
             prompt,
-            size: '1024x576' as '1024x1024',
+            size: getImageProviderConfig().size as OpenAI.Images.ImageGenerateParams['size'],
             quality: 'standard',
             response_format: 'b64_json',
             n: 1,
@@ -81,6 +82,8 @@ export function createOpenAiImageProvider(options?: {
           throw new Error('Image response contained neither b64_json nor url.');
         } catch (err) {
           lastError = err;
+          const status = err && typeof err === 'object' && 'status' in err ? err.status : undefined;
+          if (typeof status === 'number' && status >= 400 && status < 500 && status !== 429) throw err;
           if (attempt < maxRetries) {
             await sleep(backoffMs);
           }

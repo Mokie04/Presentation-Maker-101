@@ -1,16 +1,17 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../helpers/image-responses';
 import { afterEach, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { openWorkspace, selectSlide } from '../helpers/workspace';
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 it('removes the rail, stage and panel warnings immediately after panel editing', async () => {
-  vi.stubGlobal('fetch', vi.fn((url: string) => {
+  vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => {
     if (url === '/api/session') return Promise.resolve(Response.json({ authenticated: true }));
     if (url === '/api/generate') return Promise.resolve(Response.json({ subject: 'Science', topic: 'Water', slides: [
       { slideNumber: 1, part: 'Title Page', title: 'Water', contentPoints: ['Science'], visualDescription: '' },
       { slideNumber: 2, part: 'Discussion', title: 'Evidence', contentPoints: ['Evidence '.repeat(1000)], visualDescription: '' },
     ] }));
-    if (url === '/api/generate-images') return Promise.resolve(Response.json({ images: {} }));
+    if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(Promise.resolve(Response.json({ images: {} })), init);
     throw new Error(`Unexpected request: ${url}`);
   }));
   await openWorkspace(); selectSlide(2);

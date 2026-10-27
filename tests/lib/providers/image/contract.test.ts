@@ -47,7 +47,7 @@ it('OpenAI applies the prefix and retries only between attempts', async () => {
   expect(await pending).toBe('YWk='); expect(mocks.generate).toHaveBeenCalledTimes(2);
   for (const [body] of mocks.generate.mock.calls) {
     expect(body).toEqual({ model: 'dall-e-3', prompt: IMAGE_PROMPT_PREFIX + request.description,
-      size: '1024x576', quality: 'standard', response_format: 'b64_json', n: 1 });
+      size: '1792x1024', quality: 'standard', response_format: 'b64_json', n: 1 });
   }
   expect(vi.getTimerCount()).toBe(0);
 });
@@ -67,5 +67,5 @@ it('OpenAI defers default client construction until generation and reuses it', a
   expect(mocks.construct).not.toHaveBeenCalled();
   await provider.generate(request); await provider.generate(request);
   expect(mocks.construct).toHaveBeenCalledOnce();
-  expect(mocks.construct).toHaveBeenCalledWith({ baseURL: 'https://api.openai.com/v1', apiKey: 'not-configured' });
+  expect(mocks.construct).toHaveBeenCalledWith({ baseURL: 'https://api.openai.com/v1', apiKey: 'not-configured', maxRetries: 0 });
 });

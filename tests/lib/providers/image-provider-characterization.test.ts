@@ -10,7 +10,7 @@ const construction = vi.hoisted(() => {
   return { error, create: vi.fn(function () { throw error; }) };
 });
 vi.mock('openai', () => ({ default: construction.create }));
-const imageConfig = { baseUrl: 'https://example.test/v1', apiKey: 'test-key', model: 'test-model', source: 'auto' as const };
+const imageConfig = { baseUrl: 'https://example.test/v1', apiKey: 'test-key', model: 'test-model', size: '1024x576', source: 'auto' as const };
 const description = 'Volcano eruption and lava';
 function client(generate = vi.fn().mockResolvedValue({ data: [{ b64_json: 'YWk=' }] })) {
   return { client: { images: { generate } } as unknown as OpenAI, generate };
@@ -136,4 +136,11 @@ describe('generateSlideImage characterization before extracting adapters', () =>
     await expect(generateSlideImage(description, { source: 'auto', pexelsApiKey: 'key', maxRetries: 3 })).rejects.toBe(construction.error);
     expect(construction.create).toHaveBeenCalledOnce(); expect(pexels.fetchPexelsImageBase64).not.toHaveBeenCalled();
   });
+});
+
+it('auto skips the unconfigured AI client and goes directly to configured Pexels', async () => {
+  vi.mocked(config.getImageProviderConfig).mockReturnValue({ ...imageConfig, apiKey: 'not-configured' });
+  expect(await generateSlideImage(description, { source: 'auto', pexelsApiKey: 'key' })).toBe('cGhvdG8=');
+  expect(construction.create).not.toHaveBeenCalled();
+  expect(pexels.fetchPexelsImageBase64).toHaveBeenCalledOnce();
 });

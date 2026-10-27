@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../../helpers/image-responses';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import { useSlideDeck } from '@/lib/deck/use-slide-deck';
@@ -13,16 +14,19 @@ let batches: ReturnType<typeof deferred>[];
 let singles: ReturnType<typeof deferred>[];
 beforeEach(() => {
   batches = []; singles = [];
-  vi.stubGlobal('fetch', vi.fn((url: string) => {
-    const response = deferred();
-    if (url === '/api/generate-images') batches.push(response);
-    else if (url === '/api/generate-image') singles.push(response);
-    else throw new Error(`Unexpected request ${url}`);
+  vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => {
+    if (url !== '/api/generate-image') throw new Error(`Unexpected request ${url}`);
+    const { variation, slideIndex } = JSON.parse(String(init?.body));
+    if (variation === 0) {
+      if (slideIndex === 0) batches.push(deferred());
+      return automaticImageResponse(batches[batches.length - 1].promise, init);
+    }
+    const response = deferred(); singles.push(response);
     return response.promise;
   }));
 });
 afterEach(() => { vi.unstubAllGlobals(); });
-it('routes real batch and regeneration requests to Session 1 while Session 2 is active', async () => {
+it('routes automatic and regeneration requests to Session 1 while Session 2 is active', async () => {
   const { result } = renderHook(() => useSlideDeck());
   act(() => { result.current.loadPresentation(presentation, 'Session 1'); });
   const leaves = result.current.slideIds[1];
@@ -40,7 +44,7 @@ it('routes real batch and regeneration requests to Session 1 while Session 2 is 
   act(() => { result.current.switchSession('Session 2'); });
   expect(result.current.slideImages).toEqual({});
 });
-it('drops old batch and regeneration results after replacing a session, then accepts its new batch', async () => {
+it('drops old automatic and regeneration results after replacing a session, then accepts its new pictures', async () => {
   const { result } = renderHook(() => useSlideDeck());
   act(() => { result.current.loadPresentation(presentation, 'Session 1'); });
   let pending!: Promise<void>;
@@ -55,7 +59,7 @@ it('drops old batch and regeneration results after replacing a session, then acc
   });
   expect(result.current.slideImages).toEqual({});
   await act(async () => { batches[2].resolve(Response.json({ images: { 0: 'new-batch' } })); });
-  expect(result.current.slideImages).toEqual({ 0: 'new-batch' });
+  expect(result.current.slideImages).toEqual({ 0: 'new-batch', 1: 'failed' });
 });
 it('keeps the newest regeneration version when requests finish in reverse order across a switch', async () => {
   const { result } = renderHook(() => useSlideDeck());

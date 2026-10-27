@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../helpers/image-responses';
 import { afterEach, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { openWorkspace, selectSlide, stage } from '../helpers/workspace';
@@ -14,16 +15,17 @@ const points = [
 ];
 function stub(contentPoints = points) {
   let batch!: (response: Response) => void;
+  const batchResponse = new Promise<Response>(resolve => { batch = resolve; });
   vi.stubGlobal('URL', class extends URL { static createObjectURL() { return 'blob:test'; } static revokeObjectURL() {} });
   vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
-  vi.stubGlobal('fetch', vi.fn((url: string) => {
+  vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => {
     if (url === '/api/session') return Promise.resolve(Response.json({ authenticated: true }));
     if (url === '/api/generate') return Promise.resolve(Response.json({ subject: 'Science', originalWriters: 'Teacher', topic: 'Space', slides: [
       { slideNumber: 1, part: 'Title Page', title: 'Space', contentPoints: ['Science'], visualDescription: '' },
       { slideNumber: 2, part: 'Discussion', title: 'Bodies', contentPoints, visualDescription: 'Solar System', imageMetadata: samples.commonsFull },
       { slideNumber: 3, part: 'Discussion', title: 'Next', contentPoints: ['Reflect'], visualDescription: 'Stars' },
     ] }));
-    if (url === '/api/generate-images') return new Promise<Response>(resolve => { batch = resolve; });
+    if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(batchResponse, init);
     if (url === '/api/download-pptx') return Promise.resolve(new Response('pptx'));
     throw new Error(`Unexpected request: ${url}`);
   }));
@@ -39,8 +41,8 @@ it.each(['stage', 'panel'] as const)('splits from the %s, retains original selec
   expect(options.map(option => option.getAttribute('aria-label'))).toEqual(['Slide 1: Space', 'Slide 2: Bodies', 'Slide 3: Bodies (cont.)', 'Slide 4: Next']);
   expect(options[1].getAttribute('aria-selected')).toBe('true');
   expect(document.activeElement).toBe(stage());
-  expect(screen.getByRole('status').textContent).toBe('Slide 2 of 4 · 4. DISCUSSION');
-  expect(screen.getByRole('status').getAttribute('aria-live')).toBe('polite');
+  expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 2 of 4 · 4. DISCUSSION');
+  expect(screen.getByRole('status', { name: '' }).getAttribute('aria-live')).toBe('polite');
   expect(screen.queryAllByRole('note')).toHaveLength(0);
   const remaining = within(stage()).getAllByRole('button', { name: /^Edit bullet/ }).length;
   expect(remaining).toBeGreaterThan(0); expect(remaining).toBeLessThan(points.length);
