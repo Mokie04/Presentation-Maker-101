@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../helpers/image-responses';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, screen } from '@testing-library/react';
 import { openWorkspace } from '../helpers/workspace';
@@ -10,7 +11,7 @@ vi.mock('@/lib/export/client', async (importOriginal) => ({
 }));
 
 beforeEach(() => {
-  vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+  vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
     if (url === '/api/session') return Response.json({ authenticated: true });
     if (url === '/api/generate') return Response.json({
       subject: 'Science', originalWriters: 'Teacher', topic: 'Plants',
@@ -18,7 +19,7 @@ beforeEach(() => {
         slideNumber: index + 1, part: 'Discussion', title, contentPoints: [title], visualDescription: `${title} diagram`,
       })),
     });
-    if (url === '/api/generate-images') return Response.json({ images: { 0: '/9j/roots', 1: '/9j/leaves' } });
+    if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(Response.json({ images: { 0: '/9j/roots', 1: '/9j/leaves' } }), init);
     if (url === '/api/download-pptx') return new Response('pptx');
     throw new Error(`Unexpected request: ${url}`);
   }));

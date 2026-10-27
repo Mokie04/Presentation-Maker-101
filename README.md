@@ -31,7 +31,7 @@ Teacher browser → authenticated Next.js routes → text provider → slide dec
 Slide deck → export payload → PPTX or Markdown route
 ```
 
-The text client validates structured `PresentationData` and retries up to five times after the initial attempt. The OpenAI-compatible image adapter retries up to three times after the initial attempt; `auto` falls back to Pexels only when `PEXELS_API_KEY` is configured. Pexels search and the NASA/Commons libraries have separate retrieval paths.
+The text client validates structured `PresentationData`, allows two explicit retries by default, bounds each attempt to 150 seconds and the overall operation to 270 seconds, and forwards cancellation. The OpenAI-compatible image adapter retries up to three times after the initial attempt; `auto` falls back to Pexels only when `PEXELS_API_KEY` is configured and skips an unconfigured AI key immediately. Pexels search and the NASA/Commons libraries have separate retrieval paths.
 
 ---
 
@@ -39,7 +39,7 @@ The text client validates structured `PresentationData` and retries up to five t
 
 ### Prerequisites
 
-- **Node.js**: 22.22.2 or newer for the test suite (`.github/workflows/ci.yml` uses Node 22; this checkout was also tested on Node 26).
+- **Node.js**: supported majors are **22 and 24**; CI and `.nvmrc` use 22. The package range is `>=22.12 <25` (the Node 22 test suite needs 22.22.2 or newer). PDF parsing is unsupported on Node 25 and later because `pdf-parse` bundles legacy pdf.js 1.10.100. Replace that parser in a separate task before widening the runtime range.
 - **npm**: install from the committed lockfile with `npm ci`.
 
 ### Installation
@@ -85,7 +85,7 @@ MAX_FILE_SIZE_MB=4
 |---|---|
 | `TEXT_PROVIDER_BASE_URL`, `TEXT_PROVIDER_API_KEY`, `TEXT_PROVIDER_MODEL` | Required when the text client is used. |
 | `IMAGE_SOURCE` | `auto` by default; `ai` uses the OpenAI-compatible adapter, `pexels` uses Pexels, and `auto` tries AI then Pexels only if a Pexels key is present. |
-| `IMAGE_PROVIDER_BASE_URL`, `IMAGE_PROVIDER_API_KEY`, `IMAGE_PROVIDER_MODEL` | Image adapter defaults are the OpenAI URL, `not-configured` and `dall-e-3`; a usable key is needed for AI image requests. |
+| `IMAGE_PROVIDER_BASE_URL`, `IMAGE_PROVIDER_API_KEY`, `IMAGE_PROVIDER_MODEL`, `IMAGE_PROVIDER_SIZE` | Image adapter defaults are the OpenAI URL, `not-configured` and `dall-e-3`; a usable key is needed for AI image requests. Optional size override defaults to DALL-E 3 1792x1024 / gpt-image 1536x1024 / other models 1024x576. |
 | `PEXELS_API_KEY` | Optional unless using Pexels; also enables fallback in `auto`. |
 | `MAX_FILE_SIZE_MB` | Positive number, default 4; the upload route applies this file-size check and the upload screen checks the 4 MB default before sending. |
 
@@ -182,7 +182,7 @@ Other OpenAI-compatible endpoints can be configured, but their model and image-r
 ## 3. Core Feature Walkthrough
 
 ### 1. Multi-Format Document Ingestion
-- Upload `.docx` (Microsoft Word via `mammoth`), `.pdf` (via `pdf-parse`), `.txt`, or `.md` files, subject to the configured file-size check and the hosting request-body limit.
+- Upload `.docx` (Microsoft Word via `mammoth`), `.pdf` (via `pdf-parse`), `.txt`, or `.md` files, subject to the configured file-size check and hosting request-body limit. DOCX additionally permits at most 2,000 entries, 10 MiB per expanded entry and 20 MiB total; PDF permits 200 pages. Extracted or pasted lessons have a 250,000-character product default and are rejected rather than truncated. PDF has no hard worker timeout; see ADR 0030.
 - Instant "Paste Lesson Plan Text" toggle for educators who prefer pasting raw text.
 - Live character counter and upload status feedback.
 
@@ -203,10 +203,10 @@ The teacher can select a subject; otherwise a keyword classifier supplies one. T
 - **English / Reading**: Contextual story scenes and high-contrast vocabulary keywords.
 - **Social Studies / History**: Character profiles and illustrated Philippine maps.
 
-### 4. Background Sequential Visual Synthesis
-- Following slide generation, background batch synthesis requests images for Motivation, Lesson Presentation and Discussion slides.
-- Sequenced with an `800ms` inter-request delay to respect external API rate limits.
-- Fault-tolerant: If an image request fails, the batch emits the `"failed"` wire value and continues; the deck preserves an existing image when appropriate.
+### 4. Background pictures
+- Following generation, eligible non-blank visual descriptions use individual requests with a shared concurrency cap of three across sessions.
+- Reset, replacement and unmount cancel the owning loads; image tokens prevent stale results from replacing newer choices.
+- The header reports picture progress and actionable failures; successful completion hides the status. The batch endpoint remains available for compatibility.
 - "Render Visual Concept Image" / "Regenerate AI Graphic" and "Find image" (NASA or Wikimedia Commons) for the selected slide in the settings panel.
 
 ### 5. Interactive Slide Editor
@@ -246,6 +246,12 @@ The route files currently set these `maxDuration` values; actual execution still
 - `POST /api/generate-image` ➔ `maxDuration = 120`
 - `POST /api/generate-images` ➔ `maxDuration = 300`
 - `POST /api/download-pptx` ➔ `maxDuration = 120`
+- `POST /api/download-markdown` ➔ `maxDuration = 30`
+- `POST /api/upload` ➔ `maxDuration = 60`
+- `GET /api/health` ➔ `maxDuration = 30`
+- `GET /api/session` ➔ `maxDuration = 10`
+
+Route declarations are the single source; vercel.json has no competing functions override. Authenticated responses use no-store. Mutating JSON routes require application/json and reject browser-marked cross-site requests. Response headers set nosniff and strict-origin-when-cross-origin. Embedding-origin restrictions remain a product decision; see [ADR 0030](docs/adr/0030-input-hardening.md).
 
 
 ---

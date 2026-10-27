@@ -45,7 +45,8 @@ describe('POST /api/generate', () => {
     expect(spy).toHaveBeenCalledWith(
       'Detailed lesson plan on botany and flower dissection.',
       'Session 1',
-      'Science'
+      'Science',
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
     );
   });
 
@@ -68,7 +69,8 @@ describe('POST /api/generate', () => {
     expect(spy).toHaveBeenCalledWith(
       'We will conduct a science experiment on biodiversity.',
       'Session 2',
-      'Science' // Auto-detected from keyword "science experiment"
+      'Science', // Auto-detected from keyword "science experiment"
+      expect.objectContaining({ signal: expect.any(AbortSignal) })
     );
   });
 

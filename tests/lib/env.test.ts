@@ -54,7 +54,7 @@ describe('readTextProviderConfig', () => {
 describe('readImageProviderConfig', () => {
   it('uses the existing defaults without text settings', () => {
     expect(readImageProviderConfig({})).toEqual({
-      baseUrl: 'https://api.openai.com/v1', apiKey: 'not-configured', model: 'dall-e-3', source: 'auto',
+      baseUrl: 'https://api.openai.com/v1', apiKey: 'not-configured', model: 'dall-e-3', size: '1792x1024', source: 'auto',
     });
   });
 
@@ -62,7 +62,7 @@ describe('readImageProviderConfig', () => {
     expect(readImageProviderConfig({
       ...invalidEnv, IMAGE_PROVIDER_BASE_URL: 'https://images.example/v1',
       IMAGE_PROVIDER_API_KEY: 'test-image-key', IMAGE_PROVIDER_MODEL: 'image-model', IMAGE_SOURCE: source,
-    })).toEqual({ baseUrl: 'https://images.example/v1', apiKey: 'test-image-key', model: 'image-model', source });
+    })).toEqual({ baseUrl: 'https://images.example/v1', apiKey: 'test-image-key', model: 'image-model', size: '1024x576', source });
   });
 
   it('continues to accept empty image key and model strings', () => {

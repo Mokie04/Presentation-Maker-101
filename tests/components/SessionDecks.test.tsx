@@ -28,7 +28,7 @@ beforeEach(() => {
     if (url === '/api/session') return Response.json({ authenticated: true });
     if (url === '/api/generate') { requests.push(JSON.parse(String(init?.body))); return generate(url, init); }
     if (url === '/api/upload') return upload(url, init);
-    if (url === '/api/generate-images') { batchCount++; return Response.json({ images: {} }); }
+    if (url === '/api/generate-image') { batchCount++; return Response.json({ base64: 'image' }); }
     if (url === '/api/download-pptx' || url === '/api/download-markdown') {
       exports.push(JSON.parse(String(init?.body)));
       return { ok: true, blob: async () => new Blob(['pptx']), text: async (): Promise<string> => 'outline', headers: new Headers() };
@@ -68,7 +68,7 @@ it.each(['Science', ''])('reuses lesson and original %s subject provenance, and 
   await screen.findByRole('tab', { name: 'Session 2' });
   expect(requests).toEqual([{ text: lesson, session: 'Session 1', ...(subject ? { subject, subjectSource: 'teacher-supplied' } : {}) },
     { text: lesson, session: 'Session 2', ...(subject ? { subject, subjectSource: 'teacher-supplied' } : {}) }]);
-  expect(batchCount).toBe(2);
+  expect(batchCount).toBe(0);
   expect(screen.queryByRole('dialog')).toBeNull();
   expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Another session' }));
 });
@@ -115,7 +115,7 @@ it('keeps all decks and the dialog on failure, including the exact 422 error', a
   fireEvent.click(within(dialog()).getByRole('button', { name: 'Cancel' }));
   expect(screen.getAllByRole('tab')).toHaveLength(2);
   expect(screen.getByRole('tab', { name: 'Session 2' }).getAttribute('aria-selected')).toBe('true');
-  expect(batchCount).toBe(2);
+  expect(batchCount).toBe(0);
 });
 it('cancel before generation and Escape return focus and store no deck', async () => {
   await open(); another();
@@ -141,7 +141,7 @@ it.each([200, 422])('aborts during generation and ignores a late %s response aft
   expect(dialog()).toBeTruthy();
   fireEvent.click(within(dialog()).getByRole('button', { name: 'Cancel' }));
   expect(screen.getAllByRole('tab')).toHaveLength(1);
-  expect(batchCount).toBe(1);
+  expect(batchCount).toBe(0);
 });
 it('exports and previews the active session', async () => {
   await open(); await addSecond();

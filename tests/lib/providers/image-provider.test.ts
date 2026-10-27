@@ -27,7 +27,7 @@ describe('image-provider', () => {
     expect(mockGenerate).toHaveBeenCalledWith(
       expect.objectContaining({
         prompt: `${IMAGE_PROMPT_PREFIX}${visualDesc}`,
-        size: '1024x576',
+        size: '1792x1024',
         quality: 'standard',
         response_format: 'b64_json',
       })
@@ -76,19 +76,19 @@ describe('image-provider', () => {
 
   describe('variation', () => {
     const pexelsSearch = { ok: true, json: async () => ({ total_results: 3, photos: [0, 1, 2].map((i) => ({ src: { medium: `https://images.pexels.com/${i}.jpg` } })) }) };
-    const download = { ok: true, arrayBuffer: async () => new Uint8Array(Buffer.from('photo')).buffer };
+    const download = () => new Response('photo', { headers: { 'Content-Type': 'image/jpeg' } });
 
     afterEach(() => { vi.unstubAllGlobals(); });
 
     it('picks the varied Pexels photo when the source is pexels', async () => {
-      const mockFetch = vi.fn().mockResolvedValueOnce(pexelsSearch).mockResolvedValueOnce(download);
+      const mockFetch = vi.fn().mockResolvedValueOnce(pexelsSearch).mockResolvedValueOnce(download());
       vi.stubGlobal('fetch', mockFetch);
       await generateSlideImage('Volcano eruption with lava', { source: 'pexels', pexelsApiKey: 'test-pexels-key', variation: 2 });
       expect(mockFetch.mock.calls[1][0]).toBe('https://images.pexels.com/2.jpg');
     });
 
     it('passes the variation to the Pexels fallback after an AI failure', async () => {
-      const mockFetch = vi.fn().mockResolvedValueOnce(pexelsSearch).mockResolvedValueOnce(download);
+      const mockFetch = vi.fn().mockResolvedValueOnce(pexelsSearch).mockResolvedValueOnce(download());
       vi.stubGlobal('fetch', mockFetch);
       const mockClient = { images: { generate: vi.fn().mockRejectedValue(new Error('AI down')) } } as unknown as OpenAI;
       await generateSlideImage('Volcano eruption with lava', {

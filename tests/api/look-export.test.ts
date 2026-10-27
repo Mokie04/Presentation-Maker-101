@@ -11,7 +11,7 @@ const presentationData = { subject: 'Science', originalWriters: 'Teacher', topic
   { slideNumber: 2, title: 'Observe water', part: 'Discussion', contentPoints: ['Compare evidence'], visualDescription: 'Water diagram' },
 ] };
 const input = { presentationData, slideImages: {}, session: 'Session 1' };
-const request = (extra = {}) => new NextRequest('http://localhost/api/download-pptx', { method: 'POST', body: JSON.stringify({ ...input, ...extra }) });
+const request = (extra = {}) => new NextRequest('http://localhost/api/download-pptx', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...input, ...extra }) });
 afterEach(() => vi.useRealTimers());
 it('preserves the exact default client request and includes only non-default theme IDs', async () => {
   const options = { compress: async (image: string) => image };

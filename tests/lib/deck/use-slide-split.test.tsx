@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../../helpers/image-responses';
 import { afterEach, expect, it, vi } from 'vitest';
 import { act, cleanup, renderHook } from '@testing-library/react';
 import { useSlideDeck } from '@/lib/deck/use-slide-deck';
@@ -25,8 +26,10 @@ it('keeps the original selected without a transient continuation render, then se
   expect(reconcileSelection([0, 1, 2], [0, 1, 3, 2], 1, { slideId: 1, insertedId: 3 })).toBe(1);
 });
 it('dispatches an explicit split and keeps request-time batch and regeneration ownership', async () => {
-  let batch!: (response: Response) => void, single!: (response: Response) => void;
-  vi.stubGlobal('fetch', vi.fn((url: string) => new Promise<Response>(resolve => { if (url === '/api/generate-images') batch = resolve; else single = resolve; })));
+  const batches: ((response: Response) => void)[] = [];
+  const batch = (response: Response) => batches.forEach(resolve => resolve(response));
+  let single!: (response: Response) => void;
+  vi.stubGlobal('fetch', vi.fn((_url: string, init?: RequestInit) => { const automatic = JSON.parse(String(init?.body)).variation === 0; const response = new Promise<Response>(resolve => { if (automatic) batches.push(resolve); else single = resolve; }); return automatic ? automaticImageResponse(response, init) : response; }));
   const { result } = renderHook(() => useSlideDeck());
   act(() => result.current.loadPresentation(presentation));
   let pending!: Promise<void>;
@@ -34,9 +37,9 @@ it('dispatches an explicit split and keeps request-time batch and regeneration o
   act(() => { expect(result.current.splitSlide(1, 2)).toBe(true); });
   expect(result.current.generatingImages).toEqual({ 1: true });
   await act(async () => { batch(Response.json({ images: { 1: 'old-water', 2: 'next' } })); });
-  expect(result.current.slideImages).toEqual({ 3: 'next' });
+  expect(result.current.slideImages).toEqual({ 0: 'failed', 3: 'next' });
   await act(async () => { single(Response.json({ base64: 'fresh-water' })); await pending; });
-  expect(result.current.slideImages).toEqual({ 1: 'fresh-water', 3: 'next' });
+  expect(result.current.slideImages).toEqual({ 0: 'failed', 1: 'fresh-water', 3: 'next' });
   expect(result.current.presentationData!.slides[2].imageMetadata).toBeUndefined();
   act(() => {
     expect(result.current.splitSlide(999, 2)).toBe(false);

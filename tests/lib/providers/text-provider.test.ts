@@ -3,7 +3,7 @@ import {
   generateSlideContent,
   presentationDataSchema,
 } from '@/lib/providers/text-provider';
-import type OpenAI from 'openai';
+import OpenAI from 'openai';
 
 beforeEach(() => {
   vi.stubEnv('TEXT_PROVIDER_BASE_URL', 'http://127.0.0.1:9/v1');
@@ -81,15 +81,16 @@ describe('text-provider', () => {
           expect.objectContaining({ role: 'system' }),
           expect.objectContaining({ role: 'user' }),
         ]),
-      })
+      }),
+      expect.objectContaining({ maxRetries: 0, timeout: 150_000, signal: expect.any(AbortSignal) })
     );
   });
 
-  it('retries on failure up to 5 times and succeeds on a subsequent attempt', async () => {
+  it('retries transient failures and succeeds on a subsequent attempt', async () => {
     const mockCreate = vi
       .fn()
-      .mockRejectedValueOnce(new Error('Rate limit exceeded'))
-      .mockRejectedValueOnce(new Error('Server error 500'))
+      .mockRejectedValueOnce(new OpenAI.RateLimitError(429, {}, 'Rate limit exceeded', new Headers()))
+      .mockRejectedValueOnce(new OpenAI.InternalServerError(500, {}, 'Server error 500', new Headers()))
       .mockResolvedValueOnce({
         choices: [
           {
@@ -118,8 +119,8 @@ describe('text-provider', () => {
     expect(mockCreate).toHaveBeenCalledTimes(3);
   });
 
-  it('fails after exceeding 5 retries', async () => {
-    const mockCreate = vi.fn().mockRejectedValue(new Error('Continuous 500 error'));
+  it('fails after exceeding the two default retries', async () => {
+    const mockCreate = vi.fn().mockRejectedValue(new OpenAI.InternalServerError(500, { message: 'Continuous 500 error' }, undefined, new Headers()));
     const mockClient = {
       chat: { completions: { create: mockCreate } },
     } as unknown as OpenAI;
@@ -131,8 +132,8 @@ describe('text-provider', () => {
       })
     ).rejects.toThrowError('Continuous 500 error');
 
-    // 1 initial attempt + 5 retries = 6 total calls
-    expect(mockCreate).toHaveBeenCalledTimes(6);
+    // 1 initial attempt + 2 retries = 3 total calls
+    expect(mockCreate).toHaveBeenCalledTimes(3);
   });
 
   it('retries when model returns invalid non-schema JSON', async () => {

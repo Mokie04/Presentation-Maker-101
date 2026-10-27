@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../helpers/image-responses';
 import React from 'react';
 import { chooseSession } from '../helpers/workspace';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
@@ -8,10 +9,10 @@ import Home from '@/app/page';
 
 const presentation = { subject: 'Science', originalWriters: 'Teacher', topic: 'Plants', slides: ['Plants', 'Leaves', 'Flowers'].map((title, i) => ({ slideNumber: i + 1,
   part: i === 0 ? 'Title Page' : 'Discussion', title, contentPoints: [title], visualDescription: `${title} diagram` })) };
-beforeEach(() => { vi.stubGlobal('fetch', vi.fn((url: string) => {
+beforeEach(() => { vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => {
   if (url === '/api/session') return Promise.resolve(Response.json({ authenticated: true }));
   if (url === '/api/generate') return Promise.resolve(Response.json(presentation));
-  if (url === '/api/generate-images') return new Promise(() => {});
+  if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(new Promise(() => {}), init);
   throw new Error(`Unexpected request: ${url}`);
 })); });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
@@ -46,12 +47,12 @@ it('recovers focus after deleting the focused sorter card or the selected slide 
   fireEvent.click(screen.getByRole('button', { name: 'Normal' }));
   const panelRemove = screen.getByRole('button', { name: 'Delete Slide' }); panelRemove.focus(); fireEvent.click(panelRemove);
   expect(document.activeElement).toBe(screen.getByRole('region', { name: 'Slide stage' }));
-  expect(screen.getByRole('status').textContent).toBe('Slide 1 of 1 · 4. DISCUSSION');
+  expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 1 of 1 · 4. DISCUSSION');
 });
 it.each(['Enter', 'Escape'])('returns title focus after %s and leaves live slide status unchanged while typing', async key => {
   await open(); const stage = screen.getByRole('region', { name: 'Slide stage' });
   fireEvent.click(within(stage).getByRole('button', { name: 'Edit slide title' }));
-  const status = screen.getByRole('status'); const text = status.textContent;
+  const status = screen.getByRole('status', { name: '' }); const text = status.textContent;
   const records: MutationRecord[] = []; const observer = new MutationObserver(mutations => records.push(...mutations));
   observer.observe(status, { childList: true, characterData: true, subtree: true });
   const field = within(stage).getByRole('textbox'); fireEvent.change(field, { target: { value: 'Edited plants' } });

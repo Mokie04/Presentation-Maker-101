@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../helpers/image-responses';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, screen, within } from '@testing-library/react';
 import { generateDeck, openWorkspace, panel, panelImageSrc, selectSlide, selectSlideTitled } from '../helpers/workspace';
@@ -22,10 +23,10 @@ beforeEach(() => {
     static revokeObjectURL() {}
   });
   vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
-  vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+  vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
     if (url === '/api/session') return Response.json({ authenticated: true });
     if (url === '/api/generate') return Response.json(presentation);
-    if (url === '/api/generate-images') return batch ? batch.promise : Response.json({ images: { 0: 'old-roots', 1: 'old-leaves', 2: 'old-flowers' } });
+    if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(batch ? batch.promise : Response.json({ images: { 0: 'old-roots', 1: 'old-leaves', 2: 'old-flowers' } }), init);
     if (url === '/api/nasa-images/search' || url === '/api/commons-images/search') return search();
     if (url === '/api/nasa-images/select' || url === '/api/commons-images/select') return selected.promise;
     if (url === '/api/generate-image') return ai ? ai.promise : Response.json({ base64: 'new-ai' });

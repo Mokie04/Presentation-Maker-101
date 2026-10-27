@@ -1,6 +1,7 @@
 import OpenAI from 'openai';
 import { getImageProviderConfig } from '@/lib/env';
 import { IMAGE_PROMPT_PREFIX } from '@/lib/prompts/slide-generation';
+import { downloadProviderImage, openAiImageDownloadHosts } from '../download-provider-image';
 import type { ImageProvider } from './types';
 
 export function createImageProviderClient(options?: {
@@ -10,6 +11,7 @@ export function createImageProviderClient(options?: {
   return new OpenAI({
     baseURL: options?.baseURL ?? getImageProviderConfig().baseUrl,
     apiKey: options?.apiKey ?? getImageProviderConfig().apiKey,
+    maxRetries: 0,
   });
 }
 
@@ -53,7 +55,7 @@ export function createOpenAiImageProvider(options?: {
           const response = await client.images.generate({
             model: getImageProviderConfig().model,
             prompt,
-            size: '1024x576' as '1024x1024',
+            size: getImageProviderConfig().size as OpenAI.Images.ImageGenerateParams['size'],
             quality: 'standard',
             response_format: 'b64_json',
             n: 1,
@@ -70,17 +72,16 @@ export function createOpenAiImageProvider(options?: {
 
           if (firstImage.url) {
             // Fallback for providers that only return a hosted URL
-            const imageRes = await fetch(firstImage.url);
-            if (!imageRes.ok) {
-              throw new Error(`Failed to download image from URL: ${imageRes.statusText}`);
-            }
-            const arrayBuffer = await imageRes.arrayBuffer();
-            return Buffer.from(arrayBuffer).toString('base64');
+            return await downloadProviderImage(firstImage.url, {
+              allowedHosts: openAiImageDownloadHosts(getImageProviderConfig().baseUrl),
+            });
           }
 
           throw new Error('Image response contained neither b64_json nor url.');
         } catch (err) {
           lastError = err;
+          const status = err && typeof err === 'object' && 'status' in err ? err.status : undefined;
+          if (typeof status === 'number' && status >= 400 && status < 500 && status !== 429) throw err;
           if (attempt < maxRetries) {
             await sleep(backoffMs);
           }

@@ -1,7 +1,10 @@
 # Local slide look verification
 
 Dev tools only; no provider requests, production routes, or CI integration.
-Use Node 22.23.4 (the repo's CI major). LibreOffice, pdftoppm and pdffonts must
+Supported runtime majors are Node 22 and 24 (`>=22.12 <25`); CI and `.nvmrc`
+use 22. Prefer Node 22.23.4 for these checks. PDF parsing is unsupported on
+Node 25 and later because pdf-parse bundles legacy pdf.js 1.10.100; replacing
+that parser is a separate task. LibreOffice, pdftoppm and pdffonts must
 already be installed; these scripts do not install anything. Arial and Georgia
 are read from macOS Supplemental Fonts in place and are never copied.
 

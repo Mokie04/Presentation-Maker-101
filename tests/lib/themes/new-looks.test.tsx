@@ -61,7 +61,7 @@ it.each(['chalkboard', 'paper-notebook'])('exports %s with Office theme fonts an
     if (buffer === completed) expect(themeXml).toContain(`<a:hlink><a:srgbClr val="${theme.palette.muted}"/></a:hlink>`);
     if (buffer === completed) expect(themeXml).toContain(`<a:folHlink><a:srgbClr val="${theme.palette.muted}"/></a:folHlink>`);
   }
-  const response = await POST(new NextRequest('http://localhost/api/download-pptx', { method: 'POST', body: JSON.stringify({ presentationData: deck, themeId: id }) }));
+  const response = await POST(new NextRequest('http://localhost/api/download-pptx', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ presentationData: deck, themeId: id }) }));
   expect(response.status).toBe(200);
   const zip = await JSZip.loadAsync(await response.arrayBuffer());
   expect(await zip.file('ppt/slides/slide2.xml')!.async('string')).toContain(`typeface="${theme.typography.exportFace}"`);

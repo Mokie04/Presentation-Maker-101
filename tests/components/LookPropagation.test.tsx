@@ -12,7 +12,7 @@ const deck = { subject: 'Science', originalWriters: 'Teacher', topic: 'Water', s
 ] };
 beforeEach(() => {
   localStorage.clear();
-  vi.stubGlobal('fetch', vi.fn((url: string) => Promise.resolve(Response.json(url === '/api/generate' ? deck : url === '/api/generate-images' ? { images: {} } : { authenticated: true }))));
+  vi.stubGlobal('fetch', vi.fn((url: string) => Promise.resolve(Response.json(url === '/api/generate' ? deck : url === '/api/generate-image' ? { base64: 'image' } : { authenticated: true }))));
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 function choose(name: string) {

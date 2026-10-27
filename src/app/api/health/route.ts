@@ -3,9 +3,11 @@ import { defineRoute } from '@/lib/api';
 import { checkHealth } from '@/lib/health';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 30;
 
 export const GET = defineRoute({
   name: 'health',
+  noStore: true,
   failureMessage: 'Health check failed.',
   parse: 'none',
   handler: async () => {

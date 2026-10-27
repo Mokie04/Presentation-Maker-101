@@ -57,10 +57,19 @@ export function defineRoute<Schema extends z.ZodType = z.ZodType<Record<string, 
     const auth = requireSession(request);
     if (!auth.ok) return respond(auth.response);
 
+    const mutating = !['GET', 'HEAD', 'OPTIONS'].includes(request.method);
+    if (mutating && request.headers.get('Sec-Fetch-Site') === 'cross-site') {
+      return respond(NextResponse.json({ error: 'Cross-site requests are not allowed.' }, { status: 403 }));
+    }
+    const parsing = parse ?? 'json';
+    if (mutating && parsing === 'json' &&
+        request.headers.get('Content-Type')?.split(';', 1)[0].trim().toLowerCase() !== 'application/json') {
+      return respond(NextResponse.json({ error: 'Content-Type must be application/json.' }, { status: 415 }));
+    }
+
     let body: Record<string, unknown> = {};
     try {
       let form: FormData | undefined;
-      const parsing = parse ?? 'json';
       if (parsing !== 'none') {
         // Resolve configuration after auth, outside the malformed-body catch.
         const limit = typeof maxBodyBytes === 'function' ? maxBodyBytes() : maxBodyBytes;

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import { LESSON_TOO_LONG_MESSAGE, MAX_LESSON_TEXT_LENGTH } from '@/lib/lesson-limits';
 import { defineRoute, PublicError } from '@/lib/api';
 import { autoFitDeck } from '@/lib/auto-fit-deck';
 import { generateSlideContent, TextOutputTruncatedError } from '@/lib/providers/text-provider';
@@ -11,21 +12,22 @@ import type { PresentationData, SubjectEvidence } from '@/types/presentation';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
 
-/** Vercel's request body limit. The lesson text has no separate cap: the model prompt forbids truncating it. */
+/** Vercel's request body limit; lesson text also has a shared product cap. */
 const MAX_BODY_BYTES = 4_500_000;
 
 // Loose so the subject provenance keys below stay visible on the raw body.
 const inputSchema = z.looseObject({
-  text: z.string().refine((text) => text.trim().length > 0, 'must be a non-empty string'),
+  text: z.string().max(MAX_LESSON_TEXT_LENGTH, LESSON_TOO_LONG_MESSAGE).refine((text) => text.trim().length > 0, 'must be a non-empty string'),
   session: z.enum(SESSION_OPTIONS),
 });
 
 export const POST = defineRoute({
   name: 'generate',
+  noStore: true,
   failureMessage: 'Failed to generate the presentation. Please try again.',
   input: inputSchema,
   maxBodyBytes: MAX_BODY_BYTES,
-  handler: async ({ input, body }) => {
+  handler: async ({ input, body, request }) => {
     const { text, session } = input;
     const { subject, subjectSource } = body;
 
@@ -40,15 +42,19 @@ export const POST = defineRoute({
       );
     }
 
-    const hasSubject = typeof subject === 'string' && subject.trim().length > 0;
-    const resolvedSubject = hasSubject ? subject.trim() : detectSubject(text);
+    // Legacy callers have no provenance marker; keep their free text bounded and prompt-safe.
+    const safeSubject = typeof subject === 'string'
+      ? (hasSubjectSource ? subject : subject.replace(/[\u0000-\u001f\u007f-\u009f\u2028\u2029"'`]/g, '').slice(0, 100)).trim()
+      : '';
+    const hasSubject = safeSubject.length > 0;
+    const resolvedSubject = hasSubject ? safeSubject : detectSubject(text);
     const inputEvidence: SubjectEvidence = {
       subject: resolvedSubject,
       source: hasSubjectSource ? 'teacher-supplied' : hasSubject ? 'unknown' : 'keyword-detected',
     };
     let generated: PresentationData;
     try {
-      generated = await generateSlideContent(text, session, resolvedSubject);
+      generated = await generateSlideContent(text, session, resolvedSubject, { signal: request.signal });
     } catch (err) {
       if (err instanceof TextOutputTruncatedError) {
         throw new PublicError(

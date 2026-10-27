@@ -30,6 +30,7 @@ const slideIndexOf = (body: Record<string, unknown>) => (typeof body.slideIndex 
 
 export const POST = defineRoute({
   name: 'generate-image',
+  noStore: true,
   failureMessage: 'Failed to render the image. Please try again.',
   input: inputSchema,
   maxBodyBytes: MAX_BODY_BYTES,

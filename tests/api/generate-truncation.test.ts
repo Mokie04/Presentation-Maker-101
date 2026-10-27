@@ -4,7 +4,7 @@ import { POST } from '@/app/api/generate/route';
 import * as provider from '@/lib/providers/text-provider';
 const message = 'This lesson is too long to convert in one pass. Choose a shorter session or paste a smaller part of the lesson plan.';
 afterEach(() => vi.restoreAllMocks());
-function request() { return new NextRequest('http://localhost/api/generate', { method: 'POST', body: JSON.stringify({ text: 'Science lesson', session: 'Session 1' }) }); }
+function request() { return new NextRequest('http://localhost/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: 'Science lesson', session: 'Session 1' }) }); }
 it('returns the exact safe 422 message for typed truncation without exposing provider details', async () => {
   const error = new provider.TextOutputTruncatedError(); error.message = 'SECRET partial model response';
   vi.spyOn(provider, 'generateSlideContent').mockRejectedValueOnce(error);

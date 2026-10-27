@@ -13,6 +13,7 @@ const imageProviderSchema = z.object({
   IMAGE_PROVIDER_BASE_URL: z.string().url('IMAGE_PROVIDER_BASE_URL must be a valid URL').default('https://api.openai.com/v1'),
   IMAGE_PROVIDER_API_KEY: z.string().default('not-configured'),
   IMAGE_PROVIDER_MODEL: z.string().default('dall-e-3'),
+  IMAGE_PROVIDER_SIZE: z.string().regex(/^\d+x\d+$/, 'IMAGE_PROVIDER_SIZE must be a widthxheight size').optional(),
   IMAGE_SOURCE: z.enum(['ai', 'pexels', 'auto']).default('auto'),
 });
 
@@ -46,10 +47,19 @@ export function readTextProviderConfig(raw: RawEnv) {
 
 export function readImageProviderConfig(raw: RawEnv) {
   const data = parseConfig(imageProviderSchema, raw);
+  const acceptedSizes = data.IMAGE_PROVIDER_MODEL === 'dall-e-3'
+    ? ['1792x1024', '1024x1024', '1024x1792']
+    : data.IMAGE_PROVIDER_MODEL.startsWith('gpt-image')
+      ? ['1536x1024', '1024x1024', '1024x1536'] : undefined;
+  const size = data.IMAGE_PROVIDER_SIZE ?? acceptedSizes?.[0] ?? '1024x576';
+  if (acceptedSizes && !acceptedSizes.includes(size)) {
+    throw new Error(`Environment validation error: IMAGE_PROVIDER_SIZE: must be one of ${acceptedSizes.join(', ')} for ${data.IMAGE_PROVIDER_MODEL}`);
+  }
   return {
     baseUrl: data.IMAGE_PROVIDER_BASE_URL,
     apiKey: data.IMAGE_PROVIDER_API_KEY,
     model: data.IMAGE_PROVIDER_MODEL,
+    size,
     source: data.IMAGE_SOURCE,
   };
 }

@@ -52,7 +52,7 @@ describe('POST /api/download-pptx', () => {
   it('passes identical content to PPTX generation when optional subject history is present', async () => {
     const build = vi.spyOn(pptxGenService, 'buildPresentationPptx').mockResolvedValueOnce(Buffer.from('pptx'));
     const req = new NextRequest('http://localhost/api/download-pptx', {
-      method: 'POST', body: JSON.stringify({ presentationData: { ...validPresentation,
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ presentationData: { ...validPresentation,
         subjectEvidence: [{ subject: 'English/Reading', source: 'teacher-supplied' },
           { subject: 'Science', source: 'model-generated' }],
       }, session: 'Session 1' }),

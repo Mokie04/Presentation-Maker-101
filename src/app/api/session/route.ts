@@ -14,6 +14,7 @@ import {
 } from '@/lib/sessionAuth';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 10;
 
 function applyNoStoreHeaders(response: NextResponse): NextResponse {
   response.headers.set('Cache-Control', 'no-store');

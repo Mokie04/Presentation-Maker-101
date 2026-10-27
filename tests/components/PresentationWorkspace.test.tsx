@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../helpers/image-responses';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, screen, within } from '@testing-library/react';
 import { openWorkspace, panel, panelImageSrc, railTitles, selectSlideTitled } from '../helpers/workspace';
@@ -23,10 +24,10 @@ let single: ReturnType<typeof deferredResponse>;
 beforeEach(() => {
   batch = deferredResponse();
   single = deferredResponse();
-  vi.stubGlobal('fetch', vi.fn((url: string) => {
+  vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => {
     if (url === '/api/session') return Promise.resolve(Response.json({ authenticated: true }));
     if (url === '/api/generate') return Promise.resolve(Response.json(presentation));
-    if (url === '/api/generate-images') return batch.promise;
+    if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(batch.promise, init);
     if (url === '/api/generate-image') return single.promise;
     throw new Error(`Unexpected request: ${url}`);
   }));
@@ -73,7 +74,7 @@ describe('workspace slide deletion', () => {
     selectSlideTitled('Leaves');
     fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
     // Deleting Leaves selects its neighbour, the shifted Flowers slide.
-    expect(screen.getByRole('status').textContent).toBe('Slide 2 of 2 · 4. DISCUSSION');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 2 of 2 · 4. DISCUSSION');
     expect(screen.getByRole('button', { name: 'Rendering Image...' })).toBeTruthy();
     await act(async () => { single.resolve(Response.json({ base64: 'new-flowers-image', slideIndex: 2 })); });
     expect(panelImageSrc('Flowers')).toContain('new-flowers-image');

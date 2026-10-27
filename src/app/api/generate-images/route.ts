@@ -34,6 +34,7 @@ const inputSchema = z.object({
 
 export const POST = defineRoute({
   name: 'generate-images',
+  noStore: true,
   failureMessage: 'Failed to generate images. Please try again.',
   input: inputSchema,
   maxBodyBytes: MAX_BODY_BYTES,

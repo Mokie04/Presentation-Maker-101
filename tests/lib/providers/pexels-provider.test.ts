@@ -114,10 +114,7 @@ describe('pexels-provider', () => {
           }),
         })
         // 2. Image download
-        .mockResolvedValueOnce({
-          ok: true,
-          arrayBuffer: async () => new Uint8Array(fakeBinary).buffer,
-        });
+        .mockResolvedValueOnce(new Response(fakeBinary, { headers: { 'Content-Type': 'image/jpeg' } }));
 
       const base64 = await fetchPexelsImageBase64('photosynthesis in plants', {
         apiKey: 'test-pexels-key',
@@ -147,10 +144,7 @@ describe('pexels-provider', () => {
             photos: [{ src: { large: 'https://images.pexels.com/sample.jpg' } }],
           }),
         })
-        .mockResolvedValueOnce({
-          ok: true,
-          arrayBuffer: async () => new Uint8Array(fakeBinary).buffer,
-        });
+        .mockResolvedValueOnce(new Response(fakeBinary, { headers: { 'Content-Type': 'image/jpeg' } }));
       globalThis.fetch = mockFetch as unknown as typeof fetch;
 
       try {
@@ -211,7 +205,7 @@ describe('pexels-provider', () => {
     it('fetchPexelsImageBase64 downloads the varied photo', async () => {
       const mockFetch = vi.fn()
         .mockResolvedValueOnce(results(5))
-        .mockResolvedValueOnce({ ok: true, arrayBuffer: async () => new Uint8Array(Buffer.from('third')).buffer });
+        .mockResolvedValueOnce(new Response('third', { headers: { 'Content-Type': 'image/jpeg' } }));
       const base64 = await fetchPexelsImageBase64('volcano eruption lava', {
         apiKey: 'test-pexels-key', fetchFn: mockFetch as unknown as typeof fetch, variation: 2,
       });

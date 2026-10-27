@@ -16,7 +16,7 @@ function streamed(chunks: string[]) {
   const stream = new ReadableStream<Uint8Array>({
     start(controller) { chunks.forEach((chunk) => controller.enqueue(encoder.encode(chunk))); controller.close(); },
   });
-  return new NextRequest('http://localhost/api/test', { method: 'POST', body: stream, duplex: 'half' } as ConstructorParameters<typeof NextRequest>[1]);
+  return new NextRequest('http://localhost/api/test', { method: 'POST', body: stream, duplex: 'half', headers: { 'Content-Type': 'application/json' } } as ConstructorParameters<typeof NextRequest>[1]);
 }
 
 /** A JSON body of exactly `bytes` bytes. */

@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../../helpers/image-responses';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { useSlideDeck } from '@/lib/deck/use-slide-deck';
@@ -26,8 +27,8 @@ beforeEach(() => {
   batch = deferred();
   single = deferred();
   consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
-  vi.stubGlobal('fetch', vi.fn((url: string) => {
-    if (url === '/api/generate-images') return batch.promise;
+  vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => {
+    if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(batch.promise, init);
     if (url === '/api/generate-image') return single.promise;
     throw new Error(`Unexpected request: ${url}`);
   }));
@@ -60,13 +61,13 @@ describe('useSlideDeck', () => {
     expect(consoleError).toHaveBeenCalledWith('Image regeneration failed:', expect.any(Error));
   });
 
-  it('leaves the deck untouched when the batch request fails', async () => {
+  it('keeps lesson content and exposes failures when automatic requests fail', async () => {
     const { result } = await loadedDeck();
     const before = result.current.presentationData;
     await act(async () => { batch.resolve(new Response('upstream exploded', { status: 500 })); });
-    await waitFor(() => expect(consoleError).toHaveBeenCalledWith('Batch image generation error:', expect.any(Error)));
-    expect(result.current.slideImages).toEqual({});
-    expect(result.current.presentationData).toBe(before);
+    await waitFor(() => expect(result.current.imageProgress).toEqual({ loading: 0, done: 0, failed: 3 }));
+    expect(result.current.slideImages).toEqual({ 0: 'failed', 1: 'failed', 2: 'failed' });
+    expect(result.current.presentationData).toEqual(before);
   });
 
   it('drops a late regeneration for a slide deleted and replaced while in flight', async () => {
@@ -103,7 +104,7 @@ describe('useSlideDeck', () => {
       ['Discussion', 'Blossoms', ['Petals']],
     ]);
     act(() => { void result.current.regenerateImage(flowers, 'Blossoms diagram'); });
-    const call = vi.mocked(fetch).mock.calls.find(([url]) => url === '/api/generate-image');
+    const call = vi.mocked(fetch).mock.calls.find(([url, init]) => url === '/api/generate-image' && JSON.parse(String(init?.body)).variation > 0);
     expect(JSON.parse(String(call?.[1]?.body))).toEqual({ prompt: 'Blossoms diagram', slideIndex: 1, variation: 1 });
     expect(result.current.generatingImages).toEqual({ 1: true });
   });
@@ -112,7 +113,7 @@ describe('useSlideDeck', () => {
     const { result } = await loadedDeck();
     const roots = result.current.slideIds[0];
     const bodies = () => vi.mocked(fetch).mock.calls
-      .filter(([url]) => url === '/api/generate-image')
+      .filter(([url, init]) => url === '/api/generate-image' && JSON.parse(String(init?.body)).variation > 0)
       .map(([, init]) => JSON.parse(String(init?.body)));
 
     act(() => { void result.current.regenerateImage(roots, 'Roots diagram'); });

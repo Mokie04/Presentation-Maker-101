@@ -15,6 +15,7 @@ Beyond this list, refactoring has diminishing returns; later changes should be d
 
 | Work | Result |
 |---|---|
+| Input hardening (`docs/adr/0030-input-hardening.md`) | Bounded validation/documents/text calls, per-slide image queues and status, trusted image retrieval, route CSRF/cache/security policy and CI/config cleanup. PDF hard worker timeout remains open; PR/release pending. |
 | Export integrity (`docs/adr/0029-export-integrity.md`) | XML-illegal text stripped at PPTX sinks; conservative shared formulas and readable Markdown; transparent PNGs, omission status/credit cleanup, compressed packages, bounded credits and picture alt text. Local verification recorded; PR/release pending. |
 | Export picture cover (`docs/adr/0028-export-picture-cover.md`) | Ordinary Classic/Chalkboard pictures use decoded aspect and centred native cover; legacy fallback retained, Paper/library bytes preserved, before/after local renders verified. |
 | Paper Notebook treatments Phase 4c (`docs/theme-style-roadmap.md`) | Pale ruled paper, red margin, binder holes and a taped polaroid; theme picture box/rotation, cover parity, fit invariance and exact Classic/Chalkboard compatibility. ADR 0027. |

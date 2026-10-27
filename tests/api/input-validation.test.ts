@@ -107,7 +107,7 @@ describe('generate input', () => {
     const spy = vi.spyOn(textProvider, 'generateSlideContent').mockResolvedValueOnce(deck(1));
     const res = await call(generate, { text: '  Lesson about roots  \n', session: 'Session 2' });
     expect(res.status).toBe(200);
-    expect(spy).toHaveBeenCalledWith('  Lesson about roots  \n', 'Session 2', expect.any(String));
+    expect(spy).toHaveBeenCalledWith('  Lesson about roots  \n', 'Session 2', expect.any(String), expect.objectContaining({ signal: expect.any(AbortSignal) }));
   });
 });
 
@@ -161,9 +161,11 @@ describe('body size caps', () => {
     expect(await res.json()).toEqual({ error: 'Request body exceeds the size limit.' });
   });
 
-  it('generate accepts a 2 MB lesson text under its 4.5 MB cap', async () => {
-    vi.spyOn(textProvider, 'generateSlideContent').mockResolvedValueOnce(deck(1));
-    expect((await call(generate, { text: 'L'.repeat(2_000_000), session: 'Session 1' })).status).toBe(200);
+  it('generate rejects a 2 MB lesson above the shared 250,000-character product cap', async () => {
+    const provider = vi.spyOn(textProvider, 'generateSlideContent');
+    const response = await call(generate, { text: 'L'.repeat(2_000_000), session: 'Session 1' });
+    await expectRejected(response, /This lesson is too long to convert in one pass/);
+    expect(provider).not.toHaveBeenCalled();
   });
 
   it('download-pptx accepts 2 MB of images under its 4.5 MB cap', async () => {

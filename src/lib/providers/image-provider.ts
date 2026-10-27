@@ -29,6 +29,7 @@ export async function generateSlideImage(
       maxRetries: options?.maxRetries, backoffMs: options?.backoffMs }),
     pexels: () => createPexelsImageProvider({ apiKey: options?.pexelsApiKey }),
     hasPexelsKey,
+    hasAiKey: Boolean(options?.client) || getImageProviderConfig().apiKey !== 'not-configured',
   });
   return generateWithFallback(providers, { description: visualDescription, title: options?.title, variation: options?.variation });
 }

@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+import { automaticImageResponse } from '../helpers/image-responses';
 import React from 'react';
 import { chooseSession } from '../helpers/workspace';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -20,10 +21,10 @@ beforeEach(() => {
     static revokeObjectURL() {}
   });
   vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
-  vi.stubGlobal('fetch', vi.fn((url: string) => {
+  vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => {
     if (url === '/api/session') return Promise.resolve(Response.json({ authenticated: true }));
     if (url === '/api/generate') return Promise.resolve(Response.json(presentation));
-    if (url === '/api/generate-images') return batch;
+    if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(batch, init);
     if (url === '/api/commons-images/search') return Promise.resolve(Response.json({ candidates: [{ ...samples.commonsFull, selectable: true }] }));
     if (url === '/api/commons-images/select') return Promise.resolve(Response.json({ base64: 'selected-leaves', metadata: samples.commonsFull }));
     if (url === '/api/download-pptx') return Promise.resolve(new Response('pptx'));
@@ -60,7 +61,7 @@ describe('Slide sorter workspace', () => {
     expect(railTitles()).toEqual(['Slide 1: Leaves', 'Slide 2: Plants', 'Slide 3: Flowers']);
     expect((screen.getByLabelText('Slide Title') as HTMLInputElement).value).toBe('Leaves');
     expect(within(stage()).getByRole('heading', { name: 'Leaves' })).toBeTruthy();
-    expect(screen.getByRole('status').textContent).toBe('Slide 1 of 3 · 4. DISCUSSION');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 1 of 3 · 4. DISCUSSION');
   });
 
   it('duplicates independently, selects the copy, and opens it in Normal', async () => {
@@ -81,7 +82,7 @@ describe('Slide sorter workspace', () => {
     fireEvent.click(within(screen.getByRole('listbox')).getByRole('option', { name: 'Slide 1: Plants' }));
     fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
     expect(railTitles()).toEqual(['Slide 1: Plants', 'Slide 2: New Slide Topic', 'Slide 3: Leaves', 'Slide 4: Flowers']);
-    expect(screen.getByRole('status').textContent).toBe('Slide 2 of 4 · 4. DISCUSSION');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 2 of 4 · 4. DISCUSSION');
   });
 
   it('moves the selected rail slide with Alt arrows and with the panel buttons', async () => {
@@ -90,9 +91,9 @@ describe('Slide sorter workspace', () => {
     fireEvent.keyDown(rail, { key: 'ArrowDown', altKey: true });
     expect(railTitles()).toEqual(['Slide 1: Leaves', 'Slide 2: Plants', 'Slide 3: Flowers']);
     fireEvent.click(screen.getByRole('button', { name: 'Move slide 2 later' }));
-    expect(screen.getByRole('status').textContent).toBe('Slide 3 of 3 · TITLE PAGE');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 3 of 3 · TITLE PAGE');
     fireEvent.click(screen.getByRole('button', { name: 'Duplicate slide' }));
-    expect(screen.getByRole('status').textContent).toBe('Slide 4 of 4 · TITLE PAGE');
+    expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 4 of 4 · TITLE PAGE');
   });
 
   it('deletes a sorter card, selects its neighbour, and disables the final delete', async () => {
@@ -117,14 +118,14 @@ describe('Slide sorter workspace', () => {
     expect(within(stage()).getByRole('img').getAttribute('src')).toContain('selected-leaves');
     expect(screen.getByRole('link', { name: 'Commons source' })).toBeTruthy();
     fireEvent.click(within(screen.getByRole('listbox')).getByRole('option', { name: 'Slide 2: Plants' }));
-    expect(within(stage()).getByRole('img').getAttribute('src')).toContain('plants-image');
+    expect(within(stage()).queryByRole('img')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Download PowerPoint' }));
     await waitFor(() => expect(vi.mocked(fetch).mock.calls.some(([url]) => url === '/api/download-pptx')).toBe(true));
     const call = vi.mocked(fetch).mock.calls.find(([url]) => url === '/api/download-pptx')!;
     const body = JSON.parse(String(call[1]?.body));
     expect(body.presentationData.slides.map((slide: { title: string; slideNumber: number }) => [slide.title, slide.slideNumber]))
       .toEqual([['Flowers',1],['Plants',2],['Leaves',3]]);
-    expect(body.slideImages).toEqual({ 0:'flowers-image', 1:'plants-image', 2:'data:image/png;base64,selected-leaves' });
+    expect(body.slideImages).toEqual({ 0:'flowers-image', 2:'data:image/png;base64,selected-leaves' });
     expect(body.presentationData.slides.map((slide: { imageMetadata?: unknown }) => slide.imageMetadata))
       .toEqual([undefined, undefined, samples.commonsFull]);
     expect(body.presentationData.slides.every((slide: object) => !('id' in slide))).toBe(true);

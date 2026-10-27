@@ -15,3 +15,5 @@ The following documents preserve the decisions and evidence from earlier work. T
 | [Commons provider](commons-provider.md) | Historical picker, URL and export evidence. |
 
 - [ADR 0029: Export integrity](adr/0029-export-integrity.md) — text, pictures, credits and package integrity.
+
+- [ADR 0030: Input hardening](adr/0030-input-hardening.md) — validation, document/provider bounds and route policy.

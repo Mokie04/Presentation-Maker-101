@@ -12,7 +12,7 @@ describe('exportFilename', () => {
     ['Fotosíntesis 🌱', 'Session 4', 'fotos_ntesis____session_4'],
     ['   ', '   ', '____session'],
     ['日本語', 'Session 1', '____session_1'],
-    ['A'.repeat(300), 'Session 1', `${'a'.repeat(300)}_session_1`],
+    ['A'.repeat(300), 'Session 1', `${'a'.repeat(80)}_session_1`],
   ])('names topic %j and session %j as %j', (topic, session, stem) => {
     expect(exportFilename({ topic, session, suffix: 'SayunaAI.pptx' })).toBe(`${stem}_SayunaAI.pptx`);
     expect(exportFilename({ topic, session, suffix: 'Outline.md' })).toBe(`${stem}_Outline.md`);

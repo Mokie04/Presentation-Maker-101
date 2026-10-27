@@ -18,5 +18,5 @@ it('shows the route’s too-long message on the upload screen without loading a 
   chooseSession('Session 1');
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
   expect(await screen.findByText(message)).toBeTruthy(); expect(screen.queryByRole('listbox')).toBeNull();
-  expect(vi.mocked(fetch).mock.calls.some(([url]) => url === '/api/generate-images')).toBe(false);
+  expect(vi.mocked(fetch).mock.calls.some(([url]) => url === '/api/generate-image')).toBe(false);
 });
