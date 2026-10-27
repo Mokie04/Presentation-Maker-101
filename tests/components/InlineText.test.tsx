@@ -57,7 +57,7 @@ function Harness({ initial = 'H_2O', bullet = false, initiallyEditing = false, d
         onFinish={() => { events('finish'); if (!deferTransitions) setEditing(false); }}
         onInsert={bullet ? () => { events('insert'); setInserted((count) => count + 1); if (!deferTransitions) setEditing(false); } : undefined}
         onEmptyBackspace={bullet ? () => { events('backspace'); if (!deferTransitions) setDeleted(true); } : undefined}
-        onEmptyBlur={bullet ? () => { events('empty-blur'); setDeleted(true); } : undefined}>
+        onEmptyBlur={bullet ? () => { events('empty-blur'); if (!deferTransitions) setDeleted(true); } : undefined}>
         <FormattedFormula text={value} />
       </InlineText>}
       <output aria-label="Stored text">{value}</output>
@@ -178,14 +178,35 @@ describe('InlineText', () => {
     expect(screen.getByLabelText('Stored text').textContent).toBe('Saved');
   });
 
-  it('captures the original value when editing starts under caller control', () => {
-    render(<Harness initiallyEditing initial="" bullet />);
+  it('removes a newly inserted bullet when Escape restores its empty original', () => {
+    const events = vi.fn();
+    render(<Harness initiallyEditing initial="" bullet events={events} />);
     const field = screen.getByRole('textbox');
     fireEvent.change(field, { target: { value: 'New bullet' } });
     fireEvent.keyDown(field, { key: 'Escape' });
     expect(screen.getByLabelText('Stored text').textContent).toBe('');
+    expect(screen.getByLabelText('Deleted').textContent).toBe('true');
+    expect(screen.queryByRole('textbox')).toBeNull();
+    expect(events.mock.calls).toEqual([['change:New bullet'], ['change:'], ['empty-blur']]);
+  });
+
+  it('removes a newly inserted bullet cancelled before typing', () => {
+    render(<Harness initiallyEditing initial="" bullet />);
+    fireEvent.keyDown(screen.getByRole('textbox'), { key: 'Escape' });
+    expect(screen.getByLabelText('Deleted').textContent).toBe('true');
+    expect(screen.queryByRole('textbox')).toBeNull();
+  });
+
+  it('restores a nonempty bullet original and finishes after its live text was cleared', () => {
+    const events = vi.fn();
+    render(<Harness initiallyEditing initial="Original bullet" bullet events={events} />);
+    const field = screen.getByRole('textbox');
+    fireEvent.change(field, { target: { value: '' } });
+    fireEvent.keyDown(field, { key: 'Escape' });
+    expect(screen.getByLabelText('Stored text').textContent).toBe('Original bullet');
     expect(screen.getByLabelText('Deleted').textContent).toBe('false');
     expect(screen.queryByRole('textbox')).toBeNull();
+    expect(events.mock.calls).toEqual([['change:'], ['change:Original bullet'], ['finish']]);
   });
 
   it('finishes on blur and keeps the live change', () => {
@@ -217,7 +238,8 @@ describe('InlineText', () => {
   it.each([
     { key: 'Enter', bullet: true, expected: [['insert']] },
     { key: 'Enter', bullet: false, expected: [['finish']] },
-    { key: 'Escape', bullet: true, expected: [['change:'], ['finish']] },
+    { key: 'Escape', bullet: true, expected: [['change:'], ['empty-blur']] },
+    { key: 'Escape', bullet: false, expected: [['change:'], ['finish']] },
     { key: 'Backspace', bullet: true, expected: [['backspace']] },
   ])('ignores blur after $key when the owner defers replacement (bullet: $bullet)', ({ key, bullet, expected }) => {
     const events = vi.fn();
@@ -253,13 +275,30 @@ describe('InlineText', () => {
     expect(events.mock.calls).toEqual([['finish']]);
   });
 
-  it.each(['Enter', 'Backspace'])('ignores %s during IME composition', (key) => {
+  it.each(['Escape', 'Enter', 'Backspace'])('ignores native composing %s until composition ends', (key) => {
     const events = vi.fn();
     render(<Harness initial="" bullet events={events} />);
     const field = start('Edit bullet 2');
+    fireEvent.compositionStart(field);
     expect(fireEvent.keyDown(field, { key, isComposing: true })).toBe(true);
-    expect(screen.queryByRole('textbox')).not.toBeNull();
+    expect(screen.getByRole('textbox')).toBe(field);
     expect(events).not.toHaveBeenCalled();
+    fireEvent.compositionEnd(field);
+    expect(fireEvent.keyDown(field, { key })).toBe(false);
+    expect(screen.queryByRole('textbox')).toBeNull();
+  });
+
+  it.each(['Escape', 'Enter', 'Backspace'])('ignores Safari %s with keyCode 229 after compositionend', (key) => {
+    const events = vi.fn();
+    render(<Harness initial="" bullet events={events} />);
+    const field = start('Edit bullet 2');
+    fireEvent.compositionStart(field);
+    fireEvent.compositionEnd(field);
+    expect(fireEvent.keyDown(field, { key, keyCode: 229, isComposing: false })).toBe(true);
+    expect(screen.getByRole('textbox')).toBe(field);
+    expect(events).not.toHaveBeenCalled();
+    expect(fireEvent.keyDown(field, { key })).toBe(false);
+    expect(screen.queryByRole('textbox')).toBeNull();
   });
 
   it.each([false, true])('allows Shift+Enter as a natural newline (bullet: %s)', (bullet) => {

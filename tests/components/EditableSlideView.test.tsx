@@ -57,6 +57,17 @@ describe('EditableSlideView', () => {
     expect(screen.getByRole('button', { name: 'Edit bullet 2' }).textContent).toBe('Second point');
   });
 
+  it('removes a new empty point on Escape without leaving a blank bullet', () => {
+    render(<Harness />);
+    fireEvent.click(screen.getByRole('button', { name: 'Edit bullet 1' }));
+    fireEvent.keyDown(screen.getByRole('textbox'), { key: 'Enter' });
+    fireEvent.keyDown(screen.getByRole('textbox', { name: 'Edit bullet 2' }), { key: 'Escape' });
+    expect(screen.queryByRole('textbox')).toBeNull();
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
+    expect(screen.getByRole('button', { name: 'Edit bullet 2' }).textContent).toBe('Second point');
+    expect(screen.queryByRole('button', { name: 'Edit bullet 3' })).toBeNull();
+  });
+
   it('ends when deleting the first empty point and removes an empty point left on blur', () => {
     render(<Harness points={['', 'Keep']} />);
     fireEvent.click(screen.getByRole('button', { name: 'Edit bullet 1' }));

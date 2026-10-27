@@ -11,7 +11,7 @@ Teachers need to edit the text they see on the Normal stage while keeping the se
 
 `src/components/workspace/EditableSlideView.tsx` wraps the passive slide renderer through optional title and point render functions. `src/components/workspace/InlineText.tsx` replaces one formatted text run with a plain textarea that inherits its typography and grows with its content. Fields show raw formula syntax; resting text uses the existing formula renderer. We do not use contentEditable.
 
-Typing calls the same deck actions as the panel, so changes are live. Escape restores the value captured when editing started. Bullet Enter inserts an empty point through the reducer; empty Backspace deletes and edits the previous point, while empty blur deletes and finishes. IME composition keeps its Enter and Backspace events.
+Typing calls the same deck actions as the panel, so changes are live. Escape restores the value captured when editing started and finishes; if that original is empty and the field has an empty-blur handler, it deletes the bullet through that handler instead. Bullet Enter inserts an empty point through the reducer; empty Backspace deletes and edits the previous point, while empty blur deletes and finishes. IME composition keeps its Escape, Enter and Backspace events. Keyboard events with native `isComposing` or keyCode 229 do not cancel, insert, finish or delete, including Safari's final keydown after compositionend.
 
 ## Consequences
 

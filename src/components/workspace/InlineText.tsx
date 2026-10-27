@@ -102,13 +102,15 @@ export function InlineText({
       }}
       onChange={(event) => onChange(event.target.value)}
       onKeyDown={(event) => {
-        if (completed.current) return;
+        // Safari can end composition before delivering its final keydown.
+        if (completed.current || event.nativeEvent.isComposing || event.keyCode === 229) return;
         if (event.key === 'Escape') {
           event.preventDefault();
           completed.current = true;
           onChange(original.current);
-          onFinish();
-        } else if (!event.nativeEvent.isComposing) {
+          if (original.current === '' && onEmptyBlur) onEmptyBlur();
+          else onFinish();
+        } else {
           if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             completed.current = true;
