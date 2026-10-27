@@ -5,6 +5,7 @@ import { parseDocument, DocumentParseError } from '@/lib/parsers/document-parser
 import { defineRoute, PublicError } from '@/lib/api';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
 
 const ALLOWED_EXTENSIONS = ['.docx', '.pdf', '.txt', '.md'];
 

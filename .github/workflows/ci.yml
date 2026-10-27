@@ -1,4 +1,4 @@
-# Checks typecheck, lint and unit tests; Vercel handles builds and deploys.
+# Required verification builds without provider credentials; audit is advisory.
 name: CI
 
 on:
@@ -39,3 +39,26 @@ jobs:
 
       - name: Unit tests
         run: npm test
+
+      - name: Production build
+        run: npm run build
+
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Production dependency audit (advisory)
+        run: npm audit --omit=dev --audit-level=high

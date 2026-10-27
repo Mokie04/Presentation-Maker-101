@@ -6,6 +6,7 @@ import { MAX_EXPORT_BODY_BYTES } from '@/lib/export/limits';
 import { buildPresentationMarkdown } from '@/lib/services/markdown-generator';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 30;
 
 
 export const POST = defineRoute({
