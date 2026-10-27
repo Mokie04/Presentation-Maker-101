@@ -126,14 +126,18 @@ it('cancel before generation and Escape return focus and store no deck', async (
   expect(screen.queryByRole('dialog')).toBeNull();
   expect(screen.getAllByRole('tab')).toHaveLength(1);
 });
-it.each([200, 422])('aborts during generation and ignores a late %s response after a new dialog opens', async status => {
+it.each([
+  { status: 200, cancelVia: 'Escape' }, { status: 422, cancelVia: 'Escape' },
+  { status: 200, cancelVia: 'Cancel' }, { status: 422, cancelVia: 'Cancel' },
+])('aborts via $cancelVia and ignores a late $status response after a new dialog opens', async ({ status, cancelVia }) => {
   await open(); another(); const pending = deferred(); generate.mockImplementationOnce(() => pending.promise);
   fireEvent.click(within(dialog()).getByRole('button', { name: 'Generate' }));
   const signal = generate.mock.calls[1][1]!.signal!;
   expect(within(dialog()).getByRole('button', { name: 'Generate' }).hasAttribute('disabled')).toBe(true);
   expect(within(dialog()).getByText('Analyzing curriculum & instructional structure...')).toBeTruthy();
-  fireEvent.keyDown(dialog(), { key: 'Escape' }); expect(dialog()).toBeTruthy();
-  fireEvent.click(within(dialog()).getByRole('button', { name: 'Cancel' }));
+  if (cancelVia === 'Escape') fireEvent.keyDown(document.body, { key: 'Escape' });
+  else fireEvent.click(within(dialog()).getByRole('button', { name: 'Cancel' }));
+  expect(screen.queryByRole('dialog')).toBeNull();
   expect(signal.aborted).toBe(true);
   another('Session 3');
   await act(async () => { pending.resolve(Response.json(status === 200 ? presentation : { error: 'This lesson is too long' }, { status })); });
@@ -176,6 +180,8 @@ it('resets one session immediately and confirms before clearing two', async () =
   confirm = screen.getByRole('dialog', { name: 'Start over?' });
   fireEvent.click(within(confirm).getByRole('button', { name: 'Start over' }));
   expect(screen.queryByRole('tablist')).toBeNull(); expect(screen.getByLabelText('Subject')).toBeTruthy();
+  expect(document.activeElement).toBe(screen.getByRole('heading', { level: 1, name: /Turn your lesson plan/ }));
+  expect(document.activeElement?.getAttribute('tabindex')).toBe('-1');
 });
 it('supports roving tabs with arrows/Home/End without moving the slide selection', async () => {
   await open(); selectSlideTitled('Leaves'); await addSecond();
@@ -222,4 +228,43 @@ it.each(['before', 'after'])('pins the lesson when a concurrent upload completes
   fireEvent.click(within(dialog()).getByRole('button', { name: 'Generate' }));
   await screen.findByRole('tab', { name: 'Session 2' });
   expect(requests[1]).toEqual({ text: lesson, session: 'Session 2', subject: 'Science', subjectSource: 'teacher-supplied' });
+});
+
+it.each(['another', 'reset'])('closes the %s dialog from body after clicking its backdrop', async mode => {
+  await open();
+  if (mode === 'reset') await addSecond();
+  const opener = screen.getByRole('button', { name: mode === 'another' ? 'Another session' : 'Start over with a new lesson' });
+  opener.focus(); fireEvent.click(opener);
+  const modal = screen.getByRole('dialog'); fireEvent.mouseDown(modal.parentElement!);
+  // Backdrop clicks can leave the browser's focus on body, outside the panel.
+  (document.activeElement as HTMLElement).blur(); expect(document.activeElement).toBe(document.body);
+  fireEvent.keyDown(document.body, { key: 'Escape' });
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(document.activeElement).toBe(opener);
+});
+it('ignores Escape already handled by a child layer', async () => {
+  await open(); another();
+  const select = within(dialog()).getByLabelText('Select Session');
+  const consumeEscape = (event: KeyboardEvent) => { event.preventDefault(); };
+  select.addEventListener('keydown', consumeEscape);
+  fireEvent.keyDown(select, { key: 'Escape' });
+  expect(dialog()).toBeTruthy();
+  select.removeEventListener('keydown', consumeEscape);
+  fireEvent.keyDown(select, { key: 'Escape' });
+  expect(screen.queryByRole('dialog')).toBeNull();
+});
+it.each(['target', 'document'])('leaves Escape to the topmost modal when it closes at the %s', async closeAt => {
+  await open(); another();
+  const nested = document.createElement('div'); nested.setAttribute('role', 'dialog'); nested.setAttribute('aria-modal', 'true');
+  nested.tabIndex = -1; dialog().append(nested);
+  (closeAt === 'target' ? nested : document).addEventListener('keydown', () => nested.remove(), { once: true });
+  fireEvent.keyDown(nested, { key: 'Escape' });
+  expect(dialog()).toBeTruthy(); expect(nested.isConnected).toBe(false);
+  fireEvent.keyDown(document.body, { key: 'Escape' });
+  expect(screen.queryByRole('dialog')).toBeNull();
+});
+it('does not steal focus on the initial home mount', async () => {
+  render(<Home />);
+  await screen.findByRole('heading', { level: 1, name: /Turn your lesson plan/ });
+  expect(document.activeElement).toBe(document.body);
 });

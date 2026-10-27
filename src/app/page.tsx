@@ -28,9 +28,16 @@ function PresentationWorkspace() {
   const [anotherSessionOpen, setAnotherSessionOpen] = useState(false);
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
   const generation = useRef<AbortController | null>(null);
+  const focusHomeAfterReset = useRef(false);
   useEffect(() => () => { generation.current?.abort(); }, []);
   const deck = useSlideDeck();
   const { presentationData, slideImages, loadPresentation, reset: resetDeck } = deck;
+  useEffect(() => {
+    if (!presentationData && focusHomeAfterReset.current) {
+      focusHomeAfterReset.current = false;
+      document.getElementById('home-title')?.focus({ preventScroll: true });
+    }
+  }, [presentationData]);
   const downloads = useDeckExport({
     presentationData, slideImages, themeId: deck.themeId, session: deck.activeSession || '', onError: (message) => alert(message),
   });
@@ -80,6 +87,7 @@ function PresentationWorkspace() {
   };
 
   const handleReset = () => {
+    focusHomeAfterReset.current = true;
     generation.current?.abort();
     generation.current = null;
     setAnotherSessionOpen(false);

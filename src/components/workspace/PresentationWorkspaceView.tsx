@@ -37,13 +37,16 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
   const selectedIndex = selection.selectedId === null ? -1 : slideIds.indexOf(selection.selectedId);
   const selectedSlide = presentationData?.slides[selectedIndex];
   useLayoutEffect(() => {
-    const lostFocus = lastFocus.current && (!lastFocus.current.isConnected || lastFocus.current.matches(':disabled'));
+    const lostFocus = lastFocus.current && !lastFocus.current.isConnected;
     if (!focusContent.current && !(lostFocus && (document.activeElement === document.body || document.activeElement === lastFocus.current))) return;
     focusContent.current = false;
     const target = view === 'normal' ? '[aria-label="Slide stage"]' : '[aria-current="true"]';
     (workspace.current?.querySelector<HTMLElement>(target) ?? workspace.current?.querySelector<HTMLElement>('button:not(:disabled)'))?.focus({ preventScroll: true });
   });
-  const changeView = (mode: typeof view) => { focusContent.current = true; setView(mode); };
+  const changeView = (mode: typeof view) => {
+    if (mode === view) return;
+    focusContent.current = true; setView(mode);
+  };
   const splitSelected = () => {
     if (selection.selectedId !== null && splitSlideToFit(selection.selectedId)) focusContent.current = true;
   };
@@ -91,8 +94,9 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   total={presentationData.slides.length} image={slideImages[selectedIndex]} originalWriters={presentationData.originalWriters} />
                 <button
                   type="button"
-                  disabled={!hasSlides || isDownloadingPptx}
-                  onClick={downloadPptx}
+                  disabled={!hasSlides}
+                  aria-disabled={isDownloadingPptx || undefined}
+                  onClick={() => { if (!isDownloadingPptx) void downloadPptx(); }}
                   className="px-3 py-2 bg-sky-700 hover:bg-sky-800 active:bg-sky-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-colors motion-reduce:transition-none"
                 >
                   <FileDown className="w-4 h-4" />
@@ -101,8 +105,9 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
 
                 <button
                   type="button"
-                  disabled={!hasSlides || isDownloadingMarkdown}
-                  onClick={downloadMarkdown}
+                  disabled={!hasSlides}
+                  aria-disabled={isDownloadingMarkdown || undefined}
+                  onClick={() => { if (!isDownloadingMarkdown) void downloadMarkdown(); }}
                   className="px-3 py-2 bg-slate-800 hover:bg-slate-900 active:bg-slate-950 text-white rounded-lg font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-colors motion-reduce:transition-none"
                 >
                   <FileText className="w-4 h-4" />
