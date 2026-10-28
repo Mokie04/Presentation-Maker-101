@@ -10,6 +10,19 @@ const GENERATION_DEADLINE_MS = 270_000;
 const RESPONSE_RESERVE_MS = 5_000;
 const MIN_ATTEMPT_MS = 1_000;
 const MAX_RETRY_AFTER_MS = 10_000;
+/** Retries after the first attempt; every retry still has to fit the overall deadline. */
+const DEFAULT_MAX_RETRIES = 5;
+/** Waits before retries 1–5 (about 31 s in total), each with up to BACKOFF_JITTER extra. */
+const DEFAULT_BACKOFF_DELAYS = [1_000, 2_000, 4_000, 8_000, 16_000];
+const BACKOFF_JITTER = 0.1;
+
+/** No further attempt fits the overall deadline; `cause` is the last attempt's failure, if any. */
+export class TextGenerationDeadlineError extends Error {
+  constructor(cause?: unknown) {
+    super('Text generation deadline exceeded.', { cause });
+    this.name = 'TextGenerationDeadlineError';
+  }
+}
 
 /** A completed request whose model output stopped at its output limit. */
 export class TextOutputTruncatedError extends Error {
@@ -63,8 +76,7 @@ export interface GenerateSlideOptions {
   signal?: AbortSignal;
 }
 
-const DEFAULT_BACKOFF_DELAYS = [1000, 2000];
-
+/** Empty, unparsable or schema-invalid model output; retried like a transient failure. */
 class RetryableResponseError extends Error {}
 
 function isRetryable(error: unknown): boolean {
@@ -72,6 +84,27 @@ function isRetryable(error: unknown): boolean {
     return [408, 409, 429].includes(error.status) || (error.status >= 500 && error.status < 600);
   }
   return error instanceof OpenAI.APIConnectionError || error instanceof RetryableResponseError;
+}
+
+/**
+ * How a final text-generation failure should be explained to the teacher:
+ * - `unavailable`: the upstream service was busy or unreachable (5xx, 408, 429, network error, timeout);
+ * - `invalid-output`: the service answered, but the output was empty, not JSON or not the expected shape;
+ * - `other`: configuration errors, cancellation and anything unexpected.
+ * A deadline stop is explained by the failure of the last attempt that ran.
+ */
+export type TextFailureKind = 'unavailable' | 'invalid-output' | 'other';
+
+export function classifyTextFailure(error: unknown): TextFailureKind {
+  if (error instanceof TextGenerationDeadlineError) {
+    return error.cause === undefined ? 'unavailable' : classifyTextFailure(error.cause);
+  }
+  if (error instanceof RetryableResponseError) return 'invalid-output';
+  if (error instanceof OpenAI.APIConnectionError) return 'unavailable';
+  if (error instanceof OpenAI.APIError && error.status !== undefined) {
+    return [408, 429].includes(error.status) || (error.status >= 500 && error.status < 600) ? 'unavailable' : 'other';
+  }
+  return 'other';
 }
 
 function retryAfterMs(error: unknown): number | undefined {
@@ -133,7 +166,7 @@ export async function generateSlideContent(
   signal?.throwIfAborted();
   const deadline = Date.now() + GENERATION_DEADLINE_MS;
   const client = options?.client ?? getTextProviderClient();
-  const maxRetries = options?.maxRetries ?? 2;
+  const maxRetries = options?.maxRetries ?? DEFAULT_MAX_RETRIES;
   const backoffDelays = options?.backoffDelays ?? DEFAULT_BACKOFF_DELAYS;
 
   let lastError: unknown;
@@ -142,7 +175,7 @@ export async function generateSlideContent(
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     signal?.throwIfAborted();
     const timeout = Math.min(ATTEMPT_TIMEOUT_MS, deadline - Date.now() - RESPONSE_RESERVE_MS);
-    if (timeout < MIN_ATTEMPT_MS) throw new Error('Text generation deadline exceeded.');
+    if (timeout < MIN_ATTEMPT_MS) throw new TextGenerationDeadlineError(lastError);
     try {
       const response = await boundedAttempt(attemptSignal => client.chat.completions.create({
         model: getTextProviderConfig().model,
@@ -184,9 +217,9 @@ export async function generateSlideContent(
       if (attempt < maxRetries) {
         const baseDelay = backoffDelays[attempt] ?? (backoffDelays[backoffDelays.length - 1] ?? 1000) * 2;
         // Injected backoffs remain exact for existing callers and deterministic tests.
-        const delay = retryAfterMs(err) ?? (options?.backoffDelays ? baseDelay : baseDelay * (1 + Math.random() * 0.1));
+        const delay = retryAfterMs(err) ?? (options?.backoffDelays ? baseDelay : baseDelay * (1 + Math.random() * BACKOFF_JITTER));
         if (delay + RESPONSE_RESERVE_MS + MIN_ATTEMPT_MS > deadline - Date.now()) {
-          throw new Error('Text generation deadline exceeded.');
+          throw new TextGenerationDeadlineError(err);
         }
         await sleep(delay, signal);
       }

@@ -90,13 +90,13 @@ describe('bounded text generation', () => {
     expect(create).toHaveBeenCalledTimes(2);
   });
 
-  it('uses two default retries and approximately one- then two-second backoffs', async () => {
+  it('uses five default retries with approximately 1, 2, 4, 8 and 16 second backoffs', async () => {
     const create = vi.fn().mockRejectedValue(new OpenAI.APIConnectionError({ message: 'network' }));
     const result = generate(create).catch(value => value);
     await vi.runAllTimersAsync();
     expect(await result).toBeInstanceOf(OpenAI.APIConnectionError);
-    expect(create).toHaveBeenCalledTimes(3);
-    expect(Date.now()).toBe(3_000);
+    expect(create).toHaveBeenCalledTimes(6);
+    expect(Date.now()).toBe(31_000);
   });
 
   it('keeps injected retry counts and exact backoffs working', async () => {
@@ -114,8 +114,8 @@ describe('bounded text generation', () => {
     const result = generate(create).catch(value => value);
     await vi.runAllTimersAsync();
     expect(await result).toBeInstanceOf(OpenAI.APIConnectionError);
-    expect(create).toHaveBeenCalledTimes(3);
-    expect(Date.now()).toBe(3_150);
+    expect(create).toHaveBeenCalledTimes(6);
+    expect(Date.now()).toBe(32_550);
   });
 
   it('bounds hung calls, shrinks the next timeout, and stops before the overall deadline', async () => {
