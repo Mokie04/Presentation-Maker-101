@@ -97,3 +97,13 @@ S3 gains page/text caps but a hard PDF worker timeout remains open (allowed bund
 fallback). Zod is 4.6.7 and Undici 8.12.3. Other dependency upgrades remain separate.
 S4 and S6 remain open. Frame/embedding restrictions require a product decision.
 See `docs/adr/0030-input-hardening.md` and `docs/input-hardening-verification.md`.
+
+## Text retry follow-up (2026-10-28)
+
+P1 note: the input-hardening defaults (two retries, about three seconds) proved too
+short for brief upstream outages, where the text provider fails fast with a transient
+5xx and recovers moments later. `fix/text-retry-policy` restores five retries with
+1–16 second backoffs (about 31 seconds) inside the unchanged 270-second deadline and
+150-second per-attempt timeout, and the generate route now answers 503 (service busy)
+or 502 (output could not be formatted) with fixed, provider-neutral messages instead
+of the generic failure. See "Retry defaults revisited" in `docs/adr/0030-input-hardening.md`.
