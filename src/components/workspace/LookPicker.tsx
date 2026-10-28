@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useId, useRef, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import type { SlideData } from '@/types/presentation';
 import { THEMES, getTheme } from '@/lib/themes';
 import { SlideThumbnail } from './SlideThumbnail';
@@ -16,6 +17,8 @@ interface LookPickerProps {
 }
 
 const focusRing = 'outline-none focus-visible:ring-2 focus-visible:ring-sky-800 focus-visible:ring-offset-2 focus-visible:ring-offset-white';
+// Tactile like the home Generate button: lifts on hover, sits down when pressed or open.
+const triggerStyle = 'inline-flex min-h-11 items-center gap-2 rounded-lg border-2 border-notebook-navy bg-sun-500 px-3 py-1.5 text-xs font-bold text-notebook-navy shadow-[0_3px_0_0_theme(colors.notebook.navy)] transition-[transform,box-shadow] duration-100 hover:-translate-y-0.5 hover:shadow-[0_5px_0_0_theme(colors.notebook.navy)] active:translate-y-[3px] active:shadow-none aria-expanded:translate-y-[3px] aria-expanded:shadow-none motion-reduce:!transform-none motion-reduce:transition-none md:min-h-0';
 
 /** A non-modal native radio chooser; a single available look adds no chrome. */
 export function LookPicker({ themeId, onChange, slide, index, total, image, originalWriters }: LookPickerProps) {
@@ -46,6 +49,7 @@ export function LookPicker({ themeId, onChange, slide, index, total, image, orig
   }, [open]);
 
   if (THEMES.length < 2) return null;
+  const current = getTheme(themeId);
   return (
     <div ref={root} className="relative" onBlur={event => {
       // A pointer press on a label can blur its radio to body before the
@@ -54,8 +58,15 @@ export function LookPicker({ themeId, onChange, slide, index, total, image, orig
     }}>
       <button ref={trigger} type="button" aria-expanded={open} aria-controls={open ? id : undefined}
         onClick={() => setOpen(value => !value)}
-        className={`min-h-11 rounded-lg border border-slate-500 bg-white px-3 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 motion-reduce:transition-none md:min-h-0 ${focusRing}`}>
-        Look: {getTheme(themeId).name}
+        className={`${triggerStyle} ${focusRing}`}>
+        {/* Visual-only swatch of the current look; the text names it. */}
+        <span aria-hidden="true" data-look-swatch
+          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full ring-2 ring-notebook-navy"
+          style={{ backgroundColor: `#${current.palette.background}` }}>
+          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: `#${current.palette.primary}` }} />
+        </span>
+        <span>Look: {current.name}</span>
+        <ChevronDown aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
       </button>
       {open && <div ref={popover} id={id} data-look-popover
         className="fixed inset-x-2 bottom-2 z-50 max-h-[calc(100dvh-1rem)] overflow-y-auto rounded-2xl border-2 border-slate-800 bg-white p-4 text-slate-900 shadow-[4px_4px_0_0_#1e293b] motion-reduce:transition-none md:absolute md:inset-x-auto md:bottom-auto md:left-0 md:right-auto md:top-full md:mt-2 md:w-[360px] md:max-h-[min(640px,80dvh)]">
