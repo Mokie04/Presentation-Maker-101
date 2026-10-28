@@ -31,7 +31,7 @@ Teacher browser → authenticated Next.js routes → text provider → slide dec
 Slide deck → export payload → PPTX or Markdown route
 ```
 
-The text client validates structured `PresentationData`, allows two explicit retries by default, bounds each attempt to 150 seconds and the overall operation to 270 seconds, and forwards cancellation. The OpenAI-compatible image adapter retries up to three times after the initial attempt; `auto` falls back to Pexels only when `PEXELS_API_KEY` is configured and skips an unconfigured AI key immediately. Pexels search and the NASA/Commons libraries have separate retrieval paths.
+The text client validates structured `PresentationData`, allows five explicit retries by default (about 31 seconds of backoff), bounds each attempt to 150 seconds and the overall operation to 270 seconds, and forwards cancellation. The OpenAI-compatible image adapter retries up to three times after the initial attempt; `auto` falls back to Pexels only when `PEXELS_API_KEY` is configured and skips an unconfigured AI key immediately. Pexels search and the NASA/Commons libraries have separate retrieval paths.
 
 ---
 

@@ -54,7 +54,7 @@ errors already mapped to 400 did not match the source.
 ### Text attempts, deadlines and cancellation
 
 The text SDK and every request disable hidden retries. Allow two explicit retries
-by default; retain injected client, maxRetries and backoffDelays options. Each
+by default (raised to five; see "Retry defaults revisited" below); retain injected client, maxRetries and backoffDelays options. Each
 attempt receives min(150 seconds, time remaining minus a five-second response
 reserve) inside a 270-second overall budget. Do not start another attempt with
 less than one second available. Bound even an injected transport that ignores
@@ -64,7 +64,7 @@ Retry connection/timeouts, HTTP 408/409/429/5xx, empty content, invalid JSON and
 schema failures. Configuration 4xx and unknown programming errors (including bare TypeError)
 fail immediately; SDK APIConnectionError wraps actual network failures;
 TextOutputTruncatedError still bypasses retries and maps to 422. Default backoffs
-are one and two seconds with 0–10% jitter. Honor numeric/date Retry-After on 429,
+are one and two seconds with 0–10% jitter (now 1, 2, 4, 8 and 16 seconds). Honor numeric/date Retry-After on 429,
 capped at ten seconds. Explicit injected backoffs remain exact. The generate route
 forwards request.signal so disconnect cancellation reaches the upstream attempt.
 The request lifetime remains 300 seconds, leaving time for a sanitized response.
@@ -159,3 +159,36 @@ image-generation prompt or broader UI sweep is included.
 scenarios, browser lifecycle checks, clean-environment build/header output, every
 existing test edited, local commits A–H, final gates and deviations. Large artifacts
 remain outside the repository. Tests generate hostile documents in memory.
+
+## Retry defaults revisited (2026-10-28)
+
+The upstream text service sometimes fails fast with a transient 5xx that succeeds
+a moment later. Two retries over about three seconds were less forgiving than the
+pre-hardening behaviour (six attempts over about 31 seconds), and teachers saw the
+same generic failure whether the service was busy or the output was unusable.
+
+Defaults in `src/lib/providers/text-provider.ts` are now five retries (six attempts)
+with waits of about 1, 2, 4, 8 and 16 seconds plus the same 0–10% jitter, named
+DEFAULT_MAX_RETRIES, DEFAULT_BACKOFF_DELAYS and BACKOFF_JITTER. This is safe under
+the deadline: fast failures spend about 31 seconds of the 270-second budget, and
+every attempt and wait is still checked against that budget, so slow failures stop
+earlier (two attempts when each one times out, five when each takes 60 seconds).
+The per-attempt timeout, response reserve, retryable set, fail-fast 4xx group,
+Retry-After cap, truncation bypass, cancellation and injected options are unchanged.
+A deadline stop now throws TextGenerationDeadlineError, whose cause is the last failure.
+
+The generate route maps the final failure without exposing upstream detail; the
+detail stays in server logs:
+
+| Final failure | Response |
+|---|---|
+| 5xx, 408, 429, network error or timeout (including a deadline stop after one) | 503 "The AI service is busy right now. Please try again in a minute." |
+| Empty, non-JSON or schema-invalid output | 502 "The AI could not format this lesson. Please try again, or try a shorter part of the lesson plan." |
+| Truncated output | 422, existing too-long message |
+| 400/401/403/404/422, 409, cancellation, anything unknown | 500, existing generic message |
+
+The last failure decides when failures were mixed. Scenario timings are pinned in
+`tests/api/generate-retry-policy.test.ts`; a guard in
+`tests/lib/providers/text-provider-json-mode.test.ts` checks that JSON response mode
+is always accompanied by the word JSON in the messages, because some compatible
+services reject the mode otherwise with an error that looks like a generic 5xx.
