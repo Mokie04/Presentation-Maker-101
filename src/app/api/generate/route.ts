@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { LESSON_TOO_LONG_MESSAGE, MAX_LESSON_TEXT_LENGTH } from '@/lib/lesson-limits';
 import { defineRoute, PublicError } from '@/lib/api';
 import { autoFitDeck } from '@/lib/auto-fit-deck';
-import { generateSlideContent, TextOutputTruncatedError } from '@/lib/providers/text-provider';
+import { classifyTextFailure, generateSlideContent, TextOutputTruncatedError } from '@/lib/providers/text-provider';
 import { detectSubject } from '@/lib/utils/subject-detector';
 import { SESSION_OPTIONS } from '@/lib/utils/session-options';
 import { SUPPORTED_SUBJECTS } from '@/lib/utils/subject-options';
@@ -14,6 +14,10 @@ export const maxDuration = 300;
 
 /** Vercel's request body limit; lesson text also has a shared product cap. */
 const MAX_BODY_BYTES = 4_500_000;
+
+// Fixed, provider-neutral texts: never include upstream status codes, bodies or names.
+const SERVICE_BUSY_MESSAGE = 'The AI service is busy right now. Please try again in a minute.';
+const OUTPUT_UNUSABLE_MESSAGE = 'The AI could not format this lesson. Please try again, or try a shorter part of the lesson plan.';
 
 // Loose so the subject provenance keys below stay visible on the raw body.
 const inputSchema = z.looseObject({
@@ -62,7 +66,13 @@ export const POST = defineRoute({
           422
         );
       }
-      throw err;
+      const kind = classifyTextFailure(err);
+      if (kind === 'other') throw err;
+      // PublicError responses are not logged by defineRoute; keep the detail in server logs.
+      console.error('[generate]', err);
+      throw kind === 'unavailable'
+        ? new PublicError(SERVICE_BUSY_MESSAGE, 503)
+        : new PublicError(OUTPUT_UNUSABLE_MESSAGE, 502);
     }
     const presentation = autoFitDeck(generated);
 

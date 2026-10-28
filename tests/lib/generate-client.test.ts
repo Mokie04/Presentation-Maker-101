@@ -27,3 +27,12 @@ it('aborts before mapping a late 422 response body even if fetch ignores abort',
   body(JSON.stringify({ error: 'This lesson is too long' }));
   await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
 });
+it('forwards the route’s busy and formatting messages unchanged', async () => {
+  const busy = 'The AI service is busy right now. Please try again in a minute.';
+  const unusable = 'The AI could not format this lesson. Please try again, or try a shorter part of the lesson plan.';
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce(Response.json({ error: busy }, { status: 503 }))
+    .mockResolvedValueOnce(Response.json({ error: unusable }, { status: 502 })));
+  const request = { text: 'lesson', session: 'Session 1' };
+  await expect(generatePresentation(request, new AbortController().signal)).rejects.toThrow(busy);
+  await expect(generatePresentation(request, new AbortController().signal)).rejects.toThrow(unusable);
+});
