@@ -49,6 +49,22 @@ describe('formula-parser', () => {
       expect(parseFormulaToSegments(input as string)).toEqual(expected);
     });
 
+    // Rendered whole before the export-integrity rewrite; it cut these to one letter or a raw caret.
+    it.each([
+      ['F_net = ma', [{ text: 'F' }, { text: 'net', subscript: true }, { text: ' = ma' }]],
+      ['v_max', [{ text: 'v' }, { text: 'max', subscript: true }]],
+      ['K_sp', [{ text: 'K' }, { text: 'sp', subscript: true }]],
+      ['R_total = R_1 + R_2', [{ text: 'R' }, { text: 'total', subscript: true }, { text: ' = R' },
+        { text: '1', subscript: true }, { text: ' + R' }, { text: '2', subscript: true }]],
+      ['λ_max', [{ text: 'λ' }, { text: 'max', subscript: true }]],
+      ['e^-x', [{ text: 'e' }, { text: '-x', superscript: true }]],
+      ['e^-kt', [{ text: 'e' }, { text: '-kt', superscript: true }]],
+      ['NO_3^-', [{ text: 'NO' }, { text: '3', subscript: true }, { text: '-', superscript: true }]],
+      ['SO_4^2-', [{ text: 'SO' }, { text: '4', subscript: true }, { text: '2-', superscript: true }]],
+    ])('keeps multi-letter scripts and charges whole in %s', (input, expected) => {
+      expect(parseFormulaToSegments(input as string)).toEqual(expected);
+    });
+
     it.each([
       'snake_case_word', 'teacher_name@school.edu', 'Wi-Fi', 'X-Ray', 'COVID-19',
       'B-52', 'R2-D2', 'MP3', 'Q1', 'H2O-invalid', 'H2Ofoo', 'H2Q',

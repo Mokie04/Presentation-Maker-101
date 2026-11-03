@@ -163,7 +163,7 @@ export function parseFormulaToSegments(rawText: string): FormulaSegment[] {
     const chemicalSegments = chemicalBase && !/^[A-Za-z]{2}/.test(normalized.slice(i + 1))
       ? parseChemicalFormula(chemicalBase, false) : null;
     const subscriptBase = marker === '_' && (
-      /(?:^|[^A-Za-z0-9_])[A-Za-z]$|[0-9)\]}]$/.test(prefix) || chemicalSegments !== null
+      /(?:^|[^A-Za-z\u0370-\u03FF0-9_])[A-Za-z\u0370-\u03FF]$|[0-9)\]}]$/.test(prefix) || chemicalSegments !== null
     );
     const inEmail = marker === '_' && (
       /@\S*$/.test(prefix) || /^\S*@/.test(normalized.slice(i + 1))
@@ -171,7 +171,10 @@ export function parseFormulaToSegments(rawText: string): FormulaSegment[] {
     if (marker === '^' || (marker === '_' && subscriptBase && !inEmail)) {
       const remainder = normalized.slice(i + 1);
       const script = /^(?:\{([^{}]+)\}|\(([^()]+)\))/.exec(remainder);
-      const unbraced = (marker === '^' ? /^[+-]?\d+|^[A-Za-z]/ : /^\d+|^[A-Za-z]/).exec(remainder);
+      // A multi-letter script (F_net, e^-kt) or a bare charge (NO_3^-) must end the word.
+      const unbraced = (marker === '^'
+        ? /^[+-]?\d+[+-]?(?!\w)|^[+-]?\d+|^-?[A-Za-z]+(?!\w)|^[A-Za-z]|^[+-](?!\w)/
+        : /^\d+|^[A-Za-z]+(?![\w@.])|^[A-Za-z]/).exec(remainder);
       const scriptText = script ? script[1] ?? script[2] : unbraced?.[0];
       if (scriptText) {
         if (chemicalBase && chemicalSegments) {

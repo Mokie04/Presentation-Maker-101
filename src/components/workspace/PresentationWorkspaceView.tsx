@@ -44,7 +44,8 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
   const selectedIndex = selection.selectedId === null ? -1 : slideIds.indexOf(selection.selectedId);
   const selectedSlide = presentationData?.slides[selectedIndex];
   useLayoutEffect(() => {
-    const lostFocus = lastFocus.current && !lastFocus.current.isConnected;
+    // Browsers drop focus from a control that became disabled, so treat it like a removed one.
+    const lostFocus = lastFocus.current && (!lastFocus.current.isConnected || lastFocus.current.matches(':disabled'));
     if (!focusContent.current && !(lostFocus && (document.activeElement === document.body || document.activeElement === lastFocus.current))) return;
     focusContent.current = false;
     const target = view === 'normal' ? '[aria-label="Slide stage"]' : '[aria-current="true"]';
@@ -64,7 +65,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
           <div ref={workspace} className="min-w-0 space-y-3" onFocusCapture={event => { lastFocus.current = event.target as HTMLElement; }} onKeyDown={(event) => { if (view === 'normal') navigateSlides(event, selection); }}>
             {/* Header Control Strip */}
             <div className="bg-white rounded-xl border border-sky-100 p-3 flex flex-wrap items-center justify-between gap-3">
-              <div className="min-w-0 basis-full space-y-1 lg:basis-0 lg:flex-1">
+              <div className="min-w-0 basis-full space-y-1 lg:basis-0 lg:flex-1 lg:min-w-64">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="px-3 py-1 bg-sky-700 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs">
                     {selectedSession}

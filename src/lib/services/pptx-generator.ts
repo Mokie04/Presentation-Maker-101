@@ -105,8 +105,15 @@ export function createPresentationPptx(
 
     if (slide.imageMetadata) {
       const credit = describeImageCredit(slide.imageMetadata);
-      const creditText = Array.from(stripIllegalXmlCharacters(`${credit.heading} — ${credit.creditLine}`));
-      const visibleCredit = creditText.length > 160 ? creditText.slice(0, 159).join('') + '…' : creditText.join('');
+      const fullCredit = stripIllegalXmlCharacters(`${credit.heading} — ${credit.creditLine}`);
+      const creditText = Array.from(fullCredit);
+      // Shorten the creator rather than the licence name, which must stay on the slide.
+      const licenceAt = credit.license ? fullCredit.lastIndexOf('; License: ') : -1;
+      const licence = licenceAt >= 0 ? Array.from(fullCredit.slice(licenceAt)) : [];
+      const keep = licence.length > 0 && licence.length < 80 ? licence : [];
+      const visibleCredit = creditText.length > 160
+        ? creditText.slice(0, 159 - keep.length).join('') + '…' + keep.join('')
+        : creditText.join('');
       slideObj.addText(visibleCredit, {
         ...CREDIT_LAYOUT, color: palette.muted,
         fontFace, fit: 'shrink',
