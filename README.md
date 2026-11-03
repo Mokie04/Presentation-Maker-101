@@ -286,4 +286,4 @@ Run `npm test` for the current count. Tests cover route policy, configuration bo
 
 - **Developer**: JOHN M. NAVARRO
 - **Product**: SAYUNA AI PRESENTATION MAKER
-- **License**: MIT
+- **License**: MIT, see [LICENSE](LICENSE). Bundled fonts, images and npm packages keep their own licences; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
