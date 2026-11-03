@@ -23,11 +23,19 @@ describe('SlidePanel', () => {
     fireEvent.change(screen.getByLabelText('Slide Title'), { target: { value: 'New title' } });
     fireEvent.change(screen.getByLabelText('Bullet 2'), { target: { value: 'Updated mineral' } });
     fireEvent.click(screen.getByRole('button', { name: '+ Add Bullet Point' }));
-    fireEvent.click(screen.getAllByRole('button', { name: 'Remove Bullet' })[1]);
+    fireEvent.click(screen.getByRole('button', { name: 'Remove bullet 2' }));
     expect(handlers.onUpdatePart).toHaveBeenCalledWith(31, 'Assessment');
     expect(handlers.onUpdateTitle).toHaveBeenCalledWith(31, 'New title');
     expect(handlers.onUpdateBullet).toHaveBeenCalledWith(31, 1, 'Updated mineral');
     expect(handlers.onAddBullet).toHaveBeenCalledWith(31);
+    expect(handlers.onDeleteBullet).toHaveBeenCalledWith(31, 1);
+  });
+
+  it('numbers each remove button so the intended bullet can be identified', () => {
+    const handlers = props();
+    render(<SlidePanel {...handlers} />);
+    expect(screen.getByRole('button', { name: 'Remove bullet 1' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Remove bullet 2' }));
     expect(handlers.onDeleteBullet).toHaveBeenCalledWith(31, 1);
   });
 

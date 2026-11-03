@@ -120,3 +120,10 @@ it('brings newly mounted generating feedback into view without scrolling again f
     expect(scroll).toHaveBeenCalledTimes(1);
   } finally { HTMLElement.prototype.scrollIntoView = previous; }
 });
+
+it('keeps the home hero as the only level-one heading', () => {
+  render(<><Header /><HomeHero /></>);
+  const headings = screen.getAllByRole('heading', { level: 1 });
+  expect(headings).toHaveLength(1);
+  expect(headings[0].textContent).toBe('Turn your lesson plan into a classroom-ready PowerPoint.');
+});

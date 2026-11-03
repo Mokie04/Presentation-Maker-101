@@ -69,3 +69,9 @@ it('keeps the option mounted during pointer-induced blur so its label can activa
   fireEvent.click(screen.getByText('Test Look'));
   expect(screen.getByRole('button', { name: 'Look: Test Look' })).toBe(document.activeElement);
 });
+
+it('describes each radio with its PowerPoint font while naming it only from the look name', () => {
+  render(<Picker />); fireEvent.click(screen.getByRole('button', { name: 'Look: Sayuna Classic' }));
+  expect(screen.getByRole('radio', { name: 'Sayuna Classic', description: 'PowerPoint font: Poppins' })).toBeTruthy();
+  expect(screen.getByRole('radio', { name: 'Test Look', description: 'PowerPoint font: Arial' })).toBeTruthy();
+});

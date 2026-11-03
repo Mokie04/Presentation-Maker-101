@@ -141,3 +141,21 @@ it('leaves PageDown on a focused download button to the button', async () => {
   expect(screen.getByRole('option', { name: 'Slide 1: Plants' }).getAttribute('aria-selected')).toBe('true');
   expect(document.activeElement).toBe(button);
 });
+
+it('uses the presentation topic as the workspace only level-one heading', async () => {
+  await open();
+  const headings = screen.getAllByRole('heading', { level: 1 });
+  expect(headings).toHaveLength(1);
+  expect(headings[0].textContent).toBe('Plants');
+});
+it('allows an unbroken writer name to wrap without shrinking its icon', async () => {
+  const originalFetch = fetch;
+  const writers = 'W'.repeat(300);
+  vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => url === '/api/generate'
+    ? Promise.resolve(Response.json({ ...presentation, originalWriters: writers })) : originalFetch(url, init)));
+  await open();
+  const text = screen.getByText(`Writers: ${writers}`);
+  expect.soft(text.classList.contains('[overflow-wrap:anywhere]')).toBe(true);
+  expect.soft(text.classList.contains('min-w-0')).toBe(true);
+  expect.soft(text.parentElement!.querySelector('svg')!.classList.contains('shrink-0')).toBe(true);
+});

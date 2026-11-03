@@ -102,7 +102,7 @@ describe('On-slide editing in the Normal workspace', () => {
     await open(); select(2);
     const field = start('Edit bullet 1');
     fireEvent.change(field, { target: { value: '' } });
-    const remove = screen.getAllByRole('button', { name: 'Remove Bullet' })[0];
+    const remove = screen.getByRole('button', { name: 'Remove bullet 1' });
     fireEvent.mouseDown(remove);
     fireEvent.blur(field, { relatedTarget: remove });
     fireEvent.mouseUp(remove);
@@ -116,7 +116,7 @@ describe('On-slide editing in the Normal workspace', () => {
     fireEvent.click(screen.getByRole('button', { name: '+ Add Bullet Point' }));
     const field = start('Edit bullet 1');
     fireEvent.change(field, { target: { value: '' } });
-    const remove = screen.getAllByRole('button', { name: 'Remove Bullet' })[1];
+    const remove = screen.getByRole('button', { name: 'Remove bullet 2' });
     fireEvent.mouseDown(remove);
     fireEvent.blur(field, { relatedTarget: remove });
     fireEvent.mouseUp(remove);

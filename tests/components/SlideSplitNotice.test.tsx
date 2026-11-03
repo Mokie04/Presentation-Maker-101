@@ -20,12 +20,14 @@ it.each([
 });
 it('does not show a split button without a handler or a notice when everything fits', () => {
   const view = render(<SlideFitNotice overflow={{ title: false, body: true }} />);
+  expect(screen.getByRole('note').textContent).toBe('Some text does not fit on this slide. Shorten it.');
   expect(screen.queryByRole('button')).toBeNull();
   view.rerender(<SlideFitNotice overflow={{ title: false, body: false }} onSplit={vi.fn()} />);
   expect(screen.queryByRole('note')).toBeNull();
 });
 it.each([{ index: 0, contentPoints: slide.contentPoints }, { index: 1, contentPoints: [slide.contentPoints[0]] }])('never offers split for title or single-bullet slides: $index', ({ index, contentPoints }) => {
   render(<SlideStage slide={{ ...slide, contentPoints }} index={index} total={2} onSplit={vi.fn()} />);
+  expect(screen.getByRole('note').textContent).not.toContain('split');
   expect(screen.getByRole('note')).toBeTruthy(); expect(screen.queryByRole('button', { name: 'Split into two slides' })).toBeNull();
 });
 it('adds a visible and accessible sorter marker and removes it when text fits', () => {

@@ -128,7 +128,7 @@ export function SlidePanel({
             />
             <button
               type="button"
-              aria-label="Remove Bullet"
+              aria-label={`Remove bullet ${bulletIndex + 1}`}
               onMouseDown={() => { pointerDelete.current = { slideId, index: bulletIndex, points: slide.contentPoints }; }}
               onClick={(event) => {
                 const pending = event.detail > 0 ? pointerDelete.current : null;
@@ -144,7 +144,7 @@ export function SlidePanel({
                 onDeleteBullet(slideId, index);
               }}
               className="text-slate-600 hover:text-rose-600 p-1.5 mt-1 rounded hover:bg-rose-50 transition-colors"
-              title="Remove Bullet"
+              title={`Remove bullet ${bulletIndex + 1}`}
             >
               <X className="w-3.5 h-3.5" />
             </button>

@@ -84,6 +84,16 @@ describe('SlideshowModal component', () => {
     expect(handleClose).toHaveBeenCalled();
   });
 
+  it.each([
+    ['Short title', 'Slide 1: Short title'],
+    ['123456789012345678901234', 'Slide 1: 123456789012345678901234'],
+    ['1234567890123456789012345', 'Slide 1: 123456789012345678901234...'],
+  ])('adds a jump-option ellipsis only when truncating %s', (title, label) => {
+    render(<SlideshowModal isOpen onClose={vi.fn()} session="Session 1" slideImages={{}}
+      presentationData={{ ...samplePresentation, slides: [{ ...samplePresentation.slides[0], title }] }} />);
+    expect(within(screen.getByRole('combobox', { name: 'Jump to slide' })).getByRole('option', { name: label })).toBeTruthy();
+  });
+
   it('handles keyboard navigation (ArrowRight, ArrowLeft, Space, Escape)', () => {
     const handleClose = vi.fn();
 

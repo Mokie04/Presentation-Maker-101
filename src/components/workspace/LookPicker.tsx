@@ -76,15 +76,15 @@ export function LookPicker({ themeId, onChange, slide, index, total, image, orig
             className="block min-h-11 cursor-pointer rounded-xl border border-slate-400 p-3 hover:bg-slate-50">
             <span className="mb-2 flex min-h-11 items-center gap-3 md:min-h-0">
               <input type="radio" name={`${id}-look`} value={theme.id} checked={themeId === theme.id}
-                aria-label={theme.name} onClick={() => { if (themeId === theme.id) close(); }} onChange={() => { onChange(theme.id); close(); }}
+                aria-labelledby={`${id}-${theme.id}-name`} aria-describedby={`${id}-${theme.id}-font`} onClick={() => { if (themeId === theme.id) close(); }} onChange={() => { onChange(theme.id); close(); }}
                 className={`h-5 w-5 shrink-0 accent-sky-800 ${focusRing}`} />
-              <span className="font-bold">{theme.name}</span>
+              <span id={`${id}-${theme.id}-name`} className="font-bold">{theme.name}</span>
             </span>
             {/* Visual-only miniature: the radio name and font note describe the option. */}
             {slide && <div aria-hidden="true" ref={element => element?.setAttribute('inert', '')} className="pointer-events-none mb-2 select-none overflow-hidden rounded border border-slate-300">
               <SlideThumbnail slide={slide} index={index} total={total} image={image} originalWriters={originalWriters} theme={theme} />
             </div>}
-            <span className="block text-xs text-slate-700">PowerPoint font: {theme.typography.exportFace}</span>
+            <span id={`${id}-${theme.id}-font`} className="block text-xs text-slate-700">PowerPoint font: {theme.typography.exportFace}</span>
           </label>)}
         </fieldset>
       </div>}

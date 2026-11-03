@@ -77,9 +77,9 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   </span>
                 </div>
 
-                <h2 className="break-words text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+                <h1 className="break-words text-lg sm:text-xl font-black text-slate-900 tracking-tight">
                   {presentationData.topic}
-                </h2>
+                </h1>
 
                 {(imageProgress.loading > 0 || imageProgress.failed > 0) && (
                   <p role="status" aria-label="Pictures" className="text-xs text-slate-500">
@@ -90,8 +90,8 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                 )}
 
                 <div className="flex items-start gap-2 break-words text-xs text-slate-500">
-                  <UserCheck className="w-4 h-4 text-sky-600" />
-                  <span>Writers: {presentationData.originalWriters || 'JOHN M. NAVARRO'}</span>
+                  <UserCheck className="w-4 h-4 shrink-0 text-sky-600" />
+                  <span className="min-w-0 [overflow-wrap:anywhere]">Writers: {presentationData.originalWriters || 'JOHN M. NAVARRO'}</span>
                 </div>
               </div>
 

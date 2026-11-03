@@ -9,7 +9,8 @@ it('shows the real three-look registry and closes when the already-selected look
   render(<LookPicker themeId="sayuna-classic" onChange={vi.fn()} slide={slide} index={0} total={1} />);
   const trigger = screen.getByRole('button', { name: 'Look: Sayuna Classic' });
   fireEvent.click(trigger);
-  expect(screen.getAllByRole('radio').map(radio => radio.getAttribute('aria-label'))).toEqual(['Sayuna Classic', 'Chalkboard', 'Paper Notebook']);
+  expect(screen.getAllByRole('radio')).toHaveLength(3);
+  for (const name of ['Sayuna Classic', 'Chalkboard', 'Paper Notebook']) expect(screen.getByRole('radio', { name })).toBeTruthy();
   fireEvent.click(screen.getByRole('radio', { name: 'Sayuna Classic' }));
   expect(screen.queryByRole('radiogroup')).toBeNull();
   expect(document.activeElement).toBe(trigger);

@@ -204,7 +204,7 @@ export function SlideshowModal({
             >
               {slides.map((s, idx) => (
                 <option key={idx} value={idx}>
-                  Slide {idx + 1}: {s.title.slice(0, 24)}...
+                  Slide {idx + 1}: {s.title.slice(0, 24)}{s.title.length > 24 ? '...' : ''}
                 </option>
               ))}
             </select>
