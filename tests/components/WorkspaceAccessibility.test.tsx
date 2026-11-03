@@ -148,6 +148,13 @@ it('uses the presentation topic as the workspace only level-one heading', async 
   expect(headings).toHaveLength(1);
   expect(headings[0].textContent).toBe('Plants');
 });
+// jsdom has no layout. At 1024-1100px the action buttons left the zero-basis title column
+// about 10px wide (one letter per line); a minimum width makes the buttons wrap instead.
+it('keeps a minimum width for the topic column when it shares a row with the actions', async () => {
+  await open();
+  const column = screen.getByRole('heading', { level: 1 }).parentElement!;
+  expect(column.className.split(/\s+/)).toEqual(expect.arrayContaining(['lg:basis-0', 'lg:flex-1', 'lg:min-w-64']));
+});
 it('allows an unbroken writer name to wrap without shrinking its icon', async () => {
   const originalFetch = fetch;
   const writers = 'W'.repeat(300);

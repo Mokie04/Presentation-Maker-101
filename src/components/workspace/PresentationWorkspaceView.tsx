@@ -64,7 +64,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
           <div ref={workspace} className="min-w-0 space-y-3" onFocusCapture={event => { lastFocus.current = event.target as HTMLElement; }} onKeyDown={(event) => { if (view === 'normal') navigateSlides(event, selection); }}>
             {/* Header Control Strip */}
             <div className="bg-white rounded-xl border border-sky-100 p-3 flex flex-wrap items-center justify-between gap-3">
-              <div className="min-w-0 basis-full space-y-1 lg:basis-0 lg:flex-1">
+              <div className="min-w-0 basis-full space-y-1 lg:basis-0 lg:flex-1 lg:min-w-64">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="px-3 py-1 bg-sky-700 text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs">
                     {selectedSession}
