@@ -4,19 +4,19 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { createRequire } from 'node:module';
 import assert from 'node:assert/strict';
 import JSZip from 'jszip';
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import { createServer } from 'vite';
-import react from '@vitejs/plugin-react';
+import { importTool, requireTool, PLAYWRIGHT_HINT, VITE_HINT } from './dev-tools.mjs';
+
+const { createServer } = await importTool('vite', VITE_HINT);
+const { default: react } = await importTool('@vitejs/plugin-react', VITE_HINT);
 
 const root = path.resolve(import.meta.dirname, '..');
 const out = path.resolve(process.argv[2] || path.join(root, 'output/export-integrity'));
 const baselineRef = process.env.EXPORT_BASELINE || '1ee7d7d';
-const require = createRequire(import.meta.url);
-const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const { chromium } = requireTool(process.env.PLAYWRIGHT_MODULE || 'playwright', PLAYWRIGHT_HINT);
 const hash = value => createHash('sha256').update(value).digest('hex');
 const fixedTime = '2026-10-26T00:00:00Z';
 const NativeDate = Date;
@@ -193,7 +193,7 @@ try {
     const directory = path.join(out, name); await mkdir(directory, { recursive: true });
     const pptx = path.join(directory, `${name}.pptx`);
     await writeFile(pptx, await after.generator.buildPresentationPptx(data, images, chalkboard));
-    const log = await run(process.env.SOFFICE || '/opt/homebrew/bin/soffice', [`-env:UserInstallation=${pathToFileURL(path.join(out, 'lo-profile')).href}`, '--headless', '--convert-to', 'pdf', '--outdir', directory, pptx], { env: { SAL_FONTPATH: path.join(root, 'src/app/fonts') } });
+    const log = await run(process.env.SOFFICE || '/opt/homebrew/bin/soffice', [`-env:UserInstallation=${pathToFileURL(path.join(out, 'lo-profile')).href}`, '--headless', '--convert-to', 'pdf', '--outdir', directory, pptx], { env: { SAL_FONTPATH: path.join(root, 'src/app/fonts/source') } });
     await run('pdftoppm', ['-png', '-r', '96', path.join(directory, `${name}.pdf`), path.join(directory, 'slide')]);
     const extracted = await run('pdftotext', ['-layout', path.join(directory, `${name}.pdf`), '-']);
     await writeFile(path.join(directory, 'extracted.txt'), extracted);
@@ -222,7 +222,7 @@ import{THEMES}from ${JSON.stringify(path.join(root, 'src/lib/themes/index.ts'))}
 const data=${JSON.stringify({ ...deck, slides: [title, content, { ...content, title: 'Dropped picture', imageMetadata: after.samples.commonsFull }] })};
 const credit=${JSON.stringify(longCredit)};
 function App(){const deck=useSlideDeck();const[error,setError]=useState('');useEffect(()=>{deck.loadPresentation(data);deck.setThemeId('chalkboard')},[]);const downloads=useDeckExport({presentationData:deck.presentationData,slideImages:deck.slideImages,session:'Session 1',themeId:deck.themeId,onError:setError});window.exportReady=Object.keys(deck.slideImages).length===2;return <><div>{error}</div><PresentationWorkspaceView deck={deck} downloads={downloads} session="Session 1" onReset={()=>{}} onPreview={()=>{}}/><div id="long-credit-preview" style={{width:1280,height:720}}><SlideView slide={credit.slides[1]} index={1} total={2} image=${JSON.stringify(before.picture('wide', 'png'))} originalWriters={credit.originalWriters} theme={THEMES.find(t=>t.id==='chalkboard')}/></div></>};createRoot(document.getElementById('root')).render(<App/>);`);
-  const css = ['Poppins', 'Arimo', 'Gelasio'].flatMap(family => [400, 700].map(weight => `@font-face{font-family:"${family} Preview";src:url("/src/app/fonts/${family}-${weight === 700 ? 'Bold' : 'Regular'}.ttf");font-weight:${weight}}.font-slide-${family.toLowerCase()}{--font-slide-${family.toLowerCase()}:"${family} Preview"}`)).join('\n');
+  const css = ['Poppins', 'Arimo', 'Gelasio'].flatMap(family => [400, 700].map(weight => `@font-face{font-family:"${family} Preview";src:url("/src/app/fonts/source/${family}-${weight === 700 ? 'Bold' : 'Regular'}.ttf");font-weight:${weight}}.font-slide-${family.toLowerCase()}{--font-slide-${family.toLowerCase()}:"${family} Preview"}`)).join('\n');
   after.server.middlewares.use('/__export_integrity', async (request, response) => {
     response.setHeader('Content-Type', 'text/html');
     response.end(await after.server.transformIndexHtml('/__export_integrity', `<!doctype html><html><head><style>${css}</style></head><body><div id="root"></div><script type="module" src="/@fs/${entry}"></script></body></html>`));
