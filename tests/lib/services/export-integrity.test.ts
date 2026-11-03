@@ -79,7 +79,10 @@ describe.each([...THEMES, TEST_DECORATION_THEME])('export integrity: $id', theme
     const doc = parse(await zip.file('ppt/slides/slide1.xml')!.async('string'));
     const credit = texts(doc).find(t => t?.startsWith('Commons — '))!;
     expect(Array.from(credit)).toHaveLength(160);
-    expect(credit).toBe(Array.from(`${full.heading} — ${full.creditLine}`).slice(0, 159).join('') + '…');
+    // Only the creator is shortened: the licence must stay named on the slide.
+    const licence = `; License: ${metadata.licenseName}`;
+    expect(credit.endsWith(`…${licence}`)).toBe(true);
+    expect(credit).toBe(Array.from(`${full.heading} — ${full.creditLine}`).slice(0, 159 - Array.from(licence).length).join('') + '…' + licence);
     const notes = parse(await zip.file('ppt/notesSlides/notesSlide1.xml')!.async('string'));
     expect(texts(notes).join('\n')).toContain(metadata.creator);
     const rels = parse(await zip.file('ppt/slides/_rels/slide1.xml.rels')!.async('string'));
