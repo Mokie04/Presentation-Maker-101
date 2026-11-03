@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import JSZip from 'jszip';
 import { getTheme } from '@/lib/themes';
-import { buildPresentationPptx, createPresentationPptx } from '@/lib/services/pptx-generator';
+import { buildPresentationPptx, createPresentationPptx, dropMisplacedParagraphProperties } from '@/lib/services/pptx-generator';
 import { slideLayoutCases } from './slide-layout-cases';
 import { lookFixtureDeck, lookFixtureImages } from '../../helpers/look-render-fixtures';
 
@@ -27,7 +27,8 @@ export function characterizeLook(themeId: string, name: string): void {
       const direct = await JSZip.loadAsync(await createPresentationPptx(deck, images, theme).write({ outputType: 'nodebuffer' }));
       for (let index = 1; index <= slides.length; index++) {
         const xml = await zip.file(`ppt/slides/slide${index}.xml`)!.async('string');
-        expect(await direct.file(`ppt/slides/slide${index}.xml`)!.async('string')).toBe(xml);
+        // The only difference from PptxGenJS's own output is the removal of misplaced paragraph properties.
+        expect(dropMisplacedParagraphProperties(await direct.file(`ppt/slides/slide${index}.xml`)!.async('string'))).toBe(xml);
         expect({ sha256: createHash('sha256').update(xml).digest('hex'), xml: xml.replace(/></g, '>\n<') }).toMatchSnapshot(`slide ${index}`);
       }
     });

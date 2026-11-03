@@ -2,7 +2,7 @@
 
 exports[`PPTX layout: long content title with formulas and AI… > preserves every slide XML byte through both export entry points > slide 1 1`] = `
 {
-  "sha256": "03ba8f50356dde09999f9e67ceb300ee71cab10e5b0617ff18054fbe1f785931",
+  "sha256": "676b9b79133345549633190390a350df09a58e3e20b2c8dbf180287afe4d787e",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -161,12 +161,6 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 <a:t>Grade 7 Science
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -179,12 +173,6 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 <a:t>Observe the world
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -197,12 +185,6 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 <a:t>Discuss your findings
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" b="1" dirty="0">
 <a:solidFill>
@@ -273,7 +255,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 
 exports[`PPTX layout: long content title with formulas and AI… > preserves every slide XML byte through both export entry points > slide 2 1`] = `
 {
-  "sha256": "54e6691b406302ff214c22c9ef4d2b6f53a671bcad6be8855234ded5690a4c58",
+  "sha256": "7343fcaa0ea9770ddbc0519646dd42ddcb49d6690445b3d61e964cc0db8fc404",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -383,9 +365,6 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 </a:rPr>
 <a:t>Investigating H</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3600" b="1" baseline="-40000" dirty="0">
 <a:solidFill>
@@ -397,9 +376,6 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3600" b="1" dirty="0">
 <a:solidFill>
@@ -411,9 +387,6 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 </a:rPr>
 <a:t>O and x</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3600" b="1" baseline="30000" dirty="0">
 <a:solidFill>
@@ -425,9 +398,6 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3600" b="1" dirty="0">
 <a:solidFill>
@@ -488,12 +458,6 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 </a:rPr>
 <a:t>Water is H</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" baseline="-40000" dirty="0">
 <a:solidFill>
@@ -505,12 +469,6 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" dirty="0">
 <a:solidFill>
@@ -543,12 +501,6 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 </a:rPr>
 <a:t>Compare x</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" baseline="30000" dirty="0">
 <a:solidFill>
@@ -560,12 +512,6 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" dirty="0">
 <a:solidFill>
@@ -577,12 +523,6 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 </a:rPr>
 <a:t> with x</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" baseline="-40000" dirty="0">
 <a:solidFill>
@@ -697,7 +637,7 @@ exports[`PPTX layout: long content title with formulas and AI… > preserves eve
 
 exports[`PPTX layout: title with writers and library image > preserves every slide XML byte through both export entry points > slide 1 1`] = `
 {
-  "sha256": "f9b3e6f4cc4b4aadb0229d3618e098f15157f81f6248ee3b582ae3d1235c5cca",
+  "sha256": "2bba2954b7a48bf0e9ea284a936b3aab148a5523e27f9d818f3e341ad6dbd39c",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -904,12 +844,6 @@ exports[`PPTX layout: title with writers and library image > preserves every sli
 <a:t>Grade 7 Science
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -922,12 +856,6 @@ exports[`PPTX layout: title with writers and library image > preserves every sli
 <a:t>Observe the world
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -940,12 +868,6 @@ exports[`PPTX layout: title with writers and library image > preserves every sli
 <a:t>Discuss your findings
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" b="1" dirty="0">
 <a:solidFill>
@@ -1032,7 +954,7 @@ exports[`PPTX layout: title with writers and library image > preserves every sli
 
 exports[`PPTX layout: wide bullets and credit without image > preserves every slide XML byte through both export entry points > slide 1 1`] = `
 {
-  "sha256": "69f04a34cd76ae870a1cb9b094aad7f9cf46163ce492d52398a2cc8c34dd8357",
+  "sha256": "0d44336a3997145e907be17befaecfa68986b755c3558ebc8f3627b8d93944c4",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -1191,12 +1113,6 @@ exports[`PPTX layout: wide bullets and credit without image > preserves every sl
 <a:t>Grade 7 Science
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -1209,12 +1125,6 @@ exports[`PPTX layout: wide bullets and credit without image > preserves every sl
 <a:t>Observe the world
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -1227,12 +1137,6 @@ exports[`PPTX layout: wide bullets and credit without image > preserves every sl
 <a:t>Discuss your findings
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" b="1" dirty="0">
 <a:solidFill>

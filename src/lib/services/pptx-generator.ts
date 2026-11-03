@@ -311,6 +311,15 @@ export function createPresentationPptx(
   return pptx;
 }
 
+/**
+ * PptxGenJS 4.0.1 writes a second `<a:pPr>` between the runs of a paragraph that has subscript or
+ * superscript runs (and `buNone` in it, so some viewers drop the bullet). The schema allows paragraph
+ * properties only as the first child, so remove the ones that follow a run.
+ */
+export function dropMisplacedParagraphProperties(slideXml: string): string {
+  return slideXml.replace(/(<\/a:(?:r|br|fld)>)<a:pPr\b(?:[^>]*\/>|[^>]*>[\s\S]*?<\/a:pPr>)/g, '$1');
+}
+
 export async function buildPresentationPptx(
   presentationData: PresentationData,
   slideImages?: Record<number, string>,
@@ -330,6 +339,11 @@ export async function buildPresentationPptx(
     const xml = await zip.file(path)!.async('string');
     zip.file(path, xml.replace(/<a:(hlink|folHlink)>[\s\S]*?<\/a:\1>/g,
       (_, tag: string) => `<a:${tag}><a:srgbClr val="${theme.palette.muted}"/></a:${tag}>`));
+  }
+  for (const path of Object.keys(zip.files).filter(path => /^ppt\/slides\/slide\d+\.xml$/.test(path))) {
+    const xml = await zip.file(path)!.async('string');
+    const fixed = dropMisplacedParagraphProperties(xml);
+    if (fixed !== xml) zip.file(path, fixed);
   }
   return zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' });
 }

@@ -1,7 +1,7 @@
 import { createRequire } from 'node:module';
 import JSZip from 'jszip';
 import { describe, expect, it, vi } from 'vitest';
-import { buildPresentationPptx, createPresentationPptx } from '@/lib/services/pptx-generator';
+import { buildPresentationPptx, createPresentationPptx, dropMisplacedParagraphProperties } from '@/lib/services/pptx-generator';
 import { THEMES } from '@/lib/themes';
 import { describeImageCredit } from '@/lib/image-credit';
 import type { PresentationData } from '@/types/presentation';
@@ -106,6 +106,10 @@ it.each(THEMES)('compresses 200 text slides below 1.5MB preserving every uncompr
     for (const path of Object.keys(before.files).filter(p => /^ppt\/theme\/theme\d+\.xml$/.test(p))) {
       if (theme.id !== 'sayuna-classic') before.file(path, (await before.file(path)!.async('string')).replace(/<a:(hlink|folHlink)>[\s\S]*?<\/a:\1>/g,
         (_, tag: string) => `<a:${tag}><a:srgbClr val="${theme.palette.muted}"/></a:${tag}>`));
+    }
+    // Likewise the removal of misplaced paragraph properties from slides.
+    for (const path of Object.keys(before.files).filter(p => /^ppt\/slides\/slide\d+\.xml$/.test(p))) {
+      before.file(path, dropMisplacedParagraphProperties(await before.file(path)!.async('string')));
     }
     const after = await JSZip.loadAsync(compressed);
     expect(Object.keys(after.files)).toEqual(Object.keys(before.files));

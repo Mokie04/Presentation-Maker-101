@@ -28,7 +28,7 @@ Severity: **Critical** = data loss, wrong output or production failure; **Major*
 | M11 | Minor | Node range vs test tools | [package.json](../package.json) engines | Code reading | No |
 | M12 | Minor | Docs drift | [ADR 0031](adr/0031-ui-state-sweep.md), [ADR 0030](adr/0030-input-hardening.md), CI audit summary | Yes | Partly (ADR 0031 focus line) |
 | M13 | Minor | PDF on Node 26 | [document-parser.ts:135](../src/lib/parsers/document-parser.ts) | Only on Node 26 | No |
-| P1 | Major, not a regression | Export bullets | [pptx-generator.ts:40](../src/lib/services/pptx-generator.ts) | Yes | No |
+| P1 | Major, not a regression | Export bullets | [pptx-generator.ts:40](../src/lib/services/pptx-generator.ts) | Yes | Yes (follow-up PR) |
 | P2 | Minor, not a regression | Health check | [health.ts:25](../src/lib/health.ts) | Code reading | No |
 | P3 | Minor, not a regression | Header logo | [Header.tsx](../src/components/Header.tsx) | Yes | No |
 | E6 | Open, kept on purpose | NASA preview vs export | [SlideView.tsx:142](../src/components/SlideView.tsx), [pptx-generator.ts:181, 266](../src/lib/services/pptx-generator.ts) | Yes, still | No |
@@ -95,7 +95,7 @@ PR 57 stopped recovering focus for a control that became disabled, and its test 
 
 ### Not regressions, noted for the backlog
 
-- **P1 (Major-looking, present before the range): bullets that contain a formula lose their bullet in the PowerPoint.** pptxgenjs puts `bullet` only on the first run and writes a `<a:pPr>…<a:buNone/>` between later runs of the same paragraph, which is not valid there. In LibreOffice those bullets have no marker and no indent. The old parser produced the same runs. Not checked in PowerPoint itself. Fix idea: strip a `<a:pPr>` that sits between two runs while `buildPresentationPptx` rewrites the zip.
+- **P1 (Major-looking, present before the range): bullets that contain a formula lose their bullet in the PowerPoint.** pptxgenjs puts `bullet` only on the first run and writes a `<a:pPr>…<a:buNone/>` between later runs of the same paragraph, which is not valid there. In LibreOffice those bullets have no marker and no indent. The old parser produced the same runs. Not checked in PowerPoint itself. Fixed afterwards: `buildPresentationPptx` now removes any `<a:pPr>` that follows a run in each slide while it rewrites the zip (`dropMisplacedParagraphProperties`). The same stray element also sat between the lines of title-slide subtitles, where it had no visible effect; a LibreOffice render before and after shows only the bullets changing. The pinned slide XML snapshots changed only by those removals. The pre-fix PowerPoint behaviour is unknown, since only LibreOffice was used.
 - **P2, health check uses the text service.** Each `/api/health` call makes a real completion request, which counts toward the upstream rate limit. It needs a session, so outside monitors cannot call it.
 - **P3, header logo size.** `sm:w-13 sm:h-13` generates no CSS in Tailwind 3, so the logo stays 44 px at `sm` and up.
 - **E6 (kept on purpose in ADR 0028): NASA preview vs export.** Still reproduces in all three looks: the preview crops NASA pictures (`object-cover`, title and content slides) and the export fits the whole picture. Commons, AI and stock pictures agree between preview and export. Scope unchanged since the last review.

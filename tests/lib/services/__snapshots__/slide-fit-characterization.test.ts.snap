@@ -3,7 +3,7 @@
 exports[`pins fitting title, wide, visual and credited library slide XML 1`] = `
 [
   {
-    "sha256": "1c96db9f53294fefe0693259d79e60d864a293930f581b1a487fa8b4fc4dbd86",
+    "sha256": "2392acbe7ad85ace184e1815593cb60590b51cb096b6a88b42cb14b4d90e1e7c",
     "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -162,12 +162,6 @@ exports[`pins fitting title, wide, visual and credited library slide XML 1`] = `
 <a:t>Observe water
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -180,12 +174,6 @@ exports[`pins fitting title, wide, visual and credited library slide XML 1`] = `
 <a:t>Share evidence
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" b="1" dirty="0">
 <a:solidFill>

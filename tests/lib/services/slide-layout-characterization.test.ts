@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { describe, expect, it } from 'vitest';
 import JSZip from 'jszip';
-import { buildPresentationPptx, createPresentationPptx } from '@/lib/services/pptx-generator';
+import { buildPresentationPptx, createPresentationPptx, dropMisplacedParagraphProperties } from '@/lib/services/pptx-generator';
 import type { PresentationData } from '@/types/presentation';
 import { slideLayoutCases as cases } from './slide-layout-cases';
 
@@ -14,7 +14,8 @@ describe.each(cases)('PPTX layout: $name', ({ slides, images }) => {
     for (let index = 1; index <= slides.length; index++) {
       const path = `ppt/slides/slide${index}.xml`;
       const xml = await zip.file(path)!.async('string');
-      expect(await directZip.file(path)!.async('string')).toBe(xml);
+      // The only difference from PptxGenJS's own output is the removal of misplaced paragraph properties.
+      expect(dropMisplacedParagraphProperties(await directZip.file(path)!.async('string'))).toBe(xml);
       // Hash pins raw bytes; expanded XML makes a deliberate future change reviewable.
       expect({ sha256: createHash('sha256').update(xml).digest('hex'), xml: xml.replace(/></g, '>\n<') })
         .toMatchSnapshot(`slide ${index}`);

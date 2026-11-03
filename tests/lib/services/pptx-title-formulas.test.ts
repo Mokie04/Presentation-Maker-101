@@ -38,7 +38,7 @@ it('characterizes title and content formula runs in the exported slide XML', asy
   ]));
   expect(content).toContain('<a:t>O and x</a:t>');
   // Bounded subscripts leave O on the baseline in H_2O.
-  expect(createHash('sha256').update(content).digest('hex')).toBe('06b51c7ce4a7bd02fef556d9ebc35b407d5bcd510cdffb9ae2cdcf136b602aa2');
+  expect(createHash('sha256').update(content).digest('hex')).toBe('a9dbe25c970133df72f64c1fdb1ed5688bc7ca0eb7638b742e6f179dc1673e70');
 });
 
 it('characterizes a plain-text title slide including its writer attribution', async () => {
@@ -47,5 +47,5 @@ it('characterizes a plain-text title slide including its writer attribution', as
   const xml = await zip.file('ppt/slides/slide1.xml')!.async('string');
   expect(xml).toContain('Plain first');
   expect(xml).toContain('Original Lesson Plan Writers: Teacher Maria');
-  expect(createHash('sha256').update(xml).digest('hex')).toBe('7a9c6af67029abd240a91469d2bf39e68f0ca641dc6511fa91468a35833d8b96');
+  expect(createHash('sha256').update(xml).digest('hex')).toBe('b13408c52c211ca1991de4f122cead211f985d0aae1c21bb8027eca8137c87a1');
 });
