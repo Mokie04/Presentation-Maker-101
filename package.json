@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "image-size": "1.2.1",
+    "image-size": "2.0.4",
     "jszip": "3.10.2",
     "lucide-react": "^1.66.0",
     "mammoth": "^1.13.0",
