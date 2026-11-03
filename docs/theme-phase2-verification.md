@@ -1,5 +1,7 @@
 # Phase 2 Look picker verification
 
+> Evidence files cited below were kept on the developer's workstation and are not part of the repository.
+
 2026-10-26. Branch: feat/look-picker.
 Base: main a594175062ed52825088c745bae9db0def02f3da (merged Phase 1).
 No push, merge, deployment, live provider calls or new production looks/fonts.
@@ -123,10 +125,10 @@ and screenshots are retained as evidence only, outside the repository.
   looks use active-theme notices and Split; switching never rewrites the deck.
 - Saved-lesson persistence is not built; its future snapshot should store themeId.
 
-[Comparison manifest, archive hashes and browser assertions](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/theme-phase2/comparison.json)
+Comparison manifest, archive hashes and browser assertions
 
-[Production baseline screenshots](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/theme-phase2/main/browser)
+Production baseline screenshots
 
-[Production branch screenshots](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/theme-phase2/branch/browser)
+Production branch screenshots
 
-[Two-look screenshots and assertions](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/theme-phase2/two-look-check)
+Two-look screenshots and assertions

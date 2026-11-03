@@ -1,6 +1,6 @@
 # Multi-session roadmap
 
-## Phase 1 — Done (local implementation; not pushed or merged)
+## Phase 1 — Done (merged in PR 34)
 
 - One in-memory deck per Session 1–5, generated from the same original lesson and subject choice/provenance.
 - Switching restores each session's selection, Normal/sorter view, edits and images.

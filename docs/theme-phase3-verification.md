@@ -1,5 +1,7 @@
 # Phase 3 new-look verification
 
+> Evidence files cited below were kept on the developer's workstation and are not part of the repository.
+
 2026-10-26. Branch: feat/new-looks. Base: main 00fcddc.
 No push, merge, deployment, live provider requests or generation/prompt changes.
 
@@ -156,10 +158,10 @@ Forty-eight screenshots and the per-combination assertions/request logs are save
 The download body is stubbed in this browser check; real route/package correctness
 is independently covered by API tests, XML goldens and the native render harness.
 
-[Evidence manifest, checks and hashes](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/theme-phase3/comparison.json)
+Evidence manifest, checks and hashes
 
-[Final render sheets and PDF font inventories](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/theme-phase3/render)
+Final render sheets and PDF font inventories
 
-[Real-app browser screenshots and assertions](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/theme-phase3/browser)
+Real-app browser screenshots and assertions
 
-[Advance deviations and missing-glyph details](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/theme-phase3/font-deviations.json)
+Advance deviations and missing-glyph details

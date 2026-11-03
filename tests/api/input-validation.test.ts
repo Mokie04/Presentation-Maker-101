@@ -9,6 +9,7 @@ import * as textProvider from '@/lib/providers/text-provider';
 import * as imageProvider from '@/lib/providers/image-provider';
 import * as imageBatch from '@/lib/services/image-batch';
 import * as pptxGenerator from '@/lib/services/pptx-generator';
+import { ONE_PIXEL_PNG } from '../helpers/images';
 
 type Post = (request: NextRequest) => Promise<Response>;
 
@@ -20,7 +21,7 @@ function call(post: Post, body: unknown) {
 
 const slide = (i: number) => ({ slideNumber: i + 1, part: 'Discussion', title: `Slide ${i + 1}`, contentPoints: ['Point'], visualDescription: 'Visual' });
 const deck = (count: number) => ({ subject: 'Science', originalWriters: 'Teacher', topic: 'Plants', slides: Array.from({ length: count }, (_, i) => slide(i)) });
-const png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+const png = ONE_PIXEL_PNG;
 const batchSlide = (i: number) => ({ slideIndex: i, part: 'Discussion', visualDescription: 'Visual' });
 
 afterEach(() => { vi.restoreAllMocks(); });

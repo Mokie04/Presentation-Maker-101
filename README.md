@@ -31,7 +31,7 @@ Teacher browser → authenticated Next.js routes → text provider → slide dec
 Slide deck → export payload → PPTX or Markdown route
 ```
 
-The text client validates structured `PresentationData`, allows two explicit retries by default, bounds each attempt to 150 seconds and the overall operation to 270 seconds, and forwards cancellation. The OpenAI-compatible image adapter retries up to three times after the initial attempt; `auto` falls back to Pexels only when `PEXELS_API_KEY` is configured and skips an unconfigured AI key immediately. Pexels search and the NASA/Commons libraries have separate retrieval paths.
+The text client validates structured `PresentationData`, allows five explicit retries by default (about 31 seconds of backoff), bounds each attempt to 150 seconds and the overall operation to 270 seconds, and forwards cancellation. The OpenAI-compatible image adapter retries up to three times after the initial attempt; `auto` falls back to Pexels only when `PEXELS_API_KEY` is configured and skips an unconfigured AI key immediately. Pexels search and the NASA/Commons libraries have separate retrieval paths.
 
 ---
 
@@ -90,6 +90,8 @@ MAX_FILE_SIZE_MB=4
 | `MAX_FILE_SIZE_MB` | Positive number, default 4; the upload route applies this file-size check and the upload screen checks the 4 MB default before sending. |
 
 Vercel Functions have a [4.5 MB request-body limit](https://vercel.com/docs/functions/limitations#request-body-size), multipart overhead included. The 4 MB default is chosen to fit under it, and the upload screen explains a rejected file instead of showing platform text. Raising `MAX_FILE_SIZE_MB` above about 4.4 only makes sense when the app is not hosted on Vercel.
+
+Uploaded and pasted lesson text is capped at 250,000 characters (`src/lib/lesson-limits.ts`). Vercel also has a [4.5 MB response-body limit](https://vercel.com/docs/functions/limitations#request-body-size): the browser budgets each export request to 3.5 MiB of JSON (ADR 0004) and the PPTX package is DEFLATE-compressed so large decks stay under it.
 
 #### App Store SSO Configuration
 
@@ -225,8 +227,8 @@ The teacher can select a subject; otherwise a keyword classifier supplies one. T
 ### 7. Server-Side PowerPoint (.pptx) & Markdown (.md) Exports
 - **PowerPoint Export (`POST /api/download-pptx`)**:
   - Compiled server-side with `pptxgenjs` in 16:9 widescreen format.
-  - Uses sky/cyan colours (`#0284C7`, `#06B6D4`) and a pale blue background (`#F0F9FF`).
-  - Embeds base64 illustrations or renders rounded pale-blue placeholder boxes.
+  - Uses the lesson's look: Sayuna Classic (default), Chalkboard or Paper Notebook. The header Look picker changes preview and export together ([ADR 0023](docs/adr/0023-look-selection.md), [ADR 0024](docs/adr/0024-office-safe-look-fonts.md)).
+  - Embeds base64 illustrations or renders placeholder boxes in the look's colours.
 - **Curriculum Markdown Outline (`POST /api/download-markdown`)**:
   - Clean formatted Markdown outline ready for lesson archiving or syllabus planning.
 
@@ -236,7 +238,7 @@ The teacher can select a subject; otherwise a keyword classifier supplies one. T
 
 Use a change branch and PR for the connected Vercel project. Configure the feature keys you need from `.env.example` in the Vercel project, plus production App Store settings: `APPSTORE_AUTH_ENABLED=true`, the matching `APPSTORE_SHARED_SECRET` and `APPSTORE_AUDIENCE`, and any required clock, lifetime or cookie overrides. Production rejects disabled App Store auth; the default cookie is host-only when `APPSTORE_COOKIE_DOMAIN` is omitted.
 
-Wait for the `verify` CI job and the Vercel preview. Smoke-test the preview through the App Store handoff: upload or paste, generate, obtain an image, edit, and download both formats. Merge only after approval. Local tests, a build or an unauthenticated health request do not prove this browser flow. Making `verify` a required GitHub branch-protection check is still a separate user action in `docs/architecture-roadmap.md`.
+Wait for the `verify` CI job and the Vercel preview. Smoke-test the preview through the App Store handoff: upload or paste, generate, obtain an image, edit, and download both formats. Merge only after approval. Local tests, a build or an unauthenticated health request do not prove this browser flow. Making `verify` a required GitHub branch-protection check is still a separate owner action; see [docs/branch-protection.md](docs/branch-protection.md). CI also runs `verify-node24` (typecheck, tests and build on Node 24) and an advisory production dependency audit.
 
 ### Notes on Serverless Function Timeouts (`maxDuration`)
 
@@ -249,9 +251,13 @@ The route files currently set these `maxDuration` values; actual execution still
 - `POST /api/download-markdown` ➔ `maxDuration = 30`
 - `POST /api/upload` ➔ `maxDuration = 60`
 - `GET /api/health` ➔ `maxDuration = 30`
+- `POST /api/nasa-images/search` ➔ `maxDuration = 30`
+- `POST /api/nasa-images/select` ➔ `maxDuration = 45`
+- `POST /api/commons-images/search` ➔ `maxDuration = 30`
+- `POST /api/commons-images/select` ➔ `maxDuration = 30`
 - `GET /api/session` ➔ `maxDuration = 10`
 
-Route declarations are the single source; vercel.json has no competing functions override. Authenticated responses use no-store. Mutating JSON routes require application/json and reject browser-marked cross-site requests. Response headers set nosniff and strict-origin-when-cross-origin. Embedding-origin restrictions remain a product decision; see [ADR 0030](docs/adr/0030-input-hardening.md).
+Route declarations are the single source; `vercel.json` has no `functions` override; `tests/architecture/routes-use-define-route.test.ts` checks both. Authenticated responses use no-store. Mutating JSON routes require application/json and reject browser-marked cross-site requests. Response headers set nosniff and strict-origin-when-cross-origin. Embedding-origin restrictions remain a product decision; see [ADR 0030](docs/adr/0030-input-hardening.md).
 
 
 ---
@@ -272,7 +278,7 @@ Route declarations are the single source; vercel.json has no competing functions
 
 ### Test Suite
 
-Run `npm test` for the current count. Tests cover route policy, configuration boundaries, deck image races, libraries, providers, exports and React components; `npm run lint` checks both `src/` and `tests/`. The CI `verify` job runs typecheck, lint and tests without provider credentials.
+Run `npm test` for the current count. Tests cover route policy, configuration boundaries, deck image races, libraries, providers, exports and React components; `npm run lint` checks both `src/` and `tests/`. The CI `verify` job runs typecheck, lint, tests and a production build on Node 22 without provider credentials; `verify-node24` repeats typecheck, tests and the build on Node 24.
 
 ---
 
@@ -280,4 +286,4 @@ Run `npm test` for the current count. Tests cover route policy, configuration bo
 
 - **Developer**: JOHN M. NAVARRO
 - **Product**: SAYUNA AI PRESENTATION MAKER
-- **License**: MIT
+- **License**: MIT, see [LICENSE](LICENSE). Bundled fonts, images and npm packages keep their own licences; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

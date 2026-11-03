@@ -15,10 +15,10 @@ not modified. The temporary capture test was removed before the bare full suite.
 
 External evidence root (not committed):
 
-    /Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/phase4a
+    a folder on the developer's workstation
 
 main/ and branch/ hold captures; byte-identity.json records whole-file SHA-256 and
-entry counts. The capture test copy is /tmp/phase4a-evidence.capture.test.tsx.
+entry counts. The capture test copy was a temporary file outside the repository.
 
 ## Render and editing evidence
 

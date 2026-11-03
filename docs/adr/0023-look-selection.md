@@ -1,7 +1,8 @@
 # ADR 0023: One remembered look per lesson
 
 Date: 2026-10-26
-Status: Accepted (Phase 2 implementation; release pending review)
+Status: Accepted (theme roadmap Phase 2)
+PR: [#38](https://github.com/Mokie04/Presentation-Maker-101/pull/38)
 
 ## Context
 

@@ -103,7 +103,7 @@ a further H2SO_4 parser/cross-render pair caught prefix-count loss and passed af
 the prefix runs were retained. Final focused parser, editing, PPTX characterization
 and cross-render coverage passes 94 checks across four files.
 
-Raw before/after captures and RED/GREEN logs are retained in the local [follow-up evidence](</Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/export-integrity/underscore-chemistry/underscore-chemistry-evidence.json>).
+Raw before/after captures and RED/GREEN logs are retained in a local follow-up evidence file on the verifying machine; it is not committed.
 
 Follow-up final gates: Node 22.23.4 and Node 26.3.0 each pass standalone
 `tsc --noEmit`, lint without warnings/errors, the full suite (166 files / 1,723

@@ -44,7 +44,7 @@ Phase 1 of `docs/commons-licenses-roadmap.md` changed no license rule; Phase 2 t
 
 ## Local acceptance evidence — 2026-10-12
 
-Artifacts and call ledger: `/tmp/commons-picker-kxGvKF/` (temporary local files, not committed).
+Artifacts and call ledger: kept in a temporary local directory (not committed).
 
 One controlled browser flow used the actual local session endpoint without changing authentication configuration. Text generation and automatic image generation were fixture responses, with all paid-provider requests prohibited by a server guard. Actual search: `water cycle USGS`, 2026-10-12 06:41:31 UTC. Commons returned HTTP 200 JSON without redirection; the application returned HTTP 502 with `Untrusted Commons URL` before previews or selection. Raw upstream JSON was not retained, so the offending field cannot be identified from this run. No repeated live search, selected-image metadata request, image download or live preview followed. Live selected-image/slide/export acceptance is **NOT PROVEN**. Unsafe/nonraster thumbnails are subsequently handled as unavailable individual candidates, with regression coverage, but the original live failure has not been revalidated; no claim is made that this resolves it.
 
@@ -71,12 +71,12 @@ Remaining gate: a separately authorized bounded live compatibility run must capt
 - `docs/commons-provider.md`
 - `package-lock.json`
 - `package.json`
-- `src/app/api/commons-images/request.ts`
+- src/app/api/commons-images/request.ts (since removed)
 - `src/app/api/commons-images/search/route.ts`
 - `src/app/api/commons-images/select/route.ts`
 - `src/app/page.tsx`
-- `src/components/NasaImagePicker.tsx`
-- `src/components/SlideCard.tsx` (retired in Phase 6; its picker and credit markup now live in `src/components/SlideImageControls.tsx`)
+- src/components/NasaImagePicker.tsx (since replaced by `src/components/ImageLibraryPicker.tsx`)
+- src/components/SlideCard.tsx (retired in Phase 6; its picker and credit markup now live in `src/components/SlideImageControls.tsx`)
 - `src/lib/image-metadata.ts`
 - `src/lib/providers/commons-provider.ts`
 - `src/lib/schemas/presentation-export.ts`
@@ -124,7 +124,7 @@ Actual browser downloads `acceptance.pptx` and `acceptance.md` were inspected. P
 
 Existing export compression converts the raster into a **480 × 329 JPEG (30,397 bytes)**. PPTX geometry fits its decoded ratio **1.458966565** without stretching; the original ratio was **1.461187215**, with the small difference due to existing integer-dimension resizing. The locally rendered PowerPoint shows the complete diagram, with the credit footer below content and no overlap. Small diagram labels lose readability at the existing export size; image compression/layout were deliberately not changed in this URL-only repair. The original browser image remains 1280 × 876.
 
-Artifacts and complete captures are local at `/tmp/commons-repair-HnznDe/`: `search-1.json`, `search-2.json`, `metadata.json`, `diagnosis.json`, `calls.json`, `browser-evidence.json`, `selected.png`, before/after-deletion screenshots, `acceptance.pptx`, `acceptance.md`, rendered PDF/PNG and `export-inspection.json`. These contain public NASA-free Commons metadata and controlled lesson content, no session cookies or secrets.
+Artifacts and complete captures were kept in a temporary local directory (not committed): `search-1.json`, `search-2.json`, `metadata.json`, `diagnosis.json`, `calls.json`, `browser-evidence.json`, `selected.png`, before/after-deletion screenshots, `acceptance.pptx`, `acceptance.md`, rendered PDF/PNG and `export-inspection.json`. These contain public NASA-free Commons metadata and controlled lesson content, no session cookies or secrets.
 
 ### Exact live call ledger (UTC)
 

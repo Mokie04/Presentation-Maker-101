@@ -1,0 +1,49 @@
+# Weekly dependency updates. npm minor and patch updates arrive as one grouped PR;
+# major updates stay separate so each can be reviewed on its own.
+#
+# The packages under `ignore` are held at their current major version on purpose. They move
+# together (Next, React, its types and the lint config) or need their own migration (Tailwind,
+# TypeScript), so an automatic major-version PR can only fail. Upgrade them deliberately as a
+# planned project, then remove the matching rule. Minor and patch updates still arrive.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      npm-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Next 14 stays until the planned Next 15/16 and React 19 upgrade (docs/adr/0030-input-hardening.md).
+      - dependency-name: next
+        update-types: ["version-update:semver-major"]
+      - dependency-name: react
+        update-types: ["version-update:semver-major"]
+      - dependency-name: react-dom
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react-dom"
+        update-types: ["version-update:semver-major"]
+      # The lint stack is pinned to Next's major version.
+      - dependency-name: eslint-config-next
+        update-types: ["version-update:semver-major"]
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      # Tailwind 4 replaces the config and plugin model; TypeScript 7 is a new major.
+      - dependency-name: tailwindcss
+        update-types: ["version-update:semver-major"]
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+      # Types must match the Node versions we support (22 and 24, see engines in package.json).
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

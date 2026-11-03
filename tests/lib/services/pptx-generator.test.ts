@@ -11,6 +11,7 @@ import {
   FALLBACK_BORDER,
 } from '@/lib/services/pptx-generator';
 import type { PresentationData } from '@/types/presentation';
+import { ONE_PIXEL_PNG } from '../../helpers/images';
 
 describe('pptx-generator', () => {
   const samplePresentation: PresentationData = {
@@ -43,7 +44,7 @@ describe('pptx-generator', () => {
   };
 
   const sampleBase64 =
-    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+    ONE_PIXEL_PNG;
 
   it('exports required color palette constants and default font face', () => {
     expect(DEFAULT_FONT_FACE).toBe('Poppins');

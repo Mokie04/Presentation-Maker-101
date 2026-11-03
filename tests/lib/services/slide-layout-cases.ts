@@ -1,7 +1,8 @@
 import type { SlideData } from '@/types/presentation';
 import { samples } from './credit-samples';
+import { ONE_PIXEL_PNG } from '../../helpers/images';
 
-const image = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+const image = ONE_PIXEL_PNG;
 const title: SlideData = {
   slideNumber: 1, part: 'Title Page', title: 'Water and energy',
   contentPoints: ['Grade 7 Science', 'Observe the world', 'Discuss your findings'], visualDescription: '',

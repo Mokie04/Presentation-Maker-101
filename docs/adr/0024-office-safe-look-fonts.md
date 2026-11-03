@@ -1,7 +1,8 @@
 # ADR 0024: Office-safe look fonts and measured rendering
 
 Date: 2026-10-26
-Status: Accepted (Phase 3 implementation; release pending review)
+Status: Accepted (theme roadmap Phase 3)
+PR: [#39](https://github.com/Mokie04/Presentation-Maker-101/pull/39)
 
 ## Decision
 
@@ -17,7 +18,8 @@ installed Arial/Georgia, avoiding a requirement to install a new face on teacher
 PowerPoint machines. Stand-ins preserve nearly all supported Latin advances;
 measured symbol differences and fallback limits are recorded below.
 
-`src/lib/fonts.ts` bundles static Regular, Bold and Italic TTFs for each stand-in,
+`src/lib/fonts.ts` bundles static Regular, Bold and Italic faces for each stand-in
+(served as woff2 since the hygiene change; see Web font delivery below),
 with display swap, preload false and --font-slide-arimo/--font-slide-gelasio.
 Theme data remains pure and never imports next/font. SlideView applies all three
 variable classes. The product owner explicitly accepted these extra root-class
@@ -36,7 +38,7 @@ font. Gelasio is the maintainer's static Version 1.008 at commit
 instancing or font modifications were needed. License texts are bundled beside
 the fonts, following the existing Poppins precedent. All files are unmodified.
 
-| File in src/app/fonts | Embedded version | SHA-256 | Upstream URL |
+| Source file (now in src/app/fonts/source, licence texts in src/app/fonts) | Embedded version | SHA-256 | Upstream URL |
 |---|---|---|---|
 | Arimo-Regular.ttf | Version 1.23 | `eafef8c99e94d10f17506c125e24d98a84256e0e665e6c659498eca96b19e148` | [Pinned source](https://raw.githubusercontent.com/google/fonts/5e49edbd1875f214e0decae1e24b200066780fa8/apache/arimo/Arimo-Regular.ttf) |
 | Arimo-Bold.ttf | Version 1.23 | `89a9a8f88a1da4cc2a96238a19239ef85e12205ea06122e226dd36932cbd482e` | [Pinned source](https://raw.githubusercontent.com/google/fonts/5e49edbd1875f214e0decae1e24b200066780fa8/apache/arimo/Arimo-Bold.ttf) |
@@ -46,6 +48,61 @@ the fonts, following the existing Poppins precedent. All files are unmodified.
 | Gelasio-Bold.ttf | Version 1.008; ttfautohint (v1.8.4.7-5d5b) | `e0ef3addf1acf35f5c6aef2be00d0a2c01363bf70a5950e16650976051a0c462` | [Pinned source](https://raw.githubusercontent.com/SorkinType/Gelasio/2c0540285e823e996a5276223807e2175515daae/fonts/ttf/Gelasio-Bold.ttf) |
 | Gelasio-Italic.ttf | Version 1.008; ttfautohint (v1.8.4.7-5d5b) | `1d8bda4ff258bb8251eae4f7d7500c8d97d084136192bb264bc2305168765d1b` | [Pinned source](https://raw.githubusercontent.com/SorkinType/Gelasio/2c0540285e823e996a5276223807e2175515daae/fonts/ttf/Gelasio-Italic.ttf) |
 | Gelasio-OFL.txt | License text | `b393cb01867c919b44381512120dc3e4c954c7b47e2035c405f3a324799a4d29` | [Pinned source](https://raw.githubusercontent.com/SorkinType/Gelasio/2c0540285e823e996a5276223807e2175515daae/OFL.txt) |
+
+## Web font delivery (woff2)
+
+The app serves woff2 copies of all nine Poppins, Arimo and Gelasio faces through
+`next/font/local`; the unmodified TTFs move to `src/app/fonts/source/`, where the
+metrics, comparison and render scripts read them and where they remain the
+licence-compliant source. Neither licence forbids the conversion: Arimo is Apache
+2.0, and the Poppins and Gelasio OFL statements and font name tables declare no
+Reserved Font Name. Geist and Geist Mono already ship as woff and are unchanged.
+
+Conversion used wawoff2 2.0.1 from npm (the WebAssembly build of the reference
+woff2 encoder), run once outside the repository with default settings: plain
+lossless compression, no subsetting, no hinting or glyph changes. It is not a
+project dependency. `src/app/fonts/MANIFEST.json` records the SHA-256 and size of
+every file in the fonts folder; `tests/lib/font-manifest.test.ts` fails when a
+file changes without it (rewrite it with `node scripts/font-manifest.mjs`), and
+`tests/lib/slide-fit-metrics-drift.test.ts` recomputes the Poppins, Arimo and
+Gelasio metrics tables from the source TTFs in memory and requires them to equal
+the committed modules, so a font swap without regenerated metrics fails.
+
+| Face | TTF bytes | woff2 bytes | TTF SHA-256 | woff2 SHA-256 |
+|---|---|---|---|---|
+| Poppins-Regular | 160,316 | 51,528 | `7e65201e9b79159e2300267cc885e16c8dcef2424cdfa09a29bfb0980a94a7ba` | `168aae2bf5b20ff9931b7463deea95c2ea02d4dcad2128ad609575244a369a24` |
+| Poppins-Bold | 155,996 | 51,012 | `983676516167748b74de6f4771fb384c664fd913acb8b471122ecacf5da5ea6c` | `eea0ca7c05cc5e893e9dbd497384ba4d7131e301195ebaeb716a62dd2bd18bc2` |
+| Poppins-Italic | 184,544 | 58,836 | `4fa76ae75b40f926420514044722cb97f32186cafd3b38263cc34dad7174d46d` | `107a16d21f1845ea18957a07843d2f4a81c3b9b297987bea84b59f78bb541393` |
+| Arimo-Regular | 436,180 | 172,620 | `eafef8c99e94d10f17506c125e24d98a84256e0e665e6c659498eca96b19e148` | `dd134d1f315347d1f4ca7bc0258b3d956c4138028ac0068872a08c0f8d689c6d` |
+| Arimo-Bold | 438,516 | 173,024 | `89a9a8f88a1da4cc2a96238a19239ef85e12205ea06122e226dd36932cbd482e` | `19c44bb6532f8e93ff4955729ec9c7ba47da115bf0b7272864b8086086d45f48` |
+| Arimo-Italic | 440,740 | 178,204 | `edcc229e781249b3f623061f5ac3f94b5fa6b880c85876f73b09b99b23ab6223` | `433018c9c87558b0fb75680203ecb681691ce5c9a0ae995f1d5e3c94272ada04` |
+| Gelasio-Regular | 147,572 | 57,884 | `48c797fbe0e07c48a18cb962e7bdfa23f19618327dddf54093265328dc9eb39d` | `f1e9ac9e319e112a8d85a50803c676d4febd7afb1cbfaa488afff4d6e2d56aef` |
+| Gelasio-Bold | 148,380 | 58,208 | `e0ef3addf1acf35f5c6aef2be00d0a2c01363bf70a5950e16650976051a0c462` | `a78b0df623d73cd776486975ecc18a7baa1deffeaebf6f788aa818b8b565fbe8` |
+| Gelasio-Italic | 160,268 | 62,416 | `1d8bda4ff258bb8251eae4f7d7500c8d97d084136192bb264bc2305168765d1b` | `e25dcdb34084aede65011a504dc6afe690c6f04e0d050722d3ac8b56156eb7e4` |
+
+Total 2,272,512 bytes of TTF become 863,732 bytes of woff2 (62.0% smaller). On
+the wire the gain is smaller because servers gzip TTF: in a local `next start`
+check, the six faces the looks load (Regular and Bold of each) transferred
+775,115 bytes as gzipped TTF and 564,276 bytes as woff2.
+
+Losslessness for our needs: each woff2 was decoded with the same tool and
+compared with its TTF. The hmtx and cmap tables are byte-identical, the unrounded
+advances for the 146-character metrics set (and the missing-glyph list) are
+identical, and every glyph outline is identical (points, on-curve flags,
+instructions, bounding boxes and composite components; 1,060 Poppins, 2,584 Arimo
+and 1,069 or 1,070 Gelasio glyphs per face). The bytes that differ are the woff2
+re-encoding of glyf/loca, the head checksum and the head flag that marks a
+lossless conversion, and Poppins's empty 8-byte DSIG stub, which the WOFF2 format
+drops. The committed metrics modules are byte-identical after regeneration from
+the moved TTFs (Poppins SHA-256 unchanged, below).
+
+Real-build check (Chromium, `next start`, 1280x800): every slide text box in the
+rail and stage (48 per look, all three looks) has the same position and size to
+0.01 px with TTF and woff2, and the network lists only woff2 slide fonts.
+Loading: neither build recorded a layout-shift entry on the home screen, and the
+home heading's line boxes are identical in Poppins and in Next's size-adjusted
+fallback face at 320 to 1280 px widths, so a late swap does not move content.
+`preload` therefore stays false for every face.
 
 ## Metrics and shaping boundary
 

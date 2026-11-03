@@ -119,7 +119,7 @@ describe('text-provider', () => {
     expect(mockCreate).toHaveBeenCalledTimes(3);
   });
 
-  it('fails after exceeding the two default retries', async () => {
+  it('fails after exceeding the five default retries', async () => {
     const mockCreate = vi.fn().mockRejectedValue(new OpenAI.InternalServerError(500, { message: 'Continuous 500 error' }, undefined, new Headers()));
     const mockClient = {
       chat: { completions: { create: mockCreate } },
@@ -132,8 +132,8 @@ describe('text-provider', () => {
       })
     ).rejects.toThrowError('Continuous 500 error');
 
-    // 1 initial attempt + 2 retries = 3 total calls
-    expect(mockCreate).toHaveBeenCalledTimes(3);
+    // 1 initial attempt + 5 retries = 6 total calls
+    expect(mockCreate).toHaveBeenCalledTimes(6);
   });
 
   it('retries when model returns invalid non-schema JSON', async () => {

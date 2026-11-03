@@ -1,5 +1,7 @@
 # Phase 1 theme module verification
 
+> Evidence files cited below were kept on the developer's workstation and are not part of the repository.
+
 2026-10-26. Branch: feat/theme-module. Base: main at
 ff0d9acf45950d7027bd90469dcac34103a89cec (also the local origin/main at start).
 No push, merge, deployment or live provider calls.
@@ -80,11 +82,11 @@ byte-identical.
 Artifacts, original captures, settled captures, fixed decks, per-entry SHA-256
 manifest, capture harnesses and verification logs are retained locally:
 
-[Evidence and comparison manifest](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/theme-phase1/comparison.json)
+Evidence and comparison manifest
 
-[Main captures](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/theme-phase1/main)
+Main captures
 
-[Branch captures](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/theme-phase1/branch)
+Branch captures
 
 ## Implementation choices
 
