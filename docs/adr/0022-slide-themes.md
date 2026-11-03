@@ -1,7 +1,8 @@
 # ADR 0022: Parameterize slide themes without changing Classic
 
 Date: 2026-10-26
-Status: Accepted (Phase 1 implementation; release pending review)
+Status: Accepted (theme roadmap Phase 1)
+PR: [#37](https://github.com/Mokie04/Presentation-Maker-101/pull/37)
 
 ## Context
 

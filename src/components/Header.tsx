@@ -8,7 +8,7 @@ export function Header() {
         <div className="flex items-center gap-3.5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/sayuna-logo.png?v=3"
+            src="/sayuna-logo-104.webp"
             alt="Sayuna AI Logo"
             className="w-11 h-11 sm:w-13 sm:h-13 object-contain drop-shadow-md flex-shrink-0 bg-transparent"
           />

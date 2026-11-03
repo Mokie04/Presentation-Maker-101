@@ -1,0 +1,98 @@
+{
+  "Arimo-Apache-2.0.txt": {
+    "bytes": 11358,
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  "Arimo-Bold.woff2": {
+    "bytes": 173024,
+    "sha256": "19c44bb6532f8e93ff4955729ec9c7ba47da115bf0b7272864b8086086d45f48"
+  },
+  "Arimo-Italic.woff2": {
+    "bytes": 178204,
+    "sha256": "433018c9c87558b0fb75680203ecb681691ce5c9a0ae995f1d5e3c94272ada04"
+  },
+  "Arimo-Regular.woff2": {
+    "bytes": 172620,
+    "sha256": "dd134d1f315347d1f4ca7bc0258b3d956c4138028ac0068872a08c0f8d689c6d"
+  },
+  "Geist-OFL.txt": {
+    "bytes": 4368,
+    "sha256": "930853ee1daa68554d9e35c8a9175affb74f699fad9a5da6ee5ebe76379d9137"
+  },
+  "GeistMonoVF.woff": {
+    "bytes": 67864,
+    "sha256": "e8b65928f551b17e3d67c3f709721b952c39842d14b00701f9232057fde73608"
+  },
+  "GeistVF.woff": {
+    "bytes": 66268,
+    "sha256": "296fafafd41304f7c992079054b8af914dbbd865f32de97c66d0f613b55755d6"
+  },
+  "Gelasio-Bold.woff2": {
+    "bytes": 58208,
+    "sha256": "a78b0df623d73cd776486975ecc18a7baa1deffeaebf6f788aa818b8b565fbe8"
+  },
+  "Gelasio-Italic.woff2": {
+    "bytes": 62416,
+    "sha256": "e25dcdb34084aede65011a504dc6afe690c6f04e0d050722d3ac8b56156eb7e4"
+  },
+  "Gelasio-OFL.txt": {
+    "bytes": 4387,
+    "sha256": "b393cb01867c919b44381512120dc3e4c954c7b47e2035c405f3a324799a4d29"
+  },
+  "Gelasio-Regular.woff2": {
+    "bytes": 57884,
+    "sha256": "f1e9ac9e319e112a8d85a50803c676d4febd7afb1cbfaa488afff4d6e2d56aef"
+  },
+  "Poppins-Bold.woff2": {
+    "bytes": 51012,
+    "sha256": "eea0ca7c05cc5e893e9dbd497384ba4d7131e301195ebaeb716a62dd2bd18bc2"
+  },
+  "Poppins-Italic.woff2": {
+    "bytes": 58836,
+    "sha256": "107a16d21f1845ea18957a07843d2f4a81c3b9b297987bea84b59f78bb541393"
+  },
+  "Poppins-OFL.txt": {
+    "bytes": 4384,
+    "sha256": "8503c30a4d7e09c4c09015fee42f829f18acbe6330755e9930ba50ea44eaa157"
+  },
+  "Poppins-Regular.woff2": {
+    "bytes": 51528,
+    "sha256": "168aae2bf5b20ff9931b7463deea95c2ea02d4dcad2128ad609575244a369a24"
+  },
+  "source/Arimo-Bold.ttf": {
+    "bytes": 438516,
+    "sha256": "89a9a8f88a1da4cc2a96238a19239ef85e12205ea06122e226dd36932cbd482e"
+  },
+  "source/Arimo-Italic.ttf": {
+    "bytes": 440740,
+    "sha256": "edcc229e781249b3f623061f5ac3f94b5fa6b880c85876f73b09b99b23ab6223"
+  },
+  "source/Arimo-Regular.ttf": {
+    "bytes": 436180,
+    "sha256": "eafef8c99e94d10f17506c125e24d98a84256e0e665e6c659498eca96b19e148"
+  },
+  "source/Gelasio-Bold.ttf": {
+    "bytes": 148380,
+    "sha256": "e0ef3addf1acf35f5c6aef2be00d0a2c01363bf70a5950e16650976051a0c462"
+  },
+  "source/Gelasio-Italic.ttf": {
+    "bytes": 160268,
+    "sha256": "1d8bda4ff258bb8251eae4f7d7500c8d97d084136192bb264bc2305168765d1b"
+  },
+  "source/Gelasio-Regular.ttf": {
+    "bytes": 147572,
+    "sha256": "48c797fbe0e07c48a18cb962e7bdfa23f19618327dddf54093265328dc9eb39d"
+  },
+  "source/Poppins-Bold.ttf": {
+    "bytes": 155996,
+    "sha256": "983676516167748b74de6f4771fb384c664fd913acb8b471122ecacf5da5ea6c"
+  },
+  "source/Poppins-Italic.ttf": {
+    "bytes": 184544,
+    "sha256": "4fa76ae75b40f926420514044722cb97f32186cafd3b38263cc34dad7174d46d"
+  },
+  "source/Poppins-Regular.ttf": {
+    "bytes": 160316,
+    "sha256": "7e65201e9b79159e2300267cc885e16c8dcef2424cdfa09a29bfb0980a94a7ba"
+  }
+}

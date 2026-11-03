@@ -1,6 +1,6 @@
 # Home screen roadmap
 
-## Current phase — Done (local implementation; not pushed or merged)
+## Current phase — Done (merged in PR 35; setup card polish in PR 36)
 
 - Approved hero layout, lesson-to-slides promise, workflow steps, decorative Mokie and slide cards; mascot stage hidden below 768 px.
 - Three numbered setup steps with completion cues; existing upload, paste, file-size/error behavior and file pill preserved.

@@ -1,5 +1,7 @@
 # Input hardening verification — 2026-10-27
 
+> Evidence files cited below were kept on the developer's workstation and are not part of the repository.
+
 Branch fix/input-hardening from main 9e458d8. Eight local commits A–H; no push,
 merge, deployment or live provider calls. Hostile files are built in memory;
 no large binary fixtures are committed. The product default is **250,000 lesson
@@ -26,7 +28,7 @@ parsing, looks, fitting and export snapshots are unchanged.
 
 Local artifact root:
 
-    /Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening
+    a folder on the developer's workstation
 
 The root is called EVIDENCE below. It contains isolated array probes, raw logs,
 clean build source/output, header captures and real Chromium screenshots/report.
@@ -261,7 +263,7 @@ assertions changed.
 
 Detailed per-section RED/GREEN commands, test names and measurement notes are retained under EVIDENCE/logs/input-hardening-B.md, C.md, D.md and E.md.
 
-Local artifacts: [array comparison](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/array-after.json), [browser report](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/browser/report.json), [loading screenshot](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/browser/loading.png), [partial failure screenshot](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/browser/partial-failure.png), [API headers](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/headers-api.txt), [clean build log](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/clean-build22.log).
+Local artifacts: array comparison, browser report, loading screenshot, partial failure screenshot, API headers, clean build log.
 
 
 ## Node runtime follow-up — 2026-10-27
@@ -293,4 +295,4 @@ handling; parser replacement remains a separate task, and Node 25+ stays
 unsupported despite the otherwise passing development checks.
 
 Logs, including the initial failures and final runs, are retained under
-`/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/input-hardening/pdf-runtime/`.
+a folder on the developer's workstation.

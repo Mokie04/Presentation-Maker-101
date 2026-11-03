@@ -1,7 +1,8 @@
 # ADR 0029: Export integrity
 
 Date: 2026-10-26
-Status: Accepted (local fix; PR and release pending)
+Status: Accepted
+PR: [#44](https://github.com/Mokie04/Presentation-Maker-101/pull/44)
 
 ## Defects
 

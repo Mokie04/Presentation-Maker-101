@@ -7,7 +7,7 @@ const report = [];
 for (const [system, standIn] of [['Arial', 'Arimo'], ['Georgia', 'Gelasio']]) {
   for (const style of ['Regular', 'Bold', 'Italic']) {
     const path = `/System/Library/Fonts/Supplemental/${system}${style === 'Regular' ? '' : ` ${style}`}.ttf`;
-    const bundled = new URL(`../src/app/fonts/${standIn}-${style}.ttf`, import.meta.url);
+    const bundled = new URL(`../src/app/fonts/source/${standIn}-${style}.ttf`, import.meta.url);
     const real = readFontMetrics(path, { rounded: false, includeMissing: true });
     const replacement = readFontMetrics(bundled, { rounded: false, includeMissing: true });
     const deltas = Array.from(characters, char => ({ char, difference: Math.abs(real.widths[char] - replacement.widths[char]) }));

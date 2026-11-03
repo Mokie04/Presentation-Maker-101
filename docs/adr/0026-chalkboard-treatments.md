@@ -1,7 +1,8 @@
 # ADR 0026: Chalkboard treatments
 
 Date: 2026-10-26
-Status: Accepted (Phase 4b implementation; release pending review)
+Status: Accepted (theme roadmap Phase 4b)
+PR: [#41](https://github.com/Mokie04/Presentation-Maker-101/pull/41)
 
 ## Decision
 

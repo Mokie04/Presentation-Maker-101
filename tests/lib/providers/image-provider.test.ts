@@ -2,13 +2,14 @@ import { afterEach, describe, it, expect, vi } from 'vitest';
 import { generateSlideImage } from '@/lib/providers/image-provider';
 import { IMAGE_PROMPT_PREFIX } from '@/lib/prompts/slide-generation';
 import type OpenAI from 'openai';
+import { ONE_PIXEL_PNG } from '../../helpers/images';
 
 describe('image-provider', () => {
   it('successfully generates an image and returns base64 string', async () => {
     const mockGenerate = vi.fn().mockResolvedValue({
       data: [
         {
-          b64_json: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+          b64_json: ONE_PIXEL_PNG,
         },
       ],
     });
@@ -23,7 +24,7 @@ describe('image-provider', () => {
       backoffMs: 1,
     });
 
-    expect(result).toBe('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=');
+    expect(result).toBe(ONE_PIXEL_PNG);
     expect(mockGenerate).toHaveBeenCalledWith(
       expect.objectContaining({
         prompt: `${IMAGE_PROMPT_PREFIX}${visualDesc}`,

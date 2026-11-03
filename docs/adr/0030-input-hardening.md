@@ -1,7 +1,8 @@
 # ADR 0030: Input hardening and bounded provider work
 
 Date: 2026-10-27
-Status: Accepted locally; PR and release pending
+Status: Accepted
+PR: [#45](https://github.com/Mokie04/Presentation-Maker-101/pull/45) (text retry defaults revisited in [#46](https://github.com/Mokie04/Presentation-Maker-101/pull/46))
 
 ## Context
 

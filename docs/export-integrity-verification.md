@@ -1,5 +1,7 @@
 # Export integrity verification — 2026-10-26
 
+> Evidence files cited below were kept on the developer's workstation and are not part of the repository.
+
 Local evidence for `fix/export-integrity`, baseline `main` commit `1ee7d7d`.
 No image providers, deployment, push or merge were used. Native evidence
 uses installed LibreOffice; browser evidence uses real Chromium around the
@@ -18,24 +20,24 @@ Playwright and Chromium are required. `EXPORT_BASELINE`, `SOFFICE`,
 Executed with Node 22.23.4:
 
 ```sh
-PLAYWRIGHT_MODULE=/Users/johnnavarro/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright \
-CHROMIUM_EXECUTABLE=/Users/johnnavarro/Library/Caches/ms-playwright/chromium-1169/chrome-mac/Chromium.app/Contents/MacOS/Chromium \
-/Users/johnnavarro/.npm/_npx/52027bd8fc0022aa/node_modules/node/bin/node \
+PLAYWRIGHT_MODULE=<path to the playwright package> \
+CHROMIUM_EXECUTABLE=<path to a Chromium binary> \
+<path to a Node 22 binary> \
   scripts/verify-export-integrity.mjs \
-  /Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/export-integrity
+  <output directory outside the repository>
 ```
 
 All large artifacts are in that output directory, referred to below as
 `EVIDENCE`.
 
-Local artifacts: [per-entry comparison](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/export-integrity/per-entry-comparison.json),
-[controlled Phase 1 comparison](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/export-integrity/controlled-phase1-comparison.json),
-[Chalkboard credit render](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/export-integrity/chalkboard-long-credit/slide-2.png),
-[control-character PDF](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/export-integrity/control-characters/control-characters.pdf),
-[browser notice](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/export-integrity/browser-notice.png),
-[exported transparent PNG](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/export-integrity/exported-transparent-picture.png),
-[browser checks](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/export-integrity/browser-verification.json),
-[summary](/Users/johnnavarro/.codex/visualizations/2026/10/26/01a1788d-44c3-74e1-aae2-ce4264fb5cee/export-integrity/summary.json).
+Local artifacts: per-entry comparison,
+controlled Phase 1 comparison,
+Chalkboard credit render,
+control-character PDF,
+browser notice,
+exported transparent PNG,
+browser checks,
+summary.
 
 The source fixture inputs are saved in `fixture-inputs.json`.
 They match the original Phase 1 capture's short/dense/Commons decks and the

@@ -1,6 +1,8 @@
 # ADR 0020: A guided home screen with Mokie
 
-Status: Accepted for local implementation; release review pending
+Date: 2026-10-26
+Status: Accepted
+PR: [#35](https://github.com/Mokie04/Presentation-Maker-101/pull/35)
 
 ## Context
 

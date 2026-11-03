@@ -3,15 +3,15 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { spawn } from 'node:child_process';
-import { createRequire } from 'node:module';
-import { createServer } from 'vite';
-import react from '@vitejs/plugin-react';
+import { importTool, requireTool, PLAYWRIGHT_HINT, VITE_HINT } from './dev-tools.mjs';
+
+const { createServer } = await importTool('vite', VITE_HINT);
+const { default: react } = await importTool('@vitejs/plugin-react', VITE_HINT);
 
 const root = path.resolve(import.meta.dirname, '..');
 const out = path.resolve(process.argv[2] || path.join(root, 'output/theme-render'));
 await mkdir(out, { recursive: true });
-const require = createRequire(import.meta.url);
-const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const { chromium } = requireTool(process.env.PLAYWRIGHT_MODULE || 'playwright', PLAYWRIGHT_HINT);
 async function run(command, args, env = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, { env: { ...process.env, ...env } });
@@ -28,7 +28,7 @@ await writeFile(fontShim, `export default options => ({ variable: options.variab
 const css = []; // Layout/reset/formula utilities come from the actual production stylesheet below.
 for (const family of ['Poppins', 'Arimo', 'Gelasio']) {
   for (const [style, weight, slant] of [['Regular', 400, 'normal'], ['Bold', 700, 'normal'], ['Italic', 400, 'italic']]) {
-    css.push(`@font-face{font-family:"${family} Preview";src:url("/src/app/fonts/${family}-${style}.ttf");font-weight:${weight};font-style:${slant};font-display:swap}`);
+    css.push(`@font-face{font-family:"${family} Preview";src:url("/src/app/fonts/source/${family}-${style}.ttf");font-weight:${weight};font-style:${slant};font-display:swap}`);
   }
   css.push(`.font-slide-${family.toLowerCase()}{--font-slide-${family.toLowerCase()}:"${family} Preview"}`);
 }
@@ -76,7 +76,7 @@ try {
     await writeFile(pptx, await buildPresentationPptx(deck, images, theme));
     await run(process.env.SOFFICE || '/opt/homebrew/bin/soffice', [
       `-env:UserInstallation=${pathToFileURL(path.join(out, 'lo-profile')).href}`, '--headless', '--convert-to', 'pdf', '--outdir', directory, pptx,
-    ], { SAL_FONTPATH: path.join(root, 'src/app/fonts') });
+    ], { SAL_FONTPATH: path.join(root, 'src/app/fonts/source') });
     await run(process.env.PDFTOPPM || 'pdftoppm', ['-png', '-r', '96', path.join(directory, 'deck.pdf'), path.join(directory, 'libreoffice')]);
     const pdfFonts = await run('pdffonts', [path.join(directory, 'deck.pdf')]);
     const fontVerified = pdfFonts.toLowerCase().includes(theme.typography.exportFace.toLowerCase());

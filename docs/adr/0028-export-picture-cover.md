@@ -1,7 +1,8 @@
 # ADR 0028: Aspect-preserving cover sizing for ordinary export pictures
 
 Date: 2026-10-26
-Status: Accepted (local fix; release pending review)
+Status: Accepted
+PR: [#43](https://github.com/Mokie04/Presentation-Maker-101/pull/43)
 
 ## Defect
 

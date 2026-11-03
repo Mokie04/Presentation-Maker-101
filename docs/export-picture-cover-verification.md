@@ -23,7 +23,7 @@ existing crop/rotation suite is unchanged and passes.
 
 External evidence root (not committed):
 
-    /Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/export-picture-aspect
+    a folder on the developer's workstation
 
 base/ and branch/ use the same inputs with Date fixed at 2026-10-26T00:00:00Z.
 byte-comparison.json records SHA-256, entry count and every changed entry.

@@ -8,8 +8,9 @@ import {
   toDataUrl,
   toRawBase64,
 } from '@/lib/slide-image';
+import { ONE_PIXEL_PNG } from '../helpers/images';
 
-const PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+const PNG = ONE_PIXEL_PNG;
 const JPG = '/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP8=';
 
 describe('FAILED_IMAGE', () => {

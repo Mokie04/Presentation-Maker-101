@@ -2,7 +2,7 @@
 
 Same loop as the earlier roadmaps: the planner writes one prompt per phase, a developer chat executes it on a branch, the planner verifies, and each phase ships through a PR, CI and the Vercel preview before the next prompt. Developers never push or merge on their own.
 
-Status: **Phases 1–4b merged (a594175, 00fcddc, 7d58689, dd80861, f92875d); Phase 4c implemented 2026-10-26, release pending planner review.** Phase 0 investigation and product decisions are accepted. See [ADR 0022](adr/0022-slide-themes.md) for the module, compatibility strategy and Classic contrast exceptions.
+Status: **Phases 1–4c merged (PRs 37 to 42: a594175, 00fcddc, 7d58689, dd80861, f92875d, 908ecfc); the export picture follow-up merged in PR 43 (1ee7d7d).** Phase 0 investigation and product decisions are accepted. See [ADR 0022](adr/0022-slide-themes.md) for the module, compatibility strategy and Classic contrast exceptions.
 
 ## What the product owner asked for
 
@@ -21,7 +21,7 @@ Read at commit `78759bf` (2026-10-24), version 6.7.3. Cloned shallow into an iso
 | Workflow shape | Multi-step with `BLOCKING` human confirmation gates; a run has Plan, then Do/Check/Act. Quality ceiling is the model; its own README says not to expect a finished deck in one shot. |
 | Dependencies | 19 Python packages, including `flask`, `google-genai`, `edge-tts`, `curl_cffi`, `requests`, `PyMuPDF`, `skia-pathops`, `uharfbuzz`. |
 | License | Repository and skill are MIT. Third-party assets carry their own licences (the icon notices say MIT does not replace them). Brand packs (McKinsey, Deloitte, Google, Microsoft and others) are trademarked identities. |
-| Attribution guard | `scripts/attribution_guard.py` is a fail-closed integrity check: it hashes `LICENSE`, requires sponsor files and fixed metadata, and several scripts refuse to run if the package is modified. Vendoring or trimming the skill breaks it by design. |
+| Attribution guard | The skill's own `attribution_guard.py` script is a fail-closed integrity check: it hashes `LICENSE`, requires sponsor files and fixed metadata, and several scripts refuse to run if the package is modified. Vendoring or trimming the skill breaks it by design. |
 | Instructions inside it | SKILL.md tells an agent to run that guard and to follow its routes. We treat all of it as data, not instructions, and ran nothing. |
 
 ### Fit with this product (conclusion)
@@ -122,12 +122,12 @@ This document. Next: a clickable mock of the 4 or 5 looks on the real slide layo
 - Reserve `themeId` in the saved-lesson snapshot design (coordinate with Phase 2 of multi-session).
 - Done = switching looks restyles rail, stage, sorter and slideshow instantly; export matches the chosen look; default export bytes unchanged.
 
-### Phase 3: the first new looks (colour and typography) — done (release pending review)
+### Phase 3: the first new looks (colour and typography) — merged (PR 39)
 - Chalkboard (Arial/Arimo) and Paper Notebook (Georgia/Gelasio) are registered with the approved palettes. See [ADR 0024](adr/0024-office-safe-look-fonts.md) for sources, hashes, licenses, metrics, native link/font handling and rendering limits. Classic remains byte-identical; its additional root font classes were explicitly approved.
 - Per-theme XML golden snapshots, contrast and fit tests, credit and counter colours, placeholder and image-card tokens.
 - Render harness: LibreOffice headless PPTX to PNG compared against the browser render per look; documented tolerance; spot check in PowerPoint.
 
-### Phase 4: style treatments (4a/4b merged, 4c implemented; approved mock)
+### Phase 4: style treatments (4a to 4c merged in PRs 40 to 42; approved mock)
 
 #### What PowerPoint can draw (investigated, not assumed)
 
@@ -172,7 +172,7 @@ Frame variant (polaroid or layered paper) is a per-look setting chosen by the pr
 #### Sub-phases (one prompt and one PR each)
 - **4a: decoration engine, no visible change — MERGED dd80861.** Primitive types, SVG renderer in `SlideView`, native-shape mapper in the exporter, empty lists for all looks, the well-formed XML test over every look, the parity test harness, the contrast rule for behind-text decoration. Classic and the two new looks stay byte-identical.
 - **4b: Chalkboard treatments — MERGED f92875d.** Decoration list, new XML goldens, render harness sheets, preview and export parity, preview smoke.
-- **4c: Paper Notebook treatments — DONE locally, pending review.** Ruled paper, margin, holes, and the chosen picture frame, with the picture rotated to match the frame (image `rotate`), goldens, render sheets, smoke.
+- **4c: Paper Notebook treatments — merged (PR 42).** Ruled paper, margin, holes, and the chosen picture frame, with the picture rotated to match the frame (image `rotate`), goldens, render sheets, smoke.
 - **4d (optional): more looks.** For example Paper Cut (layered waves, sun and clouds) and Bright Classroom. Needs per-look credit and counter positions. Only after 4a to 4c ship.
 
 ### Phase 5: polish and decisions that need data

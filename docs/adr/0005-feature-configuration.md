@@ -2,6 +2,7 @@
 
 Date: 2026-10
 Status: Accepted
+PR: [#21](https://github.com/Mokie04/Presentation-Maker-101/pull/21) (decision record for work shipped in earlier PRs)
 
 ## Context
 

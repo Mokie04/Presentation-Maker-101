@@ -12,7 +12,7 @@ Presentation Maker turns a teacher's lesson text into an editable slide deck and
 | `src/lib/themes/chalkboard.ts`, `src/lib/themes/paper-notebook.ts`, `src/lib/slide-fit-metrics-arimo.ts`, `src/lib/slide-fit-metrics-gelasio.ts` | Approved Office-safe looks, bundled Arimo/Gelasio browser faces and metrics. Non-default PPTX packages set Office theme fonts and readable hyperlink colours. Local render/advance tools live under scripts; ADR 0024 records evidence and limits. | `tests/lib/themes/new-looks.test.tsx`, `tests/components/NewLooksPicker.test.tsx`, `tests/lib/services/chalkboard-characterization.test.ts`, `tests/lib/services/paper-notebook-characterization.test.ts` |
 | `src/lib/themes/decoration.ts`, `src/components/DecorationLayer.tsx`, `src/lib/services/decoration-pptx.ts` | Optional shared vector decoration list, pure geometry/contrast guards and filtered SVG/native layers bracketing all text. Chalkboard has board/chalk treatments; Paper Notebook has ruled paper, binder holes and a taped polaroid. Content picture geometry/rotation is theme-scoped; Classic remains undecorated. ADRs 0025/0026/0027. | `tests/lib/themes/decoration.test.ts`, `tests/lib/themes/decoration-parity.test.tsx`, `tests/components/DecorationEditing.test.tsx` |
 | `src/lib/themes/`, `src/lib/slide-fit-metrics-registry.ts` | Theme registry and Classic default, palette/typography/shape/layout tokens, WCAG contrast pairs and font metrics lookup. Preview, fitting, splitting, auto-fit and PPTX accept optional themes; legacy constants and default output remain unchanged. See ADR 0022. | `tests/lib/themes/registry.test.ts`, `tests/lib/themes/contrast.test.ts`, `tests/lib/themes/propagation.test.tsx` |
-| `src/lib/fonts.ts` | One local Poppins definition shared by home and slide rendering. Home body/heading fonts are scoped in `src/app/globals.css`; workspace chrome retains its original font. | `tests/components/HomeScreen.test.tsx`, `tests/components/SlideView.test.tsx` |
+| `src/lib/fonts.ts` | Local Poppins, Arimo and Gelasio definitions served as woff2 (source TTFs in `src/app/fonts/source/` feed the metrics; `src/app/fonts/MANIFEST.json` pins every file). Poppins is shared by home and slide rendering, Arimo and Gelasio serve the Chalkboard and Paper Notebook looks. Home body/heading fonts are scoped in `src/app/globals.css`; workspace chrome retains its original font. | `tests/components/HomeScreen.test.tsx`, `tests/components/SlideView.test.tsx` |
 | `src/lib/deck/session-decks-reducer.ts`, `src/lib/deck/use-slide-deck.ts` | In-memory decks keyed by session, per-session selection/view, one shared monotonic ID counter and ID-routed async images. Successful generation replaces only its session. | `tests/lib/deck/session-decks-reducer.test.ts`, `tests/lib/deck/session-decks-routing.test.tsx` |
 | `src/lib/generate-client.ts` | Shared generation request, loading stages, existing error mapping and abort checks around response/body reading. | `tests/lib/generate-client.test.ts` |
 | `src/components/workspace/SessionTabs.tsx`, `src/components/workspace/SessionDialogs.tsx` | Roving session tabs, generation/replacement/cancel and multi-session reset confirmation; refresh-loss disclosure and shared modal focus management. Exports/slideshow follow the active session in `src/app/page.tsx`. Persistence is deferred to Phase 2 (`docs/multi-session-roadmap.md`). | `tests/components/SessionDecks.test.tsx` |
@@ -51,9 +51,10 @@ Presentation Maker turns a teacher's lesson text into an editable slide deck and
 
 ## Enforced boundaries
 
-- Every protected HTTP handler is assigned directly from `defineRoute`; the session bootstrap is the sole exception. `tests/architecture/routes-use-define-route.test.ts` checks the route files and `tests/api/auth-gate.test.ts` checks auth before body reads.
+- Every protected HTTP handler is assigned directly from `defineRoute` imported from `@/lib/api`; the session bootstrap is the sole exception. Every route file (any `route.*` extension) exports a numeric `maxDuration`, and `vercel.json` has no `functions` block. `tests/architecture/routes-use-define-route.test.ts` checks the route files and `tests/api/auth-gate.test.ts` checks auth before body reads.
 - `defineRoute` caps parsed request bodies, applies a declared Zod `input` schema and returns each route's fixed `failureMessage` for unexpected failures. `PublicError` is the explicit way for a handler to return its own safe message; auth and validation failures have their own client responses. See `tests/lib/api/define-route.test.ts`, `tests/api/input-validation.test.ts` and `tests/api/error-sanitization.test.ts`.
-- Direct `process.env` reads in `src/` are confined to `src/lib/env.ts` and `src/lib/sessionAuth.ts`, checked by `tests/architecture/config-boundary.test.ts`.
+- Direct `process.env` reads in `src/` are confined to `src/lib/env.ts` and `src/lib/sessionAuth.ts`, checked by `tests/architecture/config-boundary.test.ts` with a TypeScript syntax-tree scan (optional chaining, bracket access, destructuring, `globalThis.process` and `node:process` imports included).
+- Backticked repository paths and relative links in the main documents and `docs/` (except `docs/archive/`) must resolve, and `docs/adr/README.md` must list every ADR with its status; see `tests/architecture/docs-paths.test.ts`. The checkers live in `tests/architecture/guards.ts`, and each guard test feeds deliberately violating samples through the same checker.
 - The reducer rejects image results whose slide ID has disappeared or whose version was superseded; `tests/lib/deck/deck-reducer.test.ts` covers this. Part rules, credit descriptions and wire-image rules live respectively in `src/lib/pedagogy.ts`, `src/lib/image-credit.ts` and `src/lib/slide-image.ts`.
 
 ## How to add
@@ -63,7 +64,7 @@ Presentation Maker turns a teacher's lesson text into an editable slide deck and
 1. Add a handler under `src/app/api/` using `defineRoute` from `src/lib/api/`.
 2. Choose `parse` and an `input` Zod schema; set `maxBodyBytes` for the payload.
 3. Set a route-specific, safe `failureMessage`; throw `PublicError` only for safe, intentional client messages.
-4. Keep any Next.js segment exports such as `maxDuration` in the route file.
+4. Export `maxDuration` (and any other Next.js segment config) from the route file; it is the only place durations are set, and `vercel.json` has no `functions` block.
 5. Extend `tests/api/input-validation.test.ts` and route-specific tests; the route guard must still pass.
 
 **An image library**
@@ -81,7 +82,7 @@ Presentation Maker turns a teacher's lesson text into an editable slide deck and
 3. Add a feature-specific config reader in `src/lib/env.ts`; connect the facade in `src/lib/providers/image-provider.ts`.
 4. If callers can select it, extend `src/lib/schemas/image-request.ts` and the source types in the facade and image routes.
 5. Extend `tests/lib/providers/image/contract.test.ts` and `tests/lib/providers/image/compose.test.ts`.
-6. Review the OpenAI adapter's fixed `1024x576` size in `src/lib/providers/image/openai.ts` before sharing request settings.
+6. Review the model-aware size rules in `src/lib/env.ts` (used by `src/lib/providers/image/openai.ts`) before sharing request settings.
 
 **A credit source**
 
@@ -101,9 +102,12 @@ Presentation Maker turns a teacher's lesson text into an editable slide deck and
 
 ## Working agreements and limitations
 
-Use one branch per change, open a PR, require green `verify` CI and a Vercel preview smoke test, then merge after approval; do not commit directly to `main`. `.github/workflows/ci.yml` runs typecheck, lint, `npm test` and a production build without provider secrets; a separate non-blocking job audits production dependencies. Branch-protection configuration is separate from this repository; `docs/architecture-roadmap.md` still lists making `verify` required as a user action.
+Use one branch per change, open a PR, require green `verify` CI and a Vercel preview smoke test, then merge after approval; do not commit directly to `main`. `.github/workflows/ci.yml` runs typecheck, lint, `npm test` and a production build without provider secrets; a separate non-blocking job audits production dependencies. A separate `verify-node24` job runs typecheck, tests and the build on Node 24. Branch-protection configuration is separate from this repository; making `verify` required is an owner action described in `docs/branch-protection.md`.
 
-- `src/lib/upload-limits.ts` sets the 4 MB default that `src/lib/env.ts` uses for `MAX_FILE_SIZE_MB`; it fits under the [4.5 MB](https://vercel.com/docs/functions/limitations#request-body-size) Vercel request-body limit, and `src/components/UploadSection.tsx` refuses larger files before sending and explains a 413. An override above about 4.4 MB will still fail on Vercel before `src/app/api/upload/route.ts` runs, and the browser pre-check always uses the 4 MB default.
+- Supported Node.js majors are 22 and 24 (`engines` is `>=22.12 <25`; CI and `.nvmrc` use 22). PDF parsing is unsupported on Node 25 and later because `pdf-parse` bundles legacy pdf.js; see ADR 0008.
+- Route files set `maxDuration`: 300 s for `generate` and `generate-images`, 120 s for `generate-image` and `download-pptx`, 60 s for `upload`, 45 s for `nasa-images/select`, 30 s for `download-markdown`, `health` and the other library routes, and 10 s for `session`.
+- Three looks ship: Sayuna Classic (default, Poppins), Chalkboard (Arimo in the browser, Arial in PowerPoint) and Paper Notebook (Gelasio in the browser, Georgia in PowerPoint). See ADRs 0022 to 0027.
+- `src/lib/upload-limits.ts` sets the 4 MB default that `src/lib/env.ts` uses for `MAX_FILE_SIZE_MB`; it fits under the [4.5 MB](https://vercel.com/docs/functions/limitations#request-body-size) Vercel request-body limit, and `src/components/UploadSection.tsx` refuses larger files before sending and explains a 413. An override above about 4.4 MB will still fail on Vercel before `src/app/api/upload/route.ts` runs, and the browser pre-check always uses the 4 MB default. Responses have the same 4.5 MB limit: `src/lib/export/limits.ts` budgets each export request to 3.5 MiB of JSON and the PPTX package is DEFLATE-compressed.
 - `src/lib/lesson-limits.ts` caps uploaded and pasted lesson text at 250,000 characters. DOCX declarations and actual inflation are bounded (2,000 entries, 10 MiB each, 20 MiB total); PDF has a 200-page cap but no hard worker deadline.
 - `src/lib/providers/text-provider.ts` disables hidden retries, defaults to five explicit retries, bounds attempts to 150 seconds inside a 270-second deadline, and propagates request cancellation.
 - `src/lib/providers/image/openai.ts` reads model-aware size settings from `src/lib/env.ts`; placeholder AI keys skip directly to configured Pexels in auto mode.

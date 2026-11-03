@@ -3,14 +3,14 @@
 import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { createRequire } from 'node:module';
-import { createServer } from 'vite';
-import react from '@vitejs/plugin-react';
+import { importTool, requireTool, PLAYWRIGHT_HINT, VITE_HINT } from './dev-tools.mjs';
+
+const { createServer } = await importTool('vite', VITE_HINT);
+const { default: react } = await importTool('@vitejs/plugin-react', VITE_HINT);
 
 const root = path.resolve(import.meta.dirname, '..');
 const out = path.resolve(process.argv[2] || path.join(root, 'output/input-images'));
-const require = createRequire(import.meta.url);
-const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+const { chromium } = requireTool(process.env.PLAYWRIGHT_MODULE || 'playwright', PLAYWRIGHT_HINT);
 await mkdir(out, { recursive: true });
 const fontShim = path.join(out, 'font-shim.mjs');
 const imageShim = path.join(out, 'image-shim.jsx');

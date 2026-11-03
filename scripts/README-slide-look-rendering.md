@@ -8,10 +8,22 @@ that parser is a separate task. LibreOffice, pdftoppm and pdffonts must
 already be installed; these scripts do not install anything. Arial and Georgia
 are read from macOS Supplemental Fonts in place and are never copied.
 
+Fonts: the app serves woff2 files from `src/app/fonts/`; these tools read the
+unmodified source TTFs in `src/app/fonts/source/` (ADR 0024).
+
 Regenerate committed metrics:
 
 ```sh
 node scripts/generate-slide-fit-metrics.mjs Poppins Arimo Gelasio
+```
+
+The generator is also an importable module: `metricsModuleSource(font)` returns
+the generated text in memory, and `tests/lib/slide-fit-metrics-drift.test.ts`
+compares it with the committed tables. After a deliberate font change, regenerate
+the metrics, update ADR 0024 and rewrite the font manifest:
+
+```sh
+node scripts/font-manifest.mjs
 ```
 
 Compare raw, unrounded advances for the 146-character metrics set:
@@ -23,6 +35,15 @@ node scripts/compare-slide-font-advances.mjs output/theme-render/font-deviations
 Create the output directory first if running the comparison alone. The report
 separates all characters (including .notdef advances) from glyphs supported by
 both files. These are font-file advances per 1000 em, not a shaping/kerning test.
+
+Missing tools: `render-pptx-compare.mjs`, `verify-export-integrity.mjs` and
+`verify-input-images.mjs` need vite and @vitejs/plugin-react (both arrive with
+`npm ci`) and Playwright with a Chromium build. Playwright and browsers are
+deliberately not project dependencies; when an import fails the script stops with
+an "install X to use this tool" message instead of a stack trace
+(`scripts/dev-tools.mjs`). Install them outside the lockfile, for example with
+`npm install --no-save playwright` and `npx playwright install chromium`, or point
+the variables below at existing installations.
 
 Render all three looks using an already available Playwright package/Chromium:
 

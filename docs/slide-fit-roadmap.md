@@ -16,17 +16,17 @@ Generated slides often carry more text than the layout can hold. Body text is 35
 
 ## Phases
 
-### Phase A: fit the text and make overflow visible — done (local implementation)
+### Phase A: fit the text and make overflow visible — done (PR 31)
 - A pure estimator (`slide-fit`) that wraps text with real Poppins glyph widths and returns the largest font size that fits the box, a `fits` flag and the line count.
 - `SlideView` and `pptx-generator.ts` use it: unchanged size when the text fits, smaller size down to the floor when it does not.
 - Slides that still do not fit are flagged on the rail thumbnail, under the big slide and in the panel; their text box aligns to the top and scrolls on the big slide so every line can be reached and edited.
 - Done = dense slides show and export fitted text; slides that already fit are byte-identical in the export. Implemented in ADR 0016; branch publication, CI and preview smoke remain shipping gates.
 
-### Phase B: split a full slide — done (local implementation)
+### Phase B: split a full slide — done (PR 32)
 - A "Split into two slides" action (deck action `slideSplit`, panel and stage notices) keeps the largest fitting bullet prefix and moves the rest to a continuation directly after the original, with the same part and no visual, image or credit. The original retains its image and selection.
 - Implemented in ADR 0017; branch publication, CI and preview smoke remain shipping gates.
 
-### Phase C: prompt tuning — done (local implementation)
+### Phase C: prompt tuning — done (PR 33)
 - Prompt budget: titles up to 45 characters, up to 4 content bullets of 60 characters each; assessments may carry a question up to 100 characters plus options A to D. Content continues across slides without truncation; the 25-slide minimum remains.
 - Generation applies the shared body-fit estimator and whole-bullet split rules. Titles and single long bullets stay flagged; a capped original is retained unchanged to preserve idempotence.
 - Blank-visual slides request no batch image. Truncated model output stops without retry and receives a clear 422 message.

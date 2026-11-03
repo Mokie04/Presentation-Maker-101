@@ -54,7 +54,7 @@ Final limits (Phase 2). Body over the cap → 413 `Request body exceeds the size
 | `download-pptx` | 4,500,000 B | as Markdown, plus `slideImages` optional object: keys are slide indexes below the slide count; values `''`, `'failed'`, or raw base64 / `data:image/(png\|jpeg);base64,` starting with a JPEG (`/9j/`) or PNG (`iVBORw0KGgo`) signature, ≤ 1,500,000 characters |
 | any other `defineRoute` route | 1 MiB default | none until it defines `input` |
 
-### Phase 3: remaining routes
+### Phase 3: remaining routes — done (PRs 15 and 16)
 - Migrate `upload`, `nasa-images/*`, `commons-images/*` (keeping the Commons 413 and 429 + `Retry-After` behaviour through `PublicError`), and `health`.
 - `tests/api/auth-protection.test.ts` becomes table-driven over every route handler.
 

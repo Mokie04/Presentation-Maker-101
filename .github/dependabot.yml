@@ -1,0 +1,19 @@
+# Weekly dependency updates. npm minor and patch updates arrive as one grouped PR;
+# major updates stay separate so each can be reviewed on its own.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      npm-minor-and-patch:
+        update-types:
+          - minor
+          - patch
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

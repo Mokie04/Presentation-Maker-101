@@ -1,7 +1,8 @@
 # ADR 0025: Shared vector decoration engine
 
 Date: 2026-10-26
-Status: Accepted (Phase 4a implementation; release pending review)
+Status: Accepted (theme roadmap Phase 4a)
+PR: [#40](https://github.com/Mokie04/Presentation-Maker-101/pull/40)
 
 ## Decision
 
