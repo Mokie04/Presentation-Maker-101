@@ -10,12 +10,18 @@ const ATTEMPT_TIMEOUT_MS = 150_000;
 const GENERATION_DEADLINE_MS = 270_000;
 const RESPONSE_RESERVE_MS = 5_000;
 const MIN_ATTEMPT_MS = 1_000;
-const MAX_RETRY_AFTER_MS = 10_000;
+const MAX_RETRY_AFTER_MS = 60_000;
 /** Retries after the first attempt; every retry still has to fit the overall deadline. */
 const DEFAULT_MAX_RETRIES = 5;
 /** Waits before retries 1–5 (about 31 s in total), each with up to BACKOFF_JITTER extra. */
 const DEFAULT_BACKOFF_DELAYS = [1_000, 2_000, 4_000, 8_000, 16_000];
 const BACKOFF_JITTER = 0.1;
+/**
+ * A rate limit (429) clears over a window, so retrying it quickly only adds load. It gets its own
+ * schedule: three retries after about 8, 20 and 45 seconds (73 s in total, inside the deadline).
+ * Failures other than 429 keep the quick schedule above.
+ */
+const DEFAULT_RATE_LIMIT_BACKOFF_DELAYS = [8_000, 20_000, 45_000];
 
 /** No further attempt fits the overall deadline; `cause` is the last attempt's failure, if any. */
 export class TextGenerationDeadlineError extends Error {
@@ -89,12 +95,13 @@ function isRetryable(error: unknown): boolean {
 
 /**
  * How a final text-generation failure should be explained to the teacher:
- * - `unavailable`: the upstream service was busy or unreachable (5xx, 408, 429, network error, timeout);
+ * - `rate-limited`: the upstream service refused the request because of a rate limit (429);
+ * - `unavailable`: the upstream service was busy or unreachable (5xx, 408, network error, timeout);
  * - `invalid-output`: the service answered, but the output was empty, not JSON or not the expected shape;
  * - `other`: configuration errors, cancellation and anything unexpected.
  * A deadline stop is explained by the failure of the last attempt that ran.
  */
-export type TextFailureKind = 'unavailable' | 'invalid-output' | 'other';
+export type TextFailureKind = 'rate-limited' | 'unavailable' | 'invalid-output' | 'other';
 
 export function classifyTextFailure(error: unknown): TextFailureKind {
   if (error instanceof TextGenerationDeadlineError) {
@@ -103,9 +110,14 @@ export function classifyTextFailure(error: unknown): TextFailureKind {
   if (error instanceof RetryableResponseError) return 'invalid-output';
   if (error instanceof OpenAI.APIConnectionError) return 'unavailable';
   if (error instanceof OpenAI.APIError && error.status !== undefined) {
-    return [408, 429].includes(error.status) || (error.status >= 500 && error.status < 600) ? 'unavailable' : 'other';
+    if (error.status === 429) return 'rate-limited';
+    return error.status === 408 || (error.status >= 500 && error.status < 600) ? 'unavailable' : 'other';
   }
   return 'other';
+}
+
+function isRateLimit(error: unknown): boolean {
+  return error instanceof OpenAI.APIError && error.status === 429;
 }
 
 function retryAfterMs(error: unknown): number | undefined {
@@ -169,6 +181,9 @@ export async function generateSlideContent(
   const client = options?.client ?? getTextProviderClient();
   const maxRetries = options?.maxRetries ?? DEFAULT_MAX_RETRIES;
   const backoffDelays = options?.backoffDelays ?? DEFAULT_BACKOFF_DELAYS;
+  // Injected backoffs stay exact and apply to every retryable failure, 429 included.
+  const rateLimitDelays = options?.backoffDelays ? undefined : DEFAULT_RATE_LIMIT_BACKOFF_DELAYS;
+  let rateLimitRetries = 0;
 
   let lastError: unknown;
 
@@ -215,8 +230,13 @@ export async function generateSlideContent(
       throwIfAborted(signal);
       if (err instanceof TextOutputTruncatedError || !isRetryable(err)) throw err;
       lastError = err;
+      const limited = rateLimitDelays !== undefined && isRateLimit(err);
+      // Once the rate-limit schedule is spent, stop rather than fall back to quick retries.
+      if (limited && rateLimitRetries >= rateLimitDelays.length) throw err;
       if (attempt < maxRetries) {
-        const baseDelay = backoffDelays[attempt] ?? (backoffDelays[backoffDelays.length - 1] ?? 1000) * 2;
+        const baseDelay = limited
+          ? rateLimitDelays[rateLimitRetries++]
+          : backoffDelays[attempt] ?? (backoffDelays[backoffDelays.length - 1] ?? 1000) * 2;
         // Injected backoffs remain exact for existing callers and deterministic tests.
         const delay = retryAfterMs(err) ?? (options?.backoffDelays ? baseDelay : baseDelay * (1 + Math.random() * BACKOFF_JITTER));
         if (delay + RESPONSE_RESERVE_MS + MIN_ATTEMPT_MS > deadline - Date.now()) {

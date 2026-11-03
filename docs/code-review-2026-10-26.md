@@ -108,6 +108,16 @@ short for brief upstream outages, where the text provider fails fast with a tran
 or 502 (output could not be formatted) with fixed, provider-neutral messages instead
 of the generic failure. See "Retry defaults revisited" in `docs/adr/0030-input-hardening.md`.
 
+## Rate-limit retry follow-up (2026-11-03)
+
+Production showed the upstream text service returning 429. The generate route retried it
+like a 5xx (six attempts in about 31 seconds), which could not outlast a rate-limit window.
+429 now waits about 8, 20 and 45 seconds (three retries, Retry-After honoured up to sixty
+seconds) and, if it still fails, answers 429 with a separate "lots of requests, please wait
+a minute" message. Other failures keep their schedule. Capacity (limit or quota) and our
+own rate limiting (S4) remain open. See "Rate limits are not outages" in
+`docs/adr/0030-input-hardening.md`.
+
 ## Hygiene resolution (2026-11-03)
 
 Branch chore/hygiene fixes D1 (ADR index, statuses, archived plans in `docs/archive/plans/`, licence and notices, woff2 fonts, duplicate logo) and the architecture-guard part of T1 (AST config boundary, stricter route policy, wider docs checks, each with mutation self-tests). It also adds a Node 24 CI job, Dependabot and owner steps for C3. Still open: S4, S6, E6, C3 (the owner must change the repository setting) and N1 (replace the PDF parser). The U items and the rest of T1 belong to the UI sweep.

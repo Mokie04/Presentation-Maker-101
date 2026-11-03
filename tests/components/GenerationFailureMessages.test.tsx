@@ -6,6 +6,7 @@ import Home from '@/app/page';
 import { chooseSession } from '../helpers/workspace';
 
 const BUSY = 'The AI service is busy right now. Please try again in a minute.';
+const RATE_LIMITED = 'The AI service is getting a lot of requests right now. Please wait a minute and try again.';
 const UNUSABLE = 'The AI could not format this lesson. Please try again, or try a shorter part of the lesson plan.';
 const presentation = { subject: 'Science', originalWriters: 'Teacher', topic: 'Plants',
   slides: [{ slideNumber: 1, title: 'Roots', part: 'Discussion', contentPoints: ['Roots'], visualDescription: '' }] };
@@ -29,7 +30,7 @@ async function submitFromHome() {
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
 }
 
-it.each([[503, BUSY], [502, UNUSABLE]])('shows the route’s %i message in the home screen error area', async (status, message) => {
+it.each([[503, BUSY], [429, RATE_LIMITED], [502, UNUSABLE]])('shows the route’s %i message in the home screen error area', async (status, message) => {
   stubGenerate(() => Response.json({ error: message }, { status }));
   await submitFromHome();
   expect(await screen.findByText(message)).toBeTruthy();

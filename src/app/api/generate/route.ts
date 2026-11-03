@@ -17,6 +17,7 @@ const MAX_BODY_BYTES = 4_500_000;
 
 // Fixed, provider-neutral texts: never include upstream status codes, bodies or names.
 const SERVICE_BUSY_MESSAGE = 'The AI service is busy right now. Please try again in a minute.';
+const RATE_LIMITED_MESSAGE = 'The AI service is getting a lot of requests right now. Please wait a minute and try again.';
 const OUTPUT_UNUSABLE_MESSAGE = 'The AI could not format this lesson. Please try again, or try a shorter part of the lesson plan.';
 
 // Loose so the subject provenance keys below stay visible on the raw body.
@@ -70,6 +71,9 @@ export const POST = defineRoute({
       if (kind === 'other') throw err;
       // PublicError responses are not logged by defineRoute; keep the detail in server logs.
       console.error('[generate]', err);
+      if (kind === 'rate-limited') {
+        throw new PublicError(RATE_LIMITED_MESSAGE, 429, { headers: { 'Retry-After': '60' } });
+      }
       throw kind === 'unavailable'
         ? new PublicError(SERVICE_BUSY_MESSAGE, 503)
         : new PublicError(OUTPUT_UNUSABLE_MESSAGE, 502);

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import OpenAI from 'openai';
-import { createTextProviderClient, generateSlideContent } from '@/lib/providers/text-provider';
+import { classifyTextFailure, createTextProviderClient, generateSlideContent, TextGenerationDeadlineError } from '@/lib/providers/text-provider';
 
 const nativeAbortCheck = Object.getOwnPropertyDescriptor(AbortSignal.prototype, 'throwIfAborted')!;
 beforeEach(() => { Object.defineProperty(AbortSignal.prototype, 'throwIfAborted', { configurable: true, value: undefined }); });
@@ -43,7 +43,7 @@ describe('bounded text generation', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
-  it.each([408, 409, 429, 500, 503])('retries HTTP %i then returns valid slides', async status => {
+  it.each([408, 409, 500, 503])('retries HTTP %i then returns valid slides', async status => {
     const create = vi.fn().mockRejectedValueOnce(new OpenAI.APIError(status, {}, 'temporary', new Headers()))
       .mockResolvedValueOnce(completion);
     const result = generate(create);
@@ -54,11 +54,73 @@ describe('bounded text generation', () => {
     expect(vi.getTimerCount()).toBe(0);
   });
 
+  it('waits longer than a server error before retrying HTTP 429', async () => {
+    const create = vi.fn().mockRejectedValueOnce(new OpenAI.RateLimitError(429, {}, 'temporary', new Headers()))
+      .mockResolvedValueOnce(completion);
+    const result = generate(create);
+    await vi.runAllTimersAsync();
+    expect(await result).toEqual(presentation);
+    expect(create).toHaveBeenCalledTimes(2);
+    expect(Date.now()).toBe(8_000);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('stops after three 429 retries waiting about 8, 20 and 45 seconds', async () => {
+    const error = new OpenAI.RateLimitError(429, {}, 'limited', new Headers());
+    const create = vi.fn().mockRejectedValue(error);
+    const result = generate(create).catch(value => value);
+    await vi.runAllTimersAsync();
+    expect(await result).toBe(error);
+    expect(create).toHaveBeenCalledTimes(4);
+    expect(Date.now()).toBe(73_000);
+  });
+
+  it('adds the usual jitter to the 429 waits', async () => {
+    vi.mocked(Math.random).mockReturnValue(0.5);
+    const create = vi.fn().mockRejectedValue(new OpenAI.RateLimitError(429, {}, 'limited', new Headers()));
+    const result = generate(create).catch(value => value);
+    await vi.runAllTimersAsync();
+    await result;
+    expect(Date.now()).toBe(76_650);
+  });
+
+  it('keeps the quick schedule for server errors even after a 429', async () => {
+    const create = vi.fn().mockRejectedValueOnce(new OpenAI.RateLimitError(429, {}, 'limited', new Headers()))
+      .mockRejectedValue(new OpenAI.InternalServerError(503, {}, 'busy', new Headers()));
+    const result = generate(create).catch(value => value);
+    await vi.runAllTimersAsync();
+    await result;
+    expect(create).toHaveBeenCalledTimes(6);
+    expect(Date.now()).toBe(38_000);
+  });
+
+  it('applies an injected retry count and exact backoffs to 429 as before', async () => {
+    const create = vi.fn().mockRejectedValue(new OpenAI.RateLimitError(429, {}, 'limited', new Headers()));
+    const result = generate(create, { maxRetries: 5, backoffDelays: [10] }).catch(value => value);
+    await vi.runAllTimersAsync();
+    await result;
+    expect(create).toHaveBeenCalledTimes(6);
+    expect(Date.now()).toBe(90);
+  });
+
+  it('does not wait for a Retry-After that cannot fit the remaining deadline', async () => {
+    const error = new OpenAI.RateLimitError(429, {}, 'limited', new Headers({ 'retry-after': '60' }));
+    const create = vi.fn().mockImplementation(() => new Promise((_, reject) => setTimeout(() => reject(error), 100_000)));
+    const result = generate(create).catch(value => value);
+    await vi.runAllTimersAsync();
+    const failure = await result;
+    expect(failure).toBeInstanceOf(TextGenerationDeadlineError);
+    expect(failure.cause).toBe(error);
+    expect(classifyTextFailure(failure)).toBe('rate-limited');
+    expect(create).toHaveBeenCalledTimes(2);
+    expect(Date.now()).toBe(260_000);
+  });
+
   it.each([
     ['3', 3_000],
-    ['1000', 10_000],
+    ['1000', 60_000],
     ['Thu, 01 Jan 1970 00:00:04 GMT', 4_000],
-  ])('honors Retry-After %s with a ten-second cap', async (retryAfter, elapsed) => {
+  ])('honors Retry-After %s with a sixty-second cap', async (retryAfter, elapsed) => {
     const create = vi.fn().mockRejectedValueOnce(new OpenAI.RateLimitError(429, {}, 'temporary', new Headers({ 'retry-after': retryAfter })))
       .mockResolvedValueOnce(completion);
     const result = generate(create);
