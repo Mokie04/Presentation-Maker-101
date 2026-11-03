@@ -110,9 +110,36 @@ export function fitSlide(slide: SlideData, index: number, originalWriters?: stri
   }, undefined, size => 2 * size / 72, theme) };
 }
 
+export interface SlideOverflow { title: boolean; body: boolean; any: boolean }
+
+/**
+ * Overflow results by the slide's bullet array, then theme, then the other inputs. The deck selectors keep
+ * the same bullet array for a slide until its bullets are edited, so typing in one slide recomputes only that
+ * slide instead of measuring all of them again. The cache holds nothing once the arrays are garbage collected.
+ */
+const overflowCache = new WeakMap<readonly string[], WeakMap<SlideTheme, Map<string, SlideOverflow>>>();
+const MAX_CACHED_RESULTS_PER_SLIDE = 8;
+
 /** Shared overflow state for notices and both thumbnail lists. */
-export function getSlideOverflow(slide: SlideData, index: number, originalWriters?: string, theme: SlideTheme = DEFAULT_THEME): { title: boolean; body: boolean; any: boolean } {
-  const fit = fitSlide(slide, index, originalWriters, theme);
-  const title = !fit.title.fits, body = !fit.body.fits;
-  return { title, body, any: title || body };
+export function getSlideOverflow(slide: SlideData, index: number, originalWriters?: string, theme: SlideTheme = DEFAULT_THEME): SlideOverflow {
+  const measure = (): SlideOverflow => {
+    const fit = fitSlide(slide, index, originalWriters, theme);
+    const title = !fit.title.fits, body = !fit.body.fits;
+    return Object.freeze({ title, body, any: title || body });
+  };
+  const points = slide.contentPoints;
+  if (!Array.isArray(points)) return measure();
+  // Everything fitSlide reads besides the bullets and the theme: position (title slide or not), text, picture presence.
+  const key = [index, originalWriters ?? '', slide.title, slide.part, slide.visualDescription, slide.imageMetadata ? 1 : 0].join('\u0000');
+  let byTheme = overflowCache.get(points);
+  if (!byTheme) overflowCache.set(points, byTheme = new WeakMap());
+  let results = byTheme.get(theme);
+  if (!results) byTheme.set(theme, results = new Map());
+  let overflow = results.get(key);
+  if (!overflow) {
+    // Editing a title changes the key but not the bullet array, so keep only a few recent results per slide.
+    if (results.size >= MAX_CACHED_RESULTS_PER_SLIDE) results.clear();
+    results.set(key, overflow = measure());
+  }
+  return overflow;
 }
