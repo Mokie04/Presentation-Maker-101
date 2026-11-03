@@ -4,6 +4,7 @@ import React, { useLayoutEffect, useRef, useState } from 'react';
 import { SlideView, type SlideViewProps } from '@/components/SlideView';
 import { SLIDE_HEIGHT, SLIDE_WIDTH, SLIDE_WIDTH_PT, hasVisual, slideLayoutFor } from '@/lib/slide-theme';
 import { DEFAULT_THEME } from '@/lib/themes';
+import { poppins, arimo, gelasio } from '@/lib/fonts';
 import { InlineText } from './InlineText';
 
 export interface SlideEditingHandlers {
@@ -18,7 +19,8 @@ export type EditableSlideViewProps = Omit<SlideViewProps, 'variant' | 'renderTit
 type Editing = { kind: 'title' } | { kind: 'point'; index: number } | null;
 
 export function EditableSlideView({ onTitleChange, onPointChange, onPointInsert, onPointDelete, onPointAdd, ...props }: EditableSlideViewProps) {
-  const CONTENT_LAYOUT = (props.theme ?? DEFAULT_THEME).layout.content;
+  const theme = props.theme ?? DEFAULT_THEME;
+  const CONTENT_LAYOUT = theme.layout.content;
   const [editing, setEditing] = useState<Editing>(null);
   const [session, setSession] = useState(0);
   const titleLayout = slideLayoutFor(props.index) === 'title';
@@ -62,11 +64,12 @@ export function EditableSlideView({ onTitleChange, onPointChange, onPointInsert,
         ) : point} />
       {!titleLayout && props.slide.contentPoints.length === 0 && (
         <button type="button" onClick={() => { onPointAdd(); begin({ kind: 'point', index: 0 }); }}
-          className="rounded text-left text-slate-600 outline-none hover:ring-1 hover:ring-sky-300 focus-visible:ring-2 focus-visible:ring-sky-700"
+          className={`${poppins.variable} ${arimo.variable} ${gelasio.variable} rounded text-left outline-none hover:ring-1 hover:ring-sky-300 focus-visible:ring-2 focus-visible:ring-sky-700`}
           style={{ position: 'absolute', left: `${CONTENT_LAYOUT.bullets.x / SLIDE_WIDTH * 100}%`,
             top: `${CONTENT_LAYOUT.bullets.y / SLIDE_HEIGHT * 100}%`,
             width: hasVisual(props.slide) ? CONTENT_LAYOUT.bulletsWithVisualWidth : CONTENT_LAYOUT.bullets.w,
-            fontSize: `${CONTENT_LAYOUT.bullets.fontSize / SLIDE_WIDTH_PT * 100}cqw`, background: 'transparent' }}>
+            fontSize: `${CONTENT_LAYOUT.bullets.fontSize / SLIDE_WIDTH_PT * 100}cqw`, background: 'transparent',
+            color: `#${theme.palette.muted}`, fontFamily: theme.typography.previewFont }}>
           Click to add a bullet
         </button>
       )}

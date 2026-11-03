@@ -5,6 +5,9 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import { EditableSlideView } from '@/components/workspace/EditableSlideView';
 import { SlideStage } from '@/components/workspace/SlideStage';
 import type { SlideData } from '@/types/presentation';
+import { THEMES } from '@/lib/themes';
+import { wcagContrast } from '@/lib/themes/contrast';
+import { poppins, arimo, gelasio } from '@/lib/fonts';
 
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 const initial = { slideNumber: 1, part: 'Discussion', title: 'H_2O', contentPoints: ['x^2', 'Second point'], visualDescription: '' };
@@ -57,6 +60,17 @@ describe('EditableSlideView', () => {
     expect(screen.getByRole('button', { name: 'Edit bullet 2' }).textContent).toBe('Second point');
   });
 
+  it('removes a new empty point on Escape without leaving a blank bullet', () => {
+    render(<Harness />);
+    fireEvent.click(screen.getByRole('button', { name: 'Edit bullet 1' }));
+    fireEvent.keyDown(screen.getByRole('textbox'), { key: 'Enter' });
+    fireEvent.keyDown(screen.getByRole('textbox', { name: 'Edit bullet 2' }), { key: 'Escape' });
+    expect(screen.queryByRole('textbox')).toBeNull();
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
+    expect(screen.getByRole('button', { name: 'Edit bullet 2' }).textContent).toBe('Second point');
+    expect(screen.queryByRole('button', { name: 'Edit bullet 3' })).toBeNull();
+  });
+
   it('ends when deleting the first empty point and removes an empty point left on blur', () => {
     render(<Harness points={['', 'Keep']} />);
     fireEvent.click(screen.getByRole('button', { name: 'Edit bullet 1' }));
@@ -86,6 +100,33 @@ describe('EditableSlideView', () => {
 });
 
 const handlers = { onTitleChange: vi.fn(), onPointChange: vi.fn(), onPointInsert: vi.fn(), onPointDelete: vi.fn(), onPointAdd: vi.fn() };
+describe.each(THEMES)('empty bullet prompt in $name', theme => {
+  function renderPrompt() {
+    render(<EditableSlideView slide={{ ...initial, contentPoints: [] }} index={1} total={3} theme={theme} {...handlers} />);
+    return screen.getByRole('button', { name: 'Click to add a bullet' });
+  }
+
+  it('renders a theme colour with at least 4.5:1 contrast against the slide', () => {
+    const prompt = renderPrompt();
+    const toHex = (colour: string) => {
+      const channels = colour.match(/^rgb\((\d+), (\d+), (\d+)\)$/);
+      expect(channels, `Expected an explicit rendered RGB colour, received ${colour}`).not.toBeNull();
+      return channels!.slice(1).map(channel => Number(channel).toString(16).padStart(2, '0')).join('');
+    };
+    const foreground = toHex(getComputedStyle(prompt).color);
+    const background = toHex(getComputedStyle(screen.getByRole('group')).backgroundColor);
+    expect(wcagContrast(foreground, background)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('uses the theme preview font with its local font variables in scope', () => {
+    const prompt = renderPrompt();
+    expect.soft(prompt.style.fontFamily).toBe(theme.typography.previewFont);
+    for (const font of [poppins, arimo, gelasio]) {
+      expect.soft(prompt.closest(`.${font.variable}`)).not.toBeNull();
+    }
+  });
+});
+
 it('keeps SlideStage passive without handlers and disables editing below md', () => {
   const { rerender } = render(<SlideStage slide={initial} index={1} total={3} />);
   expect(within(screen.getByRole('region')).queryByRole('button')).toBeNull();

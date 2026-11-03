@@ -19,14 +19,21 @@ export interface SlideSorterProps {
   onMove: (slideId: number, toIndex: number) => void;
   onDuplicate: (slideId: number) => void;
   onDelete: (slideId: number) => void;
+  onAdd: () => void;
   slideImages?: Record<number, string>;
   originalWriters?: string;
 }
 
-export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, onMove, onDuplicate, onDelete, slideImages, originalWriters, theme = DEFAULT_THEME }: SlideSorterProps) {
+export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, onMove, onDuplicate, onDelete, onAdd, slideImages, originalWriters, theme = DEFAULT_THEME }: SlideSorterProps) {
   const reorder = useSlideReorder(onMove);
   return (
     <section aria-label="Slide sorter" className="min-w-0 space-y-3">
+      {slides.length === 0 && (
+        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-slate-600">
+          <p className="mb-3">No slides yet.</p>
+          <button type="button" onClick={onAdd} className="rounded-lg bg-sky-700 px-3 py-2 text-sm font-bold text-white">Add slide</button>
+        </div>
+      )}
       <ul aria-label="Slides in sorter" className="grid min-w-0 gap-3"
         style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 200px), 1fr))' }}>
         {slides.map((slide, index) => {
@@ -55,7 +62,7 @@ export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, on
             <div className="flex flex-wrap gap-1.5" onClick={(event) => event.stopPropagation()} onDoubleClick={(event) => event.stopPropagation()}>
               <button type="button" aria-label={`Duplicate slide ${index + 1}`} onClick={() => onDuplicate(id)}
                 className="min-h-11 rounded-lg border border-sky-200 bg-white px-2 py-2 text-xs font-semibold text-sky-700">Duplicate</button>
-              <button type="button" aria-label={`Delete slide ${index + 1}`} disabled={slides.length === 1} onClick={() => onDelete(id)}
+              <button type="button" aria-label={`Delete slide ${index + 1}`} disabled={slides.length === 1} title={slides.length === 1 ? 'Keep at least one slide' : 'Delete Slide'} onClick={() => onDelete(id)}
                 className="min-h-11 rounded-lg px-2 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-40">Delete</button>
               <SlideMoveButtons slideId={id} index={index} total={slides.length} onMove={onMove} />
             </div>

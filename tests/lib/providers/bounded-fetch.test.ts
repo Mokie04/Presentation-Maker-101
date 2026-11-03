@@ -1,5 +1,9 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { boundedFetch, type BoundedFetchOptions } from '@/lib/providers/bounded-fetch';
+
+const nativeAbortCheck = Object.getOwnPropertyDescriptor(AbortSignal.prototype, 'throwIfAborted')!;
+beforeEach(() => { Object.defineProperty(AbortSignal.prototype, 'throwIfAborted', { configurable: true, value: undefined }); });
+afterEach(() => { Object.defineProperty(AbortSignal.prototype, 'throwIfAborted', nativeAbortCheck); });
 
 const url = 'https://example.test/resource';
 function options(fetchFn: typeof fetch): BoundedFetchOptions {

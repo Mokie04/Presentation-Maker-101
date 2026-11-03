@@ -19,6 +19,17 @@ it.each([TEST_DECORATION_THEME, CHALKBOARD, PAPER_NOTEBOOK])('keeps $name title 
   const { container } = render(<Harness theme={theme} />);
   expect(container.querySelectorAll('[data-decoration-layer]')).toHaveLength(2);
   for (const svg of Array.from(container.querySelectorAll<SVGElement>('svg'))) expect(svg.style.pointerEvents).toBe('none');
+  // Stacking is DOM order: the behind layer must come before all slide text and the front layer after it.
+  const behind = container.querySelector('[data-decoration-layer="behind"]')!;
+  const front = container.querySelector('[data-decoration-layer="front"]')!;
+  const heading = screen.getByRole('heading');
+  const firstBullet = screen.getByRole('button', { name: 'Edit bullet 1' });
+  const follows = (a: Element, b: Element) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+  expect(follows(behind, heading)).toBe(true);
+  expect(follows(behind, firstBullet)).toBe(true);
+  expect(follows(heading, front)).toBe(true);
+  expect(follows(firstBullet, front)).toBe(true);
+  expect(follows(behind, front)).toBe(true);
   fireEvent.click(screen.getByRole('button', { name: 'Edit slide title' }));
   const title = screen.getByRole('textbox', { name: 'Edit slide title' });
   expect(document.activeElement).toBe(title);

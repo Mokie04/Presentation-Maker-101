@@ -52,7 +52,7 @@ describe('UploadSection component', () => {
 
     const textarea = screen.getByPlaceholderText(/Paste raw lesson plan content here/i);
     fireEvent.change(textarea, { target: { value: 'Sample Grade 4 Science Lesson Plan' } });
-    expect(handleUploadSuccess).toHaveBeenCalledWith('Sample Grade 4 Science Lesson Plan', 'Pasted Lesson Plan');
+    expect(handleUploadSuccess).toHaveBeenCalledWith('Sample Grade 4 Science Lesson Plan', '');
 
     // Select session
     chooseSession('Session 1');
@@ -62,7 +62,7 @@ describe('UploadSection component', () => {
     rerender(
       <UploadSection
         extractedText="Sample Grade 4 Science Lesson Plan"
-        fileName="Pasted Lesson Plan"
+        fileName=""
         onUploadSuccess={handleUploadSuccess}
         selectedSession="Session 1"
         onSessionChange={handleSessionChange}

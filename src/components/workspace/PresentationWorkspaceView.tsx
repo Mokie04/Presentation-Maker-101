@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FileDown, FileText, Play, RotateCcw, UserCheck } from 'lucide-react';
 import { partLabel } from '@/lib/pedagogy';
 import type { useSlideDeck } from '@/lib/deck/use-slide-deck';
@@ -12,6 +12,7 @@ import { SlideStage } from './SlideStage';
 import { SlidePanel } from './SlidePanel';
 import { SlideSorter } from './SlideSorter';
 import { navigateSlides } from './slide-navigation';
+import { useMediaQuery } from './use-media-query';
 
 export interface PresentationWorkspaceViewProps {
   deck: ReturnType<typeof useSlideDeck>;
@@ -25,6 +26,12 @@ export interface PresentationWorkspaceViewProps {
 
 export function PresentationWorkspaceView({ deck, downloads, session: selectedSession, sessionControls, onReset, onPreview }: PresentationWorkspaceViewProps) {
   const { view, setView, selection, theme, themeId, setThemeId } = deck;
+  const wide = useMediaQuery('(min-width: 768px)');
+  const [imageSectionOpen, setImageSectionOpen] = useState(wide);
+  useEffect(() => {
+    // Keep the teacher's choice across keyed panels; reset only at the breakpoint.
+    setImageSectionOpen(wide);
+  }, [wide]);
   const workspace = useRef<HTMLDivElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
   const focusContent = useRef(false);
@@ -37,17 +44,21 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
   const selectedIndex = selection.selectedId === null ? -1 : slideIds.indexOf(selection.selectedId);
   const selectedSlide = presentationData?.slides[selectedIndex];
   useLayoutEffect(() => {
-    const lostFocus = lastFocus.current && (!lastFocus.current.isConnected || lastFocus.current.matches(':disabled'));
+    const lostFocus = lastFocus.current && !lastFocus.current.isConnected;
     if (!focusContent.current && !(lostFocus && (document.activeElement === document.body || document.activeElement === lastFocus.current))) return;
     focusContent.current = false;
     const target = view === 'normal' ? '[aria-label="Slide stage"]' : '[aria-current="true"]';
     (workspace.current?.querySelector<HTMLElement>(target) ?? workspace.current?.querySelector<HTMLElement>('button:not(:disabled)'))?.focus({ preventScroll: true });
   });
-  const changeView = (mode: typeof view) => { focusContent.current = true; setView(mode); };
+  const changeView = (mode: typeof view) => {
+    if (mode === view) return;
+    focusContent.current = true; setView(mode);
+  };
   const splitSelected = () => {
     if (selection.selectedId !== null && splitSlideToFit(selection.selectedId)) focusContent.current = true;
   };
   if (!presentationData) return null;
+  const hasSlides = presentationData.slides.length > 0;
 
   return (
           <div ref={workspace} className="min-w-0 space-y-3" onFocusCapture={event => { lastFocus.current = event.target as HTMLElement; }} onKeyDown={(event) => { if (view === 'normal') navigateSlides(event, selection); }}>
@@ -66,9 +77,9 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   </span>
                 </div>
 
-                <h2 className="break-words text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+                <h1 className="break-words text-lg sm:text-xl font-black text-slate-900 tracking-tight">
                   {presentationData.topic}
-                </h2>
+                </h1>
 
                 {(imageProgress.loading > 0 || imageProgress.failed > 0) && (
                   <p role="status" aria-label="Pictures" className="text-xs text-slate-500">
@@ -79,8 +90,8 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                 )}
 
                 <div className="flex items-start gap-2 break-words text-xs text-slate-500">
-                  <UserCheck className="w-4 h-4 text-sky-600" />
-                  <span>Writers: {presentationData.originalWriters || 'JOHN M. NAVARRO'}</span>
+                  <UserCheck className="w-4 h-4 shrink-0 text-sky-600" />
+                  <span className="min-w-0 [overflow-wrap:anywhere]">Writers: {presentationData.originalWriters || 'JOHN M. NAVARRO'}</span>
                 </div>
               </div>
 
@@ -90,8 +101,9 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   total={presentationData.slides.length} image={slideImages[selectedIndex]} originalWriters={presentationData.originalWriters} />
                 <button
                   type="button"
-                  disabled={isDownloadingPptx}
-                  onClick={downloadPptx}
+                  disabled={!hasSlides}
+                  aria-disabled={isDownloadingPptx || undefined}
+                  onClick={() => { if (!isDownloadingPptx) void downloadPptx(); }}
                   className="px-3 py-2 bg-sky-700 hover:bg-sky-800 active:bg-sky-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-colors motion-reduce:transition-none"
                 >
                   <FileDown className="w-4 h-4" />
@@ -100,8 +112,9 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
 
                 <button
                   type="button"
-                  disabled={isDownloadingMarkdown}
-                  onClick={downloadMarkdown}
+                  disabled={!hasSlides}
+                  aria-disabled={isDownloadingMarkdown || undefined}
+                  onClick={() => { if (!isDownloadingMarkdown) void downloadMarkdown(); }}
                   className="px-3 py-2 bg-slate-800 hover:bg-slate-900 active:bg-slate-950 text-white rounded-lg font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-colors motion-reduce:transition-none"
                 >
                   <FileText className="w-4 h-4" />
@@ -110,6 +123,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
 
                 <button
                   type="button"
+                  disabled={!hasSlides}
                   onClick={() => onPreview(Math.max(selectedIndex, 0))}
                   className="px-3 py-2 bg-cyan-700 hover:bg-cyan-800 active:bg-cyan-800 text-white rounded-lg font-bold text-xs uppercase tracking-wider flex items-center gap-2 shadow-sm transition-colors motion-reduce:transition-none"
                 >
@@ -161,6 +175,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                   </div>
                   <div className="order-3 grid max-h-[520px] min-h-0 min-w-0 md:col-start-2 md:row-start-2 md:max-h-none lg:col-start-3 lg:row-start-1">
                     <SlidePanel theme={theme} key={selection.selectedId} slide={selectedSlide} slideId={slideIds[selectedIndex]}
+                      imageSectionOpen={imageSectionOpen} onImageSectionToggle={setImageSectionOpen}
                       slideImage={slideImages[selectedIndex]} isGeneratingImage={Boolean(generatingImages[selectedIndex])}
                       imageError={imageErrors[selectedIndex]} onUpdatePart={updatePart} onUpdateTitle={updateTitle}
                       onUpdateBullet={updateBullet} onAddBullet={addBullet} onDeleteBullet={deleteBullet}
@@ -179,7 +194,7 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
             ) : (
               <SlideSorter theme={theme} slides={presentationData.slides} slideIds={slideIds} selectedId={selection.selectedId}
                 onSelect={selection.selectSlide} onOpen={(id) => { selection.selectSlide(id); changeView('normal'); }}
-                onMove={moveSlide} onDuplicate={duplicateSlide} onDelete={deleteSlide}
+                onMove={moveSlide} onDuplicate={duplicateSlide} onDelete={deleteSlide} onAdd={() => addSlide()}
                 slideImages={slideImages} originalWriters={presentationData.originalWriters} />
             )}
             <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-600">

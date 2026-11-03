@@ -17,7 +17,7 @@ Text fit flags content that remains too large at the readability floor. Teachers
 ## Consequences
 
 - Both notices offer Split into two slides only for splittable body overflow. Title overflow has its own shortening message. A still-full continuation can be split again; an individual long bullet is never divided.
-- The deck hook supplies a selection hint pairing the original ID with the inserted ID. `src/lib/deck/use-slide-selection.ts` uses it before children render, retaining the original without a transient jump. Normal add and duplicate operations still select their new IDs.
+- The session deck reducer pairs the original ID with the inserted ID when it reconciles selection (`reconcileSelection` in `src/lib/deck/slide-selection.ts`), so the same update that adds the continuation keeps the original selected and no child ever renders a transient jump. Normal add and duplicate operations still select their new IDs. (An earlier standalone `useSlideSelection` hook and a `splitSelection` hint on the deck hook did this before the session layer existed; both were removed as dead code.)
 - After a split, focus returns to the original stage and the existing polite status announces the updated count.
 - Rail and sorter use the same overflow helper; passive thumbnails remain memoized. The continuation has full-width body space because it has no visual.
 - Long titles can remain flagged after a successful body split. Allowing two-line titles by moving the body is a separate follow-up; undo and merging are outside this phase.

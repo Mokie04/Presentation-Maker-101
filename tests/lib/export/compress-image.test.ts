@@ -16,7 +16,10 @@ describe('fitWithin', () => {
 });
 
 describe('compressImageForExport', () => {
-  let loads: boolean;
+  let loads: boolean | 'stalled';
+  let image: { onload: (() => void) | null; onerror: (() => void) | null };
+  // Passing the instance to a function records it without aliasing `this` to a variable (no-this-alias).
+  const remember = (instance: typeof image) => { image = instance; };
   let size: { width: number; height: number };
   const drawImage = vi.fn();
   const fillRect = vi.fn();
@@ -36,13 +39,13 @@ describe('compressImageForExport', () => {
       crossOrigin = '';
       onload: (() => void) | null = null;
       onerror: (() => void) | null = null;
-      set src(_: string) { queueMicrotask(() => (loads ? this.onload?.() : this.onerror?.())); }
+      set src(_: string) { remember(this); if (loads === 'stalled') return; queueMicrotask(() => (loads ? this.onload?.() : this.onerror?.())); }
     });
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(() => context as never);
     vi.spyOn(HTMLCanvasElement.prototype, 'toDataURL').mockReturnValue('data:image/jpeg;base64,/9j/COMPRESSED');
   });
 
-  afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
+  afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 
   it('draws at the fitted size and returns the raw JPEG base64', async () => {
     expect(await compressImageForExport('iVBORw0KGgoAAAA')).toBe('/9j/COMPRESSED');
@@ -80,6 +83,43 @@ describe('compressImageForExport', () => {
     const large = `/9j/${'A'.repeat(150_000)}`;
     expect(await compressImageForExport(small)).toBe(small);
     expect(await compressImageForExport(large)).toBe('');
+  });
+
+  it.each(['https://images.example/picture.jpg', `/9j/${'A'.repeat(150_000)}`])('uses the load-error fallback only after 15 seconds for a stalled image', async input => {
+    vi.useFakeTimers();
+    loads = 'stalled';
+    const settled = vi.fn();
+    const pending = compressImageForExport(input).then(settled);
+    const lateLoad = image.onload!;
+    const lateError = image.onerror!;
+    await vi.advanceTimersByTimeAsync(14_999);
+    expect(settled).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(1);
+    expect(settled).toHaveBeenCalledExactlyOnceWith(input.length > 150_000 ? '' : input);
+    await pending;
+    expect(image.onload).toBeNull();
+    expect(image.onerror).toBeNull();
+    expect(vi.getTimerCount()).toBe(0);
+    lateLoad(); lateError();
+    expect(drawImage).not.toHaveBeenCalled();
+    expect(settled).toHaveBeenCalledOnce();
+  });
+
+  it.each(['success', 'error', 'context', 'canvas throws'])('cleans handlers and its timer after %s', async outcome => {
+    vi.useFakeTimers();
+    loads = 'stalled';
+    if (outcome === 'context') context = null;
+    if (outcome === 'canvas throws') drawImage.mockImplementationOnce(() => { throw new Error('Canvas blocked'); });
+    const pending = compressImageForExport('https://images.example/picture.jpg');
+    const load = image.onload!;
+    if (outcome === 'error') image.onerror!(); else load();
+    await pending;
+    expect(image.onload).toBeNull();
+    expect(image.onerror).toBeNull();
+    expect(vi.getTimerCount()).toBe(0);
+    const draws = drawImage.mock.calls.length;
+    load();
+    expect(drawImage).toHaveBeenCalledTimes(draws);
   });
 
   it('returns empty and failed values unchanged', async () => {

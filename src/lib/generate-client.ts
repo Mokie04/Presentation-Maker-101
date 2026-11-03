@@ -1,3 +1,4 @@
+import { throwIfAborted } from '@/lib/abort';
 import type { PresentationData } from '@/types/presentation';
 import type { SupportedSubject } from '@/lib/utils/subject-options';
 
@@ -13,7 +14,7 @@ export async function generatePresentation(
   signal: AbortSignal,
   onStage: (stage: string) => void = () => {},
 ): Promise<PresentationData> {
-  signal.throwIfAborted();
+  throwIfAborted(signal);
   onStage('Analyzing curriculum & instructional structure...');
   const stageTimer1 = setTimeout(() => {
     if (!signal.aborted) onStage('Architecting 25+ comprehensive slides (Review, Motivation, Lesson, Discussion, Activities, Assessment)...');
@@ -26,10 +27,10 @@ export async function generatePresentation(
       method: 'POST', headers: { 'Content-Type': 'application/json' }, signal,
       body: JSON.stringify({ text, session, ...(subject ? { subject, subjectSource: 'teacher-supplied' } : {}) }),
     });
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     const resText = await res.text();
     // Fetch stubs/proxies may finish their body after cancellation. Never map or commit it.
-    signal.throwIfAborted();
+    throwIfAborted(signal);
     let data: PresentationData & { error?: string };
     try {
       data = JSON.parse(resText) as PresentationData & { error?: string };

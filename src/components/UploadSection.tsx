@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useId, ChangeEvent, DragEvent } from 'react';
+import React, { useState, useRef, useId, useEffect, ChangeEvent, DragEvent } from 'react';
 import {
   CheckCircle2,
   AlertTriangle,
@@ -47,9 +47,13 @@ export function UploadSection({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [showManual, setShowManual] = useState(false);
-  const [manualInput, setManualInput] = useState('');
   const manualId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploadRequest = useRef<AbortController | null>(null);
+  useEffect(() => () => {
+    uploadRequest.current?.abort();
+    uploadRequest.current = null;
+  }, []);
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -68,7 +72,11 @@ export function UploadSection({
       setUploadError(uploadTooLargeMessage(file.size));
       return;
     }
+    uploadRequest.current?.abort();
+    const controller = new AbortController();
+    uploadRequest.current = controller;
     setIsUploading(true);
+    onUploadSuccess('', '');
 
     try {
       const formData = new FormData();
@@ -77,10 +85,13 @@ export function UploadSection({
       const res = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
+        signal: controller.signal,
       });
 
+      if (uploadRequest.current !== controller || controller.signal.aborted) return;
       if (res.status === 413) throw new Error(uploadTooLargeMessage());
       const resText = await res.text();
+      if (uploadRequest.current !== controller || controller.signal.aborted) return;
       let data: { text?: string; fileName?: string; error?: string } = {};
       try {
         data = JSON.parse(resText) as { text?: string; fileName?: string; error?: string };
@@ -93,10 +104,15 @@ export function UploadSection({
 
       onUploadSuccess(data.text, data.fileName || file.name);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Error uploading file.';
-      setUploadError(msg);
+      if (uploadRequest.current === controller && !controller.signal.aborted) {
+        const msg = err instanceof Error ? err.message : 'Error uploading file.';
+        setUploadError(msg);
+      }
     } finally {
-      setIsUploading(false);
+      if (uploadRequest.current === controller) {
+        uploadRequest.current = null;
+        setIsUploading(false);
+      }
     }
   };
 
@@ -113,14 +129,17 @@ export function UploadSection({
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+      e.target.value = '';
       await processFile(file);
     }
   };
 
   const handleManualChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const val = e.target.value;
-    setManualInput(val);
-    onUploadSuccess(val, 'Pasted Lesson Plan');
+    uploadRequest.current?.abort();
+    uploadRequest.current = null;
+    setIsUploading(false);
+    onUploadSuccess(val, '');
   };
 
   const canGenerate =
@@ -150,7 +169,7 @@ export function UploadSection({
             <span>{showManual ? 'Hide Manual Paste' : 'Paste Lesson Plan Text'}</span>
           </button>
           {!showManual ? (
-            <div onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}
+            <div onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop} aria-busy={isUploading}
               className={`setup-drop relative flex cursor-pointer flex-col items-center gap-4 rounded-2xl border-2 border-dashed p-5 pb-20 text-center sm:flex-row sm:p-6 sm:pr-60 sm:text-left ${isDragging ? 'setup-drop-dragging' : ''}`}>
               <input hidden ref={fileInputRef} type="file" accept=".docx,.pdf,.txt,.md" onChange={handleFileChange} onClick={event => event.stopPropagation()} className="hidden" />
               {isUploading ? (
@@ -176,7 +195,7 @@ export function UploadSection({
           ) : (
             <div id={manualId} className="space-y-2">
               <label htmlFor="manual-lesson-text" className="block text-xs font-bold uppercase tracking-wider text-slate-600">Paste Lesson Plan Content</label>
-              <textarea id="manual-lesson-text" value={manualInput} onChange={handleManualChange}
+              <textarea id="manual-lesson-text" value={extractedText} onChange={handleManualChange}
                 placeholder="Paste raw lesson plan content here (objectives, parts, activities, questions)..." rows={7}
                 className="w-full resize-y rounded-xl border border-slate-400 bg-slate-50/30 p-3.5 font-mono text-xs text-slate-800 placeholder-slate-600 focus:border-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-700 sm:text-sm" />
             </div>

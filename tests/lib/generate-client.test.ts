@@ -1,5 +1,9 @@
-import { afterEach, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { generatePresentation } from '@/lib/generate-client';
+
+const nativeAbortCheck = Object.getOwnPropertyDescriptor(AbortSignal.prototype, 'throwIfAborted')!;
+beforeEach(() => { Object.defineProperty(AbortSignal.prototype, 'throwIfAborted', { configurable: true, value: undefined }); });
+afterEach(() => { Object.defineProperty(AbortSignal.prototype, 'throwIfAborted', nativeAbortCheck); });
 
 afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); });
 it('preserves the existing timeout and non-JSON error messages', async () => {
@@ -27,6 +31,18 @@ it('aborts before mapping a late 422 response body even if fetch ignores abort',
   body(JSON.stringify({ error: 'This lesson is too long' }));
   await expect(pending).rejects.toMatchObject({ name: 'AbortError' });
 });
+
+it('rejects an already aborted legacy signal as a DOMException AbortError without fetching', async () => {
+  const controller = new AbortController();
+  controller.abort('custom reason');
+  const fetch = vi.fn();
+  vi.stubGlobal('fetch', fetch);
+  const error = await generatePresentation({ text: 'lesson', session: 'Session 1' }, controller.signal).catch(value => value);
+  expect(error).toBeInstanceOf(DOMException);
+  expect(error.name).toBe('AbortError');
+  expect(fetch).not.toHaveBeenCalled();
+});
+
 it('forwards the route’s busy and formatting messages unchanged', async () => {
   const busy = 'The AI service is busy right now. Please try again in a minute.';
   const unusable = 'The AI could not format this lesson. Please try again, or try a shorter part of the lesson plan.';

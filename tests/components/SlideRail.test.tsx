@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { SlideRail } from '@/components/workspace/SlideRail';
 import { navigateSlides } from '@/components/workspace/slide-navigation';
-import { useSlideSelection } from '@/lib/deck/use-slide-selection';
+import { useTestSelection } from '../helpers/selection-harness';
 import type { SlideViewProps } from '@/components/SlideView';
 import type { SlideData } from '@/types/presentation';
 
@@ -30,7 +30,7 @@ afterEach(() => {
 });
 
 function RailKeyboard() {
-  const selection = useSlideSelection(ids);
+  const selection = useTestSelection(ids);
   return <div onKeyDown={(event) => navigateSlides(event, selection)}>
     <SlideRail slides={slides} slideIds={ids} selectedId={selection.selectedId} onSelect={selection.selectSlide} total={3} />
     <input aria-label="Other input" />
@@ -104,5 +104,37 @@ describe('SlideRail', () => {
     rerender(<SlideRail {...props} slides={[{ ...credited }, { ...slides[1], title: 'Edited leaves' }, slides[2]]} />);
     expect(views).toHaveBeenCalledTimes(1);
     expect(views.mock.calls[0][0].slide.title).toBe('Edited leaves');
+  });
+});
+
+describe('workspace navigation target boundaries', () => {
+  const keys = ['Home', 'End', 'PageUp', 'PageDown', 'ArrowUp', 'ArrowDown'];
+  it.each([
+    ['button', <button key="button">Download</button>],
+    ['link', <a key="link" href="#download">Download link</a>],
+    ['tab', <div key="tab" role="tab" tabIndex={0}>Session tab</div>],
+    ['summary', <details key="summary"><summary>Details</summary></details>],
+    ['input', <input key="input" aria-label="Title" />],
+    ['select', <select key="select" aria-label="Part"><option>Discussion</option></select>],
+    ['textarea', <textarea key="textarea" aria-label="Bullet" />],
+    ['editable', <div key="editable" contentEditable suppressContentEditableWarning>Editable text</div>],
+    ['empty editable', <div key="empty" contentEditable suppressContentEditableWarning>Editable text</div>],
+  ])('does not navigate from a %s target', (_name, child) => {
+    const selection = { next: vi.fn(), previous: vi.fn(), first: vi.fn(), last: vi.fn() };
+    const { container } = render(<div onKeyDown={event => navigateSlides(event, selection)}>{child}</div>);
+    const target = container.querySelector('summary') ?? container.firstElementChild!.firstElementChild!;
+    if (_name === 'empty editable') target.setAttribute('contenteditable', '');
+    for (const key of keys) expect(fireEvent.keyDown(target, { key })).toBe(true);
+    for (const action of Object.values(selection)) expect(action).not.toHaveBeenCalled();
+  });
+  it.each(['workspace', 'stage', 'rail'])('navigates from the %s container', target => {
+    const selection = { next: vi.fn(), previous: vi.fn(), first: vi.fn(), last: vi.fn() };
+    const { container } = render(<div onKeyDown={event => navigateSlides(event, selection)} tabIndex={0}>
+      <section aria-label="Slide stage" tabIndex={0} /><div role="listbox" aria-label="Slides" tabIndex={0} />
+    </div>);
+    const element = target === 'workspace' ? container.firstElementChild! : target === 'stage' ? screen.getByRole('region') : screen.getByRole('listbox');
+    for (const key of keys) expect(fireEvent.keyDown(element, { key })).toBe(false);
+    expect(selection.first).toHaveBeenCalledTimes(1); expect(selection.last).toHaveBeenCalledTimes(1);
+    expect(selection.next).toHaveBeenCalledTimes(2); expect(selection.previous).toHaveBeenCalledTimes(2);
   });
 });

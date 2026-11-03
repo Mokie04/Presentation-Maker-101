@@ -3,7 +3,7 @@ import type { SessionOption } from '@/lib/utils/session-options';
 import { SESSION_OPTIONS } from '@/lib/utils/session-options';
 import { deckReducer, initialDeckState } from './deck-reducer';
 import type { DeckAction, DeckState } from './types';
-import { reconcileSelection } from './use-slide-selection';
+import { reconcileSelection } from './slide-selection';
 
 export interface SessionDeck {
   deck: DeckState;

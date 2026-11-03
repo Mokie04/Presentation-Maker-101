@@ -20,6 +20,8 @@ export interface SlidePanelProps {
   slideImage?: string;
   isGeneratingImage?: boolean;
   imageError?: string;
+  imageSectionOpen?: boolean;
+  onImageSectionToggle?: (open: boolean) => void;
   onUpdatePart?: (slideId: number, part: string) => void;
   onUpdateTitle: (slideId: number, title: string) => void;
   onUpdateBullet: (slideId: number, bulletIndex: number, text: string) => void;
@@ -43,6 +45,8 @@ export function SlidePanel({
   slideImage,
   isGeneratingImage = false,
   imageError,
+  imageSectionOpen,
+  onImageSectionToggle,
   onUpdatePart,
   onUpdateTitle,
   onUpdateBullet,
@@ -68,10 +72,12 @@ export function SlidePanel({
   const detailsSection = useRef<HTMLDetailsElement>(null);
   const imageSection = useRef<HTMLDetailsElement>(null);
   useEffect(() => {
-    // Native disclosures retain the teacher's choice until the breakpoint changes.
     if (detailsSection.current) detailsSection.current.open = true;
-    if (imageSection.current) imageSection.current.open = wide;
   }, [wide]);
+  useEffect(() => {
+    // The workspace retains the native disclosure choice across keyed panel mounts.
+    if (imageSection.current) imageSection.current.open = imageSectionOpen ?? wide;
+  }, [wide, imageSectionOpen]);
 
   return (
     <aside aria-label="Slide settings" className="min-w-0 min-h-0 overflow-y-auto overscroll-contain rounded-xl border border-sky-100 bg-white p-3 space-y-4">
@@ -122,7 +128,7 @@ export function SlidePanel({
             />
             <button
               type="button"
-              aria-label="Remove Bullet"
+              aria-label={`Remove bullet ${bulletIndex + 1}`}
               onMouseDown={() => { pointerDelete.current = { slideId, index: bulletIndex, points: slide.contentPoints }; }}
               onClick={(event) => {
                 const pending = event.detail > 0 ? pointerDelete.current : null;
@@ -138,7 +144,7 @@ export function SlidePanel({
                 onDeleteBullet(slideId, index);
               }}
               className="text-slate-600 hover:text-rose-600 p-1.5 mt-1 rounded hover:bg-rose-50 transition-colors"
-              title="Remove Bullet"
+              title={`Remove bullet ${bulletIndex + 1}`}
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -156,7 +162,8 @@ export function SlidePanel({
 
         </div>
       </details>
-      <details ref={imageSection} open>
+      <details ref={imageSection} open={imageSectionOpen ?? true}
+        onToggle={event => onImageSectionToggle?.(event.currentTarget.open)}>
         <summary className="cursor-pointer rounded text-sm font-bold text-slate-700">Image</summary>
         <SlideImageControls
         key={slideId}
@@ -177,9 +184,10 @@ export function SlidePanel({
         <button
           type="button"
           aria-label="Delete Slide"
-          title="Delete Slide"
+          title={totalSlides === 1 ? 'Keep at least one slide' : 'Delete Slide'}
+          disabled={totalSlides === 1}
           onClick={() => onDeleteSlide(slideId)}
-          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50 transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50 transition-colors disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Trash2 className="w-3.5 h-3.5" />
           Delete Slide

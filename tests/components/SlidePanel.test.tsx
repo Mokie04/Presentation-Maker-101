@@ -23,11 +23,19 @@ describe('SlidePanel', () => {
     fireEvent.change(screen.getByLabelText('Slide Title'), { target: { value: 'New title' } });
     fireEvent.change(screen.getByLabelText('Bullet 2'), { target: { value: 'Updated mineral' } });
     fireEvent.click(screen.getByRole('button', { name: '+ Add Bullet Point' }));
-    fireEvent.click(screen.getAllByRole('button', { name: 'Remove Bullet' })[1]);
+    fireEvent.click(screen.getByRole('button', { name: 'Remove bullet 2' }));
     expect(handlers.onUpdatePart).toHaveBeenCalledWith(31, 'Assessment');
     expect(handlers.onUpdateTitle).toHaveBeenCalledWith(31, 'New title');
     expect(handlers.onUpdateBullet).toHaveBeenCalledWith(31, 1, 'Updated mineral');
     expect(handlers.onAddBullet).toHaveBeenCalledWith(31);
+    expect(handlers.onDeleteBullet).toHaveBeenCalledWith(31, 1);
+  });
+
+  it('numbers each remove button so the intended bullet can be identified', () => {
+    const handlers = props();
+    render(<SlidePanel {...handlers} />);
+    expect(screen.getByRole('button', { name: 'Remove bullet 1' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Remove bullet 2' }));
     expect(handlers.onDeleteBullet).toHaveBeenCalledWith(31, 1);
   });
 
@@ -37,6 +45,18 @@ describe('SlidePanel', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
     fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
     expect(handlers.onDeleteSlide).toHaveBeenCalledWith(31);
+    expect(handlers.onAddSlide).toHaveBeenCalledWith();
+  });
+
+  it('keeps the only slide and explains why deletion is unavailable', () => {
+    const handlers = props();
+    render(<SlidePanel {...handlers} totalSlides={1} />);
+    const remove = screen.getByRole('button', { name: 'Delete Slide' });
+    expect(remove.hasAttribute('disabled')).toBe(true);
+    expect(remove.getAttribute('title')).toBe('Keep at least one slide');
+    fireEvent.click(remove);
+    expect(handlers.onDeleteSlide).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
     expect(handlers.onAddSlide).toHaveBeenCalledWith();
   });
 

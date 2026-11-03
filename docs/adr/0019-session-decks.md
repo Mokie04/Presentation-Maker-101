@@ -20,6 +20,6 @@ Async image results identify their owners by slide ID across all entries, indepe
 
 ## Consequences
 
-Exports and slideshow consume the active session and its selected deck. Selection and view restore on switching; slide components and server routes remain unchanged. Multiple sessions require reset confirmation. Dialogs and confirmation disclose that refresh loses all decks.
+Exports and slideshow consume the active session and its selected deck. Selection and view restore on switching; slide components and server routes remain unchanged. Multiple sessions require reset confirmation. Dialogs and confirmation disclose that refresh loses all decks. Session dialogs handle Escape at document level, including focus on the backdrop/body, and only the topmost modal handles an unconsumed Escape. Escape uses the same abort/invalidation path as Cancel during generation. Confirming reset returns focus to the home heading after the workspace unmounts.
 
 Memory use grows with generated slides/images across up to five sessions. Pending image requests may finish after replacement but their results are dropped. Persistence, removing one session, bulk generation and session detection are deferred. Phase 2 plans IndexedDB save/restore, a Clear saved data control and a 30-day expiry; see `docs/multi-session-roadmap.md`.

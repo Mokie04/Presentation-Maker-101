@@ -7,12 +7,11 @@ import { initialDeckState } from './deck-reducer';
 import { initialSessionDecksState, sessionDecksReducer } from './session-decks-reducer';
 import type { SessionDecksAction } from './session-decks-reducer';
 import { SESSION_OPTIONS, type SessionOption } from '@/lib/utils/session-options';
-import { firstSlideId, lastSlideId, nextSlideId, previousSlideId } from './use-slide-selection';
+import { firstSlideId, lastSlideId, nextSlideId, previousSlideId } from './slide-selection';
 import { toGeneratingFlags, toPresentationData, toSlideImages } from './selectors';
 import { getTheme, isThemeId } from '@/lib/themes';
 import { readThemePreference, rememberThemePreference } from '@/lib/themes/preference';
 import { suggestSplitIndex } from '@/lib/slide-split';
-import type { SplitSelection } from './use-slide-selection';
 import type { DeckAction, ImageToken } from './types';
 import { partWantsAutoImage } from '@/lib/pedagogy';
 import { FAILED_IMAGE } from '@/lib/slide-image';
@@ -30,7 +29,6 @@ export function useSlideDeck() {
   const [sessionsState, setSessionsState] = useState(initialSessionDecksState);
   // Synchronous state is essential when several edits/load operations precede a render.
   const sessionsRef = useRef(sessionsState);
-  const splitSelection = useRef<SplitSelection>();
   const imageLoads = useRef(new Map<SessionOption, { controller: AbortController; slideIds: Set<number> }>());
   const imageQueue = useRef<{ signal: AbortSignal; run: () => Promise<void> }[]>([]);
   const activeImageRequests = useRef(0);
@@ -62,14 +60,7 @@ export function useSlideDeck() {
     return stateRef.current;
   }, []);
 
-  const dispatch = useCallback((action: DeckAction) => {
-    const previous = stateRef.current;
-    const next = dispatchSession({ type: 'deckAction', action });
-    if (action.type === 'slideSplit' && next !== previous) {
-      splitSelection.current = { slideId: action.slideId, insertedId: sessionsRef.current.nextSlideId - 1 };
-    }
-    return next;
-  }, [dispatchSession]);
+  const dispatch = useCallback((action: DeckAction) => dispatchSession({ type: 'deckAction', action }), [dispatchSession]);
 
   const presentationData = useMemo(() => toPresentationData(state), [state]);
   const slideImages = useMemo(() => toSlideImages(state), [state]);
@@ -207,7 +198,6 @@ export function useSlideDeck() {
     },
     splitSlide,
     splitSlideToFit,
-    splitSelection: splitSelection.current,
     presentationData,
     slideImages,
     generatingImages,

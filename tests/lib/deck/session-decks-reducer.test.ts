@@ -62,6 +62,26 @@ describe('session decks', () => {
     expect(state).toBe(replaced);
   });
 
+  it('drops late picture results after a session-level reset, including when a new lesson is loaded', () => {
+    const late: Parameters<typeof reduce>[1][] = [
+      { type: 'deckAction', action: { type: 'batchImagesResolved', tokens: [{ slideId: 0, version: 0 }, { slideId: 1, version: 0 }], images: { 0: 'late-a', 1: 'late-b' } } },
+      { type: 'deckAction', action: { type: 'regenerationResolved', token: { slideId: 1, version: 1 }, base64: 'late' } },
+      { type: 'deckAction', action: { type: 'regenerationFailed', token: { slideId: 1, version: 1 }, error: 'late' } },
+    ];
+    let state = edit(load(), { type: 'deckAction', action: { type: 'regenerationStarted', slideId: 1 } });
+    state = load(state, 'Session 2');
+    const cleared = reduce(state, { type: 'reset' });
+    expect(cleared.decks).toEqual({});
+    expect(cleared.activeSession).toBeNull();
+    // Results that arrive after the reset find no deck to change.
+    for (const action of late) expect(reduce(cleared, action)).toBe(cleared);
+    // A new lesson gets fresh ids (the counter is kept), so the old tokens cannot match its slides.
+    const fresh = load(cleared);
+    expect(fresh.decks['Session 1']!.deck.slides.map(s => s.id)).toEqual([4, 5]);
+    for (const action of late) expect(reduce(fresh, action)).toBe(fresh);
+    expect(fresh.decks['Session 1']!.deck.slides.map(s => s.image.status)).toEqual(['none', 'none']);
+  });
+
   it('ignores missing sessions and invalid selections without creating decks', () => {
     expect(reduce(initialSessionDecksState, { type: 'sessionSwitched', session: 'Session 2' })).toBe(initialSessionDecksState);
     const state = load();

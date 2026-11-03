@@ -126,14 +126,18 @@ it('cancel before generation and Escape return focus and store no deck', async (
   expect(screen.queryByRole('dialog')).toBeNull();
   expect(screen.getAllByRole('tab')).toHaveLength(1);
 });
-it.each([200, 422])('aborts during generation and ignores a late %s response after a new dialog opens', async status => {
+it.each([
+  { status: 200, cancelVia: 'Escape' }, { status: 422, cancelVia: 'Escape' },
+  { status: 200, cancelVia: 'Cancel' }, { status: 422, cancelVia: 'Cancel' },
+])('aborts via $cancelVia and ignores a late $status response after a new dialog opens', async ({ status, cancelVia }) => {
   await open(); another(); const pending = deferred(); generate.mockImplementationOnce(() => pending.promise);
   fireEvent.click(within(dialog()).getByRole('button', { name: 'Generate' }));
   const signal = generate.mock.calls[1][1]!.signal!;
   expect(within(dialog()).getByRole('button', { name: 'Generate' }).hasAttribute('disabled')).toBe(true);
   expect(within(dialog()).getByText('Analyzing curriculum & instructional structure...')).toBeTruthy();
-  fireEvent.keyDown(dialog(), { key: 'Escape' }); expect(dialog()).toBeTruthy();
-  fireEvent.click(within(dialog()).getByRole('button', { name: 'Cancel' }));
+  if (cancelVia === 'Escape') fireEvent.keyDown(document.body, { key: 'Escape' });
+  else fireEvent.click(within(dialog()).getByRole('button', { name: 'Cancel' }));
+  expect(screen.queryByRole('dialog')).toBeNull();
   expect(signal.aborted).toBe(true);
   another('Session 3');
   await act(async () => { pending.resolve(Response.json(status === 200 ? presentation : { error: 'This lesson is too long' }, { status })); });
@@ -144,19 +148,33 @@ it.each([200, 422])('aborts during generation and ignores a late %s response aft
   expect(batchCount).toBe(0);
 });
 it('exports and previews the active session', async () => {
+  // Each session gets its own slides, so exporting or previewing the other session's deck would fail below.
+  const titles: Record<string, string[]> = { 'Session 1': ['Roots', 'Leaves'], 'Session 2': ['Fruits', 'Seeds'] };
+  generate.mockImplementation(async (_url, init) => {
+    const { session } = JSON.parse(String(init?.body)) as { session: string };
+    return Response.json({ ...presentation, topic: `Plants ${session}`, slides: titles[session].map((title, index) => (
+      { slideNumber: index + 1, title, part: 'Discussion', contentPoints: [title], visualDescription: '' })) });
+  });
   await open(); await addSecond();
+  const exportedTitles = () => (exports[exports.length - 1].presentationData as { topic: string; slides: { title: string }[] });
   for (const session of ['Session 2', 'Session 1']) {
+    const other = session === 'Session 1' ? 'Session 2' : 'Session 1';
     fireEvent.click(screen.getByRole('tab', { name: session }));
     fireEvent.click(screen.getByRole('button', { name: 'Download PowerPoint' }));
     await screen.findByRole('button', { name: 'Download PowerPoint' });
     expect(exports[exports.length - 1].session).toBe(session);
+    expect(exportedTitles().slides.map(slide => slide.title)).toEqual(titles[session]);
+    expect(exportedTitles().topic).toBe(`Plants ${session}`);
     expect(filenames[filenames.length - 1]).toContain(session.toLowerCase().replace(' ', '_'));
     fireEvent.click(screen.getByRole('button', { name: 'Download Outline' }));
     await screen.findByRole('button', { name: 'Download Outline' });
     expect(exports[exports.length - 1].session).toBe(session);
+    expect(exportedTitles().slides.map(slide => slide.title)).toEqual(titles[session]);
     fireEvent.click(screen.getByRole('button', { name: 'Preview' }));
     const slideshow = screen.getByRole('dialog');
     expect(within(slideshow).getByText(session, { exact: false })).toBeTruthy();
+    expect(within(slideshow).getAllByText(titles[session][0]).length).toBeGreaterThan(0);
+    expect(within(slideshow).queryByText(titles[other][0])).toBeNull();
     fireEvent.keyDown(slideshow, { key: 'Escape' });
   }
 });
@@ -176,6 +194,8 @@ it('resets one session immediately and confirms before clearing two', async () =
   confirm = screen.getByRole('dialog', { name: 'Start over?' });
   fireEvent.click(within(confirm).getByRole('button', { name: 'Start over' }));
   expect(screen.queryByRole('tablist')).toBeNull(); expect(screen.getByLabelText('Subject')).toBeTruthy();
+  expect(document.activeElement).toBe(screen.getByRole('heading', { level: 1, name: /Turn your lesson plan/ }));
+  expect(document.activeElement?.getAttribute('tabindex')).toBe('-1');
 });
 it('supports roving tabs with arrows/Home/End without moving the slide selection', async () => {
   await open(); selectSlideTitled('Leaves'); await addSecond();
@@ -217,9 +237,82 @@ it.each(['before', 'after'])('pins the lesson when a concurrent upload completes
   await act(async () => { pending.resolve(Response.json(presentation)); });
   if (order === 'after') await completeUpload();
   another();
-  expect(within(dialog()).getByText('Pasted Lesson Plan')).toBeTruthy();
+  expect(within(dialog()).getByText('Lesson', { exact: true })).toBeTruthy();
   expect(within(dialog()).queryByText('B.txt')).toBeNull();
   fireEvent.click(within(dialog()).getByRole('button', { name: 'Generate' }));
   await screen.findByRole('tab', { name: 'Session 2' });
   expect(requests[1]).toEqual({ text: lesson, session: 'Session 2', subject: 'Science', subjectSource: 'teacher-supplied' });
+});
+
+it.each(['another', 'reset'])('closes the %s dialog from body after clicking its backdrop', async mode => {
+  await open();
+  if (mode === 'reset') await addSecond();
+  const opener = screen.getByRole('button', { name: mode === 'another' ? 'Another session' : 'Start over with a new lesson' });
+  opener.focus(); fireEvent.click(opener);
+  const modal = screen.getByRole('dialog'); fireEvent.mouseDown(modal.parentElement!);
+  // Backdrop clicks can leave the browser's focus on body, outside the panel.
+  (document.activeElement as HTMLElement).blur(); expect(document.activeElement).toBe(document.body);
+  fireEvent.keyDown(document.body, { key: 'Escape' });
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(document.activeElement).toBe(opener);
+});
+it('ignores Escape already handled by a child layer', async () => {
+  await open(); another();
+  const select = within(dialog()).getByLabelText('Select Session');
+  const consumeEscape = (event: KeyboardEvent) => { event.preventDefault(); };
+  select.addEventListener('keydown', consumeEscape);
+  fireEvent.keyDown(select, { key: 'Escape' });
+  expect(dialog()).toBeTruthy();
+  select.removeEventListener('keydown', consumeEscape);
+  fireEvent.keyDown(select, { key: 'Escape' });
+  expect(screen.queryByRole('dialog')).toBeNull();
+});
+it.each(['target', 'document'])('leaves Escape to the topmost modal when it closes at the %s', async closeAt => {
+  await open(); another();
+  const nested = document.createElement('div'); nested.setAttribute('role', 'dialog'); nested.setAttribute('aria-modal', 'true');
+  nested.tabIndex = -1; dialog().append(nested);
+  (closeAt === 'target' ? nested : document).addEventListener('keydown', () => nested.remove(), { once: true });
+  fireEvent.keyDown(nested, { key: 'Escape' });
+  expect(dialog()).toBeTruthy(); expect(nested.isConnected).toBe(false);
+  fireEvent.keyDown(document.body, { key: 'Escape' });
+  expect(screen.queryByRole('dialog')).toBeNull();
+});
+it('does not steal focus on the initial home mount', async () => {
+  render(<Home />);
+  await screen.findByRole('heading', { level: 1, name: /Turn your lesson plan/ });
+  expect(document.activeElement).toBe(document.body);
+});
+
+
+it.each(['fetch', 'body'] as const)('keeps Start over empty when a previous upload %s completes late', async stage => {
+  const pending = deferred(); const incoming = deferred();
+  let finishBody!: (text: string) => void;
+  const body = new Promise<string>(done => { finishBody = done; });
+  const response = new Response();
+  vi.spyOn(response, 'text').mockImplementation(() => body);
+  generate.mockImplementationOnce(() => pending.promise);
+  upload.mockImplementationOnce(() => stage === 'fetch' ? incoming.promise : Promise.resolve(response));
+  render(<Home />);
+  fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: lesson } });
+  chooseSession('Session 1');
+  fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Hide Manual Paste' }));
+  await act(async () => {
+    fireEvent.change(document.querySelector('input[type="file"]')!, { target: { files: [new File(['late lesson'], 'late.txt')] } });
+  });
+  const signal = upload.mock.calls[0][1]?.signal;
+  await act(async () => { pending.resolve(Response.json(presentation)); });
+  fireEvent.click(screen.getByRole('button', { name: 'Start over with a new lesson' }));
+  await act(async () => {
+    if (stage === 'fetch') incoming.resolve(Response.json({ text: 'Late lesson', fileName: 'late.txt' }));
+    else finishBody(JSON.stringify({ text: 'Late lesson', fileName: 'late.txt' }));
+  });
+  expect(signal?.aborted).toBe(true);
+  expect(screen.queryByText('late.txt')).toBeNull();
+  expect(screen.queryByRole('alert')).toBeNull();
+  expect((screen.getByRole('button', { name: 'Generate Slides' }) as HTMLButtonElement).disabled).toBe(true);
+  expect(screen.getByRole('button', { name: 'Choose lesson plan document' }).parentElement!.getAttribute('aria-busy')).toBe('false');
+  fireEvent.click(screen.getByRole('button', { name: 'Paste Lesson Plan Text' }));
+  expect((screen.getByRole('textbox') as HTMLTextAreaElement).value).toBe('');
 });

@@ -8,7 +8,7 @@ export function HomeHero() {
         <p className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-sun-800">
           <span aria-hidden="true" className="h-0.5 w-6 rounded bg-sun-500" />Lesson plan to slides
         </p>
-        <h1 id="home-title" className="text-[30px] font-bold leading-[1.15] tracking-tight text-slate-900 sm:text-[38px] lg:text-[46px]">
+        <h1 id="home-title" tabIndex={-1} className="text-[30px] font-bold leading-[1.15] tracking-tight text-slate-900 sm:text-[38px] lg:text-[46px]">
           Turn your lesson plan into a <span className="home-highlight">classroom-ready</span> PowerPoint.
         </h1>
         <p className="mb-5 mt-4 max-w-[540px] text-base leading-relaxed text-slate-600 lg:text-[17px]">

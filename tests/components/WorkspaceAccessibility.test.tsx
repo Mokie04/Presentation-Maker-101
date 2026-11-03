@@ -3,7 +3,7 @@ import { automaticImageResponse } from '../helpers/image-responses';
 import React from 'react';
 import { chooseSession } from '../helpers/workspace';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen, within, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, within, waitFor } from '@testing-library/react';
 import axe from 'axe-core';
 import Home from '@/app/page';
 
@@ -15,7 +15,7 @@ beforeEach(() => { vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit
   if (url === '/api/generate-image' && JSON.parse(String(init?.body)).variation === 0) return automaticImageResponse(new Promise(() => {}), init);
   throw new Error(`Unexpected request: ${url}`);
 })); });
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 async function open() {
   render(<Home />); fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'A lesson about plants.' } });
@@ -79,4 +79,83 @@ it.each(['Normal', 'Slide sorter', 'Slideshow'])('has no axe violations in %s (j
   await waitFor(() => expect(screen.getByRole('button', { name: 'Preview', hidden: true })).toBeTruthy());
   const results = await axe.run(document.body, { rules: { 'color-contrast': { enabled: false } } });
   expect(results.violations.map(({ id, nodes }) => ({ id, targets: nodes.map(node => node.target) }))).toEqual([]);
+});
+
+it('does not arm content focus when clicking active Normal before editing a panel field', async () => {
+  await open();
+  const normal = screen.getByRole('button', { name: 'Normal' }); normal.focus(); fireEvent.click(normal);
+  const title = screen.getByRole('textbox', { name: 'Slide Title' }); title.focus();
+  fireEvent.change(title, { target: { value: 'Edited plants' } });
+  expect(document.activeElement).toBe(title);
+  fireEvent.change(title, { target: { value: 'Edited plants again' } });
+  expect(document.activeElement).toBe(title);
+});
+it('does not arm content focus when clicking active sorter before duplicating a slide', async () => {
+  await open();
+  const sorter = screen.getByRole('button', { name: 'Slide sorter' }); fireEvent.click(sorter);
+  sorter.focus(); fireEvent.click(sorter);
+  const duplicate = screen.getByRole('button', { name: 'Duplicate slide 1' }); duplicate.focus(); fireEvent.click(duplicate);
+  expect(document.activeElement).toBe(duplicate);
+  expect(screen.getAllByRole('listitem', { name: /^Slide/ })).toHaveLength(4);
+});
+it.each(['Next slide', 'Previous slide'])('retains focus when %s reaches its disabled boundary', async name => {
+  await open();
+  if (name === 'Previous slide') {
+    fireEvent.keyDown(screen.getByRole('region', { name: 'Slide stage' }), { key: 'End' });
+  }
+  const button = screen.getByRole('button', { name }); button.focus();
+  fireEvent.click(button); expect(document.activeElement).toBe(button);
+  fireEvent.click(button);
+  expect(button.hasAttribute('disabled')).toBe(true);
+  expect(document.activeElement).toBe(button);
+});
+it.each([
+  { name: 'Download PowerPoint', busy: 'Compiling PPTX...', path: '/api/download-pptx' },
+  { name: 'Download Outline', busy: 'Exporting...', path: '/api/download-markdown' },
+])('retains $name focus while pending and guards duplicate download requests', async ({ name, busy, path }) => {
+  let resolve!: (response: Response) => void;
+  const pending = new Promise<Response>(done => { resolve = done; });
+  const originalFetch = fetch;
+  const exportRequest = vi.fn(() => pending);
+  vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => url === path ? exportRequest() : originalFetch(url, init)));
+  const alert = vi.spyOn(window, 'alert').mockImplementation(() => {});
+  await open();
+  const button = screen.getByRole('button', { name }); button.focus(); fireEvent.click(button);
+  await waitFor(() => expect(exportRequest).toHaveBeenCalledTimes(1));
+  expect(screen.getByRole('button', { name: busy })).toBe(button);
+  expect(button.hasAttribute('disabled')).toBe(false);
+  expect(button.getAttribute('aria-disabled')).toBe('true');
+  expect(document.activeElement).toBe(button);
+  fireEvent.click(button); fireEvent.click(button);
+  expect(exportRequest).toHaveBeenCalledTimes(1);
+  await act(async () => { resolve(Response.json({ error: 'Controlled export failure' }, { status: 500 })); });
+  expect(screen.getByRole('button', { name })).toBe(button);
+  expect(button.getAttribute('aria-disabled')).not.toBe('true');
+  expect(document.activeElement).toBe(button);
+  alert.mockRestore();
+});
+it('leaves PageDown on a focused download button to the button', async () => {
+  await open();
+  const button = screen.getByRole('button', { name: 'Download PowerPoint' }); button.focus();
+  expect(fireEvent.keyDown(button, { key: 'PageDown' })).toBe(true);
+  expect(screen.getByRole('option', { name: 'Slide 1: Plants' }).getAttribute('aria-selected')).toBe('true');
+  expect(document.activeElement).toBe(button);
+});
+
+it('uses the presentation topic as the workspace only level-one heading', async () => {
+  await open();
+  const headings = screen.getAllByRole('heading', { level: 1 });
+  expect(headings).toHaveLength(1);
+  expect(headings[0].textContent).toBe('Plants');
+});
+it('allows an unbroken writer name to wrap without shrinking its icon', async () => {
+  const originalFetch = fetch;
+  const writers = 'W'.repeat(300);
+  vi.stubGlobal('fetch', vi.fn((url: string, init?: RequestInit) => url === '/api/generate'
+    ? Promise.resolve(Response.json({ ...presentation, originalWriters: writers })) : originalFetch(url, init)));
+  await open();
+  const text = screen.getByText(`Writers: ${writers}`);
+  expect.soft(text.classList.contains('[overflow-wrap:anywhere]')).toBe(true);
+  expect.soft(text.classList.contains('min-w-0')).toBe(true);
+  expect.soft(text.parentElement!.querySelector('svg')!.classList.contains('shrink-0')).toBe(true);
 });

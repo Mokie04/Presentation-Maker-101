@@ -12,11 +12,22 @@ const refreshNote = 'Nothing is saved if the page is refreshed.';
 
 function SessionDialog({ title, children, onEscape }: { title: string; children: React.ReactNode; onEscape: () => void }) {
   const ref = useDialogFocus(true);
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || event.defaultPrevented) return;
+      const originLayer = event.target instanceof Element ? event.target.closest('[role="dialog"][aria-modal="true"]') : null;
+      if (originLayer && originLayer !== ref.current) return;
+      const layers = document.querySelectorAll('[role="dialog"][aria-modal="true"]');
+      if (layers[layers.length - 1] !== ref.current) return;
+      event.preventDefault(); event.stopPropagation(); onEscape();
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [onEscape, ref]);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-3">
       <div ref={ref} role="dialog" aria-modal="true" aria-labelledby="session-dialog-title" tabIndex={-1}
-        className="max-h-[calc(100dvh-24px)] w-full max-w-lg space-y-4 overflow-y-auto rounded-xl bg-white p-5 text-slate-800 shadow-xl"
-        onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); onEscape(); } }}>
+        className="max-h-[calc(100dvh-24px)] w-full max-w-lg space-y-4 overflow-y-auto rounded-xl bg-white p-5 text-slate-800 shadow-xl">
         <h2 id="session-dialog-title" className="text-xl font-bold">{title}</h2>
         {children}
       </div>
@@ -59,7 +70,7 @@ export function AnotherSessionDialog({ text, lessonName, subject, sessions, acti
     }
   };
   return (
-    <SessionDialog title="Another session" onEscape={() => { if (!isLoading) cancel(); }}>
+    <SessionDialog title="Another session" onEscape={cancel}>
       <p className="break-words text-sm"><span className="font-semibold">{lessonName}</span> · {text.length} characters</p>
       <div className="space-y-1">
         <label htmlFor="another-session" className="block text-sm font-semibold">Select Session</label>

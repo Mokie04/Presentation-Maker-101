@@ -13,9 +13,9 @@ export function Header() {
             className="w-11 h-11 sm:w-13 sm:h-13 object-contain drop-shadow-md flex-shrink-0 bg-transparent"
           />
           <div className="min-w-0 space-y-0.5 break-words">
-            <h1 className="home-heading text-base sm:text-lg font-extrabold tracking-tight text-white uppercase drop-shadow-sm leading-tight">
+            <p className="home-heading text-base sm:text-lg font-extrabold tracking-tight text-white uppercase drop-shadow-sm leading-tight">
               SAYUNA AI PRESENTATION MAKER
-            </h1>
+            </p>
             <p className="text-xs sm:text-sm text-sky-100/90 font-medium">
               Making Presentation very Sayuna
             </p>
