@@ -98,7 +98,9 @@ it('does not arm content focus when clicking active sorter before duplicating a 
   expect(document.activeElement).toBe(duplicate);
   expect(screen.getAllByRole('listitem', { name: /^Slide/ })).toHaveLength(4);
 });
-it.each(['Next slide', 'Previous slide'])('retains focus when %s reaches its disabled boundary', async name => {
+// jsdom keeps focus on a button that becomes disabled; browsers drop it to the page a frame
+// later, where the slide keys no longer reach the workspace. Move it to the stage first.
+it.each(['Next slide', 'Previous slide'])('moves focus to the stage when %s reaches its disabled boundary', async name => {
   await open();
   if (name === 'Previous slide') {
     fireEvent.keyDown(screen.getByRole('region', { name: 'Slide stage' }), { key: 'End' });
@@ -107,7 +109,7 @@ it.each(['Next slide', 'Previous slide'])('retains focus when %s reaches its dis
   fireEvent.click(button); expect(document.activeElement).toBe(button);
   fireEvent.click(button);
   expect(button.hasAttribute('disabled')).toBe(true);
-  expect(document.activeElement).toBe(button);
+  expect(document.activeElement).toBe(screen.getByRole('region', { name: 'Slide stage' }));
 });
 it.each([
   { name: 'Download PowerPoint', busy: 'Compiling PPTX...', path: '/api/download-pptx' },

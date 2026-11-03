@@ -44,7 +44,8 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
   const selectedIndex = selection.selectedId === null ? -1 : slideIds.indexOf(selection.selectedId);
   const selectedSlide = presentationData?.slides[selectedIndex];
   useLayoutEffect(() => {
-    const lostFocus = lastFocus.current && !lastFocus.current.isConnected;
+    // Browsers drop focus from a control that became disabled, so treat it like a removed one.
+    const lostFocus = lastFocus.current && (!lastFocus.current.isConnected || lastFocus.current.matches(':disabled'));
     if (!focusContent.current && !(lostFocus && (document.activeElement === document.body || document.activeElement === lastFocus.current))) return;
     focusContent.current = false;
     const target = view === 'normal' ? '[aria-label="Slide stage"]' : '[aria-current="true"]';
