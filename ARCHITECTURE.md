@@ -51,9 +51,10 @@ Presentation Maker turns a teacher's lesson text into an editable slide deck and
 
 ## Enforced boundaries
 
-- Every protected HTTP handler is assigned directly from `defineRoute`; the session bootstrap is the sole exception. `tests/architecture/routes-use-define-route.test.ts` checks the route files and `tests/api/auth-gate.test.ts` checks auth before body reads.
+- Every protected HTTP handler is assigned directly from `defineRoute` imported from `@/lib/api`; the session bootstrap is the sole exception. Every route file (any `route.*` extension) exports a numeric `maxDuration`, and `vercel.json` has no `functions` block. `tests/architecture/routes-use-define-route.test.ts` checks the route files and `tests/api/auth-gate.test.ts` checks auth before body reads.
 - `defineRoute` caps parsed request bodies, applies a declared Zod `input` schema and returns each route's fixed `failureMessage` for unexpected failures. `PublicError` is the explicit way for a handler to return its own safe message; auth and validation failures have their own client responses. See `tests/lib/api/define-route.test.ts`, `tests/api/input-validation.test.ts` and `tests/api/error-sanitization.test.ts`.
-- Direct `process.env` reads in `src/` are confined to `src/lib/env.ts` and `src/lib/sessionAuth.ts`, checked by `tests/architecture/config-boundary.test.ts`.
+- Direct `process.env` reads in `src/` are confined to `src/lib/env.ts` and `src/lib/sessionAuth.ts`, checked by `tests/architecture/config-boundary.test.ts` with a TypeScript syntax-tree scan (optional chaining, bracket access, destructuring, `globalThis.process` and `node:process` imports included).
+- Backticked repository paths and relative links in the main documents and `docs/` (except `docs/archive/`) must resolve, and `docs/adr/README.md` must list every ADR with its status; see `tests/architecture/docs-paths.test.ts`. The checkers live in `tests/architecture/guards.ts`, and each guard test feeds deliberately violating samples through the same checker.
 - The reducer rejects image results whose slide ID has disappeared or whose version was superseded; `tests/lib/deck/deck-reducer.test.ts` covers this. Part rules, credit descriptions and wire-image rules live respectively in `src/lib/pedagogy.ts`, `src/lib/image-credit.ts` and `src/lib/slide-image.ts`.
 
 ## How to add

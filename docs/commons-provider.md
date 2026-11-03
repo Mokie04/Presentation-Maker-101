@@ -71,12 +71,12 @@ Remaining gate: a separately authorized bounded live compatibility run must capt
 - `docs/commons-provider.md`
 - `package-lock.json`
 - `package.json`
-- `src/app/api/commons-images/request.ts`
+- src/app/api/commons-images/request.ts (since removed)
 - `src/app/api/commons-images/search/route.ts`
 - `src/app/api/commons-images/select/route.ts`
 - `src/app/page.tsx`
-- `src/components/NasaImagePicker.tsx`
-- `src/components/SlideCard.tsx` (retired in Phase 6; its picker and credit markup now live in `src/components/SlideImageControls.tsx`)
+- src/components/NasaImagePicker.tsx (since replaced by `src/components/ImageLibraryPicker.tsx`)
+- src/components/SlideCard.tsx (retired in Phase 6; its picker and credit markup now live in `src/components/SlideImageControls.tsx`)
 - `src/lib/image-metadata.ts`
 - `src/lib/providers/commons-provider.ts`
 - `src/lib/schemas/presentation-export.ts`

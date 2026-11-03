@@ -257,7 +257,7 @@ The route files currently set these `maxDuration` values; actual execution still
 - `POST /api/commons-images/select` ➔ `maxDuration = 30`
 - `GET /api/session` ➔ `maxDuration = 10`
 
-Route declarations are the single source; `vercel.json` has no `functions` override. Authenticated responses use no-store. Mutating JSON routes require application/json and reject browser-marked cross-site requests. Response headers set nosniff and strict-origin-when-cross-origin. Embedding-origin restrictions remain a product decision; see [ADR 0030](docs/adr/0030-input-hardening.md).
+Route declarations are the single source; `vercel.json` has no `functions` override; `tests/architecture/routes-use-define-route.test.ts` checks both. Authenticated responses use no-store. Mutating JSON routes require application/json and reject browser-marked cross-site requests. Response headers set nosniff and strict-origin-when-cross-origin. Embedding-origin restrictions remain a product decision; see [ADR 0030](docs/adr/0030-input-hardening.md).
 
 
 ---

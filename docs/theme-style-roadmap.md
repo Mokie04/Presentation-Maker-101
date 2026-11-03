@@ -21,7 +21,7 @@ Read at commit `78759bf` (2026-10-24), version 6.7.3. Cloned shallow into an iso
 | Workflow shape | Multi-step with `BLOCKING` human confirmation gates; a run has Plan, then Do/Check/Act. Quality ceiling is the model; its own README says not to expect a finished deck in one shot. |
 | Dependencies | 19 Python packages, including `flask`, `google-genai`, `edge-tts`, `curl_cffi`, `requests`, `PyMuPDF`, `skia-pathops`, `uharfbuzz`. |
 | License | Repository and skill are MIT. Third-party assets carry their own licences (the icon notices say MIT does not replace them). Brand packs (McKinsey, Deloitte, Google, Microsoft and others) are trademarked identities. |
-| Attribution guard | `scripts/attribution_guard.py` is a fail-closed integrity check: it hashes `LICENSE`, requires sponsor files and fixed metadata, and several scripts refuse to run if the package is modified. Vendoring or trimming the skill breaks it by design. |
+| Attribution guard | The skill's own `attribution_guard.py` script is a fail-closed integrity check: it hashes `LICENSE`, requires sponsor files and fixed metadata, and several scripts refuse to run if the package is modified. Vendoring or trimming the skill breaks it by design. |
 | Instructions inside it | SKILL.md tells an agent to run that guard and to follow its routes. We treat all of it as data, not instructions, and ran nothing. |
 
 ### Fit with this product (conclusion)
