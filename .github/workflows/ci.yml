@@ -1,4 +1,5 @@
 # Required verification builds without provider credentials; audit is advisory.
+# Actions are pinned to full commit SHAs (version in the comment); Dependabot updates them.
 name: CI
 
 on:
@@ -19,11 +20,11 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # Latest Node 22 LTS: jsdom 30 needs >=22.22.2 and vitest 5 needs >=22.12.
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
           cache: npm
@@ -43,6 +44,33 @@ jobs:
       - name: Production build
         run: npm run build
 
+  # engines allows Node 22 and 24. This separate job checks 24; `verify` keeps its exact
+  # name because branch protection requires it (docs/branch-protection.md).
+  verify-node24:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Production build
+        run: npm run build
+
   # Advisory only. Job-level continue-on-error still shows a red check on every PR,
   # so the step below is advisory instead and the job reports a warning when it finds something.
   audit:
@@ -50,10 +78,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
           cache: npm

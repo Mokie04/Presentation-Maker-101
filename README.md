@@ -238,7 +238,7 @@ The teacher can select a subject; otherwise a keyword classifier supplies one. T
 
 Use a change branch and PR for the connected Vercel project. Configure the feature keys you need from `.env.example` in the Vercel project, plus production App Store settings: `APPSTORE_AUTH_ENABLED=true`, the matching `APPSTORE_SHARED_SECRET` and `APPSTORE_AUDIENCE`, and any required clock, lifetime or cookie overrides. Production rejects disabled App Store auth; the default cookie is host-only when `APPSTORE_COOKIE_DOMAIN` is omitted.
 
-Wait for the `verify` CI job and the Vercel preview. Smoke-test the preview through the App Store handoff: upload or paste, generate, obtain an image, edit, and download both formats. Merge only after approval. Local tests, a build or an unauthenticated health request do not prove this browser flow. Making `verify` a required GitHub branch-protection check is still a separate user action in `docs/architecture-roadmap.md`.
+Wait for the `verify` CI job and the Vercel preview. Smoke-test the preview through the App Store handoff: upload or paste, generate, obtain an image, edit, and download both formats. Merge only after approval. Local tests, a build or an unauthenticated health request do not prove this browser flow. Making `verify` a required GitHub branch-protection check is still a separate owner action; see [docs/branch-protection.md](docs/branch-protection.md). CI also runs `verify-node24` (typecheck, tests and build on Node 24) and an advisory production dependency audit.
 
 ### Notes on Serverless Function Timeouts (`maxDuration`)
 
@@ -278,7 +278,7 @@ Route declarations are the single source; `vercel.json` has no `functions` overr
 
 ### Test Suite
 
-Run `npm test` for the current count. Tests cover route policy, configuration boundaries, deck image races, libraries, providers, exports and React components; `npm run lint` checks both `src/` and `tests/`. The CI `verify` job runs typecheck, lint and tests without provider credentials.
+Run `npm test` for the current count. Tests cover route policy, configuration boundaries, deck image races, libraries, providers, exports and React components; `npm run lint` checks both `src/` and `tests/`. The CI `verify` job runs typecheck, lint, tests and a production build on Node 22 without provider credentials; `verify-node24` repeats typecheck, tests and the build on Node 24.
 
 ---
 

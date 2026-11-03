@@ -19,7 +19,7 @@ the runtime range.
 
 ## Consequences
 
-Local tests do not replace preview checks for upload, images or export. Repository CI defines the job; GitHub branch protection must separately make it required. `docs/architecture-roadmap.md` still records that setting as a user action.
+Local tests do not replace preview checks for upload, images or export. Repository CI defines the job; GitHub branch protection must separately make it required, which is still an owner action: follow [Require the verify check on main](../branch-protection.md). A separate `verify-node24` job runs typecheck, tests and the build on Node 24; `verify` keeps its exact name because it is the check branch protection requires. Actions are pinned to commit SHAs and Dependabot proposes weekly npm and action updates (`.github/dependabot.yml`).
 
 ## Alternatives considered
 

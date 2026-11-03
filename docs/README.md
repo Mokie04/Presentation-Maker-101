@@ -6,7 +6,7 @@ The following documents preserve the decisions and evidence from earlier work. T
 
 | Document | Status |
 |---|---|
-| [Architecture roadmap](architecture-roadmap.md) | Implementation items 2–9 completed; making `verify` required in GitHub branch protection remains a user action. |
+| [Architecture roadmap](architecture-roadmap.md) | Implementation items 2–9 completed; making `verify` required in GitHub branch protection remains a user action ([steps](branch-protection.md)). |
 | [Code review 2026-10-26](code-review-2026-10-26.md) | Findings with their fix status; open items are marked. |
 | [Slide deck roadmap](slide-deck-roadmap.md) | Reducer and hook migration completed. |
 | [Image credit roadmap](image-credit-roadmap.md) | Shared credit and renderer migration completed. |

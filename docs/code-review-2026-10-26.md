@@ -43,7 +43,7 @@ Scope: `main` at `1ee7d7d` (after PRs 34 to 43: session decks, home screen, look
 | I2 — fixed (PR 45) | Images | Default image model `dall-e-3` with size `1024x576` is not an accepted size; every AI call would 400 and be retried (about 12 calls per image). Not hit in production today (Pexels-only). | Code reading |
 | C1 — fixed (PR 45) | CI | The `verify` job has no `next build`, so font config and route segment config are only checked by Vercel; `next/font/local` is stubbed in tests. | Reproduced (reviewer) |
 | C2 — fixed (PR 45) | Config | `vitest.config.mts` is not type-checked and sets a non-existent option (`environmentMatchGlobs`); component tests work only through per-file docblocks. | Reproduced (reviewer) |
-| C3 — open (owner setting) | Process | Making `verify` a required check (ADR 0008) is still a pending user action; `main` auto-deploys. | Known |
+| C3 — open (owner setting; steps in `docs/branch-protection.md`) | Process | Making `verify` a required check (ADR 0008) is still a pending user action; `main` auto-deploys. | Known |
 
 ### P3: hardening and smaller items
 

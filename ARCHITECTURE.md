@@ -102,7 +102,7 @@ Presentation Maker turns a teacher's lesson text into an editable slide deck and
 
 ## Working agreements and limitations
 
-Use one branch per change, open a PR, require green `verify` CI and a Vercel preview smoke test, then merge after approval; do not commit directly to `main`. `.github/workflows/ci.yml` runs typecheck, lint, `npm test` and a production build without provider secrets; a separate non-blocking job audits production dependencies. Branch-protection configuration is separate from this repository; `docs/architecture-roadmap.md` still lists making `verify` required as a user action.
+Use one branch per change, open a PR, require green `verify` CI and a Vercel preview smoke test, then merge after approval; do not commit directly to `main`. `.github/workflows/ci.yml` runs typecheck, lint, `npm test` and a production build without provider secrets; a separate non-blocking job audits production dependencies. A separate `verify-node24` job runs typecheck, tests and the build on Node 24. Branch-protection configuration is separate from this repository; making `verify` required is an owner action described in `docs/branch-protection.md`.
 
 - Supported Node.js majors are 22 and 24 (`engines` is `>=22.12 <25`; CI and `.nvmrc` use 22). PDF parsing is unsupported on Node 25 and later because `pdf-parse` bundles legacy pdf.js; see ADR 0008.
 - Route files set `maxDuration`: 300 s for `generate` and `generate-images`, 120 s for `generate-image` and `download-pptx`, 60 s for `upload`, 45 s for `nasa-images/select`, 30 s for `download-markdown`, `health` and the other library routes, and 10 s for `session`.
