@@ -1,7 +1,8 @@
 # ADR 0024: Office-safe look fonts and measured rendering
 
 Date: 2026-10-26
-Status: Accepted (Phase 3 implementation; release pending review)
+Status: Accepted (theme roadmap Phase 3)
+PR: [#39](https://github.com/Mokie04/Presentation-Maker-101/pull/39)
 
 ## Decision
 

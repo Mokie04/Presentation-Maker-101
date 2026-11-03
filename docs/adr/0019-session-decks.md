@@ -1,6 +1,8 @@
 # ADR 0019: Session decks in memory
 
-Status: Accepted for Phase 1 (local implementation; release review pending)
+Date: 2026-10-26
+Status: Accepted (Phase 1: in-memory session decks; persistence is a separate phase)
+PR: [#34](https://github.com/Mokie04/Presentation-Maker-101/pull/34)
 
 ## Context
 

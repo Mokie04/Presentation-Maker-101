@@ -91,6 +91,8 @@ MAX_FILE_SIZE_MB=4
 
 Vercel Functions have a [4.5 MB request-body limit](https://vercel.com/docs/functions/limitations#request-body-size), multipart overhead included. The 4 MB default is chosen to fit under it, and the upload screen explains a rejected file instead of showing platform text. Raising `MAX_FILE_SIZE_MB` above about 4.4 only makes sense when the app is not hosted on Vercel.
 
+Uploaded and pasted lesson text is capped at 250,000 characters (`src/lib/lesson-limits.ts`). Vercel also has a [4.5 MB response-body limit](https://vercel.com/docs/functions/limitations#request-body-size): the browser budgets each export request to 3.5 MiB of JSON (ADR 0004) and the PPTX package is DEFLATE-compressed so large decks stay under it.
+
 #### App Store SSO Configuration
 
 Presentation Maker Pro is launched from the Sayuna AI App Store with a short-lived signed `access` handoff. The application exchanges that handoff once for the `presentation_maker_pro_session` HttpOnly cookie; when App Store auth is enabled, generation, upload, image, download, and health APIs require that session.
@@ -225,8 +227,8 @@ The teacher can select a subject; otherwise a keyword classifier supplies one. T
 ### 7. Server-Side PowerPoint (.pptx) & Markdown (.md) Exports
 - **PowerPoint Export (`POST /api/download-pptx`)**:
   - Compiled server-side with `pptxgenjs` in 16:9 widescreen format.
-  - Uses sky/cyan colours (`#0284C7`, `#06B6D4`) and a pale blue background (`#F0F9FF`).
-  - Embeds base64 illustrations or renders rounded pale-blue placeholder boxes.
+  - Uses the lesson's look: Sayuna Classic (default), Chalkboard or Paper Notebook. The header Look picker changes preview and export together ([ADR 0023](docs/adr/0023-look-selection.md), [ADR 0024](docs/adr/0024-office-safe-look-fonts.md)).
+  - Embeds base64 illustrations or renders placeholder boxes in the look's colours.
 - **Curriculum Markdown Outline (`POST /api/download-markdown`)**:
   - Clean formatted Markdown outline ready for lesson archiving or syllabus planning.
 
@@ -249,9 +251,13 @@ The route files currently set these `maxDuration` values; actual execution still
 - `POST /api/download-markdown` ➔ `maxDuration = 30`
 - `POST /api/upload` ➔ `maxDuration = 60`
 - `GET /api/health` ➔ `maxDuration = 30`
+- `POST /api/nasa-images/search` ➔ `maxDuration = 30`
+- `POST /api/nasa-images/select` ➔ `maxDuration = 45`
+- `POST /api/commons-images/search` ➔ `maxDuration = 30`
+- `POST /api/commons-images/select` ➔ `maxDuration = 30`
 - `GET /api/session` ➔ `maxDuration = 10`
 
-Route declarations are the single source; vercel.json has no competing functions override. Authenticated responses use no-store. Mutating JSON routes require application/json and reject browser-marked cross-site requests. Response headers set nosniff and strict-origin-when-cross-origin. Embedding-origin restrictions remain a product decision; see [ADR 0030](docs/adr/0030-input-hardening.md).
+Route declarations are the single source; `vercel.json` has no `functions` override. Authenticated responses use no-store. Mutating JSON routes require application/json and reject browser-marked cross-site requests. Response headers set nosniff and strict-origin-when-cross-origin. Embedding-origin restrictions remain a product decision; see [ADR 0030](docs/adr/0030-input-hardening.md).
 
 
 ---
