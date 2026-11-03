@@ -1,7 +1,7 @@
 import { getPexelsConfig } from '@/lib/env';
 import { downloadProviderImage } from './download-provider-image';
 
-export interface PexelsPhoto {
+interface PexelsPhoto {
   id: number;
   width: number;
   height: number;
@@ -17,7 +17,7 @@ export interface PexelsPhoto {
   };
 }
 
-export interface PexelsSearchResponse {
+interface PexelsSearchResponse {
   total_results: number;
   page: number;
   per_page: number;

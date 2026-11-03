@@ -1,8 +1,9 @@
 import type { PresentationData } from '@/types/presentation';
 import { samples } from '../lib/services/credit-samples';
+import { ONE_PIXEL_PNG } from './images';
 
 // Fixed local PNG, never fetched from an image provider.
-export const lookFixtureImage = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+export const lookFixtureImage = ONE_PIXEL_PNG;
 export const lookFixtureImages = { 1: lookFixtureImage, 5: lookFixtureImage };
 export const lookFixtureDeck: PresentationData = {
   subject: 'Science', topic: 'Water and evidence', originalWriters: 'Teacher Maria', slides: [

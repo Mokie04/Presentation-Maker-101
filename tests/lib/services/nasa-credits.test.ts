@@ -3,13 +3,14 @@ import JSZip from 'jszip';
 import { POST as markdown } from '@/app/api/download-markdown/route';
 import { POST as powerpoint } from '@/app/api/download-pptx/route';
 import { NextRequest } from 'next/server';
+import { ONE_PIXEL_PNG } from '../../helpers/images';
 const metadata = { source: 'nasa', nasaId: 'roots', title: '<b>Roots</b>', photographer: 'Jane',
   secondaryCreator: 'Different credit', description: 'Courtesy: Original team <script>plain text</script>',
   assetUrl: 'https://images-assets.nasa.gov/image/roots/roots~large.png', rendition: 'large', mimeType: 'image/png' };
 const presentationData = { subject: 'English/Reading', topic: 'Roots', originalWriters: 'Teacher', slides: [
   { slideNumber: 1, part: 'Discussion', title: 'Roots', contentPoints: ['Root observation'], visualDescription: 'roots', imageMetadata: metadata },
 ] };
-const image = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+const image = ONE_PIXEL_PNG;
 function req() { return new NextRequest('http://localhost/export', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ presentationData, slideImages: { 0: image } }) }); }
 describe('NASA export credits', () => {
   it.each([0, 1])('preserves a 2:1 NASA image aspect ratio on exported slide %i', async (index) => {

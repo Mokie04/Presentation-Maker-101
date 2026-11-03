@@ -58,7 +58,7 @@ export function productionPackages(root = defaultRoot) {
  * Splits a simple SPDX expression into its OR alternatives.
  * @param {string} expression
  */
-export function licenseAlternatives(expression) {
+function licenseAlternatives(expression) {
   return expression.replace(/^\(|\)$/g, '').split(/\s+OR\s+/i).map((part) => part.trim());
 }
 

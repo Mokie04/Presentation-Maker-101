@@ -4,9 +4,10 @@ import { NextRequest } from 'next/server';
 import { POST as downloadMarkdown } from '@/app/api/download-markdown/route';
 import { POST as downloadPptx } from '@/app/api/download-pptx/route';
 import { buildPresentationPptx } from '@/lib/services/pptx-generator';
+import { ONE_PIXEL_PNG } from '../../helpers/images';
 
 // Captured from the routes and the PPTX generator before slide-image.ts and export/filename.ts existed.
-const PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+const PNG = ONE_PIXEL_PNG;
 const JPG = '/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAP/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AKAA/9k=';
 const slide = (n: number) => ({ slideNumber: n, part: 'Discussion', title: 'Roots', contentPoints: ['P'], visualDescription: 'V' });
 const deck = (topic: string) => ({ subject: 'Science', originalWriters: 'T', topic, slides: [slide(1)] });

@@ -100,9 +100,9 @@ export function findEnvReads(fileName: string, text: string): string[] {
 // ---------------------------------------------------------------------------
 // Route policy.
 
-export const httpMethods = new Set(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS']);
+const httpMethods = new Set(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS']);
 export const isRouteFile = (name: string): boolean => /^route\.[cm]?[jt]sx?$/.test(name);
-export const DEFINE_ROUTE_MODULE = '@/lib/api';
+const DEFINE_ROUTE_MODULE = '@/lib/api';
 
 export interface RouteReport {
   /** Exported HTTP handlers assigned from the imported defineRoute. */
@@ -174,8 +174,8 @@ export function checkVercelConfig(text: string): string[] {
 // ---------------------------------------------------------------------------
 // Documentation paths, links and the ADR index.
 
-export const pathPrefixes = /^(?:src|tests|docs|scripts|public|\.github)\/\S+$/;
-export const rootFiles = new Set(['ARCHITECTURE.md', 'GLOSSARY.md', 'README.md', 'THIRD_PARTY_NOTICES.md', 'LICENSE', '.env.example',
+const pathPrefixes = /^(?:src|tests|docs|scripts|public|\.github)\/\S+$/;
+const rootFiles = new Set(['ARCHITECTURE.md', 'GLOSSARY.md', 'README.md', 'THIRD_PARTY_NOTICES.md', 'LICENSE', '.env.example',
   'package.json', 'package-lock.json', 'vercel.json', 'next.config.mjs', 'tsconfig.json', 'vitest.config.mts', '.nvmrc']);
 
 /** Backticked repository paths in a document; placeholders and globs are not concrete paths. */
@@ -190,7 +190,7 @@ export function backtickedPaths(text: string): string[] {
 }
 
 /** Relative link targets in a markdown document, without anchors; web, mail and in-page links are skipped. */
-export function relativeLinks(text: string): string[] {
+function relativeLinks(text: string): string[] {
   const links: string[] = [];
   for (const [, target] of Array.from(text.matchAll(/\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g))) {
     if (/^(?:[a-z][a-z0-9+.-]*:|#)/i.test(target)) continue;
@@ -209,8 +209,8 @@ export function checkDocument(document: string, text: string, root: string, exis
   return problems;
 }
 
-export const adrFilePattern = /^\d{4}-[a-z0-9-]+\.md$/;
-export const adrStatus = /^Status: (Accepted|Proposed|Not adopted|Deprecated|Superseded by ADR \d{4})(?: \([^)]+\))?$/m;
+const adrFilePattern = /^\d{4}-[a-z0-9-]+\.md$/;
+const adrStatus = /^Status: (Accepted|Proposed|Not adopted|Deprecated|Superseded by ADR \d{4})(?: \([^)]+\))?$/m;
 
 /** The ADR's base status, or a problem when its Status line is missing or not an allowed value. */
 export function readAdrStatus(name: string, text: string): { status?: string; problem?: string } {
