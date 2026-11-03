@@ -66,7 +66,7 @@ schema failures. Configuration 4xx and unknown programming errors (including bar
 fail immediately; SDK APIConnectionError wraps actual network failures;
 TextOutputTruncatedError still bypasses retries and maps to 422. Default backoffs
 are one and two seconds with 0–10% jitter (now 1, 2, 4, 8 and 16 seconds). Honor numeric/date Retry-After on 429,
-capped at ten seconds. Explicit injected backoffs remain exact. The generate route
+capped at ten seconds (raised to sixty; see "Rate limits are not outages" below). Explicit injected backoffs remain exact. The generate route
 forwards request.signal so disconnect cancellation reaches the upstream attempt.
 The request lifetime remains 300 seconds, leaving time for a sanitized response.
 
@@ -193,3 +193,34 @@ The last failure decides when failures were mixed. Scenario timings are pinned i
 `tests/lib/providers/text-provider-json-mode.test.ts` checks that JSON response mode
 is always accompanied by the word JSON in the messages, because some compatible
 services reject the mode otherwise with an error that looks like a generic 5xx.
+
+## Rate limits are not outages (2026-11-03)
+
+A production log showed the upstream text service answering HTTP 429 (rate limit exceeded)
+on `/api/generate`. The retry policy above treated 429 like a transient 5xx: six attempts in
+about 31 seconds, with any Retry-After capped at ten seconds. A rate limit clears over a
+window (often a minute), so those quick retries could not succeed and added load to the
+service that was already refusing requests.
+
+429 now has its own schedule in `src/lib/providers/text-provider.ts`
+(DEFAULT_RATE_LIMIT_BACKOFF_DELAYS): at most three retries (four attempts) after about 8, 20
+and 45 seconds, with the same 0–10% jitter, 73 seconds in total. Retry-After, numeric or date,
+is honoured up to sixty seconds (MAX_RETRY_AFTER_MS). Every wait is still checked against the
+270-second deadline, so a wait that cannot fit stops the request. 408, 409, 5xx, network
+errors, timeouts and invalid output keep the quick one-to-sixteen-second schedule. Injected
+`maxRetries` and `backoffDelays` remain exact and apply to 429 as before, so existing tests
+and callers are unaffected.
+
+When the final failure is a 429 (including a deadline stop after one), classifyTextFailure
+returns `rate-limited` and the route answers 429 with a Retry-After of 60 and a fixed,
+provider-neutral message, kept apart from the busy message so teachers know to wait rather
+than retry at once:
+
+| Final failure | Response |
+|---|---|
+| 429, or a deadline stop after one | 429 "The AI service is getting a lot of requests right now. Please wait a minute and try again." |
+
+The rows for 5xx, 408, network errors and timeouts above are unchanged. Scenario timings
+are pinned in `tests/api/generate-retry-policy.test.ts`. The schedule is a mitigation:
+sustained 429s mean the upstream limit or quota is too low for the traffic, which is a
+capacity decision (higher limit, second key, our own queueing or per-user limits, item S4).

@@ -8,6 +8,7 @@ import * as provider from '@/lib/providers/text-provider';
 // Exact teacher-facing texts; they must never carry upstream detail.
 const BUSY = 'The AI service is busy right now. Please try again in a minute.';
 const UNUSABLE = 'The AI could not format this lesson. Please try again, or try a shorter part of the lesson plan.';
+const RATE_LIMITED = 'The AI service is getting a lot of requests right now. Please wait a minute and try again.';
 const GENERIC = 'Failed to generate the presentation. Please try again.';
 const TOO_LONG = 'This lesson is too long to convert in one pass. Choose a shorter session or paste a smaller part of the lesson plan.';
 // Recognisable upstream text that must stay in server logs only.
@@ -56,8 +57,18 @@ const scenarios: Scenario[] = [
     calls: 2, elapsed: 265_000, outcome: { status: 503, error: BUSY } },
   { name: '429 with Retry-After 3 then success', create: () => repeat(() => upstream(429, { 'retry-after': '3' }), 1).mockResolvedValueOnce(completion),
     calls: 2, elapsed: 3_000, outcome: { status: 200 } },
-  { name: 'repeated 429 with Retry-After 1000 (capped at 10 s)', create: () => vi.fn().mockImplementation(() => Promise.reject(upstream(429, { 'retry-after': '1000' }))),
-    calls: 6, elapsed: 50_000, outcome: { status: 503, error: BUSY } },
+  { name: 'repeated 429 with Retry-After 1000 (capped at 60 s)', create: () => vi.fn().mockImplementation(() => Promise.reject(upstream(429, { 'retry-after': '1000' }))),
+    calls: 4, elapsed: 180_000, outcome: { status: 429, error: RATE_LIMITED } },
+  { name: 'repeated 429 without Retry-After waits 8, 20 and 45 s', create: () => vi.fn().mockImplementation(() => Promise.reject(upstream(429))),
+    calls: 4, elapsed: 73_000, outcome: { status: 429, error: RATE_LIMITED } },
+  { name: 'two 429 then success on the third attempt', create: () => repeat(() => upstream(429), 2).mockResolvedValueOnce(completion),
+    calls: 3, elapsed: 28_000, outcome: { status: 200 } },
+  { name: '429 then repeated 5xx keeps the busy message', create: () => repeat(() => upstream(429), 1).mockImplementation(() => Promise.reject(upstream(503))),
+    calls: 6, elapsed: 38_000, outcome: { status: 503, error: BUSY } },
+  { name: 'repeated 5xx then 429 on the last attempt reports the rate limit', create: () => repeat(() => upstream(503), 5).mockImplementation(() => Promise.reject(upstream(429))),
+    calls: 6, elapsed: 31_000, outcome: { status: 429, error: RATE_LIMITED } },
+  { name: 'slow 429 with Retry-After 60 stops at the deadline and reports the rate limit', create: () => vi.fn().mockImplementation(slow(100_000, upstream(429, { 'retry-after': '60' }))),
+    calls: 2, elapsed: 260_000, outcome: { status: 429, error: RATE_LIMITED } },
   { name: 'repeated 408', create: () => vi.fn().mockImplementation(() => Promise.reject(upstream(408))),
     calls: 6, elapsed: 31_000, outcome: { status: 503, error: BUSY } },
   ...[400, 401, 403, 404, 422].map((status): Scenario => ({
@@ -162,6 +173,27 @@ describe('provider-neutral failure messages', () => {
     expect(JSON.parse(body)).toEqual({ error: BUSY });
     expect(body).not.toContain(MARKER);
     expect(console.error).toHaveBeenCalledWith('[generate]', error);
+  });
+
+  it('maps an exhausted rate limit to 429 with only the rate-limit message and a Retry-After hint', async () => {
+    vi.useRealTimers();
+    const error = upstream(429, { 'retry-after': '3' });
+    vi.spyOn(provider, 'generateSlideContent').mockRejectedValueOnce(error);
+    const response = await POST(request());
+    const body = await response.text();
+    expect(response.status).toBe(429);
+    expect(response.headers.get('Retry-After')).toBe('60');
+    expect(JSON.parse(body)).toEqual({ error: RATE_LIMITED });
+    expect(body).not.toContain(MARKER);
+    expect(console.error).toHaveBeenCalledWith('[generate]', error);
+  });
+
+  it('maps a deadline stop after a 429 to the rate-limit message', async () => {
+    vi.useRealTimers();
+    vi.spyOn(provider, 'generateSlideContent').mockRejectedValueOnce(new provider.TextGenerationDeadlineError(upstream(429)));
+    const response = await POST(request());
+    expect(response.status).toBe(429);
+    expect(JSON.parse(await response.text())).toEqual({ error: RATE_LIMITED });
   });
 
   it('maps exhausted unusable output to 502 with only the formatting message', async () => {

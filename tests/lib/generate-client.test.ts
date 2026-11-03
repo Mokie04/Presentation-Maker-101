@@ -43,6 +43,12 @@ it('rejects an already aborted legacy signal as a DOMException AbortError withou
   expect(fetch).not.toHaveBeenCalled();
 });
 
+it('forwards the route’s rate-limit message unchanged', async () => {
+  const limited = 'The AI service is getting a lot of requests right now. Please wait a minute and try again.';
+  vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce(Response.json({ error: limited }, { status: 429 })));
+  await expect(generatePresentation({ text: 'lesson', session: 'Session 1' }, new AbortController().signal)).rejects.toThrow(limited);
+});
+
 it('forwards the route’s busy and formatting messages unchanged', async () => {
   const busy = 'The AI service is busy right now. Please try again in a minute.';
   const unusable = 'The AI could not format this lesson. Please try again, or try a shorter part of the lesson plan.';
