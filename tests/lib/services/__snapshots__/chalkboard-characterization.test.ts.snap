@@ -2,7 +2,7 @@
 
 exports[`Chalkboard legacy characterization: long content title with formulas and AI… > preserves the same six legacy cases through both export entry points > slide 1 1`] = `
 {
-  "sha256": "1a214d56a3802adea9516ac96c98f7645cad8962b42cc48c506a57f347062716",
+  "sha256": "ad99c83ee391010f30f730811f6e7467a16e8ebe340c6c9078e7ec5d2bb9b73d",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -300,12 +300,6 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 <a:t>Grade 7 Science
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -318,12 +312,6 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 <a:t>Observe the world
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -336,12 +324,6 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 <a:t>Discuss your findings
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" b="1" dirty="0">
 <a:solidFill>
@@ -412,7 +394,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 
 exports[`Chalkboard legacy characterization: long content title with formulas and AI… > preserves the same six legacy cases through both export entry points > slide 2 1`] = `
 {
-  "sha256": "45ae82cbe726095feb8b5d900e574e504ac2d9a781d11f40c69466636df2a4bd",
+  "sha256": "566220e4b3e7d8f9acf89ee34f3b253defbf2e1a7fc209e4eee2808d6dd06b8e",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -661,9 +643,6 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </a:rPr>
 <a:t>Investigating H</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3900" b="1" baseline="-40000" dirty="0">
 <a:solidFill>
@@ -675,9 +654,6 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3900" b="1" dirty="0">
 <a:solidFill>
@@ -689,9 +665,6 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </a:rPr>
 <a:t>O and x</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3900" b="1" baseline="30000" dirty="0">
 <a:solidFill>
@@ -703,9 +676,6 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3900" b="1" dirty="0">
 <a:solidFill>
@@ -766,12 +736,6 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </a:rPr>
 <a:t>Water is H</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" baseline="-40000" dirty="0">
 <a:solidFill>
@@ -783,12 +747,6 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" dirty="0">
 <a:solidFill>
@@ -821,12 +779,6 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </a:rPr>
 <a:t>Compare x</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" baseline="30000" dirty="0">
 <a:solidFill>
@@ -838,12 +790,6 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" dirty="0">
 <a:solidFill>
@@ -855,12 +801,6 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 </a:rPr>
 <a:t> with x</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" baseline="-40000" dirty="0">
 <a:solidFill>
@@ -1001,7 +941,7 @@ exports[`Chalkboard legacy characterization: long content title with formulas an
 
 exports[`Chalkboard legacy characterization: title with writers and library image > preserves the same six legacy cases through both export entry points > slide 1 1`] = `
 {
-  "sha256": "ca57eef90ca06281c363a494cdc545b2dab0aa22e042388db49c7b9b136adc71",
+  "sha256": "59707ca1d7af692ff22daa51165364dc1772ca4292c50c1fb56eae8e7ebfc4fa",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -1347,12 +1287,6 @@ exports[`Chalkboard legacy characterization: title with writers and library imag
 <a:t>Grade 7 Science
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -1365,12 +1299,6 @@ exports[`Chalkboard legacy characterization: title with writers and library imag
 <a:t>Observe the world
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -1383,12 +1311,6 @@ exports[`Chalkboard legacy characterization: title with writers and library imag
 <a:t>Discuss your findings
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" b="1" dirty="0">
 <a:solidFill>
@@ -1475,7 +1397,7 @@ exports[`Chalkboard legacy characterization: title with writers and library imag
 
 exports[`Chalkboard legacy characterization: wide bullets and credit without image > preserves the same six legacy cases through both export entry points > slide 1 1`] = `
 {
-  "sha256": "5f9e40b0073c4eb984edb462a343f4e884fa36fea5e15e8aa8f0160dee9b2222",
+  "sha256": "c9f090ec8452b6fc6f676b8fa1afbc3c370b997685d5d1270a54c5977a2cddc4",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -1773,12 +1695,6 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 <a:t>Grade 7 Science
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -1791,12 +1707,6 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 <a:t>Observe the world
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -1809,12 +1719,6 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 <a:t>Discuss your findings
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" b="1" dirty="0">
 <a:solidFill>
@@ -2790,7 +2694,7 @@ exports[`Chalkboard legacy characterization: wide bullets and credit without ima
 
 exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 {
-  "sha256": "72954d33c5ff8401391c9bc709ff12182b7b4568302f7b392901d57e8707ee2f",
+  "sha256": "1cfe5ce406ab05e5a63fce0b9dc6f373c81337ef7a5ca5f24591fac19bf8fd92",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 1">
@@ -3088,12 +2992,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 <a:t>Grade 7 Science
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -3106,12 +3004,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 <a:t>Observe the world
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" dirty="0">
 <a:solidFill>
@@ -3124,12 +3016,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 <a:t>Discuss your findings
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="3400"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="2200" b="1" dirty="0">
 <a:solidFill>
@@ -3200,7 +3086,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 1 1`] = `
 
 exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 {
-  "sha256": "eccacaf7afde7af8f2c55fb2c72ebc043a2abf4a547c8d1450bade3d932ff14f",
+  "sha256": "cff4ae49914851f1978b395234636b6839b3603d3db98e194d429e2e881d6712",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 2">
@@ -3449,9 +3335,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </a:rPr>
 <a:t>Observe H</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="4500" b="1" baseline="-40000" dirty="0">
 <a:solidFill>
@@ -3463,9 +3346,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="4500" b="1" dirty="0">
 <a:solidFill>
@@ -3477,9 +3357,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </a:rPr>
 <a:t>O and x</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="4500" b="1" baseline="30000" dirty="0">
 <a:solidFill>
@@ -3540,12 +3417,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </a:rPr>
 <a:t>Water is H</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" baseline="-40000" dirty="0">
 <a:solidFill>
@@ -3557,12 +3428,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" dirty="0">
 <a:solidFill>
@@ -3595,12 +3460,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </a:rPr>
 <a:t>Compare x</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" baseline="30000" dirty="0">
 <a:solidFill>
@@ -3612,12 +3471,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" dirty="0">
 <a:solidFill>
@@ -3629,12 +3482,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 </a:rPr>
 <a:t> with x</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="4600"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3500" baseline="-40000" dirty="0">
 <a:solidFill>
@@ -3775,7 +3622,7 @@ exports[`pins all six Chalkboard slide XML bytes > slide 2 1`] = `
 
 exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 {
-  "sha256": "0493dc2ca43b60e69415e98b3858840b1e79fa985c30fbcefbebf15d45dbbdef",
+  "sha256": "590f357e20b952ded62a3606d2ce2cc6c12e4feef4ccfd1ef816451f45f9f73d",
   "xml": "<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
 <p:cSld name="Slide 3">
@@ -4024,9 +3871,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 </a:rPr>
 <a:t>Investigating H</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3900" b="1" baseline="-40000" dirty="0">
 <a:solidFill>
@@ -4038,9 +3882,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3900" b="1" dirty="0">
 <a:solidFill>
@@ -4052,9 +3893,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 </a:rPr>
 <a:t>O and x</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3900" b="1" baseline="30000" dirty="0">
 <a:solidFill>
@@ -4066,9 +3904,6 @@ exports[`pins all six Chalkboard slide XML bytes > slide 3 1`] = `
 </a:rPr>
 <a:t>2</a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="3900" b="1" dirty="0">
 <a:solidFill>

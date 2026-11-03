@@ -159,12 +159,6 @@ exports[`exports explicit fitted sizes and proportional spacing for dense title 
 <a:t>Observe the different kinds of small bodies in the Solar System and compare their motion.
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="2550"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="1650" dirty="0">
 <a:solidFill>
@@ -177,12 +171,6 @@ exports[`exports explicit fitted sizes and proportional spacing for dense title 
 <a:t>Observe the different kinds of small bodies in the Solar System and compare their motion.
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="2550"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="1650" dirty="0">
 <a:solidFill>
@@ -195,12 +183,6 @@ exports[`exports explicit fitted sizes and proportional spacing for dense title 
 <a:t>Observe the different kinds of small bodies in the Solar System and compare their motion.
 </a:t>
 </a:r>
-<a:pPr indent="0" marL="0">
-<a:lnSpc>
-<a:spcPts val="2550"/>
-</a:lnSpc>
-<a:buNone/>
-</a:pPr>
 <a:r>
 <a:rPr lang="en-US" sz="1650" dirty="0">
 <a:solidFill>
