@@ -18,6 +18,8 @@ describe('fitWithin', () => {
 describe('compressImageForExport', () => {
   let loads: boolean | 'stalled';
   let image: { onload: (() => void) | null; onerror: (() => void) | null };
+  // Passing the instance to a function records it without aliasing `this` to a variable (no-this-alias).
+  const remember = (instance: typeof image) => { image = instance; };
   let size: { width: number; height: number };
   const drawImage = vi.fn();
   const fillRect = vi.fn();
@@ -37,7 +39,7 @@ describe('compressImageForExport', () => {
       crossOrigin = '';
       onload: (() => void) | null = null;
       onerror: (() => void) | null = null;
-      set src(_: string) { image = this; if (loads === 'stalled') return; queueMicrotask(() => (loads ? this.onload?.() : this.onerror?.())); }
+      set src(_: string) { remember(this); if (loads === 'stalled') return; queueMicrotask(() => (loads ? this.onload?.() : this.onerror?.())); }
     });
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(() => context as never);
     vi.spyOn(HTMLCanvasElement.prototype, 'toDataURL').mockReturnValue('data:image/jpeg;base64,/9j/COMPRESSED');
