@@ -87,7 +87,22 @@ it('announces only real stage text and cycles decorative badge chips without pro
   expect(container.textContent).not.toMatch(/\d+\s*%|almost|complete|finished/i);
   expect(screen.queryByRole('progressbar')).toBeNull();
   const parts = ['Review', 'Motivation', 'Lesson Presentation', 'Discussion', 'Activities', 'Assessment'];
+  const lit = (part: string) => screen.getByText(part).classList.contains('text-white');
+  const pulsing = () => parts.filter(part => screen.getByText(part).className.includes('home-chip-pulse'));
+  // The chips light one at a time, so a panel that lit everything at once (or never) would fail here.
+  expect(parts.map(lit)).toEqual([true, false, false, false, false, false]);
+  expect(pulsing()).toEqual(['Review']);
+  act(() => { vi.advanceTimersByTime(1399); });
+  expect(parts.map(lit)).toEqual([true, false, false, false, false, false]);
+  for (let count = 2; count <= parts.length; count++) {
+    act(() => { vi.advanceTimersByTime(count === 2 ? 1 : 1400); });
+    expect(parts.map(lit)).toEqual(parts.map((_, index) => index < count));
+    expect(pulsing()).toEqual([parts[count - 1]]);
+  }
+  // Once every chip is lit they stay lit and the last one keeps pulsing until generation ends.
   act(() => { vi.advanceTimersByTime(20000); });
+  expect(parts.every(lit)).toBe(true);
+  expect(pulsing()).toEqual(['Assessment']);
   for (const part of parts) {
     const chip = screen.getByText(part);
     expect(chip.classList.contains(getPartBadgeInfo(part).bg)).toBe(true);

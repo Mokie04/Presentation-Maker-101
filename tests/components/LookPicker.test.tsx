@@ -49,12 +49,31 @@ it('closes on Escape with focus restored and on outside pointer press', () => {
   fireEvent.click(trigger); fireEvent.pointerDown(screen.getByRole('button', { name: 'Outside' }));
   expect(screen.queryByRole('radiogroup')).toBeNull();
 });
-it('leaves arrow keys to the native named radio group (browser verifies the actual selection)', () => {
-  render(<Picker />); fireEvent.click(screen.getByRole('button', { name: /Look:/ }));
-  const radio = screen.getByRole('radio', { name: 'Sayuna Classic' });
-  expect(radio).toBe(document.activeElement);
-  expect(fireEvent.keyDown(radio, { key: 'ArrowDown' })).toBe(true);
-  expect((radio as HTMLInputElement).name).toBe((screen.getByRole('radio', { name: 'Test Look' }) as HTMLInputElement).name);
+it('leaves arrow keys to the native radio group and handles the selection the browser then makes', () => {
+  // jsdom does not implement native arrow navigation, so this pins what the browser relies on and what follows it:
+  // one named group with exactly one checked radio, keys that are never intercepted, and the change an arrow key
+  // produces (the browser checks the next radio and fires click and change) updating the look and closing the popover.
+  const onChange = vi.fn();
+  function Spy() {
+    const [themeId, setThemeId] = useState('sayuna-classic');
+    return <main><LookPicker themeId={themeId} onChange={id => { onChange(id); setThemeId(id); }} slide={slide} index={1} total={3} /></main>;
+  }
+  render(<Spy />); fireEvent.click(screen.getByRole('button', { name: /Look:/ }));
+  const radios = screen.getAllByRole('radio') as HTMLInputElement[];
+  expect(radios).toHaveLength(2);
+  expect(new Set(radios.map(radio => radio.name)).size).toBe(1);
+  expect(radios.filter(radio => radio.checked).map(radio => radio.value)).toEqual(['sayuna-classic']);
+  expect(radios.every(radio => !radio.disabled)).toBe(true);
+  const current = screen.getByRole('radio', { name: 'Sayuna Classic' });
+  expect(current).toBe(document.activeElement);
+  for (const key of ['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft']) expect(fireEvent.keyDown(current, { key })).toBe(true);
+  expect(onChange).not.toHaveBeenCalled();
+  // What the browser does for ArrowDown: it checks the next radio, which fires click and change on it.
+  fireEvent.click(screen.getByRole('radio', { name: 'Test Look' }));
+  expect(onChange).toHaveBeenCalledTimes(1);
+  expect(onChange).toHaveBeenCalledWith('test-look');
+  expect(screen.queryByRole('radiogroup', { name: 'Look' })).toBeNull();
+  expect(screen.getByRole('button', { name: 'Look: Test Look' })).toBe(document.activeElement);
 });
 it('has no axe violations with the non-modal popover open (jsdom contrast excluded)', async () => {
   render(<Picker />); fireEvent.click(screen.getByRole('button', { name: /Look:/ }));

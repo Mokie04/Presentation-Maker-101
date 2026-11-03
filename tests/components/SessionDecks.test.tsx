@@ -148,19 +148,33 @@ it.each([
   expect(batchCount).toBe(0);
 });
 it('exports and previews the active session', async () => {
+  // Each session gets its own slides, so exporting or previewing the other session's deck would fail below.
+  const titles: Record<string, string[]> = { 'Session 1': ['Roots', 'Leaves'], 'Session 2': ['Fruits', 'Seeds'] };
+  generate.mockImplementation(async (_url, init) => {
+    const { session } = JSON.parse(String(init?.body)) as { session: string };
+    return Response.json({ ...presentation, topic: `Plants ${session}`, slides: titles[session].map((title, index) => (
+      { slideNumber: index + 1, title, part: 'Discussion', contentPoints: [title], visualDescription: '' })) });
+  });
   await open(); await addSecond();
+  const exportedTitles = () => (exports[exports.length - 1].presentationData as { topic: string; slides: { title: string }[] });
   for (const session of ['Session 2', 'Session 1']) {
+    const other = session === 'Session 1' ? 'Session 2' : 'Session 1';
     fireEvent.click(screen.getByRole('tab', { name: session }));
     fireEvent.click(screen.getByRole('button', { name: 'Download PowerPoint' }));
     await screen.findByRole('button', { name: 'Download PowerPoint' });
     expect(exports[exports.length - 1].session).toBe(session);
+    expect(exportedTitles().slides.map(slide => slide.title)).toEqual(titles[session]);
+    expect(exportedTitles().topic).toBe(`Plants ${session}`);
     expect(filenames[filenames.length - 1]).toContain(session.toLowerCase().replace(' ', '_'));
     fireEvent.click(screen.getByRole('button', { name: 'Download Outline' }));
     await screen.findByRole('button', { name: 'Download Outline' });
     expect(exports[exports.length - 1].session).toBe(session);
+    expect(exportedTitles().slides.map(slide => slide.title)).toEqual(titles[session]);
     fireEvent.click(screen.getByRole('button', { name: 'Preview' }));
     const slideshow = screen.getByRole('dialog');
     expect(within(slideshow).getByText(session, { exact: false })).toBeTruthy();
+    expect(within(slideshow).getAllByText(titles[session][0]).length).toBeGreaterThan(0);
+    expect(within(slideshow).queryByText(titles[other][0])).toBeNull();
     fireEvent.keyDown(slideshow, { key: 'Escape' });
   }
 });
