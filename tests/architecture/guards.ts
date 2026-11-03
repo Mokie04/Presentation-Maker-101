@@ -199,12 +199,34 @@ function relativeLinks(text: string): string[] {
   return links;
 }
 
-/** Missing backticked paths and broken relative links in one document, resolved from the repository root. */
+/**
+ * Machine-specific absolute paths in a document (a home folder, a temporary directory, a Windows user folder).
+ * They only resolve on the author's computer, so a link to one passes locally and fails in a clean checkout.
+ * A path that merely contains such a folder name (src/components/home/...) is not machine-specific: the
+ * match must start the path, not continue an earlier segment.
+ */
+const machinePath = /`?(?<![\w.~-])((?:\/(?:Users|private|tmp|home|var|root|mnt)\/|[A-Za-z]:[\\/](?:Users|Documents and Settings)[\\/])[^\s)`'"\]]*)`?/g;
+export function machinePaths(text: string): string[] {
+  const found = new Set<string>();
+  for (const [, token] of Array.from(text.matchAll(machinePath))) found.add(token.replace(/[.,;:]+$/, ''));
+  return Array.from(found);
+}
+
+/** Missing backticked paths, broken relative links and machine-specific paths in one document, resolved from the repository root. */
 export function checkDocument(document: string, text: string, root: string, exists: (file: string) => boolean = existsSync): string[] {
   const problems: string[] = [];
   for (const file of backtickedPaths(text)) if (!exists(path.resolve(root, file))) problems.push(`${document}: \`${file}\` does not exist`);
+  const machine = machinePaths(text);
   for (const link of relativeLinks(text)) {
+    if (/^(?:\/|[A-Za-z]:[\\/])/.test(link)) {
+      // Machine paths are reported once below; any other absolute link would also break outside this checkout.
+      if (!machine.some((found) => link.startsWith(found))) problems.push(`${document}: link (${link}) is an absolute path; use a relative link`);
+      continue;
+    }
     if (!exists(path.resolve(root, path.dirname(document), link))) problems.push(`${document}: link (${link}) does not resolve`);
+  }
+  for (const found of machine) {
+    problems.push(`${document}: machine-specific path (${found}) is not portable; describe the evidence in words or keep it in the repository`);
   }
   return problems;
 }

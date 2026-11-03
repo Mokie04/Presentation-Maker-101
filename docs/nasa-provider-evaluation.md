@@ -180,7 +180,7 @@ Preservation hashes (SHA-256, checked before and after):
 | tests/lib/providers/nasa-provider.test.ts | 10afafe354a702ff6e252ca413b5ce5ae50e955b28d2b7fedc1f14be4c62018d |
 | docs/nasa-provider.md | adf08072b50f71dc5f45b88364a1eb56558bf7ec089613aa044d5198de80d3e4 |
 
-Temporary local runner, captured responses, and report-generation script are outside the repository in `/tmp/nasa-evaluation-oCIcPl/` (ephemeral); no image files were produced. The report retains the IDs, titles, source URLs, credits, response facts, and complete call ledger needed to understand this result. No code changed, so tests/build were not rerun for this documentation-only slice. Final checks: file hashes, Git scope/staging status, report completeness, and report whitespace.
+Temporary local runner, captured responses, and report-generation script are outside the repository in a temporary local directory (ephemeral); no image files were produced. The report retains the IDs, titles, source URLs, credits, response facts, and complete call ledger needed to understand this result. No code changed, so tests/build were not rerun for this documentation-only slice. Final checks: file hashes, Git scope/staging status, report completeness, and report whitespace.
 
 ---
 
@@ -243,4 +243,4 @@ The next slice must still check both subject and individual slide topic; non-sci
 
 Files modified in this repair: `src/lib/providers/nasa-provider.ts`, `tests/lib/providers/nasa-provider.test.ts`, `docs/nasa-provider.md`, and this append-only follow-up in `docs/nasa-provider-evaluation.md`. Pre-existing uncommitted work was preserved; all four remain uncommitted. No routing, UI, exports, fallback policy, dependencies, production configuration, commit, push or deployment changes.
 
-Local evidence is ephemeral under `/tmp/nasa-repair-umtQP4/`: `evidence.json`, `run.cjs`, pre-turn snapshots, and `selected-1.jpg` through `selected-4.jpg` in the table's order. The ledger above retains their source URLs and measured results. No additional repository artifacts were created.
+Local evidence is ephemeral under a temporary local directory: `evidence.json`, `run.cjs`, pre-turn snapshots, and `selected-1.jpg` through `selected-4.jpg` in the table's order. The ledger above retains their source URLs and measured results. No additional repository artifacts were created.

@@ -23,7 +23,7 @@ fixture assertions remain intact.
 
 External evidence root (not committed):
 
-    /Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/phase4b
+    a folder on the developer's workstation
 
 main/, branch/ and byte-identity.json contain artifacts and hashes. Temporary
 capture tests and render-harness modifications were removed/restored before final

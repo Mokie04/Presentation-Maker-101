@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { backtickedPaths, checkAdrIndex, checkDocument, listFiles, readAdrs, readAdrStatus, toPosix } from './guards';
+import { backtickedPaths, checkAdrIndex, checkDocument, listFiles, machinePaths, readAdrs, readAdrStatus, toPosix } from './guards';
 
 const root = path.resolve('.');
 const documents = ['ARCHITECTURE.md', 'GLOSSARY.md', 'README.md', 'THIRD_PARTY_NOTICES.md',
@@ -40,6 +40,35 @@ describe('documentation checker self-test', () => {
   it('reports a broken relative link and skips web and anchor links', () => {
     const text = '[ok](adr/0001-real.md#context) [web](https://example.com) [here](#top) [broken](adr/0099-gone.md)';
     expect(checkDocument('docs/x.md', text, root, exists)).toEqual(['docs/x.md: link (adr/0099-gone.md) does not resolve']);
+  });
+
+  it('reports machine-specific paths in links and text even when the file exists on this computer', () => {
+    // Every path "exists": the rule must not depend on the author's disk, which is how 25 such links reached CI.
+    const everything = () => true;
+    const text = [
+      '[evidence](/Users/someone/.codex/visualizations/run-1/summary.json)',
+      'Run folder: `/tmp/run-1/` and /private/tmp/claude-501/scratch/notes.md.',
+      'Windows: C:\\Users\\me\\Desktop\\capture.png',
+    ].join('\n');
+    const reason = 'is not portable; describe the evidence in words or keep it in the repository';
+    expect(checkDocument('docs/x.md', text, root, everything)).toEqual([
+      `docs/x.md: machine-specific path (/Users/someone/.codex/visualizations/run-1/summary.json) ${reason}`,
+      `docs/x.md: machine-specific path (/tmp/run-1/) ${reason}`,
+      `docs/x.md: machine-specific path (/private/tmp/claude-501/scratch/notes.md) ${reason}`,
+      `docs/x.md: machine-specific path (C:\\Users\\me\\Desktop\\capture.png) ${reason}`,
+    ]);
+  });
+
+  it('does not flag repository paths that merely contain a home or tmp folder name', () => {
+    const text = 'See src/components/home/HomeHero.tsx, public/tmp/x.png and docs/home/notes.md.';
+    expect(machinePaths(text)).toEqual([]);
+    expect(checkDocument('docs/x.md', text, root, () => true)).toEqual([]);
+  });
+
+  it('reports an absolute link that is not a machine path', () => {
+    expect(checkDocument('docs/x.md', '[x](/docs/adr/0001-real.md)', root, () => true)).toEqual([
+      'docs/x.md: link (/docs/adr/0001-real.md) is an absolute path; use a relative link',
+    ]);
   });
 
   it('reports an ADR missing from the index, a stale row and a disagreeing status', () => {

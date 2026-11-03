@@ -23,7 +23,7 @@ retain their prior behavior. No fit/split/schema/picker/engine source changed.
 
 External evidence root (not committed):
 
-    /Users/johnnavarro/.codex/visualizations/2026/10/26/01a17661-7993-7300-86ae-70e4dbd458f7/phase4c
+    a folder on the developer's workstation
 
 main/, branch/, byte-identity.json and contrast.json record captures and hashes.
 The temporary capture test was removed; render harness source was restored exactly.
