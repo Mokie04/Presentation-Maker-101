@@ -130,6 +130,27 @@ it('preserves existing teacher text when an oversized file is rejected', () => {
   expect(screen.getByLabelText('Current file').textContent).toBe('original.txt');
   expect(fetchMock).not.toHaveBeenCalled();
 });
+it.each([
+  ['a server rejection', () => Promise.resolve(Response.json({ error: 'The document could not be read.' }, { status: 422 })), 'The document could not be read.'],
+  ['a network failure', () => Promise.reject(new Error('Network down')), 'Network down'],
+])('restores the previous lesson after %s', async (_case, response, message) => {
+  const { fetchMock, choose, busy } = setup('Teacher text', 'original.txt');
+  fetchMock.mockImplementationOnce(response);
+  await choose('broken.pdf');
+  expect(screen.getByRole('alert').textContent).toBe(message);
+  expect(screen.getByLabelText('Current lesson').textContent).toBe('Teacher text');
+  expect(screen.getByLabelText('Current file').textContent).toBe('original.txt');
+  expect(busy()).toBe('false');
+});
+it('restores the lesson from before the first of two failed uploads', async () => {
+  const { fetchMock, choose } = setup('Teacher text', 'original.txt');
+  const older = pendingUpload('fetch', 'Older lesson', 'older.txt');
+  fetchMock.mockImplementationOnce(older.request)
+    .mockImplementationOnce(() => Promise.resolve(Response.json({ error: 'Unreadable.' }, { status: 422 })));
+  await choose('older.txt'); await choose('newer.pdf');
+  expect(screen.getByLabelText('Current lesson').textContent).toBe('Teacher text');
+  expect(screen.getByLabelText('Current file').textContent).toBe('original.txt');
+});
 it('resets the file input synchronously and permits selecting the same file after failure', async () => {
   const { input, fetchMock } = setup();
   const pending = deferred<Response>();

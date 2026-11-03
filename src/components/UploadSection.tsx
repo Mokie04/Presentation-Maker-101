@@ -50,6 +50,7 @@ export function UploadSection({
   const manualId = useId();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadRequest = useRef<AbortController | null>(null);
+  const lessonBeforeUpload = useRef({ text: '', name: '' });
   useEffect(() => () => {
     uploadRequest.current?.abort();
     uploadRequest.current = null;
@@ -72,6 +73,8 @@ export function UploadSection({
       setUploadError(uploadTooLargeMessage(file.size));
       return;
     }
+    // Remember the lesson from before this run of uploads so a failed upload can put it back.
+    if (!uploadRequest.current) lessonBeforeUpload.current = { text: extractedText, name: fileName };
     uploadRequest.current?.abort();
     const controller = new AbortController();
     uploadRequest.current = controller;
@@ -107,6 +110,7 @@ export function UploadSection({
       if (uploadRequest.current === controller && !controller.signal.aborted) {
         const msg = err instanceof Error ? err.message : 'Error uploading file.';
         setUploadError(msg);
+        onUploadSuccess(lessonBeforeUpload.current.text, lessonBeforeUpload.current.name);
       }
     } finally {
       if (uploadRequest.current === controller) {
