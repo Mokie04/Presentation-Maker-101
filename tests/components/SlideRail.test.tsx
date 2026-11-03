@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { SlideRail } from '@/components/workspace/SlideRail';
 import { navigateSlides } from '@/components/workspace/slide-navigation';
-import { useSlideSelection } from '@/lib/deck/use-slide-selection';
+import { useTestSelection } from '../helpers/selection-harness';
 import type { SlideViewProps } from '@/components/SlideView';
 import type { SlideData } from '@/types/presentation';
 
@@ -30,7 +30,7 @@ afterEach(() => {
 });
 
 function RailKeyboard() {
-  const selection = useSlideSelection(ids);
+  const selection = useTestSelection(ids);
   return <div onKeyDown={(event) => navigateSlides(event, selection)}>
     <SlideRail slides={slides} slideIds={ids} selectedId={selection.selectedId} onSelect={selection.selectSlide} total={3} />
     <input aria-label="Other input" />

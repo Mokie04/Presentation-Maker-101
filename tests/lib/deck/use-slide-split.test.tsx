@@ -3,15 +3,15 @@ import { automaticImageResponse } from '../../helpers/image-responses';
 import { afterEach, expect, it, vi } from 'vitest';
 import { act, cleanup, renderHook } from '@testing-library/react';
 import { useSlideDeck } from '@/lib/deck/use-slide-deck';
-import { reconcileSelection, useSlideSelection } from '@/lib/deck/use-slide-selection';
+import { reconcileSelection } from '@/lib/deck/slide-selection';
 const presentation = { subject: 'Science', topic: 'Water', originalWriters: 'Teacher', slides: ['Title', 'Water', 'Next'].map((title, index) => ({ slideNumber: index + 1, part: 'Discussion', title, contentPoints: Array.from({ length: 5 }, () => 'Observe the water and record evidence about the changes in our classroom.'), visualDescription: 'Water' })) };
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 it('keeps the original selected without a transient continuation render, then selects a normal duplicate', () => {
   vi.stubGlobal('fetch', vi.fn(() => new Promise(() => {})));
   const seen: (number | null)[] = [];
   const { result } = renderHook(() => {
-    const deck = useSlideDeck(); const selection = useSlideSelection(deck.slideIds, deck.splitSelection);
-    seen.push(selection.selectedId); return { deck, selection };
+    const deck = useSlideDeck();
+    seen.push(deck.selection.selectedId); return { deck, selection: deck.selection };
   });
   act(() => result.current.deck.loadPresentation(presentation));
   act(() => result.current.selection.selectSlide(1));
