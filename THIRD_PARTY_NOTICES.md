@@ -18,7 +18,7 @@ The TTF files in `src/app/fonts/source/` are unmodified upstream releases; the a
 | Asset | Files | Licence |
 |---|---|---|
 | Mokie mascot | `public/mascot/mokie-360.webp`, `public/mascot/mokie-640.webp` | Supplied by the product owner; source and licence to be confirmed by the owner. |
-| Sayuna logo and app icons | `public/sayuna-logo.png`, `src/app/icon.png`, `src/app/apple-icon.png`, `src/app/favicon.ico` | Supplied by the product owner; source and licence to be confirmed by the owner. |
+| Sayuna logo and app icons | `public/sayuna-logo.png` (full-size original), `public/sayuna-logo-104.webp` and `public/sayuna-logo-40.webp` (resized copies for the header and footer), `src/app/icon.png`, `src/app/apple-icon.png`, `src/app/favicon.ico` | Supplied by the product owner; source and licence to be confirmed by the owner. |
 
 ## npm packages
 

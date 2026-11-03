@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex items-center justify-center gap-2">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/sayuna-logo.png?v=3"
+            src="/sayuna-logo-40.webp"
             alt="Sayuna AI"
             className="w-5 h-5 object-contain inline-block drop-shadow-xs bg-transparent"
           />
