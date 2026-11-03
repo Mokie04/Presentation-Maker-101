@@ -8,6 +8,7 @@ The following documents preserve the decisions and evidence from earlier work. T
 |---|---|
 | [Architecture roadmap](architecture-roadmap.md) | Implementation items 2–9 completed; making `verify` required in GitHub branch protection remains a user action ([steps](branch-protection.md)). |
 | [Code review 2026-10-26](code-review-2026-10-26.md) | Findings with their fix status; open items are marked. |
+| [Regression review 2026-11](regression-review-2026-11.md) | Review of PRs 44–58; Major findings fixed, Minor findings open. |
 | [Slide deck roadmap](slide-deck-roadmap.md) | Reducer and hook migration completed. |
 | [Image credit roadmap](image-credit-roadmap.md) | Shared credit and renderer migration completed. |
 | [Route module roadmap](route-module-roadmap.md) | Route policy and migration phases 1–3 completed. |
