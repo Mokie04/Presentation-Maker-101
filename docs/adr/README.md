@@ -33,6 +33,7 @@ Dates are recorded by month or day. Accepted describes the current design; Propo
 | [0028](0028-export-picture-cover.md) | Accepted | 43 | Aspect-preserving cover sizing for ordinary export pictures |
 | [0029](0029-export-integrity.md) | Accepted | 44 | Export integrity: text, pictures, credits and package |
 | [0030](0030-input-hardening.md) | Accepted | 45, 46 | Input hardening: validation, document/provider bounds and route policy |
+| [0031](0031-ui-state-sweep.md) | Accepted | 57 | UI and state sweep: empty-deck guards, focus and key rules, uploads, accessibility, overflow cache |
 
 Number 0021 was reserved for the saved-lesson work and was never written.
 
