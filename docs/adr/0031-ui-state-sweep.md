@@ -12,7 +12,7 @@ The 2026-10-26 review (`docs/code-review-2026-10-26.md`, items U1 to U8 and T1) 
 
 Fix each bug with the smallest change, test first, and adopt these rules:
 
-- **Last slide.** Delete Slide is disabled when one slide remains (panel and sorter agree). Preview and the downloads are disabled with no slides, and the slideshow only listens for keys while a slide is current.
+- **Last slide.** Delete Slide is disabled when one slide remains (the slide actions under the stage and the sorter agree; the actions moved out of the panel later). Preview and the downloads are disabled with no slides, and the slideshow only listens for keys while a slide is current.
 - **Dialogs.** Escape is handled at document level while a dialog is open and closes only the topmost layer; during generation it cancels through the same abort path as the Cancel button. After Start over, focus moves to the home heading.
 - **Focus recovery.** The workspace recovers focus for an element that was removed from the document or became disabled (browsers drop focus from a disabled control a frame later, which jsdom does not show). The download buttons use `aria-disabled` while busy, so they keep focus. The view switch only arms its focus move when the view really changes. (Amended by the 2026-11 regression review.)
 - **Navigation keys.** Home, End, PageUp, PageDown and the arrows move between slides only when the target is the page, the stage or the rail, never on buttons, links, tabs or form fields.
