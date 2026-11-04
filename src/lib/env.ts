@@ -15,6 +15,8 @@ const imageProviderSchema = z.object({
   IMAGE_PROVIDER_MODEL: z.string().default('dall-e-3'),
   IMAGE_PROVIDER_SIZE: z.string().regex(/^\d+x\d+$/, 'IMAGE_PROVIDER_SIZE must be a widthxheight size').optional(),
   IMAGE_SOURCE: z.enum(['ai', 'pexels', 'auto']).default('auto'),
+  IMAGE_PROVIDER_KIND: z.enum(['openai-compatible', 'invoke-api']).default('openai-compatible'),
+  IMAGE_PROVIDER_ASPECT_RATIO: z.string().regex(/^\d+:\d+$/, 'IMAGE_PROVIDER_ASPECT_RATIO must look like 16:9').default('16:9'),
 });
 
 const pexelsSchema = z.object({
@@ -47,6 +49,14 @@ export function readTextProviderConfig(raw: RawEnv) {
 
 export function readImageProviderConfig(raw: RawEnv) {
   const data = parseConfig(imageProviderSchema, raw);
+  if (data.IMAGE_PROVIDER_KIND === 'invoke-api') {
+    // The OpenAI-compatible defaults would send the key to the wrong host, so nothing is assumed here.
+    const missing = (['IMAGE_PROVIDER_BASE_URL', 'IMAGE_PROVIDER_MODEL'] as const).find((name) => !raw[name]);
+    if (missing) throw new Error(`Environment validation error: ${missing} is required when IMAGE_PROVIDER_KIND is invoke-api`);
+    if (new URL(data.IMAGE_PROVIDER_BASE_URL).protocol !== 'https:') {
+      throw new Error('Environment validation error: IMAGE_PROVIDER_BASE_URL must use https when IMAGE_PROVIDER_KIND is invoke-api');
+    }
+  }
   const acceptedSizes = data.IMAGE_PROVIDER_MODEL === 'dall-e-3'
     ? ['1792x1024', '1024x1024', '1024x1792']
     : data.IMAGE_PROVIDER_MODEL.startsWith('gpt-image')
@@ -61,6 +71,8 @@ export function readImageProviderConfig(raw: RawEnv) {
     model: data.IMAGE_PROVIDER_MODEL,
     size,
     source: data.IMAGE_SOURCE,
+    kind: data.IMAGE_PROVIDER_KIND,
+    aspectRatio: data.IMAGE_PROVIDER_ASPECT_RATIO,
   };
 }
 
