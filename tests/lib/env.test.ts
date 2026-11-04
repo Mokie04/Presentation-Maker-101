@@ -55,6 +55,7 @@ describe('readImageProviderConfig', () => {
   it('uses the existing defaults without text settings', () => {
     expect(readImageProviderConfig({})).toEqual({
       baseUrl: 'https://api.openai.com/v1', apiKey: 'not-configured', model: 'dall-e-3', size: '1792x1024', source: 'auto',
+      kind: 'openai-compatible', aspectRatio: '16:9',
     });
   });
 
@@ -62,7 +63,8 @@ describe('readImageProviderConfig', () => {
     expect(readImageProviderConfig({
       ...invalidEnv, IMAGE_PROVIDER_BASE_URL: 'https://images.example/v1',
       IMAGE_PROVIDER_API_KEY: 'test-image-key', IMAGE_PROVIDER_MODEL: 'image-model', IMAGE_SOURCE: source,
-    })).toEqual({ baseUrl: 'https://images.example/v1', apiKey: 'test-image-key', model: 'image-model', size: '1024x576', source });
+    })).toEqual({ baseUrl: 'https://images.example/v1', apiKey: 'test-image-key', model: 'image-model', size: '1024x576', source,
+      kind: 'openai-compatible', aspectRatio: '16:9' });
   });
 
   it('continues to accept empty image key and model strings', () => {
@@ -80,6 +82,36 @@ describe('readImageProviderConfig', () => {
     expect(() => readImageProviderConfig({ ...invalidEnv, IMAGE_PROVIDER_BASE_URL: undefined })).toThrow(
       'Environment validation error: IMAGE_SOURCE: Invalid option: expected one of "ai"|"pexels"|"auto"'
     );
+  });
+});
+
+describe('readImageProviderConfig invoke-api kind', () => {
+  const invoke = {
+    IMAGE_PROVIDER_KIND: 'invoke-api', IMAGE_PROVIDER_BASE_URL: 'https://runtime.example.test',
+    IMAGE_PROVIDER_API_KEY: 'key', IMAGE_PROVIDER_MODEL: 'vendor.image-model-v1:1',
+  };
+
+  it('reads the kind and aspect ratio', () => {
+    expect(readImageProviderConfig({ ...invoke, IMAGE_PROVIDER_ASPECT_RATIO: '3:2' }))
+      .toMatchObject({ kind: 'invoke-api', aspectRatio: '3:2', baseUrl: 'https://runtime.example.test', model: 'vendor.image-model-v1:1' });
+    expect(readImageProviderConfig(invoke)).toMatchObject({ aspectRatio: '16:9' });
+  });
+
+  it('requires an explicit base URL and model instead of the OpenAI-compatible defaults', () => {
+    expect(() => readImageProviderConfig({ ...invoke, IMAGE_PROVIDER_BASE_URL: undefined }))
+      .toThrow('IMAGE_PROVIDER_BASE_URL is required when IMAGE_PROVIDER_KIND is invoke-api');
+    expect(() => readImageProviderConfig({ ...invoke, IMAGE_PROVIDER_MODEL: undefined }))
+      .toThrow('IMAGE_PROVIDER_MODEL is required when IMAGE_PROVIDER_KIND is invoke-api');
+  });
+
+  it('requires https for the key-bearing base URL', () => {
+    expect(() => readImageProviderConfig({ ...invoke, IMAGE_PROVIDER_BASE_URL: 'http://runtime.example.test' }))
+      .toThrow('IMAGE_PROVIDER_BASE_URL must use https when IMAGE_PROVIDER_KIND is invoke-api');
+  });
+
+  it('rejects an unknown kind and a malformed aspect ratio', () => {
+    expect(() => readImageProviderConfig({ ...invoke, IMAGE_PROVIDER_KIND: 'other' })).toThrow('IMAGE_PROVIDER_KIND');
+    expect(() => readImageProviderConfig({ ...invoke, IMAGE_PROVIDER_ASPECT_RATIO: 'wide' })).toThrow('IMAGE_PROVIDER_ASPECT_RATIO');
   });
 });
 

@@ -10,7 +10,7 @@ const construction = vi.hoisted(() => {
   return { error, create: vi.fn(function () { throw error; }) };
 });
 vi.mock('openai', () => ({ default: construction.create }));
-const imageConfig = { baseUrl: 'https://example.test/v1', apiKey: 'test-key', model: 'test-model', size: '1024x576', source: 'auto' as const };
+const imageConfig = { baseUrl: 'https://example.test/v1', apiKey: 'test-key', model: 'test-model', size: '1024x576', source: 'auto' as const, kind: 'openai-compatible' as const, aspectRatio: '16:9' };
 const description = 'Volcano eruption and lava';
 function client(generate = vi.fn().mockResolvedValue({ data: [{ b64_json: 'YWk=' }] })) {
   return { client: { images: { generate } } as unknown as OpenAI, generate };
