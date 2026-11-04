@@ -50,6 +50,26 @@ describe('Normal workspace', () => {
     expect(screen.getByTitle('Reset to New Upload')).toBeTruthy();
   });
 
+  it('shows the slide actions under the stage instead of the panel, only in Normal', async () => {
+    await openWorkspace();
+    const toolbar = screen.getByRole('toolbar', { name: 'Slide actions' });
+    const panel = screen.getByRole('complementary', { name: 'Slide settings' });
+    for (const name of ['Move slide 1 earlier', 'Move slide 1 later', 'Duplicate slide', '+ Add Slide', 'Delete Slide']) {
+      expect(within(toolbar).getByRole('button', { name })).toBeTruthy();
+      expect(within(panel).queryByRole('button', { name })).toBeNull();
+    }
+    expect(stage().compareDocumentPosition(toolbar) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(toolbar.compareDocumentPosition(screen.getByRole('button', { name: 'Previous slide' })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(within(toolbar).getByRole('button', { name: 'Move slide 1 earlier' }).hasAttribute('disabled')).toBe(true);
+    expect(within(toolbar).getByRole('button', { name: 'Move slide 1 later' }).hasAttribute('disabled')).toBe(false);
+    fireEvent.keyDown(stage(), { key: 'End' });
+    const last = screen.getByRole('toolbar', { name: 'Slide actions' });
+    expect(within(last).getByRole('button', { name: 'Move slide 3 earlier' }).hasAttribute('disabled')).toBe(false);
+    expect(within(last).getByRole('button', { name: 'Move slide 3 later' }).hasAttribute('disabled')).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Slide sorter' }));
+    expect(screen.queryByRole('toolbar', { name: 'Slide actions' })).toBeNull();
+  });
+
   it('updates stage, panel and status when a thumbnail is selected', async () => {
     await openWorkspace(); selectSlide(2);
     expect(within(stage()).getByRole('heading', { name: 'Leaves' })).toBeTruthy();

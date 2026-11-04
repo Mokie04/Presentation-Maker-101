@@ -85,7 +85,7 @@ describe('Slide sorter workspace', () => {
     expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 2 of 4 · 4. DISCUSSION');
   });
 
-  it('moves the selected rail slide with Alt arrows and with the panel buttons', async () => {
+  it('moves the selected rail slide with Alt arrows and with the slide action buttons', async () => {
     await open();
     const rail = screen.getByRole('listbox');
     fireEvent.keyDown(rail, { key: 'ArrowDown', altKey: true });
