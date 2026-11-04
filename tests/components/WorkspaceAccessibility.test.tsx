@@ -45,7 +45,7 @@ it('recovers focus after deleting the focused sorter card or the selected slide 
   const remove = screen.getByRole('button', { name: 'Delete slide 1' }); remove.focus(); fireEvent.click(remove);
   expect(document.activeElement).toBe(screen.getByRole('listitem', { name: 'Slide 1: Leaves' }));
   fireEvent.click(screen.getByRole('button', { name: 'Normal' }));
-  const panelRemove = screen.getByRole('button', { name: 'Delete Slide' }); panelRemove.focus(); fireEvent.click(panelRemove);
+  const toolbarRemove = screen.getByRole('button', { name: 'Delete Slide' }); toolbarRemove.focus(); fireEvent.click(toolbarRemove);
   expect(document.activeElement).toBe(screen.getByRole('region', { name: 'Slide stage' }));
   expect(screen.getByRole('status', { name: '' }).textContent).toBe('Slide 1 of 1 · 4. DISCUSSION');
 });
@@ -108,6 +108,18 @@ it.each(['Next slide', 'Previous slide'])('moves focus to the stage when %s reac
   const button = screen.getByRole('button', { name }); button.focus();
   fireEvent.click(button); expect(document.activeElement).toBe(button);
   fireEvent.click(button);
+  expect(button.hasAttribute('disabled')).toBe(true);
+  expect(document.activeElement).toBe(screen.getByRole('region', { name: 'Slide stage' }));
+});
+it.each([
+  { name: 'Move slide 2 later', disabled: 'Move slide 3 later' },
+  { name: 'Move slide 2 earlier', disabled: 'Move slide 1 earlier' },
+])('moves focus to the stage when $name in the slide actions reaches the end of the deck', async ({ name, disabled }) => {
+  await open();
+  fireEvent.keyDown(screen.getByRole('region', { name: 'Slide stage' }), { key: 'ArrowDown' });
+  const toolbar = screen.getByRole('toolbar', { name: 'Slide actions' });
+  const button = within(toolbar).getByRole('button', { name }); button.focus(); fireEvent.click(button);
+  expect(within(toolbar).getByRole('button', { name: disabled })).toBe(button);
   expect(button.hasAttribute('disabled')).toBe(true);
   expect(document.activeElement).toBe(screen.getByRole('region', { name: 'Slide stage' }));
 });

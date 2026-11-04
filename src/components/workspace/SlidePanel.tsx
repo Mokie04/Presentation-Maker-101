@@ -4,10 +4,9 @@ import React, { useEffect, useId, useRef } from 'react';
 import { suggestSplitIndex } from '@/lib/slide-split';
 import { getSlideOverflow } from '@/lib/slide-fit';
 import { SlideFitNotice } from './SlideFitNotice';
-import { Trash2, Plus, X } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { normalizePart, PEDAGOGICAL_PARTS } from '@/lib/pedagogy';
 import { SlideImageControls } from '../SlideImageControls';
-import { SlideMoveButtons } from './SlideMoveButtons';
 import { useMediaQuery } from './use-media-query';
 import { DEFAULT_THEME, type SlideTheme } from '@/lib/themes';
 import type { SlideData } from '@/types/presentation';
@@ -27,16 +26,11 @@ export interface SlidePanelProps {
   onUpdateBullet: (slideId: number, bulletIndex: number, text: string) => void;
   onAddBullet: (slideId: number) => void;
   onDeleteBullet: (slideId: number, bulletIndex: number) => void;
-  onDeleteSlide: (slideId: number) => void;
   onRegenerateImage: (slideId: number, visualDescription: string) => void;
   onSelectImage?: (slideId: number, base64: string, metadata: ImageMetadata) => void;
-  onAddSlide: () => void;
   slideIndex?: number;
   originalWriters?: string;
   onSplit?: () => void;
-  totalSlides?: number;
-  onMoveSlide?: (slideId: number, toIndex: number) => void;
-  onDuplicateSlide?: (slideId: number) => void;
 }
 export function SlidePanel({
   slide,
@@ -52,16 +46,11 @@ export function SlidePanel({
   onUpdateBullet,
   onAddBullet,
   onDeleteBullet,
-  onDeleteSlide,
   onRegenerateImage,
   onSelectImage,
-  onAddSlide,
   slideIndex,
   originalWriters,
   onSplit,
-  totalSlides,
-  onMoveSlide,
-  onDuplicateSlide,
 }: SlidePanelProps) {
   const overflow = getSlideOverflow(slide, slideIndex ?? 0, originalWriters, theme);
   const split = overflow.body && onSplit && suggestSplitIndex(slide, slideIndex ?? 0, originalWriters, theme) !== null ? onSplit : undefined;
@@ -176,34 +165,6 @@ export function SlidePanel({
         onSelectImage={onSelectImage}
       />
       </details>
-
-      <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 pt-3">
-        {onMoveSlide && slideIndex !== undefined && totalSlides !== undefined && (
-          <SlideMoveButtons slideId={slideId} index={slideIndex} total={totalSlides} onMove={onMoveSlide} />
-        )}
-        <button
-          type="button"
-          aria-label="Delete Slide"
-          title={totalSlides === 1 ? 'Keep at least one slide' : 'Delete Slide'}
-          disabled={totalSlides === 1}
-          onClick={() => onDeleteSlide(slideId)}
-          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold text-rose-700 hover:bg-rose-50 transition-colors disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          <Trash2 className="w-3.5 h-3.5" />
-          Delete Slide
-        </button>
-        {onDuplicateSlide && <button type="button" onClick={() => onDuplicateSlide(slideId)}
-          className="rounded-lg border border-sky-200 px-3 py-2 text-xs font-bold text-sky-700 hover:bg-sky-50">
-          Duplicate slide
-        </button>}
-        <button
-          type="button"
-          onClick={() => onAddSlide()}
-          className="rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 text-xs font-bold text-sky-700 hover:bg-sky-100 transition-colors"
-        >
-          + Add Slide
-        </button>
-      </div>
     </aside>
   );
 }

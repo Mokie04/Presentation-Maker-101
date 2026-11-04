@@ -10,6 +10,7 @@ import { LookPicker } from './LookPicker';
 import { SlideRail } from './SlideRail';
 import { SlideStage } from './SlideStage';
 import { SlidePanel } from './SlidePanel';
+import { SlideActions } from './SlideActions';
 import { SlideSorter } from './SlideSorter';
 import { navigateSlides } from './slide-navigation';
 import { useMediaQuery } from './use-media-query';
@@ -157,8 +158,10 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
               aria-labelledby={sessionControls ? sessionTabId(selectedSession) : undefined} className="space-y-3">
             {view === 'normal' ? (
               selectedSlide ? (
-                <div className="grid min-w-0 gap-2.5 motion-reduce:[&_*]:animate-none motion-reduce:[&_*]:transition-none md:h-[min(760px,calc(100dvh-260px))] md:min-h-[520px] md:grid-cols-[188px_minmax(0,1fr)] md:grid-rows-[minmax(0,1fr)_minmax(0,1fr)] lg:min-h-[400px] lg:grid-cols-[188px_minmax(0,1fr)_300px] lg:grid-rows-[minmax(0,1fr)]">
-                  <div className="order-2 grid min-h-0 min-w-0 md:order-1 md:col-start-1 md:row-span-2 md:row-start-1 lg:row-span-1">
+                <div className="grid min-w-0 gap-2.5 motion-reduce:[&_*]:animate-none motion-reduce:[&_*]:transition-none md:grid-cols-[188px_minmax(0,1fr)] md:grid-rows-[var(--stage-row)_auto_var(--stage-row)] md:[--stage-row:calc((max(520px,min(760px,calc(100dvh_-_260px)))_-_0.625rem)_/_2)] lg:grid-cols-[188px_minmax(0,1fr)_300px] lg:grid-rows-[max(400px,min(760px,calc(100dvh-260px)))_auto]">
+                  {/* The stage rows keep their earlier height; the action row is added below the stage.
+                      Size containment stops the rail's list from stretching that auto row. */}
+                  <div className="order-2 grid min-h-0 min-w-0 md:order-1 md:col-start-1 md:row-span-3 md:row-start-1 md:[contain:size] lg:row-span-1">
                     <SlideRail theme={theme} slides={presentationData.slides} slideIds={slideIds} selectedId={selection.selectedId}
                       onSelect={selection.selectSlide} total={presentationData.slides.length} slideImages={slideImages}
                       onMove={moveSlide}
@@ -174,16 +177,19 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                       onPointDelete={index => deleteBullet(slideIds[selectedIndex], index)}
                       onPointAdd={() => addBullet(slideIds[selectedIndex])} />
                   </div>
-                  <div className="order-3 grid max-h-[520px] min-h-0 min-w-0 md:col-start-2 md:row-start-2 md:max-h-none lg:col-start-3 lg:row-start-1">
+                  <div className="order-1 min-w-0 md:order-2 md:col-start-2 md:row-start-2">
+                    {/* Remount per slide, as the panel does, so focus on a removed action still moves to the stage. */}
+                    <SlideActions key={selection.selectedId} slideId={slideIds[selectedIndex]} index={selectedIndex} total={presentationData.slides.length}
+                      onMove={moveSlide} onDuplicate={duplicateSlide} onAdd={() => addSlide(slideIds[selectedIndex])} onDelete={deleteSlide} />
+                  </div>
+                  <div className="order-3 grid max-h-[520px] min-h-0 min-w-0 md:col-start-2 md:row-start-3 md:max-h-none lg:col-start-3 lg:row-start-1">
                     <SlidePanel theme={theme} key={selection.selectedId} slide={selectedSlide} slideId={slideIds[selectedIndex]}
                       imageSectionOpen={imageSectionOpen} onImageSectionToggle={setImageSectionOpen}
                       slideImage={slideImages[selectedIndex]} isGeneratingImage={Boolean(generatingImages[selectedIndex])}
                       imageError={imageErrors[selectedIndex]} onUpdatePart={updatePart} onUpdateTitle={updateTitle}
                       onUpdateBullet={updateBullet} onAddBullet={addBullet} onDeleteBullet={deleteBullet}
-                      onDeleteSlide={deleteSlide} onAddSlide={() => addSlide(slideIds[selectedIndex])}
                       onRegenerateImage={regenerateImage} onSelectImage={selectLibraryImage}
-                      originalWriters={presentationData.originalWriters} slideIndex={selectedIndex} totalSlides={presentationData.slides.length}
-                      onMoveSlide={moveSlide} onDuplicateSlide={duplicateSlide} onSplit={splitSelected} />
+                      originalWriters={presentationData.originalWriters} slideIndex={selectedIndex} onSplit={splitSelected} />
                   </div>
                 </div>
               ) : (

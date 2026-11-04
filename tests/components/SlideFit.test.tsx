@@ -28,7 +28,7 @@ it('flags the rail, stage and panel, then removes all warnings when text fits', 
     <SlideRail slides={[current]} slideIds={[4]} selectedId={4} onSelect={vi.fn()} total={1} />
     <SlideStage slide={current} index={0} total={1} />
     <SlidePanel slide={current} slideIndex={0} slideId={4} onUpdateTitle={vi.fn()} onUpdateBullet={vi.fn()}
-      onAddBullet={vi.fn()} onDeleteBullet={vi.fn()} onDeleteSlide={vi.fn()} onRegenerateImage={vi.fn()} onAddSlide={vi.fn()} />
+      onAddBullet={vi.fn()} onDeleteBullet={vi.fn()} onRegenerateImage={vi.fn()} />
   </>;
   const view = render(show(slide));
   expect(screen.getByRole('option', { name: /Slide 1: Water/ }).getAttribute('aria-label')).toContain(' (text does not fit)');

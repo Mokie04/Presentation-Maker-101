@@ -9,7 +9,7 @@ function props(): SlidePanelProps {
     slide: { slideNumber: 4, part: 'Discussion', title: 'Roots', contentPoints: ['Water', 'Minerals'], visualDescription: 'A tree' },
     slideId: 31,
     onUpdatePart: vi.fn(), onUpdateTitle: vi.fn(), onUpdateBullet: vi.fn(), onAddBullet: vi.fn(),
-    onDeleteBullet: vi.fn(), onDeleteSlide: vi.fn(), onRegenerateImage: vi.fn(), onSelectImage: vi.fn(), onAddSlide: vi.fn(),
+    onDeleteBullet: vi.fn(), onRegenerateImage: vi.fn(), onSelectImage: vi.fn(),
   };
 }
 afterEach(cleanup);
@@ -37,27 +37,6 @@ describe('SlidePanel', () => {
     expect(screen.getByRole('button', { name: 'Remove bullet 1' })).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Remove bullet 2' }));
     expect(handlers.onDeleteBullet).toHaveBeenCalledWith(31, 1);
-  });
-
-  it('deletes the selected slide and offers adding a slide', () => {
-    const handlers = props();
-    render(<SlidePanel {...handlers} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Delete Slide' }));
-    fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
-    expect(handlers.onDeleteSlide).toHaveBeenCalledWith(31);
-    expect(handlers.onAddSlide).toHaveBeenCalledWith();
-  });
-
-  it('keeps the only slide and explains why deletion is unavailable', () => {
-    const handlers = props();
-    render(<SlidePanel {...handlers} totalSlides={1} />);
-    const remove = screen.getByRole('button', { name: 'Delete Slide' });
-    expect(remove.hasAttribute('disabled')).toBe(true);
-    expect(remove.getAttribute('title')).toBe('Keep at least one slide');
-    fireEvent.click(remove);
-    expect(handlers.onDeleteSlide).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole('button', { name: '+ Add Slide' }));
-    expect(handlers.onAddSlide).toHaveBeenCalledWith();
   });
 
   it.each(['Activity', 'Teacher reflection'])('keeps the noncanonical part %s selectable', (part) => {

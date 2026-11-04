@@ -54,8 +54,9 @@ it.each([true, false])('uses breakpoint-appropriate disclosure defaults (md=%s)'
   await open(); const panel = screen.getByRole('complementary', { name: 'Slide settings' });
   expect(within(panel).getByText('Slide details').closest('details')?.open).toBe(true);
   await waitFor(() => expect(within(panel).getByText('Image', { exact: true }).closest('details')?.open).toBe(matches));
-  expect(within(panel).getByRole('button', { name: 'Duplicate slide' })).toBeTruthy();
-  expect(within(panel).getByRole('button', { name: '+ Add Slide' })).toBeTruthy();
+  const actions = screen.getByRole('toolbar', { name: 'Slide actions' });
+  expect(within(actions).getByRole('button', { name: 'Duplicate slide' })).toBeTruthy();
+  expect(within(actions).getByRole('button', { name: '+ Add Slide' })).toBeTruthy();
 });
 
 function imageDisclosure() {
