@@ -84,6 +84,7 @@ MAX_FILE_SIZE_MB=4
 | Setting | Current behavior |
 |---|---|
 | `TEXT_PROVIDER_BASE_URL`, `TEXT_PROVIDER_API_KEY`, `TEXT_PROVIDER_MODEL` | Required when the text client is used. |
+| `TEXT_PROVIDER_THINKING` | Optional, `enabled` or `disabled`. When set, slide generation and the text health check send `thinking: { type }` (for example to turn off z.ai GLM reasoning); unset sends nothing. |
 | `IMAGE_SOURCE` | `auto` by default; `ai` uses the OpenAI-compatible adapter, `pexels` uses Pexels, and `auto` tries AI then Pexels only if a Pexels key is present. |
 | `IMAGE_PROVIDER_BASE_URL`, `IMAGE_PROVIDER_API_KEY`, `IMAGE_PROVIDER_MODEL`, `IMAGE_PROVIDER_SIZE` | Image adapter defaults are the OpenAI URL, `not-configured` and `dall-e-3`; a usable key is needed for AI image requests. Optional size override defaults to DALL-E 3 1792x1024 / gpt-image 1536x1024 / other models 1024x576. |
 | `PEXELS_API_KEY` | Optional unless using Pexels; also enables fallback in `auto`. |
@@ -149,7 +150,7 @@ PEXELS_API_KEY=your-pexels-key
 ```
 </details>
 
-Other OpenAI-compatible endpoints can be configured, but their model and image-request compatibility must be verified separately. The AI image adapter currently sends a fixed `1024x576` size, `standard` quality and `b64_json` response format.
+Other OpenAI-compatible endpoints can be configured, but their model and image-request compatibility must be verified separately. The text client needs JSON mode (`response_format: json_object`). For z.ai, use `TEXT_PROVIDER_BASE_URL=https://api.z.ai/api/paas/v4` with a GLM model, and set `TEXT_PROVIDER_THINKING=disabled` to keep generation inside the time limit. The AI image adapter sends the model-aware size above, `standard` quality and `b64_json` response format.
 
 ### Running Development Server & Tests
 

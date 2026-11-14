@@ -43,6 +43,20 @@ describe('readTextProviderConfig', () => {
       .toThrow(`Environment validation error: ${key}: ${message}`);
   });
 
+  it('leaves thinking unset by default, including an empty value', () => {
+    expect(readTextProviderConfig(textEnv).thinking).toBeUndefined();
+    expect(readTextProviderConfig({ ...textEnv, TEXT_PROVIDER_THINKING: '' }).thinking).toBeUndefined();
+  });
+
+  it.each(['enabled', 'disabled'] as const)('accepts TEXT_PROVIDER_THINKING=%s', (value) => {
+    expect(readTextProviderConfig({ ...textEnv, TEXT_PROVIDER_THINKING: value }).thinking).toBe(value);
+  });
+
+  it('rejects an unknown TEXT_PROVIDER_THINKING value', () => {
+    expect(() => readTextProviderConfig({ ...textEnv, TEXT_PROVIDER_THINKING: 'off' }))
+      .toThrow('Environment validation error: TEXT_PROVIDER_THINKING:');
+  });
+
   it('reports only text errors, joined in schema order', () => {
     expect(() => readTextProviderConfig(invalidEnv)).toThrow(
       'Environment validation error: TEXT_PROVIDER_BASE_URL: TEXT_PROVIDER_BASE_URL must be a valid URL; ' +
