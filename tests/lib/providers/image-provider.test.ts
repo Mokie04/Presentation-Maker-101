@@ -109,3 +109,45 @@ describe('image-provider', () => {
   });
 });
 
+
+describe('image-provider invoke-api kind', () => {
+  afterEach(async () => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+    (await import('@/lib/env')).resetConfigCache();
+  });
+
+  const useInvokeKind = async () => {
+    vi.stubEnv('IMAGE_PROVIDER_KIND', 'invoke-api');
+    vi.stubEnv('IMAGE_PROVIDER_BASE_URL', 'https://runtime.example.test');
+    vi.stubEnv('IMAGE_PROVIDER_API_KEY', 'test-image-key');
+    vi.stubEnv('IMAGE_PROVIDER_MODEL', 'vendor.image-model-v1:1');
+    (await import('@/lib/env')).resetConfigCache();
+  };
+
+  it('generates through the invoke endpoint and never builds the OpenAI-compatible client', async () => {
+    await useInvokeKind();
+    const mockFetch = vi.fn().mockResolvedValue(new Response(JSON.stringify({ images: ['aW52b2tl'], finish_reasons: [null] }), {
+      status: 200, headers: { 'Content-Type': 'application/json' },
+    }));
+    vi.stubGlobal('fetch', mockFetch);
+    const result = await generateSlideImage('A map', { source: 'ai', maxRetries: 0 });
+    expect(result).toBe('aW52b2tl');
+    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(mockFetch.mock.calls[0][0]).toBe('https://runtime.example.test/model/vendor.image-model-v1%3A1/invoke');
+  });
+
+  it('falls back to Pexels in auto mode when the invoke request fails', async () => {
+    await useInvokeKind();
+    const pexelsSearch = new Response(JSON.stringify({ photos: [{ src: { large2x: 'https://images.pexels.com/1.jpg' }, alt: 'map', photographer: 'P', url: 'https://www.pexels.com/photo/1' }] }), { status: 200 });
+    const download = new Response(new Uint8Array([1, 2, 3]), { status: 200, headers: { 'Content-Type': 'image/jpeg' } });
+    const mockFetch = vi.fn()
+      .mockResolvedValueOnce(new Response('{}', { status: 403 }))
+      .mockResolvedValueOnce(pexelsSearch)
+      .mockResolvedValueOnce(download);
+    vi.stubGlobal('fetch', mockFetch);
+    const result = await generateSlideImage('A map', { source: 'auto', maxRetries: 0, pexelsApiKey: 'test-pexels-key' });
+    expect(result).toBe(Buffer.from([1, 2, 3]).toString('base64'));
+    expect(mockFetch.mock.calls[0][0]).toContain('/invoke');
+  });
+});
