@@ -1,5 +1,5 @@
 import { getTextProviderConfig, getImageProviderConfig, getPexelsConfig } from '@/lib/env';
-import { getTextProviderClient } from '@/lib/providers/text-provider';
+import { getTextProviderClient, textProviderRequestExtras } from '@/lib/providers/text-provider';
 import { getImageProviderClient } from '@/lib/providers/image-provider';
 import type OpenAI from 'openai';
 
@@ -26,6 +26,7 @@ export async function checkHealth(options?: HealthCheckOptions): Promise<HealthC
       model: getTextProviderConfig().model,
       messages: [{ role: 'user', content: 'say hello' }],
       max_tokens: 5,
+      ...textProviderRequestExtras(),
     });
     textStatus = 'ok';
   } catch (err: unknown) {

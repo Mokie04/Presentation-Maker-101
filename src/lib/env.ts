@@ -7,6 +7,12 @@ const textProviderSchema = z.object({
   TEXT_PROVIDER_BASE_URL: z.string().url('TEXT_PROVIDER_BASE_URL must be a valid URL'),
   TEXT_PROVIDER_API_KEY: z.string().min(1, 'TEXT_PROVIDER_API_KEY is required'),
   TEXT_PROVIDER_MODEL: z.string().min(1, 'TEXT_PROVIDER_MODEL is required'),
+  // Optional `thinking: { type }` request field for providers with reasoning models (for example z.ai GLM).
+  // Unset (or empty) sends nothing, so providers that do not know the field get the same request as before.
+  TEXT_PROVIDER_THINKING: z.preprocess(
+    (value) => (value === '' ? undefined : value),
+    z.enum(['enabled', 'disabled'], { message: 'TEXT_PROVIDER_THINKING must be enabled or disabled' }).optional()
+  ),
 });
 
 const imageProviderSchema = z.object({
@@ -44,6 +50,7 @@ export function readTextProviderConfig(raw: RawEnv) {
     baseUrl: data.TEXT_PROVIDER_BASE_URL,
     apiKey: data.TEXT_PROVIDER_API_KEY,
     model: data.TEXT_PROVIDER_MODEL,
+    thinking: data.TEXT_PROVIDER_THINKING,
   };
 }
 
