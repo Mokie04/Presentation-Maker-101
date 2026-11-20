@@ -67,6 +67,15 @@ export function createTextProviderClient(options?: {
   });
 }
 
+/**
+ * Extra request fields for the configured text provider. `thinking` is not part of the OpenAI
+ * request type; the SDK sends unknown body fields as given, and they are left out when unset.
+ */
+export function textProviderRequestExtras(): { thinking?: { type: 'enabled' | 'disabled' } } {
+  const thinking = getTextProviderConfig().thinking;
+  return thinking ? { thinking: { type: thinking } } : {};
+}
+
 let defaultTextClient: OpenAI | null = null;
 
 export function getTextProviderClient(): OpenAI {
@@ -203,6 +212,7 @@ export async function generateSlideContent(
           },
         ],
         response_format: { type: 'json_object' },
+        ...textProviderRequestExtras(),
       }, { timeout, maxRetries: 0, signal: attemptSignal }), timeout, signal);
 
       if (response.choices?.[0]?.finish_reason === 'length') throw new TextOutputTruncatedError();

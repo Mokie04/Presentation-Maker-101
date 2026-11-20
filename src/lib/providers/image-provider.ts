@@ -1,6 +1,7 @@
 import type OpenAI from 'openai';
 import { getImageProviderConfig, getPexelsConfig } from '@/lib/env';
 import { createOpenAiImageProvider, getImageProviderClient } from './image/openai';
+import { createInvokeImageProvider } from './image/invoke-api';
 import { createPexelsImageProvider } from './image/pexels';
 import { resolveImageProviders, generateWithFallback } from './image/compose';
 
@@ -25,8 +26,10 @@ export async function generateSlideImage(
   const hasPexelsKey = Boolean(options?.pexelsApiKey || getPexelsConfig().apiKey);
   const providers = resolveImageProviders(chosenSource, {
     // Client construction failures historically bypass retries and fallback.
-    ai: () => createOpenAiImageProvider({ client: options?.client ?? getImageProviderClient(),
-      maxRetries: options?.maxRetries, backoffMs: options?.backoffMs }),
+    ai: () => getImageProviderConfig().kind === 'invoke-api' && !options?.client
+      ? createInvokeImageProvider({ maxRetries: options?.maxRetries, backoffMs: options?.backoffMs })
+      : createOpenAiImageProvider({ client: options?.client ?? getImageProviderClient(),
+        maxRetries: options?.maxRetries, backoffMs: options?.backoffMs }),
     pexels: () => createPexelsImageProvider({ apiKey: options?.pexelsApiKey }),
     hasPexelsKey,
     hasAiKey: Boolean(options?.client) || getImageProviderConfig().apiKey !== 'not-configured',

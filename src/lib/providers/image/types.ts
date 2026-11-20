@@ -5,6 +5,6 @@ export interface ImageRequest {
 }
 
 export interface ImageProvider {
-  id: 'openai' | 'pexels';
+  id: 'openai' | 'invoke-api' | 'pexels';
   generate(request: ImageRequest): Promise<string>;
 }
