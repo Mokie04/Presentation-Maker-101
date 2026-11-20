@@ -1,6 +1,5 @@
 // @vitest-environment jsdom
 import React from 'react';
-import { chooseSession } from '../helpers/workspace';
 import { afterEach, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import Home from '@/app/page';
@@ -15,7 +14,6 @@ it('shows the route’s too-long message on the upload screen without loading a 
   render(<Home />);
   fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'A very long lesson.' } });
-  chooseSession('Session 1');
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
   expect(await screen.findByText(message)).toBeTruthy(); expect(screen.queryByRole('listbox')).toBeNull();
   expect(vi.mocked(fetch).mock.calls.some(([url]) => url === '/api/generate-image')).toBe(false);

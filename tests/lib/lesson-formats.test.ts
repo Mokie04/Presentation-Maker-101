@@ -21,6 +21,9 @@ describe('detectLessonFormat', () => {
     ["Follows the 4 A's", "4A's"],
     ["A 5 E's lesson", '5E'],
     ['Engage. Explore. Explain. Elaborate. Evaluate. Remark: adapted from the 4As used last quarter.', '5E'],
+    ['Engage (10 min)\nExplore (20 min) Group activity and analysis of data\nExplain the abstraction\nElaborate: application\nEvaluate', '5E'],
+    ['We engage, explore, explain, elaborate and evaluate through an activity, analysis, abstraction and application.', 'Standard'],
+    ['[Pedagogy: 4As] We engage, explore, explain, elaborate and evaluate through an activity, analysis, abstraction and application.', "4A's"],
   ])('reads %j as %s', (text, format) => {
     expect(detectLessonFormat(text)).toBe(format);
   });

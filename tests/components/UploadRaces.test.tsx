@@ -36,7 +36,7 @@ function setup(initialText = '', initialName = '') {
     const [text, setText] = useState(initialText);
     const [name, setName] = useState(initialName);
     return <><output aria-label="Current lesson">{text}</output><output aria-label="Current file">{name}</output>
-      <UploadSection extractedText={text} fileName={name} onUploadSuccess={(value, fileName) => {
+      <UploadSection extractedText={text} fileName={name} onLessonChange={(value, fileName) => {
         success(value, fileName); setText(value); setName(fileName);
       }} selectedSession="Session 1" onSessionChange={vi.fn()} onGenerate={generate} isLoading={false} loadingStage="" /></>;
   }

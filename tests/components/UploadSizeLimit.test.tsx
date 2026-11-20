@@ -19,13 +19,13 @@ function fileOfSize(bytes: number, name = 'lesson.pdf') {
 function setup(response?: Response) {
   const fetchMock = vi.fn(async () => response ?? Response.json({ text: 'Parsed lesson', fileName: 'lesson.pdf' }));
   vi.stubGlobal('fetch', fetchMock);
-  const onUploadSuccess = vi.fn();
-  const { container } = render(<UploadSection extractedText="" fileName="" onUploadSuccess={onUploadSuccess} selectedSession=""
+  const onLessonChange = vi.fn();
+  const { container } = render(<UploadSection extractedText="" fileName="" onLessonChange={onLessonChange} selectedSession=""
     onSessionChange={vi.fn()} onGenerate={vi.fn()} isLoading={false} loadingStage="" />);
   const input = container.querySelector<HTMLInputElement>('input[type="file"]')!;
   const choose = (file: File) => fireEvent.change(input, { target: { files: [file] } });
   const drop = (file: File) => fireEvent.drop(screen.getByRole('button', { name: 'Choose lesson plan document' }), { dataTransfer: { files: [file] } });
-  return { fetchMock, onUploadSuccess, choose, drop };
+  return { fetchMock, onLessonChange, choose, drop };
 }
 
 describe('UploadSection size limit', () => {
@@ -36,17 +36,17 @@ describe('UploadSection size limit', () => {
   });
 
   it.each(['choose', 'drop'] as const)('refuses a 5 MB file before sending it (%s)', async (how) => {
-    const { fetchMock, onUploadSuccess, ...actions } = setup();
+    const { fetchMock, onLessonChange, ...actions } = setup();
     actions[how](fileOfSize(5 * MB));
     expect(await screen.findByText(friendly('5.0'))).toBeTruthy();
     expect(fetchMock).not.toHaveBeenCalled();
-    expect(onUploadSuccess).not.toHaveBeenCalled();
+    expect(onLessonChange).not.toHaveBeenCalled();
   });
 
   it('uploads a file of exactly 4 MB', async () => {
-    const { fetchMock, onUploadSuccess, choose } = setup();
+    const { fetchMock, onLessonChange, choose } = setup();
     choose(fileOfSize(4 * MB));
-    await waitFor(() => expect(onUploadSuccess).toHaveBeenCalledWith('Parsed lesson', 'lesson.pdf'));
+    await waitFor(() => expect(onLessonChange).toHaveBeenCalledWith('Parsed lesson', 'lesson.pdf', true));
     expect(fetchMock).toHaveBeenCalledWith('/api/upload', expect.objectContaining({ method: 'POST' }));
   });
 

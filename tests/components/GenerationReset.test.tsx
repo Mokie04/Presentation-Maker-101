@@ -4,7 +4,6 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import Home from '@/app/page';
 import type { useSlideDeck } from '@/lib/deck/use-slide-deck';
-import { chooseSession } from '../helpers/workspace';
 
 const observed = vi.hoisted(() => ({ deck: null as ReturnType<typeof useSlideDeck> | null, loadingStage: '' }));
 vi.mock('@/lib/deck/use-slide-deck', async importOriginal => {
@@ -34,7 +33,6 @@ it('clears loading and its stage on reset and ignores the aborted late generatio
   render(<Home />);
   fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'A plants lesson' } });
-  chooseSession('Session 1');
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
   expect(screen.getByRole('button', { name: 'Processing...' }).hasAttribute('disabled')).toBe(true);
   expect(screen.getByText('Analyzing curriculum & instructional structure...')).toBeTruthy();
@@ -48,7 +46,6 @@ it('clears loading and its stage on reset and ignores the aborted late generatio
   expect(observed.loadingStage).toBe('');
   fireEvent.click(screen.getByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'New lesson' } });
-  chooseSession('Session 1');
   expect(screen.getByRole('button', { name: 'Generate Slides' }).hasAttribute('disabled')).toBe(false);
   await act(async () => { finish(Response.json(data)); });
   expect(screen.queryByText('No slides yet.')).toBeNull();

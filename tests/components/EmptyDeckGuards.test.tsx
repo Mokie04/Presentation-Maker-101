@@ -5,7 +5,6 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import Home from '@/app/page';
 import type { useSlideDeck } from '@/lib/deck/use-slide-deck';
 import type { PresentationData } from '@/types/presentation';
-import { chooseSession } from '../helpers/workspace';
 
 // Observe the real hook so a deck update can be delivered while the modal owns focus.
 const observed = vi.hoisted(() => ({ deck: null as ReturnType<typeof useSlideDeck> | null }));
@@ -34,7 +33,6 @@ async function openEmptyDeck() {
   render(<Home />);
   fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'A lesson about plants.' } });
-  chooseSession('Session 1');
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
   await screen.findByText('No slides yet.');
 }

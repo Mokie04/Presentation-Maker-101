@@ -12,10 +12,10 @@ export function HomeHero() {
           Turn your lesson plan into a <span className="home-highlight">classroom-ready</span> PowerPoint.
         </h1>
         <p className="mb-5 mt-4 max-w-[540px] text-base leading-relaxed text-slate-600 lg:text-[17px]">
-          Upload your Daily Lesson Log, pick the session, and get a full deck: review, motivation, lesson, discussion, activities and assessment, with Philippine classroom visuals.
+          Upload your lesson plan and get a full deck that follows its own format, Standard, 4A&apos;s or 5E, from the first activity to the assessment, with Philippine classroom visuals.
         </p>
         <ol className="flex flex-wrap gap-x-4 gap-y-3 text-xs font-semibold text-slate-600">
-          {['Upload your lesson', 'Pick a session', 'Edit and download'].map((step, index) => (
+          {['Upload your lesson', 'Generate slides', 'Edit and download'].map((step, index) => (
             <li key={step} className="flex items-center gap-2">
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white">{index + 1}</span>
               {step}

@@ -19,17 +19,11 @@ describe('POST /api/generate lesson format', () => {
     expect(spy.mock.calls[0][3]?.lessonFormat).toBe("4A's");
   });
 
-  it("uses the teacher's format over detection", async () => {
+  it('ignores a format sent by the client and reads it from the plan', async () => {
     const spy = vi.spyOn(textProvider, 'generateSlideContent').mockResolvedValueOnce(presentation);
-    const res = await POST(request({ text: '[Pedagogy: 4As Approach]', lessonFormat: 'Standard' }));
-    expect((await res.json()).lessonFormat).toBe('Standard');
-    expect(spy.mock.calls[0][3]?.lessonFormat).toBe('Standard');
-  });
-
-  it('rejects an unknown format', async () => {
-    const spy = vi.spyOn(textProvider, 'generateSlideContent');
-    const res = await POST(request({ text: 'Lesson', lessonFormat: '7E' }));
-    expect(res.status).toBe(400);
-    expect(spy).not.toHaveBeenCalled();
+    const res = await POST(request({ text: '[Pedagogy: 4As Approach]', lessonFormat: '5E' }));
+    expect(res.status).toBe(200);
+    expect((await res.json()).lessonFormat).toBe("4A's");
+    expect(spy.mock.calls[0][3]?.lessonFormat).toBe("4A's");
   });
 });

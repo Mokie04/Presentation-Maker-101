@@ -1,19 +1,16 @@
 import { throwIfAborted } from '@/lib/abort';
 import type { PresentationData } from '@/types/presentation';
 import type { SupportedSubject } from '@/lib/utils/subject-options';
-import type { LessonFormat } from '@/lib/pedagogy';
 
 interface GenerationInput {
   text: string;
   session: string;
   subject?: SupportedSubject;
-  /** The teacher's choice; the server detects the format when omitted. */
-  lessonFormat?: LessonFormat;
 }
 
 /** Shared upload/session request policy. The caller commits only a live, successful result. */
 export async function generatePresentation(
-  { text, session, subject, lessonFormat }: GenerationInput,
+  { text, session, subject }: GenerationInput,
   signal: AbortSignal,
   onStage: (stage: string) => void = () => {},
 ): Promise<PresentationData> {
@@ -28,7 +25,7 @@ export async function generatePresentation(
   try {
     const res = await fetch('/api/generate', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, signal,
-      body: JSON.stringify({ text, session, ...(subject ? { subject, subjectSource: 'teacher-supplied' } : {}), ...(lessonFormat ? { lessonFormat } : {}) }),
+      body: JSON.stringify({ text, session, ...(subject ? { subject, subjectSource: 'teacher-supplied' } : {}) }),
     });
     throwIfAborted(signal);
     const resText = await res.text();

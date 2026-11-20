@@ -6,7 +6,7 @@ import { UploadSection } from '@/components/UploadSection';
 
 afterEach(cleanup);
 it('offers a named keyboard upload control and a manual-paste disclosure', () => {
-  const { container } = render(<UploadSection extractedText="" fileName="" onUploadSuccess={vi.fn()} selectedSession="" onSessionChange={vi.fn()} onGenerate={vi.fn()} isLoading={false} loadingStage="" />);
+  const { container } = render(<UploadSection extractedText="" fileName="" onLessonChange={vi.fn()} selectedSession="" onSessionChange={vi.fn()} onGenerate={vi.fn()} isLoading={false} loadingStage="" />);
   const file = container.querySelector<HTMLInputElement>('input[type="file"]')!;
   const browse = vi.spyOn(file, 'click');
   const upload = screen.getByRole('button', { name: 'Choose lesson plan document' }); upload.focus();

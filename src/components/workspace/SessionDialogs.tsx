@@ -3,8 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { PresentationData } from '@/types/presentation';
 import type { SupportedSubject } from '@/lib/utils/subject-options';
-import type { LessonFormat } from '@/lib/pedagogy';
-import { NUMBERED_SESSIONS, WHOLE_LESSON, type SessionOption } from '@/lib/utils/session-options';
+import { NUMBERED_SESSIONS, type SessionOption } from '@/lib/utils/session-options';
 import { generatePresentation } from '@/lib/generate-client';
 import { useDialogFocus } from './use-dialog-focus';
 
@@ -36,19 +35,16 @@ function SessionDialog({ title, children, onEscape }: { title: string; children:
   );
 }
 
-export function AnotherSessionDialog({ text, lessonName, subject, lessonFormat = '', sessions, activeSession, onClose, onSuccess }: {
+export function AnotherSessionDialog({ text, lessonName, subject, sessions, activeSession, onClose, onSuccess }: {
   text: string;
   lessonName: string;
   subject: SupportedSubject | '';
-  lessonFormat?: LessonFormat | '';
   sessions: SessionOption[];
   activeSession: SessionOption;
   onClose: () => void;
   onSuccess: (data: PresentationData, session: SessionOption) => void;
 }) {
   const [session, setSession] = useState<SessionOption | ''>('');
-  // A lesson holds either one whole-lesson deck or numbered-session decks, never both.
-  const options: readonly SessionOption[] = sessions.includes(WHOLE_LESSON) ? [WHOLE_LESSON] : NUMBERED_SESSIONS;
   const [isLoading, setIsLoading] = useState(false);
   const [stage, setStage] = useState('');
   const [error, setError] = useState('');
@@ -61,7 +57,7 @@ export function AnotherSessionDialog({ text, lessonName, subject, lessonFormat =
     request.current = controller;
     setIsLoading(true); setError('');
     try {
-      const data = await generatePresentation({ text, session, subject: subject || undefined, lessonFormat: lessonFormat || undefined }, controller.signal, setStage);
+      const data = await generatePresentation({ text, session, subject: subject || undefined }, controller.signal, setStage);
       if (request.current === controller && !controller.signal.aborted) onSuccess(data, session);
     } catch (err) {
       if (request.current === controller && !controller.signal.aborted) {
@@ -81,13 +77,12 @@ export function AnotherSessionDialog({ text, lessonName, subject, lessonFormat =
         <select id="another-session" value={session} disabled={isLoading} className="min-h-11 w-full rounded-lg border border-slate-400 bg-white px-3 text-sm"
           onChange={event => { setSession(event.target.value as SessionOption | ''); setError(''); }}>
           <option value="">Choose a session</option>
-          {options.map(option => <option key={option} value={option}>
+          {NUMBERED_SESSIONS.map(option => <option key={option} value={option}>
             {option}{sessions.includes(option) ? ' (ready)' : ''}{option === activeSession ? ' (current)' : ''}
           </option>)}
         </select>
       </div>
       <div className="text-sm"><span className="font-semibold">Subject: </span><span>{subject || 'Automatic'}</span></div>
-      <div className="text-sm"><span className="font-semibold">Lesson format: </span><span>{lessonFormat || 'Automatic'}</span></div>
       {session && sessions.includes(session) && <p className="text-sm text-amber-900">{session} already has slides. They will be replaced.</p>}
       <p className="text-sm text-slate-600">{refreshNote}</p>
       {isLoading && <p role="status" className="text-sm text-sky-800">{stage}</p>}

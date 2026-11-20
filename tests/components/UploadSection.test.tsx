@@ -1,6 +1,5 @@
 // @vitest-environment jsdom
 import React from 'react';
-import { chooseSession } from '../helpers/workspace';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { UploadSection } from '@/components/UploadSection';
@@ -11,7 +10,7 @@ describe('UploadSection component', () => {
       <UploadSection
         extractedText=""
         fileName=""
-        onUploadSuccess={vi.fn()}
+        onLessonChange={vi.fn()}
         selectedSession=""
         onSessionChange={vi.fn()}
         onGenerate={vi.fn()}
@@ -28,13 +27,13 @@ describe('UploadSection component', () => {
   it('toggles manual text entry and enables Generate button when text and session are provided', () => {
     const handleGenerate = vi.fn();
     const handleSessionChange = vi.fn();
-    const handleUploadSuccess = vi.fn();
+    const handleLessonChange = vi.fn();
 
     const { rerender } = render(
       <UploadSection
         extractedText=""
         fileName=""
-        onUploadSuccess={handleUploadSuccess}
+        onLessonChange={handleLessonChange}
         selectedSession=""
         onSessionChange={handleSessionChange}
         onGenerate={handleGenerate}
@@ -52,19 +51,15 @@ describe('UploadSection component', () => {
 
     const textarea = screen.getByPlaceholderText(/Paste raw lesson plan content here/i);
     fireEvent.change(textarea, { target: { value: 'Sample Grade 4 Science Lesson Plan' } });
-    expect(handleUploadSuccess).toHaveBeenCalledWith('Sample Grade 4 Science Lesson Plan', '');
+    expect(handleLessonChange).toHaveBeenCalledWith('Sample Grade 4 Science Lesson Plan', '', true);
 
-    // Select session
-    chooseSession('Session 1');
-    expect(handleSessionChange).toHaveBeenCalledWith('Session 1');
-
-    // Rerender with active text and session
+    // A plan without sessions builds the whole lesson; the page passes that session down.
     rerender(
       <UploadSection
         extractedText="Sample Grade 4 Science Lesson Plan"
         fileName=""
-        onUploadSuccess={handleUploadSuccess}
-        selectedSession="Session 1"
+        onLessonChange={handleLessonChange}
+        selectedSession="Whole lesson"
         onSessionChange={handleSessionChange}
         onGenerate={handleGenerate}
         isLoading={false}
@@ -78,7 +73,7 @@ describe('UploadSection component', () => {
     fireEvent.click(updatedGenerateBtn);
     expect(handleGenerate).toHaveBeenCalledWith(
       'Sample Grade 4 Science Lesson Plan',
-      'Session 1'
+      'Whole lesson'
     );
   });
 
@@ -87,7 +82,7 @@ describe('UploadSection component', () => {
       <UploadSection
         extractedText="Lesson plan"
         fileName="lesson.docx"
-        onUploadSuccess={vi.fn()}
+        onLessonChange={vi.fn()}
         selectedSession="Session 1"
         onSessionChange={vi.fn()}
         onGenerate={vi.fn()}
