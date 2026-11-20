@@ -54,7 +54,7 @@
 
 **Route** — An HTTP handler under `src/app/api/` assigned from `defineRoute` in `src/lib/api/`, which authenticates before parsing, caps bodies, optionally validates an `input` schema and sanitizes unexpected errors. `src/app/api/session/route.ts` bootstraps authentication and is the sole exception.
 
-**Lesson session** — The teacher's selected `Session 1` through `Session 5`, listed in `src/lib/utils/session-options.ts` and validated for generation. It labels a lesson and its exports; it is unrelated to login.
+**Lesson session** — The teacher's selected `Whole lesson` or `Session 1` through `Session 5`, listed in `src/lib/utils/session-options.ts` and validated for generation. `Whole lesson` builds one deck from the whole plan, usually one taught in a single session such as a demonstration or classroom observation lesson. `src/app/page.tsx` suggests it for an uploaded or pasted plan with no English or Filipino session, day or weekday markers (`hasSessionMarkers`), and replaces only its own suggestion when the lesson changes, never the teacher's pick. A lesson holds either one Whole lesson deck or numbered-session decks, so Another session offers only the matching kind. It labels a lesson and its exports; it is unrelated to login.
 
 **Auth session** — The signed `presentation_maker_pro_session` cookie created after the App Store handoff by `src/app/api/session/route.ts`. `requireSession` in `src/lib/sessionAuth.ts` checks it for protected API routes.
 

@@ -28,6 +28,7 @@ it.each([
   ['', 'Session 2', false, 'Start by dropping your lesson plan.'],
   ['Lesson', '', false, 'Nice! Now pick the session to build.'],
   ['Lesson', 'Session 5', false, "All set! I'll build Session 5."],
+  ['Lesson', 'Whole lesson', false, "All set! I'll build the whole lesson."],
   ['Lesson', 'Session 5', true, 'Building your deck, hang tight!'],
 ])('describes Generate without a live region: %s/%s/loading=%s', (extractedText, selectedSession, isLoading, copy) => {
   render(<UploadSection {...props} extractedText={extractedText} selectedSession={selectedSession} isLoading={isLoading} loadingStage="Analyzing curriculum..." />);
@@ -39,7 +40,7 @@ it.each([
 });
 it('retains the native named radios, subject dropdown and exact generation inputs', () => {
   render(<UploadSection {...props} extractedText="Original text" selectedSession="Session 3" selectedSubject="Science" />);
-  expect(within(screen.getByRole('radiogroup', { name: 'Select Session' })).getAllByRole('radio').map(r => r.getAttribute('aria-label'))).toEqual(['Session 1', 'Session 2', 'Session 3', 'Session 4', 'Session 5']);
+  expect(within(screen.getByRole('radiogroup', { name: 'Select Session' })).getAllByRole('radio').map(r => r.getAttribute('aria-label'))).toEqual(['Whole lesson', 'Session 1', 'Session 2', 'Session 3', 'Session 4', 'Session 5']);
   fireEvent.click(screen.getByRole('radio', { name: 'Session 4' })); expect(props.onSessionChange).toHaveBeenCalledWith('Session 4');
   expect(within(screen.getByRole('combobox', { name: 'Subject' })).getByRole('option', { name: 'Automatic' })).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' })); expect(props.onGenerate).toHaveBeenCalledWith('Original text', 'Session 3', 'Science');

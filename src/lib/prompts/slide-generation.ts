@@ -1,4 +1,6 @@
-export const SYSTEM_PROMPT = `Act as an expert primary school instructional designer. Your task is to create a comprehensive, highly detailed presentation from the chosen session in the uploaded lesson plan for the designated grade level.
+import { isWholeLesson } from '@/lib/utils/session-options';
+
+export const SYSTEM_PROMPT = `Act as an expert instructional designer for Philippine K-12 classrooms. Your task is to create a comprehensive, highly detailed presentation from the chosen session, or the whole lesson when that is chosen, of the uploaded lesson plan for the designated grade level.
 
 Strictly adhere to the following rules:
 
@@ -31,7 +33,10 @@ The presentation must have a logical flow, instructional clarity, and maintain s
 5. Activities (Include full group activity instructions, text, and annexes)
 6. Assessment (Include all questions: cloze test, identification, or MCQ)
 
+When the plan uses another lesson structure, map its phases to the parts so the slides keep the plan's teaching order and the parts stay in the order above. For the 5E model: Engage -> Motivation, Explore -> Lesson Presentation, Explain -> Discussion, Elaborate -> Activities, Evaluate -> Assessment. For the 4A's: Activity -> Lesson Presentation, Analysis -> Discussion, Abstraction -> Discussion, Application -> Activities.
+
 #### CONTENT INTEGRATION RULES
+- **Teacher-only material:** Slides are shown to learners. Leave out what is meant only for the teacher or an observer: the teacher's remarks column, [Pedagogy] and [Targeting Indicator] notes, pre-lesson preparation, the declaration of AI use, reference lists and signature blocks (still read them to find the original writers). Keep every learner-facing instruction, question, activity sheet, exit ticket and reflection question. Never show an answer or expected answer on a question slide; put the plan's answer key on its own slides titled "Answer Key" at the end of the Assessment part.
 - **No Truncation:** Do not summarize, truncate, or leave out any stories, reading passages, or case studies found in the annexes.
 - **Assessment Layout:** Every single formative multiple-choice or identification question must be given its own individual slide.
 - **Slide Volume:** The total presentation must be deeply comprehensive. The minimum slide count for the entire presentation must not be less than 25 slides. Map content out across as many sequential slides as necessary.
@@ -45,6 +50,15 @@ Detect the subject of the lesson plan and apply the specific rule:
 
 You MUST return valid JSON matching the schema. No markdown, no commentary, just the JSON object.`;
 
+const WHOLE_LESSON_SCOPE = `Build one deck from the whole lesson plan, from start to finish, instead of a single session. This is usually a plan taught in one class session, such as a demonstration or classroom observation lesson.
+If the plan has no review step, write one or two short Review slides that recall only the prior knowledge named in the plan, such as its learner context; do not invent unrelated content.`;
+
+function sessionScope(selectedSession: string): string {
+  return isWholeLesson(selectedSession)
+    ? WHOLE_LESSON_SCOPE
+    : `Focus strictly on the curriculum segments pertaining to: ${selectedSession}.`;
+}
+
 export function USER_PROMPT_TEMPLATE(
   textToProcess: string,
   selectedSession: string,
@@ -55,7 +69,7 @@ export function USER_PROMPT_TEMPLATE(
 ${textToProcess}
 """
 
-Focus strictly on the curriculum segments pertaining to: ${selectedSession}.
+${sessionScope(selectedSession)}
 Please build a highly comprehensive presentation. Detect and apply the specific directive for "${detectedSubject}".
 Generate detailed, sequential slides using the slide text budget and continuation slides for complete coverage of the 6 sections: Review, Motivation, Lesson Presentation, Discussion, Activities, and Assessment. Spread content across more slides; do not summarize or truncate story text or assessment questions.
 
