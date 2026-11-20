@@ -1,14 +1,14 @@
-import type { PedagogicalPart } from '@/lib/pedagogy';
+import { DEFAULT_LESSON_FORMAT, type LessonFormat } from '@/lib/pedagogy';
 import { continuationTitle } from './slide-split';
 import { FAILED_IMAGE } from '@/lib/slide-image';
 import type { DeckAction, DeckSlide, DeckState, ImageToken, SlideImage } from './types';
 
 export const initialDeckState: DeckState = { presentation: null, slides: [], nextSlideId: 0 };
 
-const NEW_SLIDE_PART: PedagogicalPart = 'Discussion';
+// The discussion-like part of each format, where a teacher's extra slide usually belongs.
+const NEW_SLIDE_PART: Record<LessonFormat, string> = { Standard: 'Discussion', "4A's": 'Analysis', '5E': 'Explain' };
 
 const NEW_SLIDE = {
-  part: NEW_SLIDE_PART,
   title: 'New Slide Topic',
   contentPoints: ['Key takeaway for learners', 'Guided classroom discussion question'],
   visualDescription: 'Philippine classroom illustration showing interactive group discussion',
@@ -81,7 +81,7 @@ export function deckReducer(state: DeckState, action: DeckAction): DeckState {
       if (!state.presentation) return state;
       const slide: DeckSlide = {
         id: state.nextSlideId,
-        content: { slideNumber: state.slides.length + 1, ...NEW_SLIDE, contentPoints: [...NEW_SLIDE.contentPoints] },
+        content: { slideNumber: state.slides.length + 1, ...NEW_SLIDE, part: NEW_SLIDE_PART[state.presentation?.lessonFormat ?? DEFAULT_LESSON_FORMAT], contentPoints: [...NEW_SLIDE.contentPoints] },
         image: { status: 'none', version: 0 },
       };
       const afterIndex = state.slides.findIndex((slide) => slide.id === action.afterSlideId);

@@ -2,7 +2,7 @@
 
 import type { SupportedSubject } from '@/lib/utils/subject-options';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { poppins } from '@/lib/fonts';
 import { HomeHero } from '@/components/home/HomeHero';
 import { HomeTrustStrip } from '@/components/home/HomeTrustStrip';
@@ -18,6 +18,7 @@ import { generatePresentation } from '@/lib/generate-client';
 import { SessionTabs } from '@/components/workspace/SessionTabs';
 import { AnotherSessionDialog, ResetSessionsDialog } from '@/components/workspace/SessionDialogs';
 import { WHOLE_LESSON, hasSessionMarkers, type SessionOption } from '@/lib/utils/session-options';
+import { DEFAULT_LESSON_FORMAT, detectLessonFormat, type LessonFormat } from '@/lib/pedagogy';
 
 function PresentationWorkspace() {
   const [extractedText, setExtractedText] = useState('');
@@ -26,7 +27,10 @@ function PresentationWorkspace() {
   const [sessionChoice, setSessionChoice] = useState({ session: '', auto: false });
   const selectedSession = sessionChoice.session;
   const [selectedSubject, setSelectedSubject] = useState<SupportedSubject | ''>('');
-  const [lesson, setLesson] = useState<{ text: string; name: string; subject: SupportedSubject | '' } | null>(null);
+  const [selectedFormat, setSelectedFormat] = useState<LessonFormat | ''>('');
+  const detectedFormat = useMemo(() => detectLessonFormat(extractedText), [extractedText]);
+  const [generatingFormat, setGeneratingFormat] = useState<LessonFormat>(DEFAULT_LESSON_FORMAT);
+  const [lesson, setLesson] = useState<{ text: string; name: string; subject: SupportedSubject | ''; lessonFormat: LessonFormat | '' } | null>(null);
   const [anotherSessionOpen, setAnotherSessionOpen] = useState(false);
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
   const generation = useRef<AbortController | null>(null);
@@ -69,15 +73,16 @@ function PresentationWorkspace() {
   const handleGenerate = async (text: string, session: string, subject?: SupportedSubject) => {
     setIsLoading(true);
     setErrorMsg('');
+    setGeneratingFormat(selectedFormat || detectLessonFormat(text));
     const controller = new AbortController();
     generation.current?.abort();
     generation.current = controller;
     try {
-      const data = await generatePresentation({ text, session, subject }, controller.signal, setLoadingStage);
+      const data = await generatePresentation({ text, session, subject, lessonFormat: selectedFormat || undefined }, controller.signal, setLoadingStage);
       if (generation.current !== controller || controller.signal.aborted) return;
       // Capture submitted inputs, not controls that may have changed while awaiting the response.
       setExtractedText(text);
-      setLesson({ text, name: fileName, subject: subject || '' });
+      setLesson({ text, name: fileName, subject: subject || '', lessonFormat: selectedFormat });
       loadPresentation(data, session as SessionOption);
     } catch (err) {
       if (generation.current === controller && !controller.signal.aborted) {
@@ -106,6 +111,7 @@ function PresentationWorkspace() {
     setFileName('');
     setSessionChoice({ session: '', auto: false });
     setSelectedSubject('');
+    setSelectedFormat('');
     setErrorMsg('');
   };
 
@@ -126,6 +132,10 @@ function PresentationWorkspace() {
             onSessionChange={session => setSessionChoice({ session, auto: false })}
             selectedSubject={selectedSubject}
             onSubjectChange={setSelectedSubject}
+            selectedFormat={selectedFormat}
+            onFormatChange={setSelectedFormat}
+            detectedFormat={detectedFormat}
+            generatingFormat={generatingFormat}
             onGenerate={handleGenerate}
             isLoading={isLoading}
             loadingStage={loadingStage}
@@ -142,7 +152,7 @@ function PresentationWorkspace() {
         )}
 
         {anotherSessionOpen && deck.activeSession && lesson && (
-          <AnotherSessionDialog text={lesson.text} lessonName={lesson.name || 'Lesson'} subject={lesson.subject}
+          <AnotherSessionDialog text={lesson.text} lessonName={lesson.name || 'Lesson'} subject={lesson.subject} lessonFormat={lesson.lessonFormat}
             sessions={deck.sessions} activeSession={deck.activeSession} onClose={() => setAnotherSessionOpen(false)}
             onSuccess={(data, session) => { loadPresentation(data, session); setAnotherSessionOpen(false); }} />
         )}

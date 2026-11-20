@@ -34,6 +34,7 @@ Dates are recorded by month or day. Accepted describes the current design; Propo
 | [0029](0029-export-integrity.md) | Accepted | 44 | Export integrity: text, pictures, credits and package |
 | [0030](0030-input-hardening.md) | Accepted | 45, 46 | Input hardening: validation, document/provider bounds and route policy |
 | [0031](0031-ui-state-sweep.md) | Accepted | 57 | UI and state sweep: empty-deck guards, focus and key rules, uploads, accessibility, overflow cache |
+| [0033](0033-lesson-formats.md) | Accepted | | Lesson formats: Standard, 4A's and 5E parts, detection and labels |
 
 Number 0021 was reserved for the saved-lesson work and was never written.
 

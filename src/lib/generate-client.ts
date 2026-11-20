@@ -1,23 +1,26 @@
 import { throwIfAborted } from '@/lib/abort';
 import type { PresentationData } from '@/types/presentation';
 import type { SupportedSubject } from '@/lib/utils/subject-options';
+import type { LessonFormat } from '@/lib/pedagogy';
 
 interface GenerationInput {
   text: string;
   session: string;
   subject?: SupportedSubject;
+  /** The teacher's choice; the server detects the format when omitted. */
+  lessonFormat?: LessonFormat;
 }
 
 /** Shared upload/session request policy. The caller commits only a live, successful result. */
 export async function generatePresentation(
-  { text, session, subject }: GenerationInput,
+  { text, session, subject, lessonFormat }: GenerationInput,
   signal: AbortSignal,
   onStage: (stage: string) => void = () => {},
 ): Promise<PresentationData> {
   throwIfAborted(signal);
   onStage('Analyzing curriculum & instructional structure...');
   const stageTimer1 = setTimeout(() => {
-    if (!signal.aborted) onStage('Architecting 25+ comprehensive slides (Review, Motivation, Lesson, Discussion, Activities, Assessment)...');
+    if (!signal.aborted) onStage('Architecting 25+ comprehensive slides across every part of the lesson...');
   }, 1200);
   const stageTimer2 = setTimeout(() => {
     if (!signal.aborted) onStage('Synthesizing Philippine pedagogical diagrams and questions...');
@@ -25,7 +28,7 @@ export async function generatePresentation(
   try {
     const res = await fetch('/api/generate', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, signal,
-      body: JSON.stringify({ text, session, ...(subject ? { subject, subjectSource: 'teacher-supplied' } : {}) }),
+      body: JSON.stringify({ text, session, ...(subject ? { subject, subjectSource: 'teacher-supplied' } : {}), ...(lessonFormat ? { lessonFormat } : {}) }),
     });
     throwIfAborted(signal);
     const resText = await res.text();

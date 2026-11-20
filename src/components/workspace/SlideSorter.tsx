@@ -4,7 +4,7 @@ import React from 'react';
 import { DEFAULT_THEME, type SlideTheme } from '@/lib/themes';
 import type { SlideData } from '@/types/presentation';
 import { getSlideOverflow } from '@/lib/slide-fit';
-import { partLabel } from '@/lib/pedagogy';
+import { partLabel, type LessonFormat } from '@/lib/pedagogy';
 import { SlideThumbnail } from './SlideThumbnail';
 import { SlideMoveButtons } from './SlideMoveButtons';
 import { useSlideReorder } from './use-slide-reorder';
@@ -22,9 +22,10 @@ export interface SlideSorterProps {
   onAdd: () => void;
   slideImages?: Record<number, string>;
   originalWriters?: string;
+  lessonFormat?: LessonFormat;
 }
 
-export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, onMove, onDuplicate, onDelete, onAdd, slideImages, originalWriters, theme = DEFAULT_THEME }: SlideSorterProps) {
+export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, onMove, onDuplicate, onDelete, onAdd, slideImages, originalWriters, lessonFormat, theme = DEFAULT_THEME }: SlideSorterProps) {
   const reorder = useSlideReorder(onMove);
   return (
     <section aria-label="Slide sorter" className="min-w-0 space-y-3">
@@ -57,7 +58,7 @@ export function SlideSorter({ slides, slideIds, selectedId, onSelect, onOpen, on
             <div className="flex min-w-0 items-start gap-2 text-xs text-slate-600">
               <span className="font-bold tabular-nums text-sky-800">{index + 1}</span>
               {overflow && <span aria-hidden="true" className="font-bold text-amber-700">!</span>}
-              <span className="min-w-0 break-words">{partLabel(slide.part)}</span>
+              <span className="min-w-0 break-words">{partLabel(slide.part, lessonFormat)}</span>
             </div>
             <div className="flex flex-wrap gap-1.5" onClick={(event) => event.stopPropagation()} onDoubleClick={(event) => event.stopPropagation()}>
               <button type="button" aria-label={`Duplicate slide ${index + 1}`} onClick={() => onDuplicate(id)}

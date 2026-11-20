@@ -14,6 +14,7 @@ import { Mokie } from '@/components/home/Mokie';
 import { GeneratingPanel } from '@/components/home/GeneratingPanel';
 import { SESSION_OPTIONS, isWholeLesson } from '@/lib/utils/session-options';
 import { SUPPORTED_SUBJECTS, type SupportedSubject } from '@/lib/utils/subject-options';
+import { DEFAULT_LESSON_FORMAT, LESSON_FORMATS, type LessonFormat } from '@/lib/pedagogy';
 import { DEFAULT_MAX_UPLOAD_MB, uploadTooLargeMessage } from '@/lib/upload-limits';
 
 interface UploadSectionProps {
@@ -24,6 +25,13 @@ interface UploadSectionProps {
   onSessionChange: (session: string) => void;
   selectedSubject?: SupportedSubject | '';
   onSubjectChange?: (subject: SupportedSubject | '') => void;
+  /** The teacher's lesson format; '' is Automatic. */
+  selectedFormat?: LessonFormat | '';
+  onFormatChange?: (format: LessonFormat | '') => void;
+  /** What Automatic would use for the current lesson text. */
+  detectedFormat?: LessonFormat;
+  /** The format of the request in flight, captured when Generate was clicked. */
+  generatingFormat?: LessonFormat;
   onGenerate: (text: string, session: string, subject?: SupportedSubject) => void;
   isLoading: boolean;
   loadingStage: string;
@@ -38,6 +46,10 @@ export function UploadSection({
   onSessionChange,
   selectedSubject = '',
   onSubjectChange,
+  selectedFormat = '',
+  onFormatChange,
+  detectedFormat = DEFAULT_LESSON_FORMAT,
+  generatingFormat = DEFAULT_LESSON_FORMAT,
   onGenerate,
   isLoading,
   loadingStage,
@@ -164,7 +176,7 @@ export function UploadSection({
   return (
     <section aria-label="Lesson setup" className="setup-card mt-6 border border-sky-100 bg-white p-1.5">
       <span aria-hidden="true" className="setup-card-tab" />
-      {isLoading && <GeneratingPanel loadingStage={loadingStage} />}
+      {isLoading && <GeneratingPanel loadingStage={loadingStage} lessonFormat={generatingFormat} />}
       <div className={`home-step ${hasText ? 'setup-step-complete' : ''}`} aria-current={currentStep === 1 ? 'step' : undefined}>
         <StepHeading number={1} done={hasText} title="Upload your lesson plan" hint={`Daily Lesson Logs in .docx, .pdf, .txt or .md, up to ${DEFAULT_MAX_UPLOAD_MB} MB.`} />
         <div className="mt-3 space-y-3 sm:ml-12">
@@ -243,16 +255,31 @@ export function UploadSection({
         </div>
       </div>
       <div className={`home-step setup-last-step ${isLoading && hasText && selectedSession ? 'setup-step-complete' : ''}`} aria-current={currentStep === 3 ? 'step' : undefined}>
-        <StepHeading number={3} done={isLoading && hasText && Boolean(selectedSession)} title="Subject and generate" hint="Leave on Automatic and we detect it from your lesson." />
+        <StepHeading number={3} done={isLoading && hasText && Boolean(selectedSession)} title="Subject and generate" hint="Leave on Automatic and we detect the subject and lesson format from your lesson." />
         <div className="mt-3 sm:ml-12">
+          <div className="grid max-w-2xl gap-3 sm:grid-cols-2">
+          <div>
           <label htmlFor="subject-select" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">Subject</label>
-          <div className="relative max-w-sm">
+          <div className="relative">
             <select id="subject-select" aria-label="Subject" value={selectedSubject} onChange={event => onSubjectChange?.(event.target.value as SupportedSubject | '')}
               className="setup-subject min-h-11 w-full cursor-pointer appearance-none rounded-xl border-2 bg-white px-4 py-3 pr-10 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-700">
               <option value="">Automatic</option>
               {SUPPORTED_SUBJECTS.map(subject => <option key={subject} value={subject}>{subject}</option>)}
             </select>
             <Layers className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600" />
+          </div>
+          </div>
+          <div>
+          <label htmlFor="lesson-format-select" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">Lesson format</label>
+          <div className="relative">
+            <select id="lesson-format-select" aria-label="Lesson format" value={selectedFormat} onChange={event => onFormatChange?.(event.target.value as LessonFormat | '')}
+              className="setup-subject min-h-11 w-full cursor-pointer appearance-none rounded-xl border-2 bg-white px-4 py-3 pr-10 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-700">
+              <option value="">{hasText ? `Automatic (${detectedFormat})` : 'Automatic'}</option>
+              {LESSON_FORMATS.map(format => <option key={format} value={format}>{format}</option>)}
+            </select>
+            <Layers className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600" />
+          </div>
+          </div>
           </div>
           <div className="setup-generate-row mt-5">
             <div className="setup-mokie" aria-hidden="true"><Mokie size="small" /></div>

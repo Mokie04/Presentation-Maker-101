@@ -115,7 +115,7 @@ export function SlideshowModal({
       <div className="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-3 sm:px-6 py-3.5 [@media(max-height:500px)]:py-1.5 flex flex-wrap shrink-0 items-center justify-between gap-2 sm:gap-3 text-white z-10">
         <div className="flex items-center gap-2 sm:gap-3 min-w-0 max-w-full">
           {(() => {
-            const badge = getPartBadgeInfo(currentSlide.part);
+            const badge = getPartBadgeInfo(currentSlide.part, presentationData.lessonFormat);
             return (
               <span className={`px-2.5 py-1 text-xs font-black uppercase tracking-wider rounded-md truncate shrink-0 max-w-[45vw] ${badge.bg} text-white shadow-sm`}>
                 {badge.label}

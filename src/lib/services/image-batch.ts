@@ -1,5 +1,5 @@
 import { generateSlideImage } from '@/lib/providers/image-provider';
-import { partWantsAutoImage } from '@/lib/pedagogy';
+import { partWantsAutoImage, type LessonFormat } from '@/lib/pedagogy';
 import { FAILED_IMAGE } from '@/lib/slide-image';
 
 export interface SlideImageBatchItem {
@@ -9,11 +9,11 @@ export interface SlideImageBatchItem {
   title?: string;
 }
 
-export function shouldGenerateImageForPart(part: string): boolean {
+export function shouldGenerateImageForPart(part: string, lessonFormat?: LessonFormat): boolean {
   if (!part || typeof part !== 'string') {
     return false;
   }
-  return partWantsAutoImage(part);
+  return partWantsAutoImage(part, lessonFormat);
 }
 
 function sleep(ms: number): Promise<void> {
@@ -22,13 +22,13 @@ function sleep(ms: number): Promise<void> {
 
 export async function processBatchImages(
   slides: SlideImageBatchItem[],
-  options?: { delayMs?: number; source?: 'ai' | 'pexels' | 'auto' }
+  options?: { delayMs?: number; source?: 'ai' | 'pexels' | 'auto'; lessonFormat?: LessonFormat }
 ): Promise<Record<number, string>> {
   const images: Record<number, string> = {};
   const delayMs = options?.delayMs ?? 800;
 
   const eligibleSlides = slides.filter((slide) =>
-    shouldGenerateImageForPart(slide.part) && slide.visualDescription.trim().length > 0
+    shouldGenerateImageForPart(slide.part, options?.lessonFormat) && slide.visualDescription.trim().length > 0
   );
 
   for (let i = 0; i < eligibleSlides.length; i++) {

@@ -38,7 +38,7 @@ describe('POST /api/generate', () => {
     expect(res.status).toBe(200);
 
     const json = await res.json();
-    expect(json).toEqual({ ...samplePresentation, subjectEvidence: [
+    expect(json).toEqual({ ...samplePresentation, lessonFormat: 'Standard', subjectEvidence: [
       { subject: 'Science', source: 'unknown' },
       { subject: 'Science', source: 'model-generated' },
     ] });

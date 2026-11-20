@@ -2,7 +2,7 @@ import { throwIfAborted } from '@/lib/abort';
 import OpenAI from 'openai';
 import { z } from 'zod';
 import { getTextProviderConfig } from '@/lib/env';
-import { canonicalPart } from '@/lib/pedagogy';
+import { canonicalPart, DEFAULT_LESSON_FORMAT, type LessonFormat } from '@/lib/pedagogy';
 import { SYSTEM_PROMPT, USER_PROMPT_TEMPLATE } from '@/lib/prompts/slide-generation';
 import type { PresentationData } from '@/types/presentation';
 
@@ -41,8 +41,8 @@ export class TextOutputTruncatedError extends Error {
 
 export const slideDataSchema = z.object({
   slideNumber: z.number(),
-  // Canonical name when recognizable, so exports and badges agree; unknown parts pass through.
-  part: z.string().transform(canonicalPart),
+  // Named by the deck's lesson format after generation (see generateSlideContent); exports keep it as edited.
+  part: z.string(),
   title: z.string(),
   contentPoints: z.array(z.string()),
   visualDescription: z.string(),
@@ -81,6 +81,8 @@ export interface GenerateSlideOptions {
   maxRetries?: number;
   backoffDelays?: number[];
   signal?: AbortSignal;
+  /** The lesson structure the deck follows; Standard when omitted. */
+  lessonFormat?: LessonFormat;
 }
 
 /** Empty, unparsable or schema-invalid model output; retried like a transient failure. */
@@ -176,6 +178,7 @@ export async function generateSlideContent(
   options?: GenerateSlideOptions
 ): Promise<PresentationData> {
   const signal = options?.signal;
+  const lessonFormat = options?.lessonFormat ?? DEFAULT_LESSON_FORMAT;
   throwIfAborted(signal);
   const deadline = Date.now() + GENERATION_DEADLINE_MS;
   const client = options?.client ?? getTextProviderClient();
@@ -199,7 +202,7 @@ export async function generateSlideContent(
           { role: 'system', content: SYSTEM_PROMPT },
           {
             role: 'user',
-            content: USER_PROMPT_TEMPLATE(lessonText, session, detectedSubject),
+            content: USER_PROMPT_TEMPLATE(lessonText, session, detectedSubject, lessonFormat),
           },
         ],
         response_format: { type: 'json_object' },
@@ -225,7 +228,11 @@ export async function generateSlideContent(
         throw new RetryableResponseError(`Model response failed PresentationData schema validation: ${msg}`);
       }
 
-      return validated.data as PresentationData;
+      // Canonical part names for the format, so badges and exports agree; unknown parts pass through.
+      return {
+        ...validated.data,
+        slides: validated.data.slides.map(slide => ({ ...slide, part: canonicalPart(slide.part, lessonFormat) })),
+      };
     } catch (err) {
       throwIfAborted(signal);
       if (err instanceof TextOutputTruncatedError || !isRetryable(err)) throw err;

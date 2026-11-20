@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { PresentationData } from '@/types/presentation';
 import type { SupportedSubject } from '@/lib/utils/subject-options';
+import type { LessonFormat } from '@/lib/pedagogy';
 import { NUMBERED_SESSIONS, WHOLE_LESSON, type SessionOption } from '@/lib/utils/session-options';
 import { generatePresentation } from '@/lib/generate-client';
 import { useDialogFocus } from './use-dialog-focus';
@@ -35,10 +36,11 @@ function SessionDialog({ title, children, onEscape }: { title: string; children:
   );
 }
 
-export function AnotherSessionDialog({ text, lessonName, subject, sessions, activeSession, onClose, onSuccess }: {
+export function AnotherSessionDialog({ text, lessonName, subject, lessonFormat = '', sessions, activeSession, onClose, onSuccess }: {
   text: string;
   lessonName: string;
   subject: SupportedSubject | '';
+  lessonFormat?: LessonFormat | '';
   sessions: SessionOption[];
   activeSession: SessionOption;
   onClose: () => void;
@@ -59,7 +61,7 @@ export function AnotherSessionDialog({ text, lessonName, subject, sessions, acti
     request.current = controller;
     setIsLoading(true); setError('');
     try {
-      const data = await generatePresentation({ text, session, subject: subject || undefined }, controller.signal, setStage);
+      const data = await generatePresentation({ text, session, subject: subject || undefined, lessonFormat: lessonFormat || undefined }, controller.signal, setStage);
       if (request.current === controller && !controller.signal.aborted) onSuccess(data, session);
     } catch (err) {
       if (request.current === controller && !controller.signal.aborted) {
@@ -85,6 +87,7 @@ export function AnotherSessionDialog({ text, lessonName, subject, sessions, acti
         </select>
       </div>
       <div className="text-sm"><span className="font-semibold">Subject: </span><span>{subject || 'Automatic'}</span></div>
+      <div className="text-sm"><span className="font-semibold">Lesson format: </span><span>{lessonFormat || 'Automatic'}</span></div>
       {session && sessions.includes(session) && <p className="text-sm text-amber-900">{session} already has slides. They will be replaced.</p>}
       <p className="text-sm text-slate-600">{refreshNote}</p>
       {isLoading && <p role="status" className="text-sm text-sky-800">{stage}</p>}

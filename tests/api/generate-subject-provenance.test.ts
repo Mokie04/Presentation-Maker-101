@@ -18,7 +18,7 @@ describe('generation subject provenance', () => {
     const detect = vi.spyOn(detector, 'detectSubject');
     const response = await POST(request());
     expect(response.status).toBe(200);
-    expect(await response.json()).toEqual({ ...modelPresentation, subjectEvidence: [
+    expect(await response.json()).toEqual({ ...modelPresentation, lessonFormat: 'Standard', subjectEvidence: [
       { subject: 'Science', source: 'keyword-detected' }, { subject: 'Science', source: 'model-generated' },
     ] });
     expect(generate).toHaveBeenCalledWith('English reading about a planet', 'Session 1', 'Science', expect.objectContaining({ signal: expect.any(AbortSignal) }));
@@ -31,7 +31,7 @@ describe('generation subject provenance', () => {
       const detect = vi.spyOn(detector, 'detectSubject');
       const response = await POST(request({ subject, subjectSource: 'teacher-supplied' }));
       expect(response.status).toBe(200);
-      expect(await response.json()).toEqual({ ...modelPresentation, subjectEvidence: [
+      expect(await response.json()).toEqual({ ...modelPresentation, lessonFormat: 'Standard', subjectEvidence: [
         { subject, source: 'teacher-supplied' }, { subject: 'Science', source: 'model-generated' },
       ] });
       expect(generate).toHaveBeenCalledWith('English reading about a planet', 'Session 1', subject, expect.objectContaining({ signal: expect.any(AbortSignal) }));
