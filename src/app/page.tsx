@@ -17,12 +17,14 @@ import { useDeckExport } from '@/lib/export/use-deck-export';
 import { generatePresentation } from '@/lib/generate-client';
 import { SessionTabs } from '@/components/workspace/SessionTabs';
 import { AnotherSessionDialog, ResetSessionsDialog } from '@/components/workspace/SessionDialogs';
-import type { SessionOption } from '@/lib/utils/session-options';
+import { WHOLE_LESSON, hasSessionMarkers, type SessionOption } from '@/lib/utils/session-options';
 
 function PresentationWorkspace() {
   const [extractedText, setExtractedText] = useState('');
   const [fileName, setFileName] = useState('');
-  const [selectedSession, setSelectedSession] = useState('');
+  // `auto` marks a session the app suggested; a new lesson may replace it, but never the teacher's own pick.
+  const [sessionChoice, setSessionChoice] = useState({ session: '', auto: false });
+  const selectedSession = sessionChoice.session;
   const [selectedSubject, setSelectedSubject] = useState<SupportedSubject | ''>('');
   const [lesson, setLesson] = useState<{ text: string; name: string; subject: SupportedSubject | '' } | null>(null);
   const [anotherSessionOpen, setAnotherSessionOpen] = useState(false);
@@ -58,6 +60,9 @@ function PresentationWorkspace() {
     setExtractedText(text);
     setFileName(name);
     setErrorMsg('');
+    // A plan with no sessions or days in it is taught in one session.
+    setSessionChoice(current => current.session && !current.auto ? current
+      : { session: text.trim() && !hasSessionMarkers(text) ? WHOLE_LESSON : '', auto: true });
   };
 
   // Generate Presentation Flow
@@ -99,7 +104,7 @@ function PresentationWorkspace() {
     resetDeck();
     setExtractedText('');
     setFileName('');
-    setSelectedSession('');
+    setSessionChoice({ session: '', auto: false });
     setSelectedSubject('');
     setErrorMsg('');
   };
@@ -118,7 +123,7 @@ function PresentationWorkspace() {
             fileName={fileName}
             onUploadSuccess={handleUploadSuccess}
             selectedSession={selectedSession}
-            onSessionChange={setSelectedSession}
+            onSessionChange={session => setSessionChoice({ session, auto: false })}
             selectedSubject={selectedSubject}
             onSubjectChange={setSelectedSubject}
             onGenerate={handleGenerate}

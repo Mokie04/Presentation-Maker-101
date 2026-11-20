@@ -19,6 +19,10 @@ describe('hasSessionMarkers', () => {
     '1st day - Motivation',
     'Meeting 4',
     'MONDAY\tTUESDAY\tWEDNESDAY\tTHURSDAY\tFRIDAY\nObjectives',
+    'LUNES\tMARTES\tMIYERKULES\tHUWEBES\tBIYERNES\nLayunin',
+    'Unang Araw: Balik-aral',
+    'Ikaapat na Sesyon',
+    'Araw 2 - Pagtataya',
   ])('finds sessions or days in %j', text => {
     expect(hasSessionMarkers(text)).toBe(true);
   });
@@ -28,6 +32,7 @@ describe('hasSessionMarkers', () => {
     'Imagine walking from your house to school every day. On Monday you take a detour.',
     'Research applications and present findings in the next class.',
     'Teaching date 11/23/2026, Grade 7 Science',
+    'Monday and Lunes name the same day; with Friday that is only two days.',
   ])('finds none in a one-session plan: %j', text => {
     expect(hasSessionMarkers(text)).toBe(false);
   });

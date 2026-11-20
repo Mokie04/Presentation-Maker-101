@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { PresentationData } from '@/types/presentation';
 import type { SupportedSubject } from '@/lib/utils/subject-options';
-import { SESSION_OPTIONS, type SessionOption } from '@/lib/utils/session-options';
+import { NUMBERED_SESSIONS, WHOLE_LESSON, type SessionOption } from '@/lib/utils/session-options';
 import { generatePresentation } from '@/lib/generate-client';
 import { useDialogFocus } from './use-dialog-focus';
 
@@ -45,6 +45,8 @@ export function AnotherSessionDialog({ text, lessonName, subject, sessions, acti
   onSuccess: (data: PresentationData, session: SessionOption) => void;
 }) {
   const [session, setSession] = useState<SessionOption | ''>('');
+  // A lesson holds either one whole-lesson deck or numbered-session decks, never both.
+  const options: readonly SessionOption[] = sessions.includes(WHOLE_LESSON) ? [WHOLE_LESSON] : NUMBERED_SESSIONS;
   const [isLoading, setIsLoading] = useState(false);
   const [stage, setStage] = useState('');
   const [error, setError] = useState('');
@@ -77,7 +79,7 @@ export function AnotherSessionDialog({ text, lessonName, subject, sessions, acti
         <select id="another-session" value={session} disabled={isLoading} className="min-h-11 w-full rounded-lg border border-slate-400 bg-white px-3 text-sm"
           onChange={event => { setSession(event.target.value as SessionOption | ''); setError(''); }}>
           <option value="">Choose a session</option>
-          {SESSION_OPTIONS.map(option => <option key={option} value={option}>
+          {options.map(option => <option key={option} value={option}>
             {option}{sessions.includes(option) ? ' (ready)' : ''}{option === activeSession ? ' (current)' : ''}
           </option>)}
         </select>
