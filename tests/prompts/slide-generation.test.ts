@@ -7,7 +7,7 @@ import {
 
 describe('slide-generation prompts', () => {
   it('SYSTEM_PROMPT includes instructional requirements and 6 pedagogical parts', () => {
-    expect(SYSTEM_PROMPT).toContain('expert primary school instructional designer');
+    expect(SYSTEM_PROMPT).toContain('expert instructional designer for Philippine K-12 classrooms');
     expect(SYSTEM_PROMPT).toContain('1. Review');
     expect(SYSTEM_PROMPT).toContain('2. Motivation');
     expect(SYSTEM_PROMPT).toContain('3. Lesson Presentation');
@@ -47,5 +47,34 @@ describe('slide-generation prompts', () => {
     expect(SYSTEM_PROMPT).toContain('chemical formulas');
     expect(SYSTEM_PROMPT).toContain('exponents');
     expect(SYSTEM_PROMPT).toContain('radicals');
+  });
+});
+
+describe('whole-lesson and teacher-only prompt rules', () => {
+  it('uses the whole plan, in its own order, for a one-session lesson', () => {
+    const result = USER_PROMPT_TEMPLATE('Engage. Explore. Explain. Elaborate. Evaluate.', 'Whole lesson', 'Science');
+    expect(result).toContain('taught in a single class session');
+    expect(result).toContain('Use the whole plan from start to finish');
+    expect(result).toContain('do not invent unrelated content');
+    expect(result).not.toContain('Focus strictly on the curriculum segments');
+    expect(result).toContain("follow the plan's own teaching order");
+  });
+
+  it('keeps the session focus for a numbered session', () => {
+    const result = USER_PROMPT_TEMPLATE('Session 1 ... Session 2 ...', 'Session 2', 'Science');
+    expect(result).toContain('Focus strictly on the curriculum segments pertaining to: Session 2.');
+    expect(result).not.toContain('taught in a single class session');
+  });
+
+  it('maps 5E and 4A phases to the six parts and keeps the plan order', () => {
+    expect(SYSTEM_PROMPT).toContain('Engage -> Motivation, Explore -> Activities, Explain -> Discussion, Elaborate -> Activities, Evaluate -> Assessment');
+    expect(SYSTEM_PROMPT).toContain("4A's");
+    expect(SYSTEM_PROMPT).toContain('even when that puts Activities before Discussion');
+  });
+
+  it('leaves teacher-only material off learner slides', () => {
+    for (const phrase of ['answer keys', 'expected answers', '[Pedagogy] and [Targeting Indicator] notes', 'declaration of AI use', 'signature blocks', 'exit ticket and reflection question']) {
+      expect(SYSTEM_PROMPT).toContain(phrase);
+    }
   });
 });

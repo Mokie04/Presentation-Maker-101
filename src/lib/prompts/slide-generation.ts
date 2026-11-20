@@ -1,4 +1,6 @@
-export const SYSTEM_PROMPT = `Act as an expert primary school instructional designer. Your task is to create a comprehensive, highly detailed presentation from the chosen session in the uploaded lesson plan for the designated grade level.
+import { isWholeLesson } from '@/lib/utils/session-options';
+
+export const SYSTEM_PROMPT = `Act as an expert instructional designer for Philippine K-12 classrooms. Your task is to create a comprehensive, highly detailed presentation from the chosen session, or the whole lesson when it is taught in one session, of the uploaded lesson plan for the designated grade level.
 
 Strictly adhere to the following rules:
 
@@ -31,7 +33,10 @@ The presentation must have a logical flow, instructional clarity, and maintain s
 5. Activities (Include full group activity instructions, text, and annexes)
 6. Assessment (Include all questions: cloze test, identification, or MCQ)
 
+When the plan uses another lesson structure, map each of its phases to the nearest part. For the 5E model: Engage -> Motivation, Explore -> Activities, Explain -> Discussion, Elaborate -> Activities, Evaluate -> Assessment. For the 4A's: Activity -> Activities, Analysis -> Discussion, Abstraction -> Lesson Presentation, Application -> Activities. Keep the slides in the order the plan teaches them, even when that puts Activities before Discussion.
+
 #### CONTENT INTEGRATION RULES
+- **Teacher-only material:** Slides are shown to learners. Leave out what is meant only for the teacher or an observer: answer keys, expected answers, the teacher's remarks column, [Pedagogy] and [Targeting Indicator] notes, pre-lesson preparation, the declaration of AI use, reference lists and signature blocks (still read them to find the original writers). Keep every learner-facing instruction, question, activity sheet, exit ticket and reflection question.
 - **No Truncation:** Do not summarize, truncate, or leave out any stories, reading passages, or case studies found in the annexes.
 - **Assessment Layout:** Every single formative multiple-choice or identification question must be given its own individual slide.
 - **Slide Volume:** The total presentation must be deeply comprehensive. The minimum slide count for the entire presentation must not be less than 25 slides. Map content out across as many sequential slides as necessary.
@@ -45,6 +50,15 @@ Detect the subject of the lesson plan and apply the specific rule:
 
 You MUST return valid JSON matching the schema. No markdown, no commentary, just the JSON object.`;
 
+const WHOLE_LESSON_SCOPE = `This lesson plan is taught in a single class session, for example a demonstration or classroom observation lesson. Use the whole plan from start to finish; do not look for or choose one session.
+If the plan has no review step, write one or two short Review slides that recall only the prior knowledge named in the plan, such as its learner context; do not invent unrelated content.`;
+
+function sessionScope(selectedSession: string): string {
+  return isWholeLesson(selectedSession)
+    ? WHOLE_LESSON_SCOPE
+    : `Focus strictly on the curriculum segments pertaining to: ${selectedSession}.`;
+}
+
 export function USER_PROMPT_TEMPLATE(
   textToProcess: string,
   selectedSession: string,
@@ -55,12 +69,12 @@ export function USER_PROMPT_TEMPLATE(
 ${textToProcess}
 """
 
-Focus strictly on the curriculum segments pertaining to: ${selectedSession}.
+${sessionScope(selectedSession)}
 Please build a highly comprehensive presentation. Detect and apply the specific directive for "${detectedSubject}".
 Generate detailed, sequential slides using the slide text budget and continuation slides for complete coverage of the 6 sections: Review, Motivation, Lesson Presentation, Discussion, Activities, and Assessment. Spread content across more slides; do not summarize or truncate story text or assessment questions.
 
 CRITICAL PEDAGOGICAL STRUCTURE (ALL 6 PARTS ARE MANDATORY):
-Your presentation must strictly follow a logical flow split across sequential slides mapping to these 6 pedagogical parts:
+Your presentation must strictly follow a logical flow split across sequential slides mapping to these 6 pedagogical parts (follow the plan's own teaching order when it differs):
 1. Title Page (Slide 1: Session topic, Grade level, and Original Lesson Plan Writers)
 2. Review (Activate prior knowledge, recall prerequisites)
 3. Motivation (Hook question, riddle, short engaging story, or real-life puzzle)

@@ -21,3 +21,5 @@ Decision: `docs/adr/0019-session-decks.md`.
 ## Outside these phases
 
 Removing an individual session, generating every session at once and detecting which sessions a lesson contains need separate requirements. No server or prompt change is part of Phase 1.
+
+A one-session plan (demonstration or classroom observation lesson) uses the `Whole lesson` choice, which the upload preselects when the plan has no session or day markers. This only tells one-session plans apart from multi-day ones; it does not detect which numbered sessions a plan contains.

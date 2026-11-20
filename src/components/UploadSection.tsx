@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { Mokie } from '@/components/home/Mokie';
 import { GeneratingPanel } from '@/components/home/GeneratingPanel';
-import { SESSION_OPTIONS } from '@/lib/utils/session-options';
+import { NUMBERED_SESSIONS, WHOLE_LESSON, hasSessionMarkers, isWholeLesson } from '@/lib/utils/session-options';
 import { SUPPORTED_SUBJECTS, type SupportedSubject } from '@/lib/utils/subject-options';
 import { DEFAULT_MAX_UPLOAD_MB, uploadTooLargeMessage } from '@/lib/upload-limits';
 
@@ -106,6 +106,8 @@ export function UploadSection({
       }
 
       onUploadSuccess(data.text, data.fileName || file.name);
+      // A plan with no sessions or days in it is taught in one session; the teacher can still pick another.
+      if (!selectedSession && !hasSessionMarkers(data.text)) onSessionChange(WHOLE_LESSON);
     } catch (err) {
       if (uploadRequest.current === controller && !controller.signal.aborted) {
         const msg = err instanceof Error ? err.message : 'Error uploading file.';
@@ -156,6 +158,7 @@ export function UploadSection({
   const hint = isLoading ? 'Building your deck, hang tight!'
     : !hasText ? 'Start by dropping your lesson plan.'
     : !selectedSession ? 'Nice! Now pick the session to build.'
+    : isWholeLesson(selectedSession) ? "All set! I'll build the whole lesson."
     : `All set! I'll build ${selectedSession}.`;
   const hintId = `${manualId}-generate-hint`;
   const currentStep = isLoading ? undefined : !hasText ? 1 : !selectedSession ? 2 : 3;
@@ -223,9 +226,16 @@ export function UploadSection({
         </div>
       </div>
       <div className={`home-step ${selectedSession ? 'setup-step-complete' : ''}`} aria-current={currentStep === 2 ? 'step' : undefined}>
-        <StepHeading number={2} done={Boolean(selectedSession)} title="Which session is this deck for?" hint="The deck covers only that session of your lesson plan. You can make the others afterwards." />
+        <StepHeading number={2} done={Boolean(selectedSession)} title="Which session is this deck for?" hint="Pick Whole lesson for a one-session plan, or the session of a multi-day plan. You can make the others afterwards." />
         <div role="radiogroup" aria-label="Select Session" className="mt-3 grid grid-cols-5 gap-1.5 sm:ml-12 sm:gap-2">
-          {SESSION_OPTIONS.map((session, index) => (
+          <label className="relative col-span-5 min-w-0 cursor-pointer">
+            <input type="radio" name={`lesson-session-${manualId}`} value={WHOLE_LESSON} aria-label={WHOLE_LESSON} checked={selectedSession === WHOLE_LESSON}
+              onChange={() => onSessionChange(WHOLE_LESSON)} className="peer sr-only" />
+            <span aria-hidden="true" className="setup-session flex min-h-[60px] flex-col items-center justify-center rounded-xl border-2 bg-white px-3 pb-2 pt-5 text-center text-sm font-bold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-sky-700">
+              <span className="home-heading text-base leading-none">Whole lesson</span><span className="mt-1 text-[11px] font-semibold">One-session plan, such as a demo or observation lesson</span>
+            </span>
+          </label>
+          {NUMBERED_SESSIONS.map((session, index) => (
             <label key={session} className="relative min-w-0 cursor-pointer">
               <input type="radio" name={`lesson-session-${manualId}`} value={session} aria-label={session} checked={selectedSession === session}
                 onChange={() => onSessionChange(session)} className="peer sr-only" />

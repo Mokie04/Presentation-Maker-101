@@ -17,14 +17,14 @@ function ControlledForm() {
   return <UploadSection {...props} selectedSession={session} onSessionChange={setSession} />;
 }
 describe('home setup', () => {
-  it('names the radiogroup and five native radios, with checked state controlled by props', () => {
+  it('names the radiogroup and six native radios (Whole lesson, then Sessions 1-5), with checked state controlled by props', () => {
     const { rerender } = render(<UploadSection {...props} selectedSession="Session 3" />);
     const group = screen.getByRole('radiogroup', { name: 'Select Session' });
     const radios = within(group).getAllByRole('radio') as HTMLInputElement[];
-    expect(radios.map(r => r.getAttribute('aria-label'))).toEqual(['Session 1', 'Session 2', 'Session 3', 'Session 4', 'Session 5']);
+    expect(radios.map(r => r.getAttribute('aria-label'))).toEqual(['Whole lesson', 'Session 1', 'Session 2', 'Session 3', 'Session 4', 'Session 5']);
     expect(radios.every(r => r.type === 'radio' && r.name === radios[0].name)).toBe(true);
-    expect(radios.map(r => r.checked)).toEqual([false, false, true, false, false]);
-    fireEvent.click(radios[4]); expect(props.onSessionChange).toHaveBeenCalledWith('Session 5');
+    expect(radios.map(r => r.checked)).toEqual([false, false, false, true, false, false]);
+    fireEvent.click(radios[5]); expect(props.onSessionChange).toHaveBeenCalledWith('Session 5');
     rerender(<UploadSection {...props} selectedSession="Session 5" />);
     expect((screen.getByRole('radio', { name: 'Session 5' }) as HTMLInputElement).checked).toBe(true);
   });
