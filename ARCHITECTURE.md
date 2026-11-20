@@ -30,7 +30,7 @@ Presentation Maker turns a teacher's lesson text into an editable slide deck and
 | `src/lib/deck/deck-reducer.ts`, `src/lib/deck/use-slide-deck.ts` | `bulletInserted` inserts an empty point after a bounded index; `insertBullet` shares the existing edit and image ownership boundaries. | `tests/lib/deck/bullet-insertion.test.ts`, `tests/lib/deck/use-slide-deck-insertion.test.tsx` |
 | `src/lib/deck/deck-reducer.ts`, `src/lib/deck/use-slide-deck.ts` | Stable-ID move, duplicate and optional add-after actions; renumber ordered selectors while preserving image ownership and isolating duplicated image tokens. | `tests/lib/deck/deck-operations.test.ts`, `tests/lib/deck/deck-operations-selection.test.ts`, `tests/lib/deck/use-slide-deck-operations.test.tsx` |
 | `src/components/SlideImageControls.tsx` | Original image generation, picker, failure and attribution markup in the Normal panel. | `tests/components/SlideImageControls.test.tsx`, `tests/components/NasaPicker.test.tsx` |
-| `src/lib/pedagogy.ts` | Canonical lesson parts, labels, ordinals and automatic-image eligibility through `normalizePart`, `partLabel` and `partWantsAutoImage`. | `tests/lib/pedagogy.test.ts` |
+| `src/lib/pedagogy.ts` | Lesson formats (Standard, 4A's, 5E) and their detection; canonical parts, labels, ordinals and automatic-image eligibility per format through `normalizePart`, `partLabel` and `partWantsAutoImage`. | `tests/lib/pedagogy.test.ts`, `tests/lib/lesson-formats.test.ts` |
 | `src/lib/image-credit.ts` | `describeImageCredit` supplies one attribution description for renderers. | `tests/lib/image-credit.test.ts`, `tests/lib/services/credit-characterization.test.ts` |
 | `src/lib/slide-theme.ts`, `src/components/SlideView.tsx` | Shared PPTX palette, type sizes and geometry; `slideLayoutFor` and `hasVisual` select layouts. `SlideView` renders real formula text with local Poppins and a passive thumbnail mode; optional title/point render functions let the stage wrap stored text for editing. | `tests/lib/slide-theme.test.ts`, `tests/components/SlideView.test.tsx`, `tests/components/SlideViewEditing.test.tsx`, `tests/lib/services/slide-layout-characterization.test.ts` |
 | `src/lib/slide-fit.ts`, `src/lib/slide-fit-metrics.ts`, `scripts/generate-slide-fit-metrics.mjs` | Pure `fitText` and layout-aware `fitSlide` select the largest fitting sizes with shared floors and margins. Generated Poppins advances and line heights keep browser and export decisions consistent. | `tests/lib/slide-fit.test.ts`, `tests/lib/slide-fit-metrics.test.ts`, `tests/lib/slide-fit-calibration.test.ts`, `tests/fixtures/slide-fit-corpus.json`, `tests/lib/services/slide-fit-characterization.test.ts`, `tests/lib/services/slide-fit-dense.test.ts` |
@@ -94,11 +94,11 @@ Presentation Maker turns a teacher's lesson text into an editable slide deck and
 
 **A lesson part**
 
-1. Add the name and normalization rule in `src/lib/pedagogy.ts`.
+1. Add the name and normalization rule to its lesson format in `src/lib/pedagogy.ts`.
 2. Decide its ordinal and automatic-image eligibility in the same module.
 3. Add its badge colour in `src/components/part-badge.ts`.
 4. Update generation instructions in `src/lib/prompts/slide-generation.ts` if the new part should be generated.
-5. Extend `tests/lib/pedagogy.test.ts` and `tests/prompts/pedagogical-parts.test.ts`.
+5. Extend `tests/lib/pedagogy.test.ts`, `tests/lib/lesson-formats.test.ts` and `tests/prompts/pedagogical-parts.test.ts`.
 
 ## Working agreements and limitations
 

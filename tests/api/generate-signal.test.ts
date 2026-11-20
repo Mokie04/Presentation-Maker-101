@@ -15,7 +15,7 @@ it('forwards request cancellation to the text provider', async () => {
     subject: 'Science', originalWriters: 'Teacher', topic: 'Roots', slides: [],
   });
   expect((await POST(request)).status).toBe(200);
-  expect(generate).toHaveBeenCalledWith('A lesson about roots', 'Session 1', expect.any(String), { signal: request.signal });
+  expect(generate).toHaveBeenCalledWith('A lesson about roots', 'Session 1', expect.any(String), { signal: request.signal, lessonFormat: 'Standard' });
   const upstream = generate.mock.calls[0][3]?.signal;
   controller.abort();
   expect(upstream?.aborted).toBe(true);

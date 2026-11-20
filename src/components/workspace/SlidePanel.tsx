@@ -5,7 +5,7 @@ import { suggestSplitIndex } from '@/lib/slide-split';
 import { getSlideOverflow } from '@/lib/slide-fit';
 import { SlideFitNotice } from './SlideFitNotice';
 import { Plus, X } from 'lucide-react';
-import { normalizePart, PEDAGOGICAL_PARTS } from '@/lib/pedagogy';
+import { lessonFormatParts, normalizePart, type LessonFormat } from '@/lib/pedagogy';
 import { SlideImageControls } from '../SlideImageControls';
 import { useMediaQuery } from './use-media-query';
 import { DEFAULT_THEME, type SlideTheme } from '@/lib/themes';
@@ -31,6 +31,7 @@ export interface SlidePanelProps {
   slideIndex?: number;
   originalWriters?: string;
   onSplit?: () => void;
+  lessonFormat?: LessonFormat;
 }
 export function SlidePanel({
   slide,
@@ -51,6 +52,7 @@ export function SlidePanel({
   slideIndex,
   originalWriters,
   onSplit,
+  lessonFormat,
 }: SlidePanelProps) {
   const overflow = getSlideOverflow(slide, slideIndex ?? 0, originalWriters, theme);
   const split = overflow.body && onSplit && suggestSplitIndex(slide, slideIndex ?? 0, originalWriters, theme) !== null ? onSplit : undefined;
@@ -84,8 +86,8 @@ export function SlidePanel({
           onChange={(e) => onUpdatePart?.(slideId, e.target.value)}
           className="w-full text-xs font-bold text-slate-800 p-2.5 bg-white border border-slate-500 rounded-lg focus:ring-2 focus:ring-sky-700 focus:border-sky-700 outline-none transition-all"
         >
-          {PEDAGOGICAL_PARTS.map((part) => <option key={part} value={part}>{part}</option>)}
-          {normalizePart(slide.part) !== slide.part && <option value={slide.part}>{slide.part}</option>}
+          {lessonFormatParts(lessonFormat).map((part) => <option key={part} value={part}>{part}</option>)}
+          {normalizePart(slide.part, lessonFormat) !== slide.part && <option value={slide.part}>{slide.part}</option>}
         </select>
       </div>
 

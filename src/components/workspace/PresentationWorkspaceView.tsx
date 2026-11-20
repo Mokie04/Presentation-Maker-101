@@ -189,7 +189,8 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
                       imageError={imageErrors[selectedIndex]} onUpdatePart={updatePart} onUpdateTitle={updateTitle}
                       onUpdateBullet={updateBullet} onAddBullet={addBullet} onDeleteBullet={deleteBullet}
                       onRegenerateImage={regenerateImage} onSelectImage={selectLibraryImage}
-                      originalWriters={presentationData.originalWriters} slideIndex={selectedIndex} onSplit={splitSelected} />
+                      originalWriters={presentationData.originalWriters} slideIndex={selectedIndex} onSplit={splitSelected}
+                      lessonFormat={presentationData.lessonFormat} />
                   </div>
                 </div>
               ) : (
@@ -202,11 +203,11 @@ export function PresentationWorkspaceView({ deck, downloads, session: selectedSe
               <SlideSorter theme={theme} slides={presentationData.slides} slideIds={slideIds} selectedId={selection.selectedId}
                 onSelect={selection.selectSlide} onOpen={(id) => { selection.selectSlide(id); changeView('normal'); }}
                 onMove={moveSlide} onDuplicate={duplicateSlide} onDelete={deleteSlide} onAdd={() => addSlide()}
-                slideImages={slideImages} originalWriters={presentationData.originalWriters} />
+                slideImages={slideImages} originalWriters={presentationData.originalWriters} lessonFormat={presentationData.lessonFormat} />
             )}
             <div className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-600">
               <span role="status" aria-live="polite" aria-atomic="true">
-                {selectedSlide ? `Slide ${selectedIndex + 1} of ${presentationData.slides.length} · ${partLabel(selectedSlide.part)}` : 'No slides'}
+                {selectedSlide ? `Slide ${selectedIndex + 1} of ${presentationData.slides.length} · ${partLabel(selectedSlide.part, presentationData.lessonFormat)}` : 'No slides'}
               </span>
               <div role="group" aria-label="Slide navigation" className="flex flex-wrap items-center gap-2">
                 <button type="button" aria-label="Previous slide" onClick={selection.previous} disabled={selectedIndex <= 0}

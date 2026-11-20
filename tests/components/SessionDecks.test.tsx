@@ -61,7 +61,7 @@ it.each(['Science', ''])('reuses lesson and original %s subject provenance, and 
   await open(subject);
   another();
   expect(within(dialog()).getByText(`${lesson.length} characters`, { exact: false })).toBeTruthy();
-  expect(within(dialog()).getByText(subject || 'Automatic')).toBeTruthy();
+  expect(within(dialog()).getByText('Subject:').parentElement?.textContent).toBe(`Subject: ${subject || 'Automatic'}`);
   expect(within(dialog()).getByRole('option', { name: 'Session 1 (ready) (current)' })).toBeTruthy();
   expect(within(dialog()).getByRole('option', { name: 'Session 2' })).toBeTruthy();
   fireEvent.click(within(dialog()).getByRole('button', { name: 'Generate' }));

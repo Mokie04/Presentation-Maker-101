@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { defineRoute } from '@/lib/api';
 import { imageSourceSchema } from '@/lib/schemas/image-request';
 import { processBatchImages } from '@/lib/services/image-batch';
+import { LESSON_FORMATS } from '@/lib/pedagogy';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -27,6 +28,8 @@ const inputSchema = z.object({
     title: z.string().max(MAX_TITLE_LENGTH).optional(),
   })).max(MAX_SLIDES),
   source: imageSourceSchema.optional(),
+  // The deck's lesson format names its parts; Standard when omitted.
+  lessonFormat: z.enum(LESSON_FORMATS).optional(),
   // Same meaning as before validation existed: anything but a non-negative number uses the default.
   delayMs: z.unknown().optional().transform((delayMs) =>
     typeof delayMs === 'number' && delayMs >= 0 ? Math.min(delayMs, MAX_DELAY_MS) : DEFAULT_DELAY_MS),
@@ -42,6 +45,7 @@ export const POST = defineRoute({
     const images = await processBatchImages(input.slides, {
       delayMs: input.delayMs,
       source: input.source,
+      lessonFormat: input.lessonFormat,
     });
 
     return NextResponse.json({ images }, { status: 200 });

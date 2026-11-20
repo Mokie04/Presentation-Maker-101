@@ -21,6 +21,6 @@ it('fits a mocked dense model response before returning server-recorded provenan
 });
 it('passes an already fitting model deck through without content changes', async () => {
   vi.spyOn(provider, 'generateSlideContent').mockResolvedValueOnce(base);
-  const response = await POST(request()); const { subjectEvidence, ...body } = await response.json();
-  expect(response.status).toBe(200); expect(body).toEqual(base); expect(subjectEvidence).toHaveLength(2);
+  const response = await POST(request()); const { subjectEvidence, lessonFormat, ...body } = await response.json();
+  expect(response.status).toBe(200); expect(body).toEqual(base); expect(lessonFormat).toBe('Standard'); expect(subjectEvidence).toHaveLength(2);
 });

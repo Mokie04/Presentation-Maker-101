@@ -1,21 +1,20 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { PEDAGOGICAL_PARTS } from '@/lib/pedagogy';
+import { DEFAULT_LESSON_FORMAT, numberedParts, type LessonFormat } from '@/lib/pedagogy';
 import { getPartBadgeInfo } from '@/components/part-badge';
 import { Mokie } from './Mokie';
 
-const lessonParts = PEDAGOGICAL_PARTS.filter(part => part !== 'Title Page');
-
 /** Decorative activity, not a measurement of server progress or time remaining. */
-export function GeneratingPanel({ loadingStage }: { loadingStage: string }) {
+export function GeneratingPanel({ loadingStage, lessonFormat = DEFAULT_LESSON_FORMAT }: { loadingStage: string; lessonFormat?: LessonFormat }) {
+  const lessonParts = numberedParts(lessonFormat);
   const panel = useRef<HTMLElement>(null);
   const [litParts, setLitParts] = useState(1);
   useEffect(() => {
     panel.current?.scrollIntoView?.({ block: 'start', behavior: 'auto' });
     const timer = setInterval(() => { setLitParts(count => Math.min(count + 1, lessonParts.length)); }, 1400);
     return () => clearInterval(timer);
-  }, []);
+  }, [lessonParts.length]);
   return (
     <section ref={panel} aria-label="Generating presentation" className="border-b border-sky-100 p-5 sm:p-7">
       <div className="mb-5 flex items-center gap-4">
@@ -29,7 +28,7 @@ export function GeneratingPanel({ loadingStage }: { loadingStage: string }) {
       </div>
       <div aria-hidden="true" className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
         {lessonParts.map((part, index) => (
-          <span key={part} className={`rounded-xl border px-2 py-3 text-center text-[11px] font-bold uppercase tracking-wide ${index < litParts ? `${getPartBadgeInfo(part).bg} border-transparent text-white` : 'border-slate-200 bg-white text-slate-600'} ${index === litParts - 1 ? 'home-chip-pulse motion-reduce:animate-none' : ''}`}>
+          <span key={part} className={`rounded-xl border px-2 py-3 text-center text-[11px] font-bold uppercase tracking-wide ${index < litParts ? `${getPartBadgeInfo(part, lessonFormat).bg} border-transparent text-white` : 'border-slate-200 bg-white text-slate-600'} ${index === litParts - 1 ? 'home-chip-pulse motion-reduce:animate-none' : ''}`}>
             {part}
           </span>
         ))}

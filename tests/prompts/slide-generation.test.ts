@@ -77,6 +77,40 @@ describe('whole-lesson and teacher-only prompt rules', () => {
       expect(SYSTEM_PROMPT).toContain(phrase);
     }
     expect(SYSTEM_PROMPT).toContain('Never show an answer or expected answer on a question slide');
-    expect(SYSTEM_PROMPT).toContain('titled "Answer Key" at the end of the Assessment part');
+    expect(SYSTEM_PROMPT).toContain('titled "Answer Key" at the end of the last part (Assessment, or Evaluate in the 5E format)');
+  });
+});
+
+describe('lesson format prompts', () => {
+  it("lists the 4A's parts, makes Review and Motivation optional and shows 4A's example parts", () => {
+    const result = USER_PROMPT_TEMPLATE('Lesson', 'Whole lesson', 'Mathematics', "4A's");
+    expect(result).toContain("CRITICAL PEDAGOGICAL STRUCTURE (4A'S LESSON FORMAT)");
+    expect(result).toContain('4. Activity (');
+    expect(result).toContain('7. Application (');
+    expect(result).toContain('2. Review (Only when the plan has a review or recall step; otherwise leave it out)');
+    expect(result).toContain("spelled exactly: Title Page, Review, Motivation, Activity, Analysis, Abstraction, Application, Assessment.");
+    expect(result).toContain('"part": "Abstraction"');
+    expect(result).not.toContain('"part": "Discussion"');
+    expect(result).not.toContain('ALL 6 PARTS ARE MANDATORY');
+    expect(result).not.toContain('write one or two short Review slides');
+  });
+
+  it('lists the 5E parts and examples', () => {
+    const result = USER_PROMPT_TEMPLATE('Lesson', 'Session 1', 'Science', '5E');
+    expect(result).toContain('CRITICAL PEDAGOGICAL STRUCTURE (5E LESSON FORMAT)');
+    expect(result).toContain('Engage, Explore, Explain, Elaborate and Evaluate are mandatory.');
+    expect(result).toContain('"part": "Evaluate"');
+    expect(result).not.toContain('"part": "Assessment"');
+  });
+
+  it('keeps the six-part prompt for the Standard format', () => {
+    const result = USER_PROMPT_TEMPLATE('Lesson', 'Whole lesson', 'Science', 'Standard');
+    expect(result).toBe(USER_PROMPT_TEMPLATE('Lesson', 'Whole lesson', 'Science'));
+    expect(result).toContain('ALL 6 PARTS ARE MANDATORY');
+    expect(result).toContain('write one or two short Review slides');
+  });
+
+  it('tells the model the request names the format', () => {
+    expect(SYSTEM_PROMPT).toContain("For the 4A's and 5E formats, use the parts the request lists instead");
   });
 });

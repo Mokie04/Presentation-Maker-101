@@ -80,17 +80,18 @@ export function useSlideDeck() {
     dispatchSession({ type: 'sessionLoaded', session, presentation: data });
     const controller = new AbortController();
     const requests = stateRef.current.slides.flatMap((slide, slideIndex) =>
-      partWantsAutoImage(slide.content.part) && slide.content.visualDescription.trim()
+      partWantsAutoImage(slide.content.part, data.lessonFormat) && slide.content.visualDescription.trim()
         ? [{ token: { slideId: slide.id, version: slide.image.version }, slideIndex, prompt: slide.content.visualDescription }]
         : []);
     const load = { controller, slideIds: new Set(requests.map(({ token }) => token.slideId)) };
     imageLoads.current.set(session, load);
     for (const { token, slideIndex, prompt } of requests) {
       imageQueue.current.push({ signal: controller.signal, run: async () => {
-        const current = sessionsRef.current.decks[session]?.deck.slides.find(slide => slide.id === token.slideId);
+        const sessionDeck = sessionsRef.current.decks[session]?.deck;
+        const current = sessionDeck?.slides.find(slide => slide.id === token.slideId);
         // A deleted slide or a newer image intent needs no queued automatic request.
         if (controller.signal.aborted || !current || current.image.version !== token.version ||
-          !partWantsAutoImage(current.content.part) || !current.content.visualDescription.trim()) {
+          !partWantsAutoImage(current.content.part, sessionDeck?.presentation?.lessonFormat) || !current.content.visualDescription.trim()) {
           // A skipped request stays finished if the teacher later restores eligibility.
           load.slideIds.delete(token.slideId);
           return;
@@ -167,7 +168,7 @@ export function useSlideDeck() {
   const imageProgress = { loading: 0, done: 0, failed: 0 };
   const automaticIds = sessionsState.activeSession ? imageLoads.current.get(sessionsState.activeSession)?.slideIds : undefined;
   for (const slide of state.slides) {
-    if (!automaticIds?.has(slide.id) || !partWantsAutoImage(slide.content.part) || !slide.content.visualDescription.trim()) continue;
+    if (!automaticIds?.has(slide.id) || !partWantsAutoImage(slide.content.part, state.presentation?.lessonFormat) || !slide.content.visualDescription.trim()) continue;
     if (slide.image.status === 'ready') imageProgress.done++;
     else if (slide.image.status === 'failed') imageProgress.failed++;
     else imageProgress.loading++;
