@@ -1,7 +1,6 @@
 // @vitest-environment jsdom
 import { automaticImageResponse } from '../helpers/image-responses';
 import React from 'react';
-import { chooseSession } from '../helpers/workspace';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen, within, waitFor } from '@testing-library/react';
 import Home from '@/app/page';
@@ -18,7 +17,6 @@ afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
 async function open() {
   render(<Home />); fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: 'A lesson about plants.' } });
-  chooseSession('Session 1');
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' })); await screen.findByRole('listbox');
 }
 function swipe(element: HTMLElement, x: number, y: number) {

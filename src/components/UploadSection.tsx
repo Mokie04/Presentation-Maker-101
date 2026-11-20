@@ -12,23 +12,27 @@ import {
 } from 'lucide-react';
 import { Mokie } from '@/components/home/Mokie';
 import { GeneratingPanel } from '@/components/home/GeneratingPanel';
-import { SESSION_OPTIONS, isWholeLesson } from '@/lib/utils/session-options';
+import { SESSION_OPTIONS, isWholeLesson, replacesMostOf } from '@/lib/utils/session-options';
 import { SUPPORTED_SUBJECTS, type SupportedSubject } from '@/lib/utils/subject-options';
-import { DEFAULT_LESSON_FORMAT, LESSON_FORMATS, type LessonFormat } from '@/lib/pedagogy';
+import { DEFAULT_LESSON_FORMAT, type LessonFormat } from '@/lib/pedagogy';
 import { DEFAULT_MAX_UPLOAD_MB, uploadTooLargeMessage } from '@/lib/upload-limits';
 
 interface UploadSectionProps {
   extractedText: string;
   fileName: string;
-  onUploadSuccess: (text: string, fileName: string) => void;
+  /**
+   * The lesson text changed: an upload started (empty), finished or was restored after a failure, or the paste box
+   * changed. `newLesson` is true for a finished upload or a change that replaces most of the text, not for an edit
+   * or a restore.
+   */
+  onLessonChange: (text: string, fileName: string, newLesson: boolean) => void;
   selectedSession: string;
   onSessionChange: (session: string) => void;
   selectedSubject?: SupportedSubject | '';
   onSubjectChange?: (subject: SupportedSubject | '') => void;
-  /** The teacher's lesson format; '' is Automatic. */
-  selectedFormat?: LessonFormat | '';
-  onFormatChange?: (format: LessonFormat | '') => void;
-  /** What Automatic would use for the current lesson text. */
+  /** Whether the lesson plan is split into sessions or days; a plan without them always builds the whole lesson. */
+  planHasSessions?: boolean;
+  /** The lesson format detected from the current lesson text. */
   detectedFormat?: LessonFormat;
   /** The format of the request in flight, captured when Generate was clicked. */
   generatingFormat?: LessonFormat;
@@ -41,13 +45,12 @@ interface UploadSectionProps {
 export function UploadSection({
   extractedText,
   fileName,
-  onUploadSuccess,
+  onLessonChange,
   selectedSession,
   onSessionChange,
   selectedSubject = '',
   onSubjectChange,
-  selectedFormat = '',
-  onFormatChange,
+  planHasSessions = false,
   detectedFormat = DEFAULT_LESSON_FORMAT,
   generatingFormat = DEFAULT_LESSON_FORMAT,
   onGenerate,
@@ -91,7 +94,7 @@ export function UploadSection({
     const controller = new AbortController();
     uploadRequest.current = controller;
     setIsUploading(true);
-    onUploadSuccess('', '');
+    onLessonChange('', '', false);
 
     try {
       const formData = new FormData();
@@ -117,12 +120,12 @@ export function UploadSection({
         throw new Error(data.error || 'Failed to upload and parse document.');
       }
 
-      onUploadSuccess(data.text, data.fileName || file.name);
+      onLessonChange(data.text, data.fileName || file.name, true);
     } catch (err) {
       if (uploadRequest.current === controller && !controller.signal.aborted) {
         const msg = err instanceof Error ? err.message : 'Error uploading file.';
         setUploadError(msg);
-        onUploadSuccess(lessonBeforeUpload.current.text, lessonBeforeUpload.current.name);
+        onLessonChange(lessonBeforeUpload.current.text, lessonBeforeUpload.current.name, false);
       }
     } finally {
       if (uploadRequest.current === controller) {
@@ -155,7 +158,7 @@ export function UploadSection({
     uploadRequest.current?.abort();
     uploadRequest.current = null;
     setIsUploading(false);
-    onUploadSuccess(val, '');
+    onLessonChange(val, '', replacesMostOf(extractedText, val));
   };
 
   const canGenerate =
@@ -236,31 +239,35 @@ export function UploadSection({
         </div>
       </div>
       <div className={`home-step ${selectedSession ? 'setup-step-complete' : ''}`} aria-current={currentStep === 2 ? 'step' : undefined}>
-        <StepHeading number={2} done={Boolean(selectedSession)} title="Which session is this deck for?" hint="Pick Whole lesson for a one-session plan, or the session of a multi-day plan. You can make the others afterwards." />
-        <div role="radiogroup" aria-label="Select Session" className="mt-3 grid grid-cols-5 gap-1.5 sm:ml-12 sm:gap-2">
-          {SESSION_OPTIONS.map(session => {
-            const whole = isWholeLesson(session);
-            return (
-              <label key={session} className={`relative min-w-0 cursor-pointer ${whole ? 'col-span-5' : ''}`}>
-                <input type="radio" name={`lesson-session-${manualId}`} value={session} aria-label={session} checked={selectedSession === session}
-                  onChange={() => onSessionChange(session)} className="peer sr-only" />
-                <span aria-hidden="true" className={`setup-session flex flex-col items-center justify-center rounded-xl border-2 bg-white pb-2 text-sm font-bold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-sky-700 ${whole ? 'min-h-[60px] px-3 pt-5 text-center' : 'min-h-[76px] min-w-11 px-1 pt-6'}`}>
-                  {whole
-                    ? <><span className="home-heading text-base leading-none">Whole lesson</span><span className="mt-1 text-[11px] font-semibold">One-session plan, such as a demo or observation lesson</span></>
-                    : <><span className="home-heading text-2xl leading-none">{session.replace('Session ', '')}</span><span className="mt-1 text-[11px] font-semibold">Session</span></>}
-                </span>
-              </label>
-            );
-          })}
-        </div>
+        {!hasText ? (
+          <StepHeading number={2} done={false} title="Sessions" hint="We check your lesson plan for sessions once you add it." />
+        ) : !planHasSessions ? (
+          <StepHeading number={2} done title="Whole lesson" hint="No sessions or days found in your plan, so the deck covers the whole lesson." />
+        ) : (<>
+          <StepHeading number={2} done={Boolean(selectedSession)} title="Which session is this deck for?" hint="Your plan seems to have several sessions. Pick one, or Whole lesson if it is taught in one session." />
+          <div role="radiogroup" aria-label="Select Session" className="mt-3 grid grid-cols-5 gap-1.5 sm:ml-12 sm:gap-2">
+            {SESSION_OPTIONS.map(session => {
+              const whole = isWholeLesson(session);
+              return (
+                <label key={session} className={`relative min-w-0 cursor-pointer ${whole ? 'col-span-5' : ''}`}>
+                  <input type="radio" name={`lesson-session-${manualId}`} value={session} aria-label={session} checked={selectedSession === session}
+                    onChange={() => onSessionChange(session)} className="peer sr-only" />
+                  <span aria-hidden="true" className={`setup-session flex flex-col items-center justify-center rounded-xl border-2 bg-white pb-2 text-sm font-bold peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-sky-700 ${whole ? 'min-h-[60px] px-3 pt-5 text-center' : 'min-h-[76px] min-w-11 px-1 pt-6'}`}>
+                    {whole
+                      ? <><span className="home-heading text-base leading-none">Whole lesson</span><span className="mt-1 text-[11px] font-semibold">Build one deck from the whole plan</span></>
+                      : <><span className="home-heading text-2xl leading-none">{session.replace('Session ', '')}</span><span className="mt-1 text-[11px] font-semibold">Session</span></>}
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+        </>)}
       </div>
       <div className={`home-step setup-last-step ${isLoading && hasText && selectedSession ? 'setup-step-complete' : ''}`} aria-current={currentStep === 3 ? 'step' : undefined}>
-        <StepHeading number={3} done={isLoading && hasText && Boolean(selectedSession)} title="Subject and generate" hint="Leave on Automatic and we detect the subject and lesson format from your lesson." />
+        <StepHeading number={3} done={isLoading && hasText && Boolean(selectedSession)} title="Subject and generate" hint="Leave on Automatic and we detect it from your lesson." />
         <div className="mt-3 sm:ml-12">
-          <div className="grid max-w-2xl gap-3 sm:grid-cols-2">
-          <div>
           <label htmlFor="subject-select" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">Subject</label>
-          <div className="relative">
+          <div className="relative max-w-sm">
             <select id="subject-select" aria-label="Subject" value={selectedSubject} onChange={event => onSubjectChange?.(event.target.value as SupportedSubject | '')}
               className="setup-subject min-h-11 w-full cursor-pointer appearance-none rounded-xl border-2 bg-white px-4 py-3 pr-10 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-700">
               <option value="">Automatic</option>
@@ -268,19 +275,13 @@ export function UploadSection({
             </select>
             <Layers className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600" />
           </div>
-          </div>
-          <div>
-          <label htmlFor="lesson-format-select" className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-600">Lesson format</label>
-          <div className="relative">
-            <select id="lesson-format-select" aria-label="Lesson format" value={selectedFormat} onChange={event => onFormatChange?.(event.target.value as LessonFormat | '')}
-              className="setup-subject min-h-11 w-full cursor-pointer appearance-none rounded-xl border-2 bg-white px-4 py-3 pr-10 text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-700">
-              <option value="">{hasText ? `Automatic (${detectedFormat})` : 'Automatic'}</option>
-              {LESSON_FORMATS.map(format => <option key={format} value={format}>{format}</option>)}
-            </select>
-            <Layers className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600" />
-          </div>
-          </div>
-          </div>
+          {hasText && (
+            <p className="mt-3 text-sm text-slate-700">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-600">Lesson format</span>{' '}
+              <span className="ml-1 font-semibold text-slate-900">{detectedFormat}</span>
+              <span className="text-slate-600"> · detected from your plan</span>
+            </p>
+          )}
           <div className="setup-generate-row mt-5">
             <div className="setup-mokie" aria-hidden="true"><Mokie size="small" /></div>
             <div className="setup-generate-actions">

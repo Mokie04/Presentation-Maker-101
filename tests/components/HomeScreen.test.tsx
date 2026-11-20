@@ -10,22 +10,22 @@ import { GeneratingPanel } from '@/components/home/GeneratingPanel';
 import { Header } from '@/components/Header';
 import { getPartBadgeInfo } from '@/components/part-badge';
 
-const props = { extractedText: '', fileName: '', selectedSession: '', onSessionChange: vi.fn(), onUploadSuccess: vi.fn(), onGenerate: vi.fn(), isLoading: false, loadingStage: '' };
+const props = { extractedText: '', fileName: '', selectedSession: '', onSessionChange: vi.fn(), onLessonChange: vi.fn(), onGenerate: vi.fn(), isLoading: false, loadingStage: '' };
 afterEach(() => { cleanup(); vi.clearAllMocks(); vi.useRealTimers(); });
 function ControlledForm() {
   const [session, setSession] = useState('');
-  return <UploadSection {...props} selectedSession={session} onSessionChange={setSession} />;
+  return <UploadSection {...props} extractedText="Session 1 ... Session 2 ..." planHasSessions selectedSession={session} onSessionChange={setSession} />;
 }
 describe('home setup', () => {
-  it('names the radiogroup and six native radios (Whole lesson, then Sessions 1-5), with checked state controlled by props', () => {
-    const { rerender } = render(<UploadSection {...props} selectedSession="Session 3" />);
+  it('names the radiogroup and six native radios (Whole lesson, then Sessions 1-5) for a plan with sessions, with checked state controlled by props', () => {
+    const { rerender } = render(<UploadSection {...props} extractedText="Session 1 ... Session 2 ..." planHasSessions selectedSession="Session 3" />);
     const group = screen.getByRole('radiogroup', { name: 'Select Session' });
     const radios = within(group).getAllByRole('radio') as HTMLInputElement[];
     expect(radios.map(r => r.getAttribute('aria-label'))).toEqual(['Whole lesson', 'Session 1', 'Session 2', 'Session 3', 'Session 4', 'Session 5']);
     expect(radios.every(r => r.type === 'radio' && r.name === radios[0].name)).toBe(true);
     expect(radios.map(r => r.checked)).toEqual([false, false, false, true, false, false]);
     fireEvent.click(radios[5]); expect(props.onSessionChange).toHaveBeenCalledWith('Session 5');
-    rerender(<UploadSection {...props} selectedSession="Session 5" />);
+    rerender(<UploadSection {...props} extractedText="Session 1 ... Session 2 ..." planHasSessions selectedSession="Session 5" />);
     expect((screen.getByRole('radio', { name: 'Session 5' }) as HTMLInputElement).checked).toBe(true);
   });
   it('updates checked state through the native input change event', () => {
@@ -59,7 +59,7 @@ describe('home setup', () => {
     expect(props.onGenerate).toHaveBeenCalledWith('original text', 'Session 4', 'Science');
   });
   it('retains setup controls and Processing while showing the generating state', () => {
-    render(<UploadSection {...props} extractedText="lesson" selectedSession="Session 1" isLoading loadingStage="Analyzing curriculum..." />);
+    render(<UploadSection {...props} extractedText="lesson" planHasSessions selectedSession="Session 1" isLoading loadingStage="Analyzing curriculum..." />);
     expect(screen.getByRole('button', { name: 'Processing...' }).hasAttribute('disabled')).toBe(true);
     expect(screen.getByRole('radio', { name: 'Session 5' })).toBeTruthy();
     expect(screen.getByRole('combobox', { name: 'Subject' })).toBeTruthy();
@@ -70,7 +70,7 @@ describe('home setup', () => {
 it('renders the exact hero promise, steps, speech bubble and shared header tagline', () => {
   render(<><Header /><HomeHero /></>);
   expect(screen.getByRole('heading', { name: 'Turn your lesson plan into a classroom-ready PowerPoint.' })).toBeTruthy();
-  for (const text of ['Upload your lesson', 'Pick a session', 'Edit and download', "Hi, I'm Mokie! Drop your lesson plan and I'll build the slides.", 'Making Presentation very Sayuna']) expect(screen.getByText(text)).toBeTruthy();
+  for (const text of ['Upload your lesson', 'Generate slides', 'Edit and download', "Hi, I'm Mokie! Drop your lesson plan and I'll build the slides.", 'Making Presentation very Sayuna']) expect(screen.getByText(text)).toBeTruthy();
 });
 it('uses decorative, explicitly sized mascot assets with hero priority and reduced-motion support', () => {
   const { container } = render(<><Mokie size="hero" /><Mokie size="small" /></>);

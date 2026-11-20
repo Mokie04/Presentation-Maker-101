@@ -1,3 +1,5 @@
+import { HEADING_START } from '@/lib/utils/session-options';
+
 /** Lesson parts in teaching order; every slide's `part` is meant to be one of these. */
 export const PEDAGOGICAL_PARTS = [
   'Title Page',
@@ -142,20 +144,33 @@ export function partWantsAutoImage(raw: string, format: LessonFormat = DEFAULT_L
   return part !== null && AUTO_IMAGE_PARTS.has(part);
 }
 
-// Phase headings are stronger evidence than a passing mention of the approach, so they are checked first.
-const FOUR_AS_PHASES = ['activity', 'analysis', 'abstraction', 'application'].map(word => new RegExp(`\\b${word}\\b`, 'i'));
-const FIVE_E_PHASES = ['engage', 'explore', 'explain', 'elaborate', 'evaluate'].map(word => new RegExp(`\\b${word}\\b`, 'i'));
+const PHASE_WORDS: Record<Exclude<LessonFormat, 'Standard'>, readonly string[]> = {
+  "4A's": ['activity', 'analysis', 'abstraction', 'application'],
+  '5E': ['engage', 'explore', 'explain', 'elaborate', 'evaluate'],
+};
+// Each phase as a heading (start of a line or table cell) and as a word anywhere in the plan.
+const PHASES_AS_HEADINGS = phasePatterns(word => new RegExp(`${HEADING_START}${word}\\b`, 'im'));
+const PHASES_ANYWHERE = phasePatterns(word => new RegExp(`\\b${word}\\b`, 'i'));
 // "4As", "4A's", "4 A’s", "5E", "5Es", "5 E's"; a space only with the apostrophe, so "item 4 As shown" is not a match.
 const FOUR_AS_NAME = /\b4(?: ?A['’]s|As)\b/;
 const FIVE_E_NAME = /\b5(?: ?E['’]s|Es?)\b/;
 
+function phasePatterns(toPattern: (word: string) => RegExp) {
+  return (Object.keys(PHASE_WORDS) as (keyof typeof PHASE_WORDS)[])
+    .map(format => ({ format, patterns: PHASE_WORDS[format].map(toPattern) }));
+}
+
 /**
- * The format a lesson plan follows: 4A's or 5E when it uses every phase name of it, or else names the
- * approach ("4As Approach", "5Es"); Standard otherwise. The teacher can choose another format.
+ * The format a lesson plan follows. Strongest evidence first: every phase of exactly one format as a heading,
+ * then every phase of exactly one format anywhere in the plan, then the approach's name ("4As Approach", "5Es")
+ * to settle a tie or a plan without phase names; Standard otherwise. Teachers do not choose it.
  */
 export function detectLessonFormat(text: string): LessonFormat {
-  if (FOUR_AS_PHASES.every(phase => phase.test(text))) return "4A's";
-  if (FIVE_E_PHASES.every(phase => phase.test(text))) return '5E';
+  for (const candidates of [PHASES_AS_HEADINGS, PHASES_ANYWHERE]) {
+    const complete = candidates.filter(({ patterns }) => patterns.every(pattern => pattern.test(text)));
+    if (complete.length === 1) return complete[0].format;
+    if (complete.length > 1) break;
+  }
   if (FOUR_AS_NAME.test(text)) return "4A's";
   if (FIVE_E_NAME.test(text)) return '5E';
   return 'Standard';

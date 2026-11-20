@@ -7,18 +7,18 @@ import { UploadSection } from '@/components/UploadSection';
 import { HomeTrustStrip } from '@/components/home/HomeTrustStrip';
 import { getPartAccentClass } from '@/components/part-badge';
 
-const props = { extractedText: '', fileName: '', selectedSession: '', onSessionChange: vi.fn(), onUploadSuccess: vi.fn(), onGenerate: vi.fn(), isLoading: false, loadingStage: '' };
+const props = { extractedText: '', fileName: '', selectedSession: '', onSessionChange: vi.fn(), onLessonChange: vi.fn(), onGenerate: vi.fn(), isLoading: false, loadingStage: '' };
 afterEach(() => { cleanup(); vi.clearAllMocks(); });
 it('moves the current step through upload, session and generate, retaining completed checks', () => {
   const { container, rerender } = render(<UploadSection {...props} />);
   const current = () => container.querySelectorAll('[aria-current="step"]');
   expect(current()).toHaveLength(1);
   expect(current()[0].contains(screen.getByRole('img', { name: 'Step 1' }))).toBe(true);
-  rerender(<UploadSection {...props} extractedText="Lesson" fileName="lesson.docx" />);
+  rerender(<UploadSection {...props} extractedText="Lesson" fileName="lesson.docx" planHasSessions />);
   expect(current()).toHaveLength(1);
   expect(current()[0].contains(screen.getByRole('img', { name: 'Step 2' }))).toBe(true);
   expect(screen.getByRole('img', { name: 'Step 1 complete' })).toBeTruthy();
-  rerender(<UploadSection {...props} extractedText="Lesson" selectedSession="Session 4" />);
+  rerender(<UploadSection {...props} extractedText="Lesson" planHasSessions selectedSession="Session 4" />);
   expect(current()).toHaveLength(1);
   expect(current()[0].contains(screen.getByRole('img', { name: 'Step 3' }))).toBe(true);
   expect(screen.getByRole('img', { name: 'Step 2 complete' })).toBeTruthy();
@@ -39,7 +39,7 @@ it.each([
   expect(bubble?.closest('[aria-live], [role="status"], [role="alert"]')).toBeNull();
 });
 it('retains the native named radios, subject dropdown and exact generation inputs', () => {
-  render(<UploadSection {...props} extractedText="Original text" selectedSession="Session 3" selectedSubject="Science" />);
+  render(<UploadSection {...props} extractedText="Original text" planHasSessions selectedSession="Session 3" selectedSubject="Science" />);
   expect(within(screen.getByRole('radiogroup', { name: 'Select Session' })).getAllByRole('radio').map(r => r.getAttribute('aria-label'))).toEqual(['Whole lesson', 'Session 1', 'Session 2', 'Session 3', 'Session 4', 'Session 5']);
   fireEvent.click(screen.getByRole('radio', { name: 'Session 4' })); expect(props.onSessionChange).toHaveBeenCalledWith('Session 4');
   expect(within(screen.getByRole('combobox', { name: 'Subject' })).getByRole('option', { name: 'Automatic' })).toBeTruthy();

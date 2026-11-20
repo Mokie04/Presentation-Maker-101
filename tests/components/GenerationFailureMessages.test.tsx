@@ -25,7 +25,7 @@ function stubGenerate(generate: () => Response) {
 async function submitFromHome() {
   render(<Home />);
   fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
-  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'A lesson about plants.' } });
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Session 1: plants. Session 2: seeds.' } });
   chooseSession('Session 1');
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
 }

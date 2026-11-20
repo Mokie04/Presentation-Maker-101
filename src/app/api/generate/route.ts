@@ -6,7 +6,7 @@ import { autoFitDeck } from '@/lib/auto-fit-deck';
 import { classifyTextFailure, generateSlideContent, TextOutputTruncatedError } from '@/lib/providers/text-provider';
 import { detectSubject } from '@/lib/utils/subject-detector';
 import { SESSION_OPTIONS } from '@/lib/utils/session-options';
-import { detectLessonFormat, LESSON_FORMATS } from '@/lib/pedagogy';
+import { detectLessonFormat } from '@/lib/pedagogy';
 import { SUPPORTED_SUBJECTS } from '@/lib/utils/subject-options';
 import type { PresentationData, SubjectEvidence } from '@/types/presentation';
 
@@ -25,8 +25,6 @@ const OUTPUT_UNUSABLE_MESSAGE = 'The AI could not format this lesson. Please try
 const inputSchema = z.looseObject({
   text: z.string().max(MAX_LESSON_TEXT_LENGTH, LESSON_TOO_LONG_MESSAGE).refine((text) => text.trim().length > 0, 'must be a non-empty string'),
   session: z.enum(SESSION_OPTIONS),
-  // The teacher's choice; detected from the lesson text when omitted.
-  lessonFormat: z.enum(LESSON_FORMATS).optional(),
 });
 
 export const POST = defineRoute({
@@ -37,7 +35,8 @@ export const POST = defineRoute({
   maxBodyBytes: MAX_BODY_BYTES,
   handler: async ({ input, body, request }) => {
     const { text, session } = input;
-    const lessonFormat = input.lessonFormat ?? detectLessonFormat(text);
+    // Always read from the lesson plan itself; teachers do not choose it.
+    const lessonFormat = detectLessonFormat(text);
     const { subject, subjectSource } = body;
 
     // The new marker distinguishes an explicit teacher choice from legacy subject input.

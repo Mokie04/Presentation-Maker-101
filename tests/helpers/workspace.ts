@@ -8,11 +8,14 @@ export async function openWorkspace(text = 'A lesson about plants.') {
   await generateDeck(text);
 }
 
-/** Generates a deck from the upload screen of an already rendered app. */
-export async function generateDeck(text: string, session = 'Session 1') {
+/**
+ * Generates a deck from the upload screen of an already rendered app. A plan without sessions builds the
+ * whole lesson; pass `session` only for a plan with session markers.
+ */
+export async function generateDeck(text: string, session?: string) {
   fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: text } });
-  chooseSession(session);
+  if (session) chooseSession(session);
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
   await screen.findByRole('listbox', { name: 'Slides' });
 }

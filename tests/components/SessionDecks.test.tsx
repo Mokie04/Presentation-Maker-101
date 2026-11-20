@@ -6,7 +6,7 @@ import axe from 'axe-core';
 import Home from '@/app/page';
 import { chooseSession, selectSlideTitled } from '../helpers/workspace';
 
-const lesson = 'A lesson about plants with several sessions.';
+const lesson = 'A lesson about plants.\nSession 1: roots\nSession 2: seeds';
 const presentation = { subject: 'Science', originalWriters: 'Teacher', topic: 'Plants',
   subjectEvidence: [{ subject: 'Science', source: 'teacher-supplied' }],
   slides: ['Roots', 'Leaves'].map((title, index) => ({ slideNumber: index + 1, title, part: 'Discussion', contentPoints: [title], visualDescription: '' })) };
@@ -180,7 +180,7 @@ it('exports and previews the active session', async () => {
 });
 it('resets one session immediately and confirms before clearing two', async () => {
   await open(); fireEvent.click(screen.getByRole('button', { name: 'Start over with a new lesson' }));
-  expect(screen.queryByRole('dialog')).toBeNull(); expect(screen.getByLabelText('Select Session')).toBeTruthy();
+  expect(screen.queryByRole('dialog')).toBeNull(); expect(screen.getByRole('heading', { name: 'Sessions' })).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: /paste/i }));
   fireEvent.change(screen.getByRole('textbox'), { target: { value: lesson } });
   chooseSession('Session 1');

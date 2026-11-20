@@ -17,20 +17,20 @@ import { useDeckExport } from '@/lib/export/use-deck-export';
 import { generatePresentation } from '@/lib/generate-client';
 import { SessionTabs } from '@/components/workspace/SessionTabs';
 import { AnotherSessionDialog, ResetSessionsDialog } from '@/components/workspace/SessionDialogs';
-import { WHOLE_LESSON, hasSessionMarkers, type SessionOption } from '@/lib/utils/session-options';
+import { WHOLE_LESSON, hasSessionMarkers, isWholeLesson, type SessionOption } from '@/lib/utils/session-options';
 import { DEFAULT_LESSON_FORMAT, detectLessonFormat, type LessonFormat } from '@/lib/pedagogy';
 
 function PresentationWorkspace() {
   const [extractedText, setExtractedText] = useState('');
   const [fileName, setFileName] = useState('');
-  // `auto` marks a session the app suggested; a new lesson may replace it, but never the teacher's own pick.
-  const [sessionChoice, setSessionChoice] = useState({ session: '', auto: false });
-  const selectedSession = sessionChoice.session;
+  // A plan with no sessions or days in it is taught in one session, so it always builds the whole lesson.
+  const planHasSessions = useMemo(() => hasSessionMarkers(extractedText), [extractedText]);
+  const [pickedSession, setPickedSession] = useState('');
+  const selectedSession = !extractedText.trim() ? '' : planHasSessions ? pickedSession : WHOLE_LESSON;
   const [selectedSubject, setSelectedSubject] = useState<SupportedSubject | ''>('');
-  const [selectedFormat, setSelectedFormat] = useState<LessonFormat | ''>('');
   const detectedFormat = useMemo(() => detectLessonFormat(extractedText), [extractedText]);
   const [generatingFormat, setGeneratingFormat] = useState<LessonFormat>(DEFAULT_LESSON_FORMAT);
-  const [lesson, setLesson] = useState<{ text: string; name: string; subject: SupportedSubject | ''; lessonFormat: LessonFormat | '' } | null>(null);
+  const [lesson, setLesson] = useState<{ text: string; name: string; subject: SupportedSubject | '' } | null>(null);
   const [anotherSessionOpen, setAnotherSessionOpen] = useState(false);
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
   const generation = useRef<AbortController | null>(null);
@@ -59,30 +59,29 @@ function PresentationWorkspace() {
   const [loadingStage, setLoadingStage] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Handle successful document upload or paste
-  const handleUploadSuccess = (text: string, name: string) => {
+  // The lesson text changed through an upload or the paste box
+  const handleLessonChange = (text: string, name: string, newLesson: boolean) => {
     setExtractedText(text);
     setFileName(name);
     setErrorMsg('');
-    // A plan with no sessions or days in it is taught in one session.
-    setSessionChoice(current => current.session && !current.auto ? current
-      : { session: text.trim() && !hasSessionMarkers(text) ? WHOLE_LESSON : '', auto: true });
+    // A new lesson's sessions are not the previous plan's; an edit or a restored plan keeps the pick.
+    if (newLesson) setPickedSession('');
   };
 
   // Generate Presentation Flow
   const handleGenerate = async (text: string, session: string, subject?: SupportedSubject) => {
     setIsLoading(true);
     setErrorMsg('');
-    setGeneratingFormat(selectedFormat || detectLessonFormat(text));
+    setGeneratingFormat(detectLessonFormat(text));
     const controller = new AbortController();
     generation.current?.abort();
     generation.current = controller;
     try {
-      const data = await generatePresentation({ text, session, subject, lessonFormat: selectedFormat || undefined }, controller.signal, setLoadingStage);
+      const data = await generatePresentation({ text, session, subject }, controller.signal, setLoadingStage);
       if (generation.current !== controller || controller.signal.aborted) return;
       // Capture submitted inputs, not controls that may have changed while awaiting the response.
       setExtractedText(text);
-      setLesson({ text, name: fileName, subject: subject || '', lessonFormat: selectedFormat });
+      setLesson({ text, name: fileName, subject: subject || '' });
       loadPresentation(data, session as SessionOption);
     } catch (err) {
       if (generation.current === controller && !controller.signal.aborted) {
@@ -109,9 +108,8 @@ function PresentationWorkspace() {
     resetDeck();
     setExtractedText('');
     setFileName('');
-    setSessionChoice({ session: '', auto: false });
+    setPickedSession('');
     setSelectedSubject('');
-    setSelectedFormat('');
     setErrorMsg('');
   };
 
@@ -127,13 +125,12 @@ function PresentationWorkspace() {
           <UploadSection
             extractedText={extractedText}
             fileName={fileName}
-            onUploadSuccess={handleUploadSuccess}
+            onLessonChange={handleLessonChange}
             selectedSession={selectedSession}
-            onSessionChange={session => setSessionChoice({ session, auto: false })}
+            onSessionChange={setPickedSession}
+            planHasSessions={planHasSessions}
             selectedSubject={selectedSubject}
             onSubjectChange={setSelectedSubject}
-            selectedFormat={selectedFormat}
-            onFormatChange={setSelectedFormat}
             detectedFormat={detectedFormat}
             generatingFormat={generatingFormat}
             onGenerate={handleGenerate}
@@ -146,13 +143,14 @@ function PresentationWorkspace() {
         ) : (
           /* Presentation Workspace View */
           <PresentationWorkspaceView deck={deck} downloads={downloads} session={deck.activeSession!}
-            sessionControls={<SessionTabs sessions={deck.sessions} activeSession={deck.activeSession!}
+            // A whole-lesson deck is the lesson's only deck: no other sessions to switch to or build.
+            sessionControls={isWholeLesson(deck.activeSession!) ? undefined : <SessionTabs sessions={deck.sessions} activeSession={deck.activeSession!}
               onSwitch={deck.switchSession} onAnother={() => setAnotherSessionOpen(true)} />}
             onReset={() => { if (deck.sessions.length > 1) setResetConfirmOpen(true); else handleReset(); }} onPreview={(slideIndex) => { setCurrentSlideIndex(slideIndex); setIsSlideShowActive(true); }} />
         )}
 
         {anotherSessionOpen && deck.activeSession && lesson && (
-          <AnotherSessionDialog text={lesson.text} lessonName={lesson.name || 'Lesson'} subject={lesson.subject} lessonFormat={lesson.lessonFormat}
+          <AnotherSessionDialog text={lesson.text} lessonName={lesson.name || 'Lesson'} subject={lesson.subject}
             sessions={deck.sessions} activeSession={deck.activeSession} onClose={() => setAnotherSessionOpen(false)}
             onSuccess={(data, session) => { loadPresentation(data, session); setAnotherSessionOpen(false); }} />
         )}

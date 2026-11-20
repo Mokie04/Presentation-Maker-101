@@ -7,7 +7,7 @@ import { GeneratingPanel } from '@/components/home/GeneratingPanel';
 import { SlideshowModal } from '@/components/SlideshowModal';
 import { SlideSorter } from '@/components/workspace/SlideSorter';
 import type { PresentationData } from '@/types/presentation';
-import { chooseSession, panel, selectSlide } from '../helpers/workspace';
+import { panel, selectSlide } from '../helpers/workspace';
 
 const FOUR_AS = 'CLASSROOM OBSERVATION LESSON PLAN\nACTIVITY (10 minutes)\nANALYSIS (15 minutes)\nABSTRACTION (10 minutes)\nAPPLICATION (10 minutes)';
 const deck = { subject: 'Mathematics', originalWriters: 'Teacher', topic: 'Reports', lessonFormat: "4A's",
@@ -32,31 +32,23 @@ async function pasteLesson(text = FOUR_AS) {
   fireEvent.change(screen.getByRole('textbox'), { target: { value: text } });
 }
 async function generate() {
-  chooseSession('Whole lesson');
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
   await screen.findByRole('listbox', { name: 'Slides' });
 }
 
-it("shows what Automatic detects and leaves detection to the server", async () => {
+it('shows the detected format without asking for one, and never sends a format', async () => {
   await pasteLesson();
-  const select = screen.getByRole('combobox', { name: 'Lesson format' });
-  expect(within(select).getAllByRole('option').map(option => option.textContent)).toEqual(["Automatic (4A's)", 'Standard', "4A's", '5E']);
+  expect(screen.queryByRole('combobox', { name: 'Lesson format' })).toBeNull();
+  expect(screen.getByText('Lesson format').parentElement?.textContent).toBe("Lesson format 4A's · detected from your plan");
   await generate();
   expect(requests[0]).not.toHaveProperty('lessonFormat');
 });
 
-it("sends the teacher's format and reuses it for another session", async () => {
-  await pasteLesson();
-  fireEvent.change(screen.getByRole('combobox', { name: 'Lesson format' }), { target: { value: '5E' } });
-  await generate();
-  expect(requests[0].lessonFormat).toBe('5E');
-  fireEvent.click(screen.getByRole('button', { name: 'Another session' }));
-  const dialog = screen.getByRole('dialog');
-  expect(within(dialog).getByText('Lesson format:').parentElement?.textContent).toBe('Lesson format: 5E');
-  fireEvent.change(within(dialog).getByLabelText('Select Session'), { target: { value: 'Whole lesson' } });
-  fireEvent.click(within(dialog).getByRole('button', { name: 'Generate' }));
-  await vi.waitFor(() => expect(requests).toHaveLength(2));
-  expect(requests[1].lessonFormat).toBe('5E');
+it('updates the detected format as the plan changes', async () => {
+  await pasteLesson('Engage. Explore. Explain. Elaborate. Evaluate.');
+  expect(screen.getByText('5E')).toBeTruthy();
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'A lesson about plants.' } });
+  expect(screen.getByText('Standard')).toBeTruthy();
 });
 
 it("labels and edits a 4A's deck with 4A's parts", async () => {
@@ -76,7 +68,7 @@ it("lights the 4A's while generating", () => {
   expect(Array.from(document.querySelectorAll('.grid span'), chip => chip.textContent)).toEqual(['Activity', 'Analysis', 'Abstraction', 'Application', 'Assessment']);
 });
 
-it('keeps the chips of the submitted format when the dropdown changes during generation', async () => {
+it('keeps the chips of the submitted format when the plan text changes during generation', async () => {
   let finish!: (response: Response) => void;
   vi.stubGlobal('fetch', vi.fn(async (url: string) => {
     if (url === '/api/session') return Response.json({ authenticated: true });
@@ -85,9 +77,8 @@ it('keeps the chips of the submitted format when the dropdown changes during gen
     throw new Error(`Unexpected request ${url}`);
   }));
   await pasteLesson();
-  chooseSession('Whole lesson');
   fireEvent.click(screen.getByRole('button', { name: 'Generate Slides' }));
-  fireEvent.change(screen.getByRole('combobox', { name: 'Lesson format' }), { target: { value: '5E' } });
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Engage. Explore. Explain. Elaborate. Evaluate.' } });
   const chips = () => Array.from(screen.getByRole('region', { name: 'Generating presentation' }).querySelectorAll('.grid span'), chip => chip.textContent);
   expect(chips()).toEqual(['Activity', 'Analysis', 'Abstraction', 'Application', 'Assessment']);
   await act(async () => { finish(Response.json(deck)); });

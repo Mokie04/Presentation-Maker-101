@@ -43,7 +43,7 @@ afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 async function prepare() {
   render(<Home />);
   fireEvent.click(await screen.findByRole('button', { name: /paste/i }));
-  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Reading about a planet experiment.' } });
+  fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Session 1: Reading about a planet experiment.' } });
   chooseSession('Session 1');
 }
 async function submit() {
@@ -64,7 +64,7 @@ describe('teacher subject selection and presentation history', () => {
       'Automatic', 'Science', 'Mathematics', 'English/Reading', 'Social Studies/History', 'General Study',
     ]));
     await submit();
-    expect(requests).toEqual([{ text: 'Reading about a planet experiment.', session: 'Session 1' }]);
+    expect(requests).toEqual([{ text: 'Session 1: Reading about a planet experiment.', session: 'Session 1' }]);
     expect((await exportData()).subjectEvidence).toBeUndefined(); // Legacy presentation remains valid.
   });
 
@@ -72,7 +72,7 @@ describe('teacher subject selection and presentation history', () => {
     await prepare();
     fireEvent.change(screen.getByLabelText('Subject'), { target: { value: subject } });
     await submit();
-    expect(requests[0]).toEqual({ text: 'Reading about a planet experiment.', session: 'Session 1',
+    expect(requests[0]).toEqual({ text: 'Session 1: Reading about a planet experiment.', session: 'Session 1',
       subject, subjectSource: 'teacher-supplied' });
   });
 
@@ -103,13 +103,13 @@ describe('teacher subject selection and presentation history', () => {
     expect(screen.queryByRole('button', { name: 'Download Outline' })).toBeNull();
     expect((screen.getByLabelText('Subject') as HTMLSelectElement).value).toBe('');
     fireEvent.click(screen.getByRole('button', { name: /paste/i }));
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Next lesson' } });
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Session 2: Next lesson' } });
     chooseSession('Session 2');
     generate.mockResolvedValueOnce(Response.json({ ...presentation, subjectEvidence: [
       { subject: 'General Study', source: 'keyword-detected' }, { subject: 'Science', source: 'model-generated' },
     ] }));
     await submit();
-    expect(requests[1]).toEqual({ text: 'Next lesson', session: 'Session 2' });
+    expect(requests[1]).toEqual({ text: 'Session 2: Next lesson', session: 'Session 2' });
     expect((await exportData()).subjectEvidence).toEqual([
       { subject: 'General Study', source: 'keyword-detected' }, { subject: 'Science', source: 'model-generated' },
     ]);
