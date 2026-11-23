@@ -29,8 +29,9 @@ const ENGLISH_LABELS = 'session|day|meeting';
 const FILIPINO_LABELS = 'araw|sesyon';
 const LABEL_WORDS = `${ENGLISH_LABELS}|${FILIPINO_LABELS}`;
 const WEEKDAY_NAME = '(monday|tuesday|wednesday|thursday|friday|lunes|martes|miyerkules|huwebes|biyernes)';
-// English and Filipino labels: "Session 2", "Day 1", "Araw 3", "Sesyon 1".
-const NUMBERED_HEADING = new RegExp(`${HEADING_START}(?:${LABEL_WORDS})\\s*(?:#|no\\.?)?\\s*[1-9]\\b`, 'gim');
+// English and Filipino labels: "Session 2", "Day 1", "Araw 3", "Sesyon 1", optionally after one word such as
+// "Learning Session 1" in a weekly plan.
+const NUMBERED_HEADING = new RegExp(`${HEADING_START}(?:[A-Za-z]+[ \\t]+)?(?:${LABEL_WORDS})\\s*(?:#|no\\.?)?\\s*[1-9]\\b`, 'gim');
 // "Second meeting", "1st day", "Unang Araw", "Ikaapat na Sesyon".
 const ORDINAL_HEADING = new RegExp(`${HEADING_START}(?:(?:first|second|third|fourth|fifth|1st|2nd|3rd|4th|5th)\\s+(?:${ENGLISH_LABELS})|(?:unang|ikalawang|ikatlong|ikaapat na|ikalimang)\\s+(?:${FILIPINO_LABELS}))\\b`, 'gim');
 const WEEKDAY_HEADING = new RegExp(`${HEADING_START}${WEEKDAY_NAME}\\b`, 'gim');
