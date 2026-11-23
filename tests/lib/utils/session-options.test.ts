@@ -33,6 +33,9 @@ describe('hasSessionMarkers', () => {
     '• Day 3 – Assessment',
     '1. Araw 1 - Balik-aral',
     'IV. Day 4: Application',
+    // Headings in the Week 8 and Week 9 weekly plans.
+    'WEEK 8 GRADE 9 SCIENCE\nLearning Session 1\nObjectives\nLearning Session 2\nObjectives',
+    'Teaching Day 3: Assessment',
   ])('finds sessions or days in %j', text => {
     expect(hasSessionMarkers(text)).toBe(true);
   });
